@@ -127,7 +127,7 @@
           </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
-          <form action="">
+            <form action="{{ route('products.search') }}" method="GET" name="kyw">
             <div class="input-group">
               <input
                 type="text"

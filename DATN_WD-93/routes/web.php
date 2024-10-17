@@ -21,6 +21,10 @@ use App\Http\Controllers\Client\ContactController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
+Route::get('/products', [HomeController::class, 'products'])->name('products');
+Route::get('/search', [HomeController::class, 'search'])->name('products.search');
+Route::get('/products/detail/{product_id}', [HomeController::class, 'detail'])->name('productDetail');
+Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
