@@ -19,7 +19,7 @@
         <input type="hidden" name="id" value="{{ $product->id }}">
         <div class="mb-3">
             <label class="form-label">ID</label>
-            <input type="text" class="form-control @error('idProduct') is-invalid @enderror" value="{{ $product->idProduct }}" name="idProduct">
+            <input type="text" class="form-control" value="{{ $product->idProduct }}" name="idProduct">
         </div>
 
       <div class="mb-3">

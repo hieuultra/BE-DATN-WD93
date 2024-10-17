@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ImageProduct;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -14,7 +15,7 @@ class ProductController extends Controller
     {
         $categories = Category::orderBy('name', 'ASC')->get();
         // $products = Product::orderBy('id', 'desc')->paginate(10);
-        $products = Product::orderBy('id', 'desc')->paginate(10);
+        $products = Product::orderBy('updated_at', 'desc')->paginate(10);
         return view('admin.products.productList', compact('categories', 'products'));
     }
     public function viewProAdd()
@@ -85,7 +86,7 @@ class ProductController extends Controller
     public function productUpdate(Request $request)
     {
         $validatedData = $request->validate([
-            'idProduct' => 'required|max:10|unique:products,idProduct,' . $request->route('id'),
+            'idProduct' => 'required|max:10',
             'name' => 'required|string|max:255',
             'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
@@ -110,16 +111,51 @@ class ProductController extends Controller
             $imageName = time() . '.' . $request->img->extension();
             $request->img->move(public_path('upload'), $imageName);
             $validatedData['img'] = $imageName;
-            // kiểm tra hình củ và xóa
+            // kiểm tra hình cux và xóa
             $oldImagePath = public_path('upload/' . $product->img);
             if (file_exists($oldImagePath)) {
                 unlink($oldImagePath);
             }
         }
         //xu ly album
-        if($request->has('list_img')){
-            $currentImage = $product->imageProduct->pluck('id')->toArray();
-            $arrayCombine = array_combine($currentImage, $currentImage);
+
+        $currentImage = $product->imageProduct->pluck('id')->toArray();
+        $arrayCombine = array_combine($currentImage, $currentImage);
+
+        foreach ($arrayCombine as $key => $value) {
+            //tim kiem id image trong array moi day len
+            //neu ko ton tai id thi user da xoa image do
+            if (!array_key_exists($key, $request->list_img)) {
+                $imageProduct = ImageProduct::query()->find($key);
+                //xoa image do
+                if ($imageProduct && Storage::disk('public')->exists($imageProduct->image)) {
+                    Storage::disk('public')->delete($imageProduct->image); //xoa duong dan
+                    $imageProduct->delete(); //xoa database
+                }
+            }
+        }
+
+        //TH add or edit
+        foreach ($request->list_img as $key => $image) {
+            if (!array_key_exists($key, $arrayCombine)) {
+                if ($request->hasFile("list_img.$key")) {
+                    $path = $image->store('upload/imageProduct/id_' . $id, 'public');
+                    $product->imageProduct()->create([
+                        'product_id' => $id,
+                        'image' => $path
+                    ]); //them moi image vao database
+                }
+            } else if (is_file($image) && $request->hasFile("list_img.$key")) {
+                //TH thay doi image
+                $imageProduct = ImageProduct::query()->find($key);
+                if ($imageProduct && Storage::disk('public')->exists($imageProduct->image)) {
+                    Storage::disk('public')->delete($imageProduct->image); //xoa duong dan
+                }
+                $path = $image->store('upload/imageProduct/id_' . $product->id, 'public');
+                $imageProduct->update([
+                    'image' => $path
+                ]);
+            }
         }
 
         $product->update($validatedData);
