@@ -85,6 +85,7 @@ class ProductController extends Controller
     public function productUpdate(Request $request)
     {
         $validatedData = $request->validate([
+            'idProduct' => 'required|max:10|unique:products,idProduct,' . $request->route('id'),
             'name' => 'required|string|max:255',
             'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
@@ -114,6 +115,11 @@ class ProductController extends Controller
             if (file_exists($oldImagePath)) {
                 unlink($oldImagePath);
             }
+        }
+        //xu ly album
+        if($request->has('list_img')){
+            $currentImage = $product->imageProduct->pluck('id')->toArray();
+            $arrayCombine = array_combine($currentImage, $currentImage);
         }
 
         $product->update($validatedData);

@@ -74,9 +74,9 @@
 
                     <div class="mb-3">
                         <label class="form-label">Description Short</label>
-                        <textarea class="form-control @error('description') is-invalid @enderror"
-                         placeholder="Leave a description product here" style="height: 100px" name="description" >{{ old('description') }}</textarea>
-                         @error('description')
+                        <textarea class="form-control @error('content') is-invalid @enderror"
+                         placeholder="Leave a description product here" style="height: 100px" name="content" >{{ old('content') }}</textarea>
+                         @error('content')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
@@ -128,7 +128,7 @@
                         <div id="quill-editor" style="height: 400px;">
 
                         </div>
-                        <textarea name="content" id="nd_content" class="d-none">Enter Description Long</textarea>
+                        <textarea name="description" id="nd_content" class="d-none">Enter Description Long</textarea>
                     </div>
 
                     <div class="mb-3">
@@ -273,7 +273,7 @@
             theme: "snow",
     })
     //hien thi nd cu
-    var old_content = `{!! old('content') !!}`;
+    var old_content = `{!! old('description') !!}`;
     quill.root.innerHTML = old_content;
 
     //update lai textarea an khi content quill_editor thay doi
