@@ -45,7 +45,7 @@ class HomeController extends Controller
         // }
         if ($request->product_id) {
             // Lấy sản phẩm
-            $sp = Product::with('productVariants')->find($request->product_id);
+            $sp = Product::find($request->product_id);
             if (!$sp) {
                 return redirect()->route('products')->with('error', 'Sản phẩm không tồn tại.');
             }
@@ -57,13 +57,21 @@ class HomeController extends Controller
 
             $categories = Category::orderBy('name', 'asc')->get();
 
-            // Lấy các giá trị độc nhất cho size và color
-            $sizes = $sp->productVariants->pluck('size')->unique();
-            $colors = $sp->productVariants->pluck('color')->unique();
-
-            return view('client.detailSearch.detail', compact('sp', 'splq', 'categories', 'sizes', 'colors'));
+            return view('client.home.detail', compact('sp', 'splq', 'categories'));
         }
 
         return redirect()->route('products')->with('error', 'Không tìm thấy sản phẩm.');
+    }
+    function search(Request $request)
+    {
+        $categories = Category::orderBy('name', 'ASC')->get();
+
+        $kyw = $request->input('query');
+        $category_id = $request->input('category_id');
+
+        // $products = Product::where('name', 'LIKE', "%$kyw%")->orWhere('description', 'LIKE', "%$kyw%")->orderBy('id', 'DESC')->paginate(9);
+        $products = Product::where('name', 'LIKE', "%$kyw%")->orderBy('id', 'DESC')->paginate(9);
+        // echo var_dump($dssp);
+        return view('client.detailSearch.proSearch', compact('categories', 'products', 'kyw', 'category_id'));
     }
 }
