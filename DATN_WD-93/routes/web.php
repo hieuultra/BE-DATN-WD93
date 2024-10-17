@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SpecialtyController;
 //client
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\HomeController;
@@ -79,6 +80,15 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/productUpdate', [ProductController::class, 'productUpdate'])->name('productUpdate');
                 Route::delete('/productDestroy/{id}', [ProductController::class, 'productDestroy'])->name('productDestroy');
             });
+        //specialties
+        Route::prefix('specialties')
+            ->as('specialties.')
+            ->group(function () {
+                Route::get('/specialtyList', [SpecialtyController::class, 'index'])->name('specialtyList');
+                Route::post('/specialtyAdd', [SpecialtyController::class, 'store']);
+                Route::put('/specialtyUpdate/{id}', [SpecialtyController::class, 'update']);
+                Route::delete('/specialtyDestroy/{id}', [SpecialtyController::class, 'destroy']);
+            });
         //order
         // Route::prefix('bills')
         //     ->as('bills.')
@@ -100,3 +110,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         //         Route::delete('/accDestroy/{id}', [AccountController::class, 'accDestroy'])->name('accDestroy');
         //     });
     });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
