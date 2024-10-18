@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -19,26 +20,23 @@ class CategoryController extends Controller
         $categories = Category::orderBy('name', 'asc')->get();
         return view('admin.categories.viewCateAdd', compact('categories'));
     }
-    public function cateAdd(Request $request)
+    public function cateAdd(CategoryRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'img' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required|boolean',  // Đảm bảo trạng thái là boolean
-        ]);
-
-        if ($request->hasFile('img')) {
-            $imageName = time() . '.' . $request->img->extension(); //Tạo tên tệp tin duy nhất dựa trên thời gian hiện tại.
-            //$request->img->extension() sẽ trả về jpg,..., là phần mở rộng của tệp tin.
-            $request->img->move(public_path('upload'), $imageName); //Di chuyển tệp tin đến thư mục public/upload.
-            $validatedData['img'] = $imageName; //Cập nhật dữ liệu đã xác thực với tên tệp tin hình ảnh.
-        } else {
-            return redirect()->back()->withInput()->withErrors(['img' => 'Vui lòng chọn ảnh category']);
+        if ($request->isMethod("POST")) {
+            $validatedData = $request->except('_token');
+            if ($request->hasFile('img')) {
+                $imageName = time() . '.' . $request->img->extension(); //Tạo tên tệp tin duy nhất dựa trên thời gian hiện tại.
+                //$request->img->extension() sẽ trả về jpg,..., là phần mở rộng của tệp tin.
+                $request->img->move(public_path('upload'), $imageName); //Di chuyển tệp tin đến thư mục public/upload.
+                $validatedData['img'] = $imageName; //Cập nhật dữ liệu đã xác thực với tên tệp tin hình ảnh.
+            } else {
+                return redirect()->back()->withInput()->withErrors(['img' => 'Vui lòng chọn ảnh category']);
+            }
+    
+            Category::create($validatedData); // tạo một bản ghi mới trong bảng products.
+    
+            return redirect()->route('admin.categories.categoriesList')->with('success', 'Thêm category thành công'); //Chuyển hướng người dùng đến route productList và kèm theo thông báo thành công.
         }
-
-        $category = Category::create($validatedData); // tạo một bản ghi mới trong bảng products.
-
-        return redirect()->route('admin.categories.categoriesList')->with('success', 'Thêm category thành công'); //Chuyển hướng người dùng đến route productList và kèm theo thông báo thành công.
     }
     //hien thi formUpdate
     public function cateUpdateForm($id)

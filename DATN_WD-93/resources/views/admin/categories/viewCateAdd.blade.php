@@ -19,6 +19,9 @@
         <label class="form-label">Image</label>
         <input type="file" class="form-control" name="img" onchange="showImage(event)">
         <img id="imgCate" src="" alt="Image Product" style="width:150px; display: none">
+        @error('img')
+        <p class="text-danger">{{ $message }}</p>
+        @enderror
       </div>
 
       <label for="status" class="form-label">Status:</label>
