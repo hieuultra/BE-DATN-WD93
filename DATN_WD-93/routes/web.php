@@ -1,17 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+use App\Models\Bill;
 //admin
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\BillController;
+use App\Http\Controllers\Admin\UserController;
+
+
 //client
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Client\ContactController;
-
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -96,4 +100,9 @@ Route::middleware(['auth', CheckRoleAdminMiddleware::class])->prefix('admin')
         //         Route::post('/accUpdate', [AccountController::class, 'accUpdate'])->name('accUpdate');
         //         Route::delete('/accDestroy/{id}', [AccountController::class, 'accDestroy'])->name('accDestroy');
         //     });
+
+        //User
+        Route::resource('users', UserController::class);
+        //Bills
+        Route::resource('bill', BillController::class);
     });
