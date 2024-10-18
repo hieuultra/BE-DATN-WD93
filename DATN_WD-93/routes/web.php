@@ -3,16 +3,16 @@
 use Illuminate\Support\Facades\Auth;
 //admin
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryController;
 //client
-use App\Http\Controllers\Client\AuthController;
-use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Client\ContactController;
-
+use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Client\HomeController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -89,14 +89,14 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         //         Route::delete('{id}/destroy', [BillsController::class, 'destroy'])->name('destroy');
         //     });
         //account
-        // Route::prefix('account')
-        //     ->as('account.')
-        //     ->group(function () {
-        //         Route::get('/accountList', [AccountController::class, 'accountList'])->name('accountList');
-        //         Route::get('/viewAccAdd', [AccountController::class, 'viewAccAdd'])->name('viewAccAdd');
-        //         Route::post('/accAdd', [AccountController::class, 'accAdd'])->name('accAdd');
-        //         Route::get('/accUpdateForm/{id}', [AccountController::class, 'accUpdateForm'])->name('accUpdateForm');
-        //         Route::post('/accUpdate', [AccountController::class, 'accUpdate'])->name('accUpdate');
-        //         Route::delete('/accDestroy/{id}', [AccountController::class, 'accDestroy'])->name('accDestroy');
-        //     });
+        Route::prefix('user')
+            ->as('users.')
+            ->group(function () {
+                Route::get('/userList', [UserController::class, 'userList'])->name('userList');
+                Route::get('/viewUserAdd', [UserController::class, 'viewUserAdd'])->name('viewUserAdd');
+                Route::post('/userAdd', [UserController::class, 'userAdd'])->name('userAdd');
+                Route::get('/userUpdateForm/{id}', [UserController::class, 'userUpdateForm'])->name('userUpdateForm');
+                Route::post('/userUpdate', [UserController::class, 'userUpdate'])->name('userUpdate');
+                Route::delete('/userDestroy/{id}', [UserController::class, 'userDestroy'])->name('userDestroy');
+            });
     });
