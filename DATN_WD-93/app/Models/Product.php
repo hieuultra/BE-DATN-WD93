@@ -53,6 +53,10 @@ class Product extends Model
     {
         return $this->hasMany(Cart::class);
     }
+    public function variantProduct()
+    {
+        return $this->hasMany(VariantProduct::class);
+    }
     public function scopeNewProducts($query, $limit) //định nghĩa một query scope có tên là newProducts.
     //Query scope là một cách để thêm điều kiện truy vấn vào Eloquent query một cách dễ dàng.
     //khi định nghĩa một query scope trong model, tham số đầu tiên của phương thức scope luôn là một đối tượng query.
