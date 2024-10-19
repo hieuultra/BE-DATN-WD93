@@ -33,7 +33,7 @@ class ProductController extends Controller
             'content' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric',
-            'discount' => 'required|numeric',
+            'discount' => 'nullable|numeric',
             'category_id' => 'required|integer|exists:categories,id',
             'is_type' => 'required|boolean',
         ]);
@@ -93,7 +93,7 @@ class ProductController extends Controller
             'content' => 'nullable|string',
             'price' => 'required|numeric',
             'quantity' => 'nullable|numeric',
-            'discount' => 'required|numeric',
+            'discount' => 'nullable|numeric',
             'category_id' => 'required|integer|exists:categories,id',
             'is_type' => 'required|boolean',
         ]);
