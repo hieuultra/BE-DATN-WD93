@@ -14,6 +14,8 @@ use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Admin\VariantPackageController;
+use App\Http\Controllers\Admin\VariantProductsController;
+use App\Http\Controllers\Admin\VariantProPackageController;
 
 
 // Route::get('/', function () {
@@ -70,17 +72,17 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/cateUpdate', [CategoryController::class, 'cateUpdate'])->name('cateUpdate');
                 Route::delete('/cateDestroy/{id}', [CategoryController::class, 'cateDestroy'])->name('cateDestroy');
             });
-             //variantPackages
+        //variantPackages
         Route::prefix('variantPackages')
-        ->as('variantPackages.')
-        ->group(function () {
-            Route::get('/variantPackageList', [VariantPackageController::class, 'variantPackageList'])->name('variantPackageList');
-            Route::get('/viewVariantPackageAdd', [VariantPackageController::class, 'viewVariantPackageAdd'])->name('viewVariantPackageAdd');
-            Route::post('/variantPackageAdd', [VariantPackageController::class, 'variantPackageAdd'])->name('variantPackageAdd');
-            Route::get('/packageUpdateForm/{id}', [VariantPackageController::class, 'packageUpdateForm'])->name('packageUpdateForm');
-            Route::post('/packageUpdate', [VariantPackageController::class, 'packageUpdate'])->name('packageUpdate');
-            Route::delete('/packageDestroy/{id}', [VariantPackageController::class, 'packageDestroy'])->name('packageDestroy');
-        });
+            ->as('variantPackages.')
+            ->group(function () {
+                Route::get('/variantPackageList', [VariantPackageController::class, 'variantPackageList'])->name('variantPackageList');
+                Route::get('/viewVariantPackageAdd', [VariantPackageController::class, 'viewVariantPackageAdd'])->name('viewVariantPackageAdd');
+                Route::post('/variantPackageAdd', [VariantPackageController::class, 'variantPackageAdd'])->name('variantPackageAdd');
+                Route::get('/packageUpdateForm/{id}', [VariantPackageController::class, 'packageUpdateForm'])->name('packageUpdateForm');
+                Route::post('/packageUpdate', [VariantPackageController::class, 'packageUpdate'])->name('packageUpdate');
+                Route::delete('/packageDestroy/{id}', [VariantPackageController::class, 'packageDestroy'])->name('packageDestroy');
+            });
         //products
         Route::prefix('products')
             ->as('products.')
@@ -91,6 +93,27 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/productUpdateForm/{id}', [ProductController::class, 'productUpdateForm'])->name('productUpdateForm');
                 Route::post('/productUpdate', [ProductController::class, 'productUpdate'])->name('productUpdate');
                 Route::delete('/productDestroy/{id}', [ProductController::class, 'productDestroy'])->name('productDestroy');
+            });
+        //variantPackages
+        Route::prefix('variantPros')
+            ->as('variantPros.')
+            ->group(function () {
+                Route::get('/variantProList', [VariantProPackageController::class, 'variantProList'])->name('variantProList');
+                Route::get('/VariantPackageAdd', [VariantProPackageController::class, 'variantProAdd'])->name('packageAdd');
+                Route::post('/VariantPackageAdd', [VariantProPackageController::class, 'packageAdd'])->name('packageAdd');
+                Route::get('/packageUpdate/{id}', [VariantProPackageController::class, 'packegeUpdate'])->name('viewpackageUpdate');
+                Route::post('/packageUpdate', [VariantProPackageController::class, 'packageUpdate'])->name('packageUpdate');
+                Route::delete('/packageDestroy/{id}', [VariantProPackageController::class, 'packageDestroy'])->name('packageDestroy');
+            });
+        //variantProducs
+        Route::prefix('productVariant')
+            ->as('productVariant.')
+            ->group(function () {
+                Route::get('/viewVariantProductAdd', [VariantProductsController::class, 'viewProductVariantAdd'])->name('viewProductVariantAdd');
+                Route::post('/VariantProductAdd', [VariantProductsController::class, 'variantProductAdd'])->name('variantProductAdd');
+                Route::get('/VariantProductUpdate/{id}', [VariantProductsController::class, 'VariantProductUpdateForm'])->name('viewVariantProductUpdate');
+                Route::post('/VariantProductUpdate', [VariantProductsController::class, 'VariantProductUpdate'])->name('variantProductUpdate');
+                Route::delete('/VariantProductDestroy/{id}', [VariantProductsController::class, 'VariantProductDestroy'])->name('VariantProductDestroy');
             });
         //order
         // Route::prefix('bills')

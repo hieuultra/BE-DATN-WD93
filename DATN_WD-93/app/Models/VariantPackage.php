@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class VariantPackage extends Model
 {
     use HasFactory;
+    // protected $table = 'variant_packages';
     protected $fillable = ['name'];
-    protected $table = 'variant_packages';
+
 
     //dn khoa chinh/khoa ngoai
     public function variantProduct()
