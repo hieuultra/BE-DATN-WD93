@@ -1,18 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
-//admin
+//
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\CategoryController;
-//client
-use App\Http\Controllers\Client\AboutController;
-use App\Http\Middleware\CheckRoleAdminMiddleware;
-use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\AuthController;
+//
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\AboutController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Middleware\CheckRoleAdminMiddleware;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Admin\VariantPackageController;
+
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -68,6 +70,17 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/cateUpdate', [CategoryController::class, 'cateUpdate'])->name('cateUpdate');
                 Route::delete('/cateDestroy/{id}', [CategoryController::class, 'cateDestroy'])->name('cateDestroy');
             });
+             //variantPackages
+        Route::prefix('variantPackages')
+        ->as('variantPackages.')
+        ->group(function () {
+            Route::get('/variantPackageList', [VariantPackageController::class, 'variantPackageList'])->name('variantPackageList');
+            Route::get('/viewVariantPackageAdd', [VariantPackageController::class, 'viewVariantPackageAdd'])->name('viewVariantPackageAdd');
+            Route::post('/variantPackageAdd', [VariantPackageController::class, 'variantPackageAdd'])->name('variantPackageAdd');
+            Route::get('/packageUpdateForm/{id}', [VariantPackageController::class, 'packageUpdateForm'])->name('packageUpdateForm');
+            Route::post('/packageUpdate', [VariantPackageController::class, 'packageUpdate'])->name('packageUpdate');
+            Route::delete('/packageDestroy/{id}', [VariantPackageController::class, 'packageDestroy'])->name('packageDestroy');
+        });
         //products
         Route::prefix('products')
             ->as('products.')
