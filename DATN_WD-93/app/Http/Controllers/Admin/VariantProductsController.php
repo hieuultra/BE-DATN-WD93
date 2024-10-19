@@ -24,7 +24,9 @@ class VariantProductsController extends Controller
             'quantity' => 'required|numeric',
             'price' => 'required|numeric|min:0',
         ]);
+
         $variantProduct = VariantProduct::create($validatedData);
+
 
         return redirect()->route('admin.variantPros.variantProList')->with('success', 'Thêm biến thể thành công'); //Chuyển hướng người dùng đến route productList và kèm theo thông báo thành công.
     }
