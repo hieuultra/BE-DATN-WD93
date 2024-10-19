@@ -20,10 +20,10 @@
             <div class="mb-3">
                 <input type="hidden" name="id" value="{{ $variantPro->id }}">
                 <label class="form-label">Name</label>
-                <select class="form-select" name="id_Product">
+                <select class="form-select" name="id_product">
                     <option value="0">Choose Products</option>
                     @foreach($products as $p)
-                    @if ($p->id == $variantPro->id_Product)
+                    @if ($p->id == $variantPro->id_product)
                     <option value="{{ $p->id }}" selected>{{ $p->name }}</option>
                 @else
                     <option value="{{ $p->id }}">{{ $p->name }}</option>

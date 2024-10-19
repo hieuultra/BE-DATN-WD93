@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function productAdd(Request $request)
     {
         $validatedData = $request->validate([
-            'idProduct' => 'required|max:10|unique:products,idProduct,' . $request->route('id'),
+            'idProduct' => 'required|max:10|unique:products,idProduct',
             'name' => 'required|string|max:255',
             'img' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',

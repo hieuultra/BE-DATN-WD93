@@ -19,7 +19,7 @@ class VariantProductsController extends Controller
     public function variantProductAdd(Request $request)
     {
         $validatedData = $request->validate([
-            'id_product' => 'required|integer|exists:product,id',
+            'id_product' => 'required|integer|exists:products,id',
             'id_variant' => 'required|integer|exists:variant_packages,id',
             'quantity' => 'required|numeric',
             'price' => 'required|numeric|min:0',
@@ -37,13 +37,13 @@ class VariantProductsController extends Controller
         $products = Product::orderBy('id')->get();
         $variantPros = VariantProduct::orderBy('id')->get();
         $variantPro = VariantProduct::find($id); //tim id
-        return view('admin.variantProducts.productVariant.productVariantUpdateFrom', compact('variantPros', 'variantPro', 'variantPackages', 'products'));
+        return view('admin.variantProducts.productVariant.productVariantUpdateForm', compact('variantPros', 'variantPro', 'variantPackages', 'products'));
     }
     //Update
     public function VariantProductUpdate(Request $request)
     {
         $validatedData = $request->validate([
-            'id_product' => 'required|integer|exists:product,id',
+            'id_product' => 'required|integer|exists:products,id',
             'id_variant' => 'required|integer|exists:variant_packages,id',
             'quantity' => 'required|numeric',
             'price' => 'required|numeric|min:0',

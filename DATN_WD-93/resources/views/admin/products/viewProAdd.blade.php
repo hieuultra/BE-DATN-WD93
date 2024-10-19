@@ -194,62 +194,6 @@
    <script src="{{ asset('assets/admin/libs/quill/quill.core.js') }}"></script>
    <script src="{{ asset('assets/admin/libs/quill/quill.min.js') }}"></script>
 
-{{-- /bien the --}}
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let variantIndex = 0;
-
-        document.getElementById('add-variant').addEventListener('click', function() {
-            const row = `
-                <tr>
-                    <td>
-                        <select class="form-select" name="sizes[]">
-                            <option value="">Select Size</option>
-                            @foreach($sizes as $size)
-                            <option value="{{ $size->id }}">{{ $size->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-select" name="colors[]">
-                            <option value="">Select Color</option>
-                            @foreach($colors as $color)
-                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" class="form-control" name="quantities[]" placeholder="Quantity">
-                    </td>
-                    <td>
-                        <input type="file" class="form-control" name="variant_images[${variantIndex}]" onchange="previewVariantImage(this, ${variantIndex})">
-                        <img id="variant-preview_${variantIndex}" src="https://cdn.icon-icons.com/icons2/510/PNG/512/image_icon-icons.com_50366.png" style="width:50px; display: block; margin-top: 5px;">
-                    </td>
-                    <td>
-                        <i class="mdi mdi-delete text-muted fs-18 rounded-2 border p-1" style="cursor: pointer" onclick="removeVariantRow(this)"></i>
-                    </td>
-                </tr>
-            `;
-            document.querySelector('#variant-table tbody').insertAdjacentHTML('beforeend', row);
-            variantIndex++;
-        });
-
-        window.previewVariantImage = function(input, index) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.querySelector(`#variant-preview_${index}`).src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        };
-
-        window.removeVariantRow = function(button) {
-            button.closest('tr').remove();
-        };
-    });
-</script> --}}
-
-
-
    <script>
     //hien thi image khi add
     function showImage(event){

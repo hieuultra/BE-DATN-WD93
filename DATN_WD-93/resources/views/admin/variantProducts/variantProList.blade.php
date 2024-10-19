@@ -135,7 +135,7 @@
                 <th scope="row">{{ $vpPro->id }}</th>
                 <td>
                     @foreach ($product as $pro)
-                        @if (($vpPro->id_Product) == ($pro->id))
+                        @if (($vpPro->id_product) == ($pro->id))
                             {{$pro->name}}
                         @endif
                     @endforeach
@@ -143,14 +143,14 @@
                 <td>
 
                   @foreach ($product as $pro)
-                        @if (($vpPro->id_Product) == ($pro->id))
+                        @if (($vpPro->id_product) == ($pro->id))
                         <img src="{{ asset('upload/'.$pro->img)  }}" width="150" height="90" alt="">
                         @endif
                     @endforeach
                 </td>
                 <td>
                   @foreach ($product as $pro)
-                  @if (($vpPro->id_Product) == ($pro->id))
+                  @if (($vpPro->id_product) == ($pro->id))
                      @foreach ($cates as $cate)
                          @if (($cate->id) == ($pro->category_id))
                              {{$cate->name}}
