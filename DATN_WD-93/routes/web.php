@@ -92,7 +92,10 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/productAdd', [ProductController::class, 'productAdd'])->name('productAdd');
                 Route::get('/productUpdateForm/{id}', [ProductController::class, 'productUpdateForm'])->name('productUpdateForm');
                 Route::post('/productUpdate', [ProductController::class, 'productUpdate'])->name('productUpdate');
-                Route::delete('/productDestroy/{id}', [ProductController::class, 'productDestroy'])->name('productDestroy');
+                // Route::delete('/productDestroy/{id}', [ProductController::class, 'productDestroy'])->name('productDestroy');
+                Route::delete('/soft-delete/{id}', [ProductController::class, 'softDelete'])->name('softDelete');
+                Route::delete('/hard-delete/{id}', [ProductController::class, 'hardDelete'])->name('hardDelete');
+                Route::get('/restore/{id}', [ProductController::class, 'restore'])->name('restore');
             });
         //variantPackages
         Route::prefix('variantPros')

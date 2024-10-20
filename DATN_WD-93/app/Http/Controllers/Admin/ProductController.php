@@ -182,4 +182,44 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('admin.products.productList')->with('success', 'Sản phẩm đã được xóa thành công.');
     }
+    public function softDelete($id)
+    {
+        $product = Product::find($id);
+        if ($product) {
+            $product->delete(); // Thực hiện xóa mềm
+            return redirect()->route('admin.products.productList')->with('success', 'Xóa mềm thành công!');
+        }
+        return redirect()->route('admin.products.productList')->with('error', 'Sản phẩm không tồn tại.');
+    }
+
+    public function hardDelete($id)
+    {
+        $product = Product::withTrashed()->find($id); //lấy các bản ghi đã bị xóa mềm (soft deleted) trong một model
+        if ($product) {
+            $imgpath = "upload/" . $product->img; //duong dan
+            if (file_exists($imgpath)) {
+                unlink($imgpath); //xoa
+            }
+            //xoa toan bo image trong folder
+            $path = 'upload/imageProduct/id_' . $id;
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->deleteDirectory($path); //xoa thu muc
+            }
+            $product->forceDelete(); // Thực hiện xóa cứng
+            return redirect()->route('admin.products.productList')->with('success', 'Xóa cứng thành công!');
+        }
+        return redirect()->route('admin.products.productList')->with('error', 'Sản phẩm không tồn tại.');
+    }
+    public function restore($id)
+    {
+        // Tìm sản phẩm đã xóa
+        $product = Product::onlyTrashed()->find($id);
+
+        if ($product) {
+            $product->restore(); // Khôi phục sản phẩm
+            return redirect()->route('admin.products.productList')->with('success', 'Khôi phục sản phẩm thành công!');
+        }
+
+        return redirect()->route('admin.products.productList')->with('error', 'Sản phẩm không tồn tại.');
+    }
 }

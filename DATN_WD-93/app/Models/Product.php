@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -32,6 +33,9 @@ class Product extends Model
         'is_hot_deal' => 'boolean',
         'is_show_home' => 'boolean',
     ];
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
     public function category()
     {
         return $this->belongsTo(Category::class); //$this đại diện cho thể hiện hiện tại của lớp Product

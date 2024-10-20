@@ -120,7 +120,7 @@
                 <tr>
                   <th scope="col">STT</th>
                   <th scope="col" style="width: 280px;">Name</th>
-                  <th scope="col"  style="width: 220px;" >IMG</th>
+                  <th scope="col"  style="width: 220px;" >Image</th>
                   <th scope="col" style="width: 200px;" >Category</th>
                   <th scope="col">Variant</th>
                   <th scope="col">Price</th>
