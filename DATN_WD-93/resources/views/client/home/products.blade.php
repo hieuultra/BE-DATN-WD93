@@ -3,6 +3,12 @@
 @section('title','Welcome')
 
 @section('content')
+<style>
+    #img {
+      height: 300px;
+      width: 100%;
+    }
+  </style>
 
  <!-- Breadcrumb Start -->
  <div class="container-fluid">
@@ -185,9 +191,11 @@
                                 </div>
                             </div>
                             <div class="text-center py-4">
-                                <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $item->id) }}">{{ $item->name }}</a>
+                                <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $item->id) }}" style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    {{ $item->name }}
+                                </a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5>  {{ number_format($tt, 0, ",", ".")  }} $</h5><h6 class="text-muted ml-2"><del> {{ number_format($item->price,0,',','.') }} $</del></h6>
+                                    <h5 class="text-danger">  {{ number_format($tt, 0, ",", ".")  }} $</h5><h6 class="text-muted ml-2"><del> {{ number_format($item->price,0,',','.') }} $</del></h6>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center mb-1">
                                     <small class="fa fa-star text-primary mr-1"></small>

@@ -20,6 +20,16 @@
 .pagination li {
     list-style-type: none;
 }
+table th, table td {
+        word-wrap: break-word !important;
+        white-space: normal !important;
+        max-width: 100px !important; /* Giới hạn chiều rộng cho tên sản phẩm */
+    }
+
+ td.product-name {
+        max-width: 100px !important;
+    }
+
 </style>
 <main>
     <div class="container-fluid px-4">
@@ -75,7 +85,7 @@
                  <tr>
                     <td>{{ $item->idProduct }}</td>
                     <td>{{ $item->category->name }}</td>
-                    <td>{{ $item->name }}</td>
+                    <td class="product-name">{{ $item->name }}</td>
                     <td><img src="{{ asset('upload/'.$item->img)  }}" width="200" height="150" alt=""></td>
                     <td>{{ number_format($item->price,0,'.',',')}} $</td>
                     <td>{{ number_format($item->discount,0,'.',',') }} %</td>
@@ -83,7 +93,7 @@
                     <td class="{{ $item->is_type == true ? 'text-success' : 'text-danger' }}">
                         {{ $item->is_type == true ? 'Display' : 'Hidden' }}
                       </td>
-                    <td>
+                    <td class="action">
                     <a href="" class="btn btn-warning">
                     <!-- Thêm nút update -->
                       <form action="{{ route('admin.products.productUpdateForm', $item->id) }}" method="GET">
