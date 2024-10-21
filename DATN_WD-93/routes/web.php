@@ -1,9 +1,21 @@
 <?php
 
+<<<<<<< HEAD
+use App\Models\Bill;
+//admin
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\BillController;
+use App\Http\Controllers\Admin\UserController;
+
+
+//client
+=======
 use Illuminate\Support\Facades\Auth;
 //
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+>>>>>>> main
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Client\AuthController;
 //
@@ -13,11 +25,14 @@ use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
+<<<<<<< HEAD
+use App\Http\Controllers\Admin\StaffController;
+=======
+>>>>>>> main
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
-
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -144,6 +159,31 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         //         Route::delete('{id}/destroy', [BillsController::class, 'destroy'])->name('destroy');
         //     });
         //account
+<<<<<<< HEAD
+        // Route::prefix('account')
+        //     ->as('account.')
+        //     ->group(function () {
+        //         Route::get('/accountList', [AccountController::class, 'accountList'])->name('accountList');
+        //         Route::get('/viewAccAdd', [AccountController::class, 'viewAccAdd'])->name('viewAccAdd');
+        //         Route::post('/accAdd', [AccountController::class, 'accAdd'])->name('accAdd');
+        //         Route::get('/accUpdateForm/{id}', [AccountController::class, 'accUpdateForm'])->name('accUpdateForm');
+        //         Route::post('/accUpdate', [AccountController::class, 'accUpdate'])->name('accUpdate');
+        //         Route::delete('/accDestroy/{id}', [AccountController::class, 'accDestroy'])->name('accDestroy');
+        //     });
+
+        //User
+        Route::get('/users/exportexcel', [UserController::class, 'exportexcel'])->name('users.exportexcel');
+        Route::get('/users/exportpdf', [UserController::class, 'exportPDF'])->name('users.exportPDF');
+        Route::resource('users', UserController::class);
+        Route::get('/users/activate/{id}', [UserController::class, 'activate'])->name('users.activate');
+        //Nhân viên
+        Route::get('/staffs/exportexcel', [StaffController::class, 'exportexcel'])->name('staffs.exportexcel');
+        Route::get('/staffs/exportpdf', [StaffController::class, 'exportPDF'])->name('staffs.exportPDF');
+        Route::resource('staffs', StaffController::class);
+        Route::get('/staffs/activate/{id}', [StaffController::class, 'activate'])->name('staffs.activate');
+
+        Route::resource('bill', BillController::class);
+=======
         Route::prefix('user')
             ->as('users.')
             ->group(function () {
@@ -154,4 +194,5 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/userUpdate', [UserController::class, 'userUpdate'])->name('userUpdate');
                 Route::delete('/userDestroy/{id}', [UserController::class, 'userDestroy'])->name('userDestroy');
             });
+>>>>>>> main
     });
