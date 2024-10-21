@@ -65,7 +65,7 @@
               alt=""
             />
             <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
+              <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"
                 ><i class="fa fa-shopping-cart"></i
               ></a>
               <a class="btn btn-outline-dark btn-square" href=""

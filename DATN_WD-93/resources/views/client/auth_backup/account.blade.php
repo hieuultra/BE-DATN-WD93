@@ -23,7 +23,7 @@
             <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
                 <div class="d-table-cell align-middle">
                     <div class="text-center mt-4">
-                        <h1 class="h2">Login Sucsess</h1>
+                        <h1 class="h2">Account</h1>
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -31,11 +31,11 @@
                                 <div class="text-center">
                                     <!-- <img src="" alt="logo" class="img-fluid rounded-circle" width="132" height="132" /> -->
                                     <h1 class="m-0 display-5 font-weight-semi-bold">
-                                        <span class="text-primary font-weight-bold border px-3 mr-1">Ultra</span>Shop
+                                        <span class="text-primary font-weight-bold border px-3 mr-1">Instinct</span>Pharmacy
                                     </h1>
                                 </div>
-                                    <div class="text-center mt-4 font-weight-bold border px-3 mr-1">
-                                        HELLO <br />
+                                    <div class="text-center text-primary mt-4 font-weight-bold border px-3 mr-1">
+                                       HELLO <br />
                                         {{ Auth::user()->name }}
                                     </div>
                                     <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">

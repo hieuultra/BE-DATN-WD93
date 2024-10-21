@@ -76,12 +76,12 @@
                   >0</span
                 >
               </a>
-              <a href="" class="btn px-0 ml-3">
+              <a href="{{ route('cart.listCart') }}" class="btn px-0 ml-3">
                 <i class="fas fa-shopping-cart text-primary"></i>
                 <span
                   class="badge text-secondary border border-secondary rounded-circle"
                   style="padding-bottom: 2px"
-                  >0</span
+                  >{{ session('cart') ? count(session('cart')) : '0' }}</span
                 >
               </a>
               <a href="" class="btn px-0">

@@ -32,15 +32,11 @@
                     <div class="carousel-item active">
                         <img class="w-100 h-100" src="{{ asset('upload/' . $sp->img) }}" alt="Image">
                     </div>
+                    @foreach($sp->imageProduct as $index => $imgs)
                     <div class="carousel-item">
-                        <img class="w-100 h-100" src="img/product-2.jpg" alt="Image">
+                        <img class="w-100 h-100" src="{{ Storage::url($imgs->image) }}" alt="Image">
                     </div>
-                    <div class="carousel-item">
-                        <img class="w-100 h-100" src="img/product-3.jpg" alt="Image">
-                    </div>
-                    <div class="carousel-item">
-                        <img class="w-100 h-100" src="img/product-4.jpg" alt="Image">
-                    </div>
+                    @endforeach
                 </div>
                 <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
                     <i class="fa fa-2x fa-angle-left text-dark"></i>
@@ -55,6 +51,7 @@
             <div class="h-100 bg-light p-30">
                 <h3>{{ $sp->name }}</h3>
                 <div class="d-flex mb-3">
+                    <small class="px-2 pt-1">Code:{{ $sp->idProduct }}</small>
                     <div class="text-primary mr-2">
                         <small class="fas fa-star"></small>
                         <small class="fas fa-star"></small>
@@ -64,35 +61,42 @@
                     </div>
                     <small class="pt-1">{{ $sp->view }} Views</small>
                 </div>
-                <h3 class="font-weight-semi-bold mb-4">{{ number_format($tt, 0, ",", ".")  }} $</h3>
-                <p class="mb-4">Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam stet sit
-                    clita ea. Sanc ipsum et, labore clita lorem magna duo dolor no sea
-                    Nonumy</p>
+                <div style="display: flex; align-items: center;">
+                    <h3 class="font-weight-semi-bold mb-4 text-danger">{{ number_format($tt, 0, ",", ".") }} $</h3>
+                    <h4 class="font-weight-semi-bold mb-4"><del>{{ number_format($sp->price, 0, ",", ".") }} $</del></h4>
+                </div>
+                <div class="">
+                    <p id="quantity-display">Inventory Quantity: {{ $sp->quantity }}</p>
+              </div>
+                <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p>
                 <div class="d-flex mb-3">
-                    <strong class="text-dark mr-3">Sizes:</strong>
+                    <strong class="text-dark mr-3">Product Classification</strong>
 
                 </div>
-                <div class="d-flex mb-4">
+                {{-- <div class="d-flex mb-4">
                     <strong class="text-dark mr-3">Colors:</strong>
 
-                </div>
+                </div> --}}
                 <div class="d-flex align-items-center mb-4 pt-2">
-                    <div class="input-group quantity mr-3" style="width: 130px;">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus">
-                                <i class="fa fa-minus"></i>
-                            </button>
+                    <form action="{{ route('cart.addCart') }}" method="post" class="d-flex align-items-center" id="add-to-cart-form">
+                        @csrf
+                        <div class="d-flex align-items-center me-4">
+                            <h6 class="mb-0 me-2">Qty:</h6>
+                            <div class="input-group" style="width: 130px;">
+                                <button class="btn btn-outline-primary" type="button" id="btn-minus">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <input type="text" class="form-control text-center" value="1" name="quantity" id="quantity-input">
+                                <button class="btn btn-outline-primary" type="button" id="btn-plus">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" name="productId" value="{{ $sp->id }}">
                         </div>
-                        <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To
-                        Cart</button>
+                        <button type="submit" class="btn btn-primary ms-4">Add to Cart</button>
+                    </form>
                 </div>
+
                 <div class="d-flex pt-2">
                     <strong class="text-dark mr-2">Share on:</strong>
                     <div class="d-inline-flex">
@@ -124,7 +128,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
                         <h4 class="mb-3">Product Description</h4>
-                        <p>  {{ $sp->description }}</p>
+                        <p class="mb-4">{!! $sp->description !!}</p>
                     </div>
                     <div class="tab-pane fade" id="tab-pane-2">
                         <h4 class="mb-3">Additional Information</h4>
@@ -236,7 +240,7 @@
                     <div class="product-img position-relative overflow-hidden">
                         <img class="img-fluid w-100" src="{{ asset('upload/'.$s->img) }}" alt="">
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"><i class="fa fa-shopping-cart"></i></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
                             <a class="btn btn-outline-dark btn-square" href="{{ route('productDetail', $s->id) }}"><i class="fa fa-search"></i></a>
@@ -245,7 +249,7 @@
                     <div class="text-center py-4">
                         <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $s->id) }}">{{ $s->name }}</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5>{{ number_format($tt, 0, ",", ".") }} VND</h5><h6 class="text-muted ml-2"><del>{{ number_format($s->price, 0, ',', '.') }} VNĐ</del></h6>
+                            <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} VND</h5><h6 class="text-muted ml-2"><del>{{ number_format($s->price, 0, ',', '.') }} VNĐ</del></h6>
                         </div>
                         <div class="d-flex align-items-center justify-content-center mb-1">
                             <small class="fa fa-star text-primary mr-1"></small>
@@ -264,4 +268,43 @@
 </div>
 <!-- Products End -->
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('add-to-cart-form');
+    const quantityInput = document.getElementById('quantity-input');
+
+    form.addEventListener('submit', function(e) {
+        var value = parseInt(quantityInput.value, 10);
+        if (isNaN(value) || value < 1) {
+            alert('Quantity must be a number >= 1');
+            quantityInput.value = 1; // Reset giá trị về 1
+            e.preventDefault(); // Ngăn không cho form submit
+        }
+    });
+
+    // Existing code for plus/minus buttons
+    const btnPlus = document.getElementById('btn-plus');
+    const btnMinus = document.getElementById('btn-minus');
+
+    btnPlus.addEventListener('click', function() {
+        quantityInput.value = parseInt(quantityInput.value) + 1;
+    });
+
+    btnMinus.addEventListener('click', function() {
+        if (parseInt(quantityInput.value) > 1) {
+            quantityInput.value = parseInt(quantityInput.value) - 1;
+        }
+    });
+
+    // Existing change event to handle manual input
+    $('#quantity-input').on('change', function(){
+        var value = parseInt($(this).val(), 10);
+        if (isNaN(value) || value < 1) {
+            alert('Quantity must be a number >= 1');
+            $(this).val(1);
+        }
+    });
+});
+
+</script>
 @endsection

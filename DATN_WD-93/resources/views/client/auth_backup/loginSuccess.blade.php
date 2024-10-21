@@ -31,7 +31,7 @@
                                 <div class="text-center">
                                     <!-- <img src="" alt="logo" class="img-fluid rounded-circle" width="132" height="132" /> -->
                                     <h1 class="m-0 display-5 font-weight-semi-bold">
-                                        <span class="text-primary font-weight-bold border px-3 mr-1">Ultra</span>Shop
+                                        <span class="text-primary font-weight-bold border px-3 mr-1">Instinct</span>Pharmacy
                                     </h1>
                                 </div>
                                     <div class="text-center mt-4 font-weight-bold border px-3 mr-1">

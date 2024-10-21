@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Client\AuthController;
 //
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Admin\ProductController;
@@ -53,6 +54,21 @@ Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/viewEditAcc', [AuthController::class, 'viewEditAcc'])->name('viewEditAcc');
 Route::post('/editAcc', [AuthController::class, 'editAcc'])->name('editAcc');
+
+Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
+Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
+Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
+
+//order
+// Route::middleware('auth')->prefix('orders')
+//     ->as('orders.')
+//     ->group(function () {
+//         Route::get('/', [OrderController::class, 'index'])->name('index');
+//         Route::get('/create', [OrderController::class, 'create'])->name('create');
+//         Route::post('/store', [OrderController::class, 'store'])->name('store');
+//         Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
+//         Route::put('{id}/update', [OrderController::class, 'update'])->name('update');
+//     });
 
 //admin
 Route::middleware(['auth', 'auth.admin'])->prefix('admin')
