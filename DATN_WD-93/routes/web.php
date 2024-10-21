@@ -15,6 +15,7 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Client\ContactController;
 
 // Route::get('/', function () {
@@ -102,7 +103,15 @@ Route::middleware(['auth', CheckRoleAdminMiddleware::class])->prefix('admin')
         //     });
 
         //User
+        Route::get('/users/exportexcel', [UserController::class, 'exportexcel'])->name('users.exportexcel');
+        Route::get('/users/exportpdf', [UserController::class, 'exportPDF'])->name('users.exportPDF');
         Route::resource('users', UserController::class);
-        //Bills
+        Route::get('/users/activate/{id}', [UserController::class, 'activate'])->name('users.activate');
+        //Nhân viên
+        Route::get('/staffs/exportexcel', [StaffController::class, 'exportexcel'])->name('staffs.exportexcel');
+        Route::get('/staffs/exportpdf', [StaffController::class, 'exportPDF'])->name('staffs.exportPDF');
+        Route::resource('staffs', StaffController::class);
+        Route::get('/staffs/activate/{id}', [StaffController::class, 'activate'])->name('staffs.activate');
+
         Route::resource('bill', BillController::class);
     });

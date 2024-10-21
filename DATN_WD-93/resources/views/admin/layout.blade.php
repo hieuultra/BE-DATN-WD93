@@ -112,12 +112,36 @@
                         </div>
 
                         <!-- account -->
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapsebl" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            Tài khoản
+                            <div class="sb-sidenav-collapse-arrow">
+                                <i class="fas fa-angle-down"></i>
+                            </div>
+                        </a>
+
+                        <div class="collapse" id="collapsebl" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{{ route('admin.staffs.index') }}">Nhân viên</a>
+                                <a class="nav-link" href="{{ route('admin.users.index') }}">Người dùng</a>
+                            </nav>
+                        </div>
+                        {{-- <a class="nav-link collapsed" href="{{ route('admin.staffs.index') }}">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-doctor"></i>
+                            </div>
+                            Nhân viên
+                        </a>
                         <a class="nav-link collapsed" href="{{ route('admin.users.index') }}">
                             <div class="sb-nav-link-icon">
                                 <i class="fas fa-user"></i>
                             </div>
                             Người dùng
-                        </a>
+                        </a> --}}
                         <!-- blog -->
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapsebl" aria-expanded="false" aria-controls="collapseLayouts">

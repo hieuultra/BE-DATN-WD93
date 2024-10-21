@@ -67,7 +67,6 @@
         .btn-export-excel {
             background-color: #979797;
             color: #fff;
-            /* text-transform: uppercase; */
         }
 
         .btn-export-excel:hover {
@@ -78,27 +77,20 @@
         .table td,
         .table th {
             white-space: nowrap;
-            /* Không cho phép xuống dòng */
             overflow: hidden;
-            /* Ẩn phần nội dung thừa */
             text-overflow: ellipsis;
-            /* Thêm dấu "..." khi nội dung bị cắt */
             max-width: 150px;
-            /* Giới hạn chiều rộng tối đa cho ô */
             vertical-align: middle;
-            /* Căn giữa theo chiều dọc */
         }
 
         .table img {
             max-width: 40px;
-            /* Giới hạn kích thước ảnh */
             max-height: 40px;
             border-radius: 15px;
         }
 
         .card-body {
             overflow-x: auto;
-            /* Thêm thanh cuộn ngang nếu bảng quá rộng */
         }
     </style>
     <div class="content">
@@ -110,13 +102,13 @@
             @endif
             <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                 <div class="flex-grow-1">
-                    <h4 class="fs-18 fw-semibold m-0">Quản lý người dùng</h4>
+                    <h4 class="fs-18 fw-semibold m-0">Quản lý nhân viên</h4>
                 </div>
-                {{-- <div class="d-flex justify-content-end">
-                    <a href="{{ route('admin.users.create') }}" class="btn"
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('admin.staffs.create') }}" class="btn"
                         style="background-color: #0072bc; color: white !important;"s> <i class="fas fa-plus me-2"></i>Thêm
-                        người dùng</a>
-                </div> --}}
+                        nhân viên</a>
+                </div>
             </div>
 
 
@@ -132,16 +124,16 @@
                                 </div>
                                 <div class="col-6">
 
-                                    <form method="GET" action="{{ route('admin.users.index') }}"
+                                    <form method="GET" action="{{ route('admin.staffs.index') }}"
                                         class="d-flex align-items-center">
                                         @csrf
                                         <a class="btn btn-export-excel" style="height: 38px; margin-left: 5px"
-                                            href="{{ route('admin.users.exportexcel', ['search' => request('search'), 'searchStatus' => request('searchStatus')]) }}"
+                                            href="{{ route('admin.staffs.exportexcel', ['search' => request('search'), 'searchStatus' => request('searchStatus')]) }}"
                                             class="btn btn-success">
                                             Excel
                                         </a>
                                         <a class="btn btn-export-excel" style="height: 38px; margin-left: 5px"
-                                            href="{{ route('admin.users.exportPDF', ['search' => request('search'), 'searchStatus' => request('searchStatus')]) }}"
+                                            href="{{ route('admin.staffs.exportPDF', ['search' => request('search'), 'searchStatus' => request('searchStatus')]) }}"
                                             class="btn btn-primary">PDF</a>
                                         {{-- <select name="searchRole" class="form-control" style="height: 38px;">
                                             <option value="" selected disabled>Lọc quyền</option>
@@ -201,7 +193,7 @@
                                             <th scope="col">Ảnh</th>
                                             <th scope="col">
                                                 <a
-                                                    href="{{ route('admin.users.index', ['orderBy' => 'name', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
+                                                    href="{{ route('admin.staffs.index', ['orderBy' => 'name', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
                                                     Họ và tên
                                                     <span class="sortable-icon">↕</span>
                                                     <!-- Biểu tượng chỉ ra có thể sắp xếp -->
@@ -216,7 +208,7 @@
                                             </th>
                                             <th scope="col">
                                                 <a
-                                                    href="{{ route('admin.users.index', ['orderBy' => 'email', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
+                                                    href="{{ route('admin.staffs.index', ['orderBy' => 'email', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
                                                     Email
                                                     <span class="sortable-icon">↕</span>
                                                     @if (request('orderBy') === 'email')
@@ -230,7 +222,7 @@
                                             </th>
                                             <th scope="col">
                                                 <a
-                                                    href="{{ route('admin.users.index', ['orderBy' => 'address', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
+                                                    href="{{ route('admin.staffs.index', ['orderBy' => 'address', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
                                                     Địa chỉ
                                                     <span class="sortable-icon">↕</span>
                                                     @if (request('orderBy') === 'address')
@@ -244,7 +236,7 @@
                                             </th>
                                             <th scope="col">
                                                 <a
-                                                    href="{{ route('admin.users.index', ['orderBy' => 'phone', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
+                                                    href="{{ route('admin.staffs.index', ['orderBy' => 'phone', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
                                                     Số điện thoại
                                                     <span class="sortable-icon">↕</span>
                                                     @if (request('orderBy') === 'phone')
@@ -256,12 +248,12 @@
                                                     @endif
                                                 </a>
                                             </th>
-                                            <th scope="col">Đơn hàng</th>
+                                            <th scope="col">Lịch khám</th>
                                             <th scope="col">Lịch sử khám</th>
-                                            <th scope="col">Bình luận</th>
+                                            <th scope="col">Chức vụ</th>
                                             <th scope="col">
                                                 <a
-                                                    href="{{ route('admin.users.index', ['orderBy' => 'deleted_at', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
+                                                    href="{{ route('admin.staffs.index', ['orderBy' => 'deleted_at', 'orderDir' => request('orderDir') === 'asc' ? 'desc' : 'asc']) }}">
                                                     Trạng thái
                                                     <span class="sortable-icon">↕</span>
                                                     @if (request('orderBy') === 'deleted_at')
@@ -299,10 +291,19 @@
                                                 <td>{{ $item->phone }}</td>
                                                 <td><a href="{{ route('admin.bill.index', ['id' => $item->id]) }}"
                                                         class="btn">👁️‍🗨️</a></td>
-                                                <td><a href="{{ route('admin.users.edit', $item->id) }}"
+                                                <td><a href="{{ route('admin.staffs.edit', $item->id) }}"
                                                         class="btn">👁️‍🗨️</a></td>
-                                                <td><a href="{{ route('admin.users.edit', $item->id) }}"
-                                                        class="btn">👁️‍🗨️</a></td>
+                                                <td>
+                                                    @if ($item->role == 'Admin')
+                                                        Quản trị viên
+                                                    @elseif ($item->role == 'Doctor')
+                                                        Bác sỹ
+                                                    @elseif ($item->role == 'Pharmacist')
+                                                        Người bán thuốc
+                                                    @else
+                                                        {{ $item->role }}
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     @if ($item->deleted_at)
                                                         <span class="badge bg-danger">Đã hủy</span>
@@ -313,14 +314,15 @@
                                                 @if ($item->deleted_at)
                                                     <td>
                                                         <a onclick="return confirm('Bạn có chắc chắn muốn kích hoạt lại tài khoản này không?');"
-                                                            href="{{ route('admin.users.activate', $item->id) }}"
+                                                            href="{{ route('admin.staffs.activate', $item->id) }}"
                                                             class="btn"
                                                             style="background-color: #078600; color: white !important;">Kích
                                                             hoạt</a>
                                                     </td>
                                                 @else
                                                     <td>
-                                                        <a href="{{ route('admin.users.edit', $item->id) }}" class="btn"
+                                                        <a href="{{ route('admin.staffs.edit', $item->id) }}"
+                                                            class="btn"
                                                             style="background-color: #0072bc; color: white !important;">Sửa</a>
                                                     </td>
                                                 @endif
@@ -333,8 +335,8 @@
 
                                 <style>
                                     /* .pagination .page-link {
-                                                                                                                                                                                                                                                                                                                                                                                                                                        color: #0072bc !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                color: #0072bc !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            } */
 
                                     .pagination .page-item.active .page-link {
                                         background-color: #0072bc !important;

@@ -15,7 +15,7 @@
 
             <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
                 <div class="flex-grow-1">
-                    <h4 class="fs-18 fw-semibold m-0">Chỉnh sửa người dùng</h4>
+                    <h4 class="fs-18 fw-semibold m-0">Chỉnh sửa nhân viên</h4>
                 </div>
             </div>
             <div class="row">
@@ -24,14 +24,14 @@
                         <div class="card-header d-flex justify-content-between align-items-center"
                             style="background-color: rgb(237, 245, 255)">
                             <h5 class="card-title mb-0">{{ $title }}</h5>
-                            <a href="{{ route('admin.users.index') }}" class="btn btn-success"
+                            <a href="{{ route('admin.staffs.index') }}" class="btn btn-success"
                                 style="border-radius: 5px;background-color: #0072bc; color: white !important; border: none; margin-right: 10px"><i
                                     class="fas fa-arrow-left me-2"></i> Quay
                                 lại trang danh sách </a>
                         </div><!-- end card header -->
 
                         <div class="card-body">
-                            <form action="{{ route('admin.users.update', $user->id) }}" method="post"
+                            <form action="{{ route('admin.staffs.update', $user->id) }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -95,9 +95,16 @@
                                                 <option value="" disabled
                                                     {{ old('role', $user->role) ? '' : 'selected' }}>-- Chọn
                                                     chức vụ (Bắt buộc) --</option>
-                                                <option value="User"
-                                                    {{ old('role', $user->role) == 'User' ? 'selected' : '' }}>Người
-                                                    Dùng</option>
+                                                <option value="Pharmacist"
+                                                    {{ old('role', $user->role) == 'Pharmacist' ? 'selected' : '' }}>Nhân
+                                                    viên bán thuốc
+                                                </option>
+                                                <option value="Doctor"
+                                                    {{ old('role', $user->role) == 'Doctor' ? 'selected' : '' }}>Bác
+                                                    sỹ</option>
+                                                <option value="Admin"
+                                                    {{ old('role', $user->role) == 'Admin' ? 'selected' : '' }}>Người
+                                                    quản lý</option>
                                             </select>
                                             @error('role')
                                                 <p class="text-danger">{{ $message }}</p>
@@ -113,10 +120,10 @@
                                             class="btn btn-primary">Cập nhật tài khoản</button>
                             </form>
 
-                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="ms-2">
+                            <form action="{{ route('admin.staffs.destroy', $user->id) }}" method="POST" class="ms-2">
                                 @csrf
                                 @method('DELETE')
-                                <button onclick="return confirm('Bạn có chắc chắn muốn hủy người dùng này không?');"
+                                <button onclick="return confirm('Bạn có chắc chắn muốn hủy nhân viên này không?');"
                                     type="submit"
                                     style="border-radius: 5px; color: white !important; border: none; margin-top: 30px; margin-left: 10px"
                                     class="btn btn-danger">Hủy</button>

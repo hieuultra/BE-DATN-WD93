@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserNoPasswordRequest extends FormRequest
+class StaffNoPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,9 +21,9 @@ class UserNoPasswordRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('user');
+        $staffId = $this->route('staff');
         return [
-            'email' => 'required|email|unique:users,email,' . $userId,
+            'email' => 'required|email|unique:users,email,' . $staffId,
             'name' => 'required|string|min:3|max:255',
             'phone' => 'required|string|max:15|regex:/^(\+?[0-9]{1,3})?([0-9]{10})$/',
             'role' => 'required|string|max:50',
