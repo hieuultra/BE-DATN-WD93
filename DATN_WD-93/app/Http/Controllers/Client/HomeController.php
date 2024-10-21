@@ -11,16 +11,17 @@ class HomeController extends Controller
 {
     function index()
     {
-        $newProducts = Product::newProducts(8)->get();
+        $newProducts = Product::newProducts(4)->get();
+        $newProducts1 = Product::limit(4)->get();
 
         $bestsellerProducts = Product::bestsellerProducts(6)->get();
 
-        $instockProducts = Product::instockProducts(3)->get();
+        $instockProducts = Product::instockProducts(8)->get();
 
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
 
-        return view('client.home.home', compact('categories', 'newProducts', 'bestsellerProducts', 'instockProducts'));
+        return view('client.home.home', compact('categories', 'newProducts','newProducts1', 'bestsellerProducts', 'instockProducts'));
     }
     function products(Request $request)
     {
@@ -72,6 +73,6 @@ class HomeController extends Controller
         // $products = Product::where('name', 'LIKE', "%$kyw%")->orWhere('description', 'LIKE', "%$kyw%")->orderBy('id', 'DESC')->paginate(9);
         $products = Product::where('name', 'LIKE', "%$kyw%")->orderBy('id', 'DESC')->paginate(9);
         // echo var_dump($dssp);
-        return view('client.detailSearch.proSearch', compact('categories', 'products', 'kyw', 'category_id'));
+        return view('client.home.proSearch', compact('categories', 'products', 'kyw', 'category_id'));
     }
 }

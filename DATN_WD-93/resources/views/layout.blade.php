@@ -127,12 +127,12 @@
           </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
-            <form action="{{ route('products.search') }}" method="GET" name="kyw">
+            <form action="{{ route('products.search') }}" method="GET">
             <div class="input-group">
               <input
-                type="text"
+                type="text" name="query"
                 class="form-control"
-                placeholder="Search for products"
+                placeholder="Search for products" name="kyw"
               />
               <div class="input-group-append">
                 <span class="input-group-text bg-transparent text-primary">
