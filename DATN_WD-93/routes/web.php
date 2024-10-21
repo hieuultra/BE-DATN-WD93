@@ -1,5 +1,6 @@
 <?php
 
+<<<<<<< HEAD
 use App\Models\Bill;
 //admin
 use Illuminate\Support\Facades\Auth;
@@ -9,14 +10,29 @@ use App\Http\Controllers\Admin\UserController;
 
 
 //client
+=======
+use Illuminate\Support\Facades\Auth;
+//
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
+>>>>>>> main
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Client\AuthController;
+//
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\AboutController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
+<<<<<<< HEAD
 use App\Http\Controllers\Admin\StaffController;
+=======
+>>>>>>> main
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Admin\VariantPackageController;
+use App\Http\Controllers\Admin\VariantProductsController;
+use App\Http\Controllers\Admin\VariantProPackageController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -25,6 +41,10 @@ use App\Http\Controllers\Client\ContactController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
+Route::get('/products', [HomeController::class, 'products'])->name('products');
+Route::get('/search', [HomeController::class, 'search'])->name('products.search');
+Route::get('/products/detail/{product_id}', [HomeController::class, 'detail'])->name('productDetail');
+Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -50,10 +70,23 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/viewEditAcc', [AuthController::class, 'viewEditAcc'])->name('viewEditAcc');
 Route::post('/editAcc', [AuthController::class, 'editAcc'])->name('editAcc');
 
-//admin
+Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
+Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
+Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
+
+//order
+// Route::middleware('auth')->prefix('orders')
+//     ->as('orders.')
+//     ->group(function () {
+//         Route::get('/', [OrderController::class, 'index'])->name('index');
+//         Route::get('/create', [OrderController::class, 'create'])->name('create');
+//         Route::post('/store', [OrderController::class, 'store'])->name('store');
+//         Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
+//         Route::put('{id}/update', [OrderController::class, 'update'])->name('update');
+//     });
 
 //admin
-Route::middleware(['auth', CheckRoleAdminMiddleware::class])->prefix('admin')
+Route::middleware(['auth', 'auth.admin'])->prefix('admin')
     ->as('admin.')
     ->group(function () {
         Route::get('/dashborad', function () {
@@ -70,17 +103,52 @@ Route::middleware(['auth', CheckRoleAdminMiddleware::class])->prefix('admin')
                 Route::post('/cateUpdate', [CategoryController::class, 'cateUpdate'])->name('cateUpdate');
                 Route::delete('/cateDestroy/{id}', [CategoryController::class, 'cateDestroy'])->name('cateDestroy');
             });
+        //variantPackages
+        Route::prefix('variantPackages')
+            ->as('variantPackages.')
+            ->group(function () {
+                Route::get('/variantPackageList', [VariantPackageController::class, 'variantPackageList'])->name('variantPackageList');
+                Route::get('/viewVariantPackageAdd', [VariantPackageController::class, 'viewVariantPackageAdd'])->name('viewVariantPackageAdd');
+                Route::post('/variantPackageAdd', [VariantPackageController::class, 'variantPackageAdd'])->name('variantPackageAdd');
+                Route::get('/packageUpdateForm/{id}', [VariantPackageController::class, 'packageUpdateForm'])->name('packageUpdateForm');
+                Route::post('/packageUpdate', [VariantPackageController::class, 'packageUpdate'])->name('packageUpdate');
+                Route::delete('/packageDestroy/{id}', [VariantPackageController::class, 'packageDestroy'])->name('packageDestroy');
+            });
         //products
-        // Route::prefix('products')
-        //     ->as('products.')
-        //     ->group(function () {
-        //         Route::get('/productList', [AdminController::class, 'productList'])->name('productList');
-        //         Route::get('/viewProAdd', [AdminController::class, 'viewProAdd'])->name('viewProAdd');
-        //         Route::post('/productAdd', [AdminController::class, 'productAdd'])->name('productAdd');
-        //         Route::get('/productUpdateForm/{id}', [AdminController::class, 'productUpdateForm'])->name('productUpdateForm');
-        //         Route::post('/productUpdate', [AdminController::class, 'productUpdate'])->name('productUpdate');
-        //         Route::delete('/productDestroy/{id}', [AdminController::class, 'productDestroy'])->name('productDestroy');
-        //     });
+        Route::prefix('products')
+            ->as('products.')
+            ->group(function () {
+                Route::get('/productList', [ProductController::class, 'productList'])->name('productList');
+                Route::get('/viewProAdd', [ProductController::class, 'viewProAdd'])->name('viewProAdd');
+                Route::post('/productAdd', [ProductController::class, 'productAdd'])->name('productAdd');
+                Route::get('/productUpdateForm/{id}', [ProductController::class, 'productUpdateForm'])->name('productUpdateForm');
+                Route::post('/productUpdate', [ProductController::class, 'productUpdate'])->name('productUpdate');
+                // Route::delete('/productDestroy/{id}', [ProductController::class, 'productDestroy'])->name('productDestroy');
+                Route::delete('/soft-delete/{id}', [ProductController::class, 'softDelete'])->name('softDelete');
+                Route::delete('/hard-delete/{id}', [ProductController::class, 'hardDelete'])->name('hardDelete');
+                Route::get('/restore/{id}', [ProductController::class, 'restore'])->name('restore');
+            });
+        //variantPackages
+        Route::prefix('variantPros')
+            ->as('variantPros.')
+            ->group(function () {
+                Route::get('/variantProList', [VariantProPackageController::class, 'variantProList'])->name('variantProList');
+                Route::get('/VariantPackageAdd', [VariantProPackageController::class, 'variantProAdd'])->name('packageAdd');
+                Route::post('/VariantPackageAdd', [VariantProPackageController::class, 'packageAdd'])->name('packageAdd');
+                Route::get('/packageUpdate/{id}', [VariantProPackageController::class, 'packegeUpdate'])->name('viewpackageUpdate');
+                Route::post('/packageUpdate', [VariantProPackageController::class, 'packageUpdate'])->name('packageUpdate');
+                Route::delete('/packageDestroy/{id}', [VariantProPackageController::class, 'packageDestroy'])->name('packageDestroy');
+            });
+        //variantProducs
+        Route::prefix('productVariant')
+            ->as('productVariant.')
+            ->group(function () {
+                Route::get('/viewVariantProductAdd', [VariantProductsController::class, 'viewProductVariantAdd'])->name('viewProductVariantAdd');
+                Route::post('/VariantProductAdd', [VariantProductsController::class, 'variantProductAdd'])->name('variantProductAdd');
+                Route::get('/VariantProductUpdate/{id}', [VariantProductsController::class, 'VariantProductUpdateForm'])->name('viewVariantProductUpdate');
+                Route::post('/VariantProductUpdate', [VariantProductsController::class, 'VariantProductUpdate'])->name('variantProductUpdate');
+                Route::delete('/VariantProductDestroy/{id}', [VariantProductsController::class, 'VariantProductDestroy'])->name('VariantProductDestroy');
+            });
         //order
         // Route::prefix('bills')
         //     ->as('bills.')
@@ -91,6 +159,7 @@ Route::middleware(['auth', CheckRoleAdminMiddleware::class])->prefix('admin')
         //         Route::delete('{id}/destroy', [BillsController::class, 'destroy'])->name('destroy');
         //     });
         //account
+<<<<<<< HEAD
         // Route::prefix('account')
         //     ->as('account.')
         //     ->group(function () {
@@ -114,4 +183,16 @@ Route::middleware(['auth', CheckRoleAdminMiddleware::class])->prefix('admin')
         Route::get('/staffs/activate/{id}', [StaffController::class, 'activate'])->name('staffs.activate');
 
         Route::resource('bill', BillController::class);
+=======
+        Route::prefix('user')
+            ->as('users.')
+            ->group(function () {
+                Route::get('/userList', [UserController::class, 'userList'])->name('userList');
+                Route::get('/viewUserAdd', [UserController::class, 'viewUserAdd'])->name('viewUserAdd');
+                Route::post('/userAdd', [UserController::class, 'userAdd'])->name('userAdd');
+                Route::get('/userUpdateForm/{id}', [UserController::class, 'userUpdateForm'])->name('userUpdateForm');
+                Route::post('/userUpdate', [UserController::class, 'userUpdate'])->name('userUpdate');
+                Route::delete('/userDestroy/{id}', [UserController::class, 'userDestroy'])->name('userDestroy');
+            });
+>>>>>>> main
     });

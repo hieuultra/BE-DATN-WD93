@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -32,6 +33,9 @@ class Product extends Model
         'is_hot_deal' => 'boolean',
         'is_show_home' => 'boolean',
     ];
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
     public function category()
     {
         return $this->belongsTo(Category::class); //$this đại diện cho thể hiện hiện tại của lớp Product
@@ -53,6 +57,10 @@ class Product extends Model
     {
         return $this->hasMany(Cart::class);
     }
+    public function variantProduct()
+    {
+        return $this->hasMany(VariantProduct::class);
+    }
     public function scopeNewProducts($query, $limit) //định nghĩa một query scope có tên là newProducts.
     //Query scope là một cách để thêm điều kiện truy vấn vào Eloquent query một cách dễ dàng.
     //khi định nghĩa một query scope trong model, tham số đầu tiên của phương thức scope luôn là một đối tượng query.
@@ -73,7 +81,7 @@ class Product extends Model
 
     public function scopeInStockProducts($query, $limit)
     {
-        return $query->where('quantity', '>', 0)->orderBy('id', 'desc')->limit($limit)->with(['category']);
+        return $query->where('quantity', '>', 0)->orderBy('quantity', 'desc')->limit($limit)->with(['category']);
     }
 
 

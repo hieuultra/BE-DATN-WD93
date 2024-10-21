@@ -122,17 +122,17 @@
               >Instinct</span
             >
             <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1"
-              >Shop</span
+              >Pharmacy</span
             >
           </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
-          <form action="">
+            <form action="{{ route('products.search') }}" method="GET">
             <div class="input-group">
               <input
-                type="text"
+                type="text" name="query"
                 class="form-control"
-                placeholder="Search for products"
+                placeholder="Search for products" name="kyw"
               />
               <div class="input-group-append">
                 <span class="input-group-text bg-transparent text-primary">
@@ -165,15 +165,15 @@
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src="lib/easing/easing.min.js"></script>
-<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="{{ asset('lib/easing/easing.min.js') }}"></script>
+<script src="{{ asset('lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
 <!-- Contact Javascript File -->
-<script src="mail/jqBootstrapValidation.min.js"></script>
-<script src="mail/contact.js"></script>
+<script src="{{ asset('mail/jqBootstrapValidation.min.js') }}"></script>
+<script src="{{ asset('mail/contact.js') }}"></script>
 
 <!-- Template Javascript -->
-<script src="js/main.js"></script>
+<script src="{{ asset('js/main.js') }}"></script>
 
 <!-- jQuery and Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

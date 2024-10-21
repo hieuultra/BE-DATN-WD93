@@ -221,7 +221,103 @@
                             </nav>
                         </div>
                     </div>
+<<<<<<< HEAD
             </nav>
+=======
+                    Dashboard
+                </a>
+
+                <!--  -->
+                <div class="sb-sidenav-menu-heading">Interface</div>
+
+                <!-- Category -->
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCate" aria-expanded="false" aria-controls="collapseLayouts">
+                    <div class="sb-nav-link-icon">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    Category
+                    <div class="sb-sidenav-collapse-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </a>
+
+                <div class="collapse" id="collapseCate" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" href="{{ route('admin.categories.categoriesList') }}">List categories</a>
+                        <a class="nav-link" href="{{ route('admin.categories.viewCateAdd') }}">Add categories</a>
+                    </nav>
+                </div>
+
+                 {{-- <!-- Variant Product -->
+                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVariantProduct" aria-expanded="false" aria-controls="collapseLayouts">
+                    <div class="sb-nav-link-icon">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    Variant Product
+                    <div class="sb-sidenav-collapse-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                  </a>
+
+                  <div class="collapse" id="collapseVariantProduct" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                      <nav class="sb-sidenav-menu-nested nav">
+                          <a class="nav-link" href="{{ route('admin.variantPackages.variantPackageList') }}">List Variant Package</a>
+                          <a class="nav-link" href="">Add Variant</a>
+                      </nav>
+                  </div> --}}
+
+                <!-- Product -->
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProduct" aria-expanded="false" aria-controls="collapseLayouts">
+                    <div class="sb-nav-link-icon">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    Product
+                    <div class="sb-sidenav-collapse-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </a>
+
+                <div class="collapse" id="collapseProduct" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav">
+                        <a class="nav-link" href="{{ route('admin.products.productList') }}">List product</a>
+                        <a class="nav-link" href="{{ route('admin.products.viewProAdd') }}">Add product</a>
+                    </nav>
+                </div>
+
+                 <!-- Variant Product -->
+                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVariantProduct" aria-expanded="false" aria-controls="collapseLayouts">
+                    <div class="sb-nav-link-icon">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    Variant Product
+                    <div class="sb-sidenav-collapse-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                  </a>
+
+                  <div class="collapse" id="collapseVariantProduct" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                      <nav class="sb-sidenav-menu-nested nav">
+                          <a class="nav-link" href="{{ route('admin.variantPros.variantProList') }}">List Variant</a>
+                          <a class="nav-link" href="{{ route('admin.variantPros.packageAdd') }}">Add Variant</a>
+                      </nav>
+                  </div>
+
+                <!-- back to web -->
+                <a class="nav-link collapsed" href="{{ route('home') }}">
+                    <div class="sb-nav-link-icon">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    Back Website
+                    <div class="sb-sidenav-collapse-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </div>
+                </a>
+
+                  <!-- bill -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsebill" aria-expanded="false" aria-controls="collapseLayouts">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-columns"></i>
+>>>>>>> main
         </div>
         <div id="layoutSidenav_content">
             <main>
@@ -229,7 +325,116 @@
             </main>
             @include('admin.footer')
         </div>
+<<<<<<< HEAD
     </div>
+=======
+      </a>
+
+      <div class="collapse" id="collapsebill" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+          <a class="nav-link" href="">List Bill</a>
+        </nav>
+      </div>
+
+                   <!-- account -->
+    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAccount" aria-expanded="false" aria-controls="collapseLayouts">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-columns"></i>
+        </div>
+        Account
+        <div class="sb-sidenav-collapse-arrow">
+          <i class="fas fa-angle-down"></i>
+        </div>
+      </a>
+
+      <div class="collapse" id="collapseAccount" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+          <a class="nav-link" href="{{ route('admin.users.userList') }}">List account</a>
+          <a class="nav-link" href="{{ route('admin.users.viewUserAdd') }}">Add account</a>
+        </nav>
+      </div>
+
+      <!-- blog -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsebl" aria-expanded="false" aria-controls="collapseLayouts">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-columns"></i>
+        </div>
+        Blog
+        <div class="sb-sidenav-collapse-arrow">
+          <i class="fas fa-angle-down"></i>
+        </div>
+      </a>
+
+      <div class="collapse" id="collapsebl" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+          <a class="nav-link" href="?act=list_blog">List Blog</a>
+          <a class="nav-link" href="?act=add_blog">Add Blog</a>
+        </nav>
+      </div>
+
+
+      <!-- brand -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseBrand" aria-expanded="false" aria-controls="collapseLayouts">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-columns"></i>
+        </div>
+        Brand
+        <div class="sb-sidenav-collapse-arrow">
+          <i class="fas fa-angle-down"></i>
+        </div>
+      </a>
+
+      <div class="collapse" id="collapseBrand" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+          <a class="nav-link" href="?act=list_brand">List Brand</a>
+          <a class="nav-link" href="?act=add_brand">Add Brand</a>
+        </nav>
+      </div>
+
+
+      <!-- comment -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseComment" aria-expanded="false" aria-controls="collapseLayouts">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-columns"></i>
+        </div>
+        Comment
+        <div class="sb-sidenav-collapse-arrow">
+          <i class="fas fa-angle-down"></i>
+        </div>
+      </a>
+
+      <div class="collapse" id="collapseComment" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+          <a class="nav-link" href="?act=list_com">List Comment</a>
+        </nav>
+      </div>
+      <!-- feedback -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsefb" aria-expanded="false" aria-controls="collapseLayouts">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-columns"></i>
+        </div>
+        Feedback
+        <div class="sb-sidenav-collapse-arrow">
+          <i class="fas fa-angle-down"></i>
+        </div>
+      </a>
+
+      <div class="collapse" id="collapsefb" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+          <a class="nav-link" href="?act=list_fb">List Feedback</a>
+        </nav>
+      </div>
+            </div>
+    </nav>
+</div>
+<div id="layoutSidenav_content">
+    <main>
+        @yield('content')
+     </main>
+     @include('admin.footer')
+</div>
+</div>
+>>>>>>> main
 
 
 

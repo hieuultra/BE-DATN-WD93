@@ -3,7 +3,6 @@
 @section('title','Welcome')
 
 @section('content')
-
 <!-- Carousel Start -->
 <div class="container-fluid mb-3">
     <div class="row px-xl-5">
@@ -455,408 +454,101 @@
     </div>
 
     <div id="productCarousel" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="row px-xl-5">
-            <!-- Product 1 -->
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-              <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                  <img
-                    class="img-fluid w-100"
-                    src="{{ asset('img/P18687_1_l.webp') }}"
-                    alt=""
-                  />
-                  <div class="product-action">
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-shopping-cart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="far fa-heart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-sync-alt"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-search"></i
-                    ></a>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="row px-xl-5">
+              <!-- Product list for the first slide -->
+              @foreach ($newProducts as $item)
+              @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+              <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <div class="product-item bg-light mb-4">
+                  <div class="product-img position-relative overflow-hidden">
+                    <img class="img-fluid w-100" src="{{ asset('upload/'.$item->img) }}" alt="" />
+                    <div class="product-action">
+                      <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"><i class="fa fa-shopping-cart"></i></a>
+                      <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                      <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                      <a class="btn btn-outline-dark btn-square" href="{{ route('productDetail', $item->id) }}"><i class="fa fa-search"></i></a>
+                    </div>
                   </div>
-                </div>
-                <div class="text-center py-4">
-                  <a class="h6 text-decoration-none text-truncate" href=""
-                    >Product Name Goes Here</a
-                  >
-                  <div
-                    class="d-flex align-items-center justify-content-center mt-2"
-                  >
-                    <h5>$123.00</h5>
-                    <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                  </div>
-                  <div
-                    class="d-flex align-items-center justify-content-center mb-1"
-                  >
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small>(99)</small>
+                  <div class="text-center py-4">
+                    <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $item->id) }}"
+                        style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" >{{ $item->name }}</a>
+                    <div class="d-flex align-items-center justify-content-center mt-2">
+                      <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
+                      <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light">
+                        <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                        <form action="{{ route('cart.addCart') }}" method="post">
+                            @csrf
+                                <input type="hidden" name="quantity" value="1">
+                               <input type="hidden" name="productId" value="{{ $item->id }}">
+                            <input type="submit" value="Add To Cart" class="btn btn-sm text-dark p-0" name="addtocart"><i class="fas fa-shopping-cart text-primary mr-1"></i>
+                        </form>
+                      </div>
+                    <div class="d-flex align-items-center justify-content-center mb-1">
+                      <small class="fa fa-star text-primary mr-1"></small>
+                      <small class="fa fa-star text-primary mr-1"></small>
+                      <small class="fa fa-star text-primary mr-1"></small>
+                      <small class="fa fa-star text-primary mr-1"></small>
+                      <small class="fa fa-star text-primary mr-1"></small>
+                      <small>(99)</small>
+                    </div>
                   </div>
                 </div>
               </div>
+              @endforeach
             </div>
-
-            <!-- Product 2 -->
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-              <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                  <img
-                    class="img-fluid w-100"
-                    src="{{ asset('img/P02182_1.jpg') }}"
-                    alt=""
-                  />
-                  <div class="product-action">
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-shopping-cart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="far fa-heart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-sync-alt"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-search"></i
-                    ></a>
+          </div>
+          <!-- Thêm một carousel-item mới cho các sản phẩm khác -->
+          <div class="carousel-item">
+            <div class="row px-xl-5">
+              @foreach ($newProducts1 as $item)
+              @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+              <!-- Product 5 -->
+              <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <div class="product-item bg-light mb-4">
+                  <div class="product-img position-relative overflow-hidden">
+                    <img class="img-fluid w-100" src="{{ asset('upload/'.$item->img) }}" alt="" />
+                    <div class="product-action">
+                      <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"><i class="fa fa-shopping-cart"></i></a>
+                      <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                      <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                      <a class="btn btn-outline-dark btn-square" href="{{ route('productDetail', $item->id) }}"><i class="fa fa-search"></i></a>
+                    </div>
                   </div>
-                </div>
-                <div class="text-center py-4">
-                  <a class="h6 text-decoration-none text-truncate" href=""
-                    >Product Name Goes Here</a
-                  >
-                  <div
-                    class="d-flex align-items-center justify-content-center mt-2"
-                  >
-                    <h5>$123.00</h5>
-                    <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                  </div>
-                  <div
-                    class="d-flex align-items-center justify-content-center mb-1"
-                  >
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small
-                      class="fa fa-star-half-alt text-primary mr-1"
-                    ></small>
-                    <small>(99)</small>
+                  <div class="text-center py-4">
+                    <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $item->id) }}"
+                        style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ $item->name }}</a>
+                    <div class="d-flex align-items-center justify-content-center mt-2">
+                      <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
+                      <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light">
+                        <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                        <form action="{{ route('cart.addCart') }}" method="post">
+                            @csrf
+                                <input type="hidden" name="quantity" value="1">
+                               <input type="hidden" name="productId" value="{{ $item->id }}">
+                            <input type="submit" value="Add To Cart" class="btn btn-sm text-dark p-0" name="addtocart"><i class="fas fa-shopping-cart text-primary mr-1"></i>
+                        </form>
+                      </div>
+                    <div class="d-flex align-items-center justify-content-center mb-1">
+                      <small class="fa fa-star text-primary mr-1"></small>
+                      <small class="fa fa-star text-primary mr-1"></small>
+                      <small class="fa fa-star text-primary mr-1"></small>
+                      <small class="fa fa-star-half-alt text-primary mr-1"></small>
+                      <small>(99)</small>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-              <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                  <img
-                    class="img-fluid w-100"
-                    src="{{ asset('img/P25174_1.jpg') }}"
-                    alt=""
-                  />
-                  <div class="product-action">
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-shopping-cart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="far fa-heart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-sync-alt"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-search"></i
-                    ></a>
-                  </div>
-                </div>
-                <div class="text-center py-4">
-                  <a class="h6 text-decoration-none text-truncate" href=""
-                    >Product Name Goes Here</a
-                  >
-                  <div
-                    class="d-flex align-items-center justify-content-center mt-2"
-                  >
-                    <h5>$123.00</h5>
-                    <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                  </div>
-                  <div
-                    class="d-flex align-items-center justify-content-center mb-1"
-                  >
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small
-                      class="fa fa-star-half-alt text-primary mr-1"
-                    ></small>
-                    <small class="far fa-star text-primary mr-1"></small>
-                    <small>(99)</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-              <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                  <img
-                    class="img-fluid w-100"
-                    src="{{ asset('img/P25474_1.jpg') }}"
-                    alt=""
-                  />
-                  <div class="product-action">
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-shopping-cart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="far fa-heart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-sync-alt"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-search"></i
-                    ></a>
-                  </div>
-                </div>
-                <div class="text-center py-4">
-                  <a class="h6 text-decoration-none text-truncate" href=""
-                    >Product Name Goes Here</a
-                  >
-                  <div
-                    class="d-flex align-items-center justify-content-center mt-2"
-                  >
-                    <h5>$123.00</h5>
-                    <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                  </div>
-                  <div
-                    class="d-flex align-items-center justify-content-center mb-1"
-                  >
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="far fa-star text-primary mr-1"></small>
-                    <small class="far fa-star text-primary mr-1"></small>
-                    <small>(99)</small>
-                  </div>
-                </div>
-              </div>
+              @endforeach
             </div>
           </div>
         </div>
-
-        <!-- Thêm một carousel-item mới cho các sản phẩm khác -->
-        <div class="carousel-item">
-          <div class="row px-xl-5">
-            <!-- Product 5 -->
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-              <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                  <img
-                    class="img-fluid w-100"
-                    src="{{ asset('img/20240924081354-0-P00270_1.jpg') }}"
-                    alt=""
-                  />
-                  <div class="product-action">
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-shopping-cart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="far fa-heart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-sync-alt"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-search"></i
-                    ></a>
-                  </div>
-                </div>
-                <div class="text-center py-4">
-                  <a class="h6 text-decoration-none text-truncate" href=""
-                    >Product Name Goes Here</a
-                  >
-                  <div
-                    class="d-flex align-items-center justify-content-center mt-2"
-                  >
-                    <h5>$123.00</h5>
-                    <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                  </div>
-                  <div
-                    class="d-flex align-items-center justify-content-center mb-1"
-                  >
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small
-                      class="fa fa-star-half-alt text-primary mr-1"
-                    ></small>
-                    <small>(99)</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Thêm các sản phẩm khác cho carousel-item -->
-            <!-- Product 6 -->
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-              <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                  <img
-                    class="img-fluid w-100"
-                    src="{{ asset('img/P01049_1_l.webp') }}"
-                    alt=""
-                  />
-                  <div class="product-action">
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-shopping-cart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="far fa-heart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-sync-alt"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-search"></i
-                    ></a>
-                  </div>
-                </div>
-                <div class="text-center py-4">
-                  <a class="h6 text-decoration-none text-truncate" href=""
-                    >Product Name Goes Here</a
-                  >
-                  <div
-                    class="d-flex align-items-center justify-content-center mt-2"
-                  >
-                    <h5>$123.00</h5>
-                    <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                  </div>
-                  <div
-                    class="d-flex align-items-center justify-content-center mb-1"
-                  >
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small
-                      class="fa fa-star-half-alt text-primary mr-1"
-                    ></small>
-                    <small>(99)</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Product 7 -->
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-              <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                  <img
-                    class="img-fluid w-100"
-                    src="{{ asset('img/20240906030300-0-P26284.jpg') }}"
-                    alt=""
-                  />
-                  <div class="product-action">
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-shopping-cart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="far fa-heart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-sync-alt"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-search"></i
-                    ></a>
-                  </div>
-                </div>
-                <div class="text-center py-4">
-                  <a class="h6 text-decoration-none text-truncate" href=""
-                    >Product Name Goes Here</a
-                  >
-                  <div
-                    class="d-flex align-items-center justify-content-center mt-2"
-                  >
-                    <h5>$123.00</h5>
-                    <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                  </div>
-                  <div
-                    class="d-flex align-items-center justify-content-center mb-1"
-                  >
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small
-                      class="fa fa-star-half-alt text-primary mr-1"
-                    ></small>
-                    <small>(99)</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Product 8 -->
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-              <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                  <img
-                    class="img-fluid w-100"
-                    src="{{ asset('img/20240802071533-0-P23866_01.jpg') }}"
-                    alt=""
-                  />
-                  <div class="product-action">
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-shopping-cart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="far fa-heart"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-sync-alt"></i
-                    ></a>
-                    <a class="btn btn-outline-dark btn-square" href=""
-                      ><i class="fa fa-search"></i
-                    ></a>
-                  </div>
-                </div>
-                <div class="text-center py-4">
-                  <a class="h6 text-decoration-none text-truncate" href=""
-                    >Product Name Goes Here</a
-                  >
-                  <div
-                    class="d-flex align-items-center justify-content-center mt-2"
-                  >
-                    <h5>$123.00</h5>
-                    <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                  </div>
-                  <div
-                    class="d-flex align-items-center justify-content-center mb-1"
-                  >
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small class="fa fa-star text-primary mr-1"></small>
-                    <small
-                      class="fa fa-star-half-alt text-primary mr-1"
-                    ></small>
-                    <small>(99)</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- Các nút điều hướng -->
       <a
@@ -879,6 +571,7 @@
       </a>
     </div>
   </div>
+
 
   <!-- Products End -->
 
@@ -922,20 +615,23 @@
      <!-- Title -->
      <div class="text-center mb-4">
       <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-        <span class="px-2">Healthy mother, good baby</span>
+        <span class="px-2">Family medicine cabinet</span>
       </h2>
     </div>
     <div class="row px-xl-5">
+        @foreach ($instockProducts as $item)
+        @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+        <!-- Product 5 -->
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
         <div class="product-item bg-light mb-4">
           <div class="product-img position-relative overflow-hidden">
             <img
               class="img-fluid w-100"
-              src="{{ asset('img/20240528102854-0-P28032_1.jpg') }}"
+              src="{{ asset('upload/'.$item->img) }}"
               alt=""
             />
             <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
+              <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"
                 ><i class="fa fa-shopping-cart"></i
               ></a>
               <a class="btn btn-outline-dark btn-square" href=""
@@ -944,21 +640,30 @@
               <a class="btn btn-outline-dark btn-square" href=""
                 ><i class="fa fa-sync-alt"></i
               ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
+              <a class="btn btn-outline-dark btn-square" href="{{ route('productDetail', $item->id) }}"
                 ><i class="fa fa-search"></i
               ></a>
             </div>
           </div>
           <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" href=""
-              >Product Name Goes Here</a
+            <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $item->id) }}" style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+              > {{ $item->name }}</a
             >
             <div
               class="d-flex align-items-center justify-content-center mt-2"
             >
-              <h5>$123.00</h5>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
+              <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
+              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $/del></h6>
             </div>
+            <div class="card-footer d-flex justify-content-between bg-light">
+                <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                <form action="{{ route('cart.addCart') }}" method="post">
+                    @csrf
+                        <input type="hidden" name="quantity" value="1">
+                       <input type="hidden" name="productId" value="{{ $item->id }}">
+                    <input type="submit" value="Add To Cart" class="btn btn-sm text-dark p-0" name="addtocart"><i class="fas fa-shopping-cart text-primary mr-1"></i>
+                </form>
+              </div>
             <div
               class="d-flex align-items-center justify-content-center mb-1"
             >
@@ -972,316 +677,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="product-item bg-light mb-4">
-          <div class="product-img position-relative overflow-hidden">
-            <img
-              class="img-fluid w-100"
-              src="{{ asset('img/20240528104006-0-P28028_1.jpg') }}"
-              alt=""
-            />
-            <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-shopping-cart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="far fa-heart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-sync-alt"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-search"></i
-              ></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" href=""
-              >Product Name Goes Here</a
-            >
-            <div
-              class="d-flex align-items-center justify-content-center mt-2"
-            >
-              <h5>$123.00</h5>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-            </div>
-            <div
-              class="d-flex align-items-center justify-content-center mb-1"
-            >
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star-half-alt text-primary mr-1"></small>
-              <small>(99)</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="product-item bg-light mb-4">
-          <div class="product-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="{{ asset('img/P27958_1.jpg') }}" alt="" />
-            <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-shopping-cart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="far fa-heart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-sync-alt"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-search"></i
-              ></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" href=""
-              >Product Name Goes Here</a
-            >
-            <div
-              class="d-flex align-items-center justify-content-center mt-2"
-            >
-              <h5>$123.00</h5>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-            </div>
-            <div
-              class="d-flex align-items-center justify-content-center mb-1"
-            >
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star-half-alt text-primary mr-1"></small>
-              <small class="far fa-star text-primary mr-1"></small>
-              <small>(99)</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="product-item bg-light mb-4">
-          <div class="product-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="{{ asset('img/P27310_1.jpg') }}" alt="" />
-            <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-shopping-cart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="far fa-heart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-sync-alt"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-search"></i
-              ></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" href=""
-              >Product Name Goes Here</a
-            >
-            <div
-              class="d-flex align-items-center justify-content-center mt-2"
-            >
-              <h5>$123.00</h5>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-            </div>
-            <div
-              class="d-flex align-items-center justify-content-center mb-1"
-            >
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="far fa-star text-primary mr-1"></small>
-              <small class="far fa-star text-primary mr-1"></small>
-              <small>(99)</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="product-item bg-light mb-4">
-          <div class="product-img position-relative overflow-hidden">
-            <img
-              class="img-fluid w-100"
-              src="{{ asset('img/20240530093211-0-P18742_1.jpg') }}"
-              alt=""
-            />
-            <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-shopping-cart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="far fa-heart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-sync-alt"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-search"></i
-              ></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" href=""
-              >Product Name Goes Here</a
-            >
-            <div
-              class="d-flex align-items-center justify-content-center mt-2"
-            >
-              <h5>$123.00</h5>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-            </div>
-            <div
-              class="d-flex align-items-center justify-content-center mb-1"
-            >
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small>(99)</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="product-item bg-light mb-4">
-          <div class="product-img position-relative overflow-hidden">
-            <img class="img-fluid w-100" src="{{ asset('img/P14305_11.jpg') }}" alt="" />
-            <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-shopping-cart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="far fa-heart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-sync-alt"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-search"></i
-              ></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" href=""
-              >Product Name Goes Here</a
-            >
-            <div
-              class="d-flex align-items-center justify-content-center mt-2"
-            >
-              <h5>$123.00</h5>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-            </div>
-            <div
-              class="d-flex align-items-center justify-content-center mb-1"
-            >
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star-half-alt text-primary mr-1"></small>
-              <small>(99)</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="product-item bg-light mb-4">
-          <div class="product-img position-relative overflow-hidden">
-            <img
-              class="img-fluid w-100"
-              src="{{ asset('img/20240920023554-0-P15652.jpg') }}"
-              alt=""
-            />
-            <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-shopping-cart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="far fa-heart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-sync-alt"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-search"></i
-              ></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" href=""
-              >Product Name Goes Here</a
-            >
-            <div
-              class="d-flex align-items-center justify-content-center mt-2"
-            >
-              <h5>$123.00</h5>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-            </div>
-            <div
-              class="d-flex align-items-center justify-content-center mb-1"
-            >
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star-half-alt text-primary mr-1"></small>
-              <small class="far fa-star text-primary mr-1"></small>
-              <small>(99)</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-        <div class="product-item bg-light mb-4">
-          <div class="product-img position-relative overflow-hidden">
-            <img
-              class="img-fluid w-100"
-              src="{{ asset('img/20240829020819-0-P22416_1.jpg') }}"
-              alt=""
-            />
-            <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-shopping-cart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="far fa-heart"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-sync-alt"></i
-              ></a>
-              <a class="btn btn-outline-dark btn-square" href=""
-                ><i class="fa fa-search"></i
-              ></a>
-            </div>
-          </div>
-          <div class="text-center py-4">
-            <a class="h6 text-decoration-none text-truncate" href=""
-              >Product Name Goes Here</a
-            >
-            <div
-              class="d-flex align-items-center justify-content-center mt-2"
-            >
-              <h5>$123.00</h5>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-            </div>
-            <div
-              class="d-flex align-items-center justify-content-center mb-1"
-            >
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="fa fa-star text-primary mr-1"></small>
-              <small class="far fa-star text-primary mr-1"></small>
-              <small class="far fa-star text-primary mr-1"></small>
-              <small>(99)</small>
-            </div>
-          </div>
-        </div>
-      </div>
+      @endforeach
     </div>
   </div>
   <!-- Products End -->
