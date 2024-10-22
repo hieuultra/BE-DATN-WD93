@@ -128,7 +128,7 @@
               <h5 class="font-weight-bold">Total</h5>
               <h5 class="font-weight-bold total_amount">{{ number_format($total,0,',','.') }}$</h5>
             </div>
-              <a href="" class="btn btn-block btn-primary my-3 py-3">
+              <a href="{{ route('orders.create') }}" class="btn btn-block btn-primary my-3 py-3">
                 Proceed To Checkout
             </a>
           </div>

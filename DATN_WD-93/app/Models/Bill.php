@@ -9,6 +9,7 @@ class Bill extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'billCode',
         'addressUser',
         'phoneUser',
         'nameUser',
