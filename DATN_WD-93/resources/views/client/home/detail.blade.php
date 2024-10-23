@@ -247,7 +247,9 @@
                         </div>
                     </div>
                     <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $s->id) }}">{{ $s->name }}</a>
+                        <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $s->id) }}"
+                            style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" >
+                            {{ $s->name }}</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
                             <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} VND</h5><h6 class="text-muted ml-2"><del>{{ number_format($s->price, 0, ',', '.') }} VNĐ</del></h6>
                         </div>

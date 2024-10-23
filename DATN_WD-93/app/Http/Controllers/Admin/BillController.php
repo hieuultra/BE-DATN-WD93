@@ -13,11 +13,11 @@ class BillController extends Controller
      */
     public function index()
     {
-        $listBill = Bill::query()->orderByDesc('id')->get();
+        $listBills = Bill::query()->orderByDesc('id')->get();
         $statusBill = Bill::status_bill;
 
         $type_da_huy = Bill::DA_HUY;
-        return view('admin.bills.index', compact('listBill', 'statusBill', 'type_da_huy'));
+        return view('admin.bills.index', compact('listBills', 'statusBill', 'type_da_huy'));
     }
 
     /**

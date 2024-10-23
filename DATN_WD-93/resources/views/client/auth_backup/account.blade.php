@@ -42,7 +42,7 @@
                                         <img src="{{asset('upload/'.Auth::user()->image) }}" alt="" width="400" height="200">
                                     </div>
                                     @else
-                                        <p>Please log in to see your name.</p><br>
+                                        <p>Please login/register to use our services..</p><br>
                                         <a href="{{ route('viewLogin') }}"><input type="submit" href="#" class="btn btn-lg btn-primary" value="Login" name="dangnhap"></a>
                                     @endif
                                     <div class="form-group">
