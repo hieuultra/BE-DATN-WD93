@@ -69,7 +69,7 @@
                                      {{ $value }}</option>
                                @endforeach
                         </select>
-
+                        <input type="hidden" name="da_giao_hang" value="1">
                        </form>
                     </td>
                     <td class="text-center">

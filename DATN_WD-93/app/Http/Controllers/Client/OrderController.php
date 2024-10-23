@@ -33,7 +33,7 @@ class OrderController extends Controller
         $type_cho_xac_nhan = Bill::CHO_XAC_NHAN;
         $type_dang_van_chuyen = Bill::DANG_VAN_CHUYEN;
 
-        return view('client.orders.index', compact('orderCount','categories', 'Bills', 'statusBill', 'type_cho_xac_nhan', 'type_dang_van_chuyen'));
+        return view('client.orders.index', compact('orderCount', 'categories', 'Bills', 'statusBill', 'type_cho_xac_nhan', 'type_dang_van_chuyen'));
     }
 
     /**
@@ -56,7 +56,7 @@ class OrderController extends Controller
             }
             $shipping = 50;
             $total = $subtotal + $shipping;
-            return view('client.orders.create', compact('orderCount','categories', 'carts', 'total', 'shipping', 'subtotal'));
+            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subtotal'));
         }
         return redirect()->route('cart.listCart');
     }
@@ -128,7 +128,7 @@ class OrderController extends Controller
         $bill = Bill::query()->findOrFail($id);
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;
-        return view('client.orders.show', compact('orderCount','bill', 'statusBill', 'status_payment_method', 'categories'));
+        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories'));
     }
 
     /**
@@ -150,6 +150,9 @@ class OrderController extends Controller
                 }
             } elseif ($request->has('da_giao_hang')) {
                 $bill->update(['status_bill' => Bill::DA_GIAO_HANG]);
+
+                // Cập nhật trạng thái thanh toán thành ĐÃ THANH TOÁN nếu đã giao hàng
+                $bill->update(['status_payment_method' => Bill::DA_THANH_TOAN]);
             }
             //Sử dụng DB::commit() để xác nhận thay đổi nếu mọi thứ thành công.
             //Nếu có lỗi, sử dụng DB::rollBack() để hoàn tác tất cả các thay đổi.

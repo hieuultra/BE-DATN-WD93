@@ -107,7 +107,7 @@
                             @endphp
                             <tr>
                                 <td>{{ $product->idProduct }}</td>
-                                <td>{{ $product->name }}</td>
+                                <td><a href="{{ route('productDetail', $detail->product_id) }}">{{ $product->name }}</a></td>
                                 <td><img class="img-fluid" src="{{ asset('upload/'.$product->img) }}" width="75px"></td>
                                 <td>{{ number_format($detail->unitPrice,0,',','.') }}$</td>
                                 <td>{{ $detail->quantity }}</td>

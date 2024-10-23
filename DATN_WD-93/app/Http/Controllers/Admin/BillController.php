@@ -52,6 +52,10 @@ class BillController extends Controller
         if (array_search($newStatus, $status) < array_search($currentStatus, $status)) {
             return redirect()->route('admin.bills.index')->with('error', 'New Status must be after current status');
         }
+        if ($request->has('da_giao_hang')) {
+            // Cập nhật trạng thái thanh toán thành ĐÃ THANH TOÁN nếu đã giao hàng
+            $bill->update(['status_payment_method' => Bill::DA_THANH_TOAN]);
+        }
 
         $bill->status_bill = $newStatus;
         $bill->save();
