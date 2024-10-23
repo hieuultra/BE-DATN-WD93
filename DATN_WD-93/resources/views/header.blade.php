@@ -84,7 +84,7 @@
                   >{{ session('cart') ? count(session('cart')) : '0' }}</span
                 >
               </a>
-              <a href="" class="btn px-0">
+              <a href="{{ route('orders.index') }}" class="btn px-0">
                 <i class="fas fa-file-invoice-dollar text-primary"></i>
                 <span
                   class="badge text-secondary border border-secondary rounded-circle"

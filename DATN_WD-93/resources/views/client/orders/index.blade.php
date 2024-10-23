@@ -34,7 +34,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="text-center">Id Bill</th>
+                    <th class="text-center">Code Bill</th>
                     <th class="text-center">Date Order</th>
                     <th class="text-center">Status Bill</th>
                     <th class="text-center">Total Bill</th>
@@ -46,7 +46,7 @@
                 <tr>
                     <th class="text-center">
                         <a href="{{ route('orders.show', $item->id) }}">
-                        {{ $item->id }}
+                        {{ $item->billCode }}
                     </a>
                     </th>
                     <td class="text-center">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Models\Bill;
 use App\Models\Product;
 use App\Models\Category;
+use App\Mail\OrderConfirm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
@@ -20,7 +21,7 @@ class OrderController extends Controller
     public function index()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get();  //tro den class bilss ben model user
+        $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get();  //tro den class bill ben model user
 
         $statusBill = Bill::status_bill;
 
@@ -92,7 +93,7 @@ class OrderController extends Controller
                 //tru di so luong cua san pham khi add thanh cong
 
                 //gui mail khi dat hang tc
-                // Mail::to($bill->emailUser)->queue(new OrderConfirmationMail($bill));
+                Mail::to($bill->emailUser)->queue(new OrderConfirm($bill));
 
                 session()->put('cart', []);
                 return redirect()->route('orders.index')->with('success', 'Bill have created successfully');
