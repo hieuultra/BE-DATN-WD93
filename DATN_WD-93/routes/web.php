@@ -3,10 +3,11 @@
 use Illuminate\Support\Facades\Auth;
 //
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\BillController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Client\AuthController;
 //
+use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\AboutController;
@@ -135,15 +136,15 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/VariantProductUpdate', [VariantProductsController::class, 'VariantProductUpdate'])->name('variantProductUpdate');
                 Route::delete('/VariantProductDestroy/{id}', [VariantProductsController::class, 'VariantProductDestroy'])->name('VariantProductDestroy');
             });
-        //order
-        // Route::prefix('bills')
-        //     ->as('bills.')
-        //     ->group(function () {
-        //         Route::get('/',               [BillsController::class, 'index'])->name('index');
-        //         Route::get('/show/{id}',     [BillsController::class, 'show'])->name('show');
-        //         Route::put('{id}/update',    [BillsController::class, 'update'])->name('update');
-        //         Route::delete('{id}/destroy', [BillsController::class, 'destroy'])->name('destroy');
-        //     });
+        // order
+        Route::prefix('bills')
+            ->as('bills.')
+            ->group(function () {
+                Route::get('/',               [BillController::class, 'index'])->name('index');
+                Route::get('/show/{id}',     [BillController::class, 'show'])->name('show');
+                Route::put('{id}/update',    [BillController::class, 'update'])->name('update');
+                Route::delete('{id}/destroy', [BillController::class, 'destroy'])->name('destroy');
+            });
         //account
         Route::prefix('user')
             ->as('users.')

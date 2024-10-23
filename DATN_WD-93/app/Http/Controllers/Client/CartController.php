@@ -6,12 +6,15 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function listCart()
     {
         $categories = Category::orderBy('name', 'asc')->get();
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
         $cart = session()->get('cart', default: []);
 
         // $tt = $cart['price'] - (($cart['price']  * $cart['discount']) / 100);
@@ -30,7 +33,7 @@ class CartController extends Controller
         $shipping = 50;
         $total = $subTotal + $shipping;
 
-        return view('client.home.cart', compact('categories', 'cart', 'subTotal', 'shipping', 'total'));
+        return view('client.home.cart', compact('orderCount','categories', 'cart', 'subTotal', 'shipping', 'total'));
     }
     public function addCart(Request $request)
     {

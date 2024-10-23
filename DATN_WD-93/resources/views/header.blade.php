@@ -89,7 +89,7 @@
                 <span
                   class="badge text-secondary border border-secondary rounded-circle"
                   style="padding-bottom: 2px"
-                  >0</span
+                  >{{ $orderCount }}</span
                 >
               </a>
               <a href="" class="btn px-0">

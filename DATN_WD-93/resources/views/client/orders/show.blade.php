@@ -40,8 +40,8 @@
                     <h5 class="text-center">Order Information</h5>
                     <table>
                         <tr>
-                            <th class="text-center">Order ID:</th>
-                            <td class="text-danger text-center">{{ $bill->id }}</td>
+                            <th class="text-center">Order Code:</th>
+                            <td class="text-danger text-center">{{ $bill->billCode }}</td>
                         </tr>
                         <tr>
                             <th class="text-center">Name User :</th>
@@ -92,7 +92,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Product Code</th>
                                 <th>Product Name</th>
                                 <th>Image</th>
                                 <th>Unit Price</th>
@@ -103,15 +103,15 @@
                         <tbody>
                             @foreach($bill->order_detail as $detail)
                             @php
-                                $product= $detail->product;
+                                $product = $detail->product;
                             @endphp
                             <tr>
-                                <td>{{ $product->id }}</td>
+                                <td>{{ $product->idProduct }}</td>
                                 <td>{{ $product->name }}</td>
                                 <td><img class="img-fluid" src="{{ asset('upload/'.$product->img) }}" width="75px"></td>
-                                <td>{{ number_format($detail->donGia,0,',','.') }}$</td>
+                                <td>{{ number_format($detail->unitPrice,0,',','.') }}$</td>
                                 <td>{{ $detail->quantity }}</td>
-                                <td>{{ number_format($detail->thanhTien,0,',','.') }}$</td>
+                                <td>{{ number_format($detail->totalMoney,0,',','.') }}$</td>
                             </tr>
                             @endforeach
                         </tbody>

@@ -14,7 +14,9 @@ class AuthController extends Controller
     public function viewLogin()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.auth_backup.viewLogin', compact('categories'));
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+        return view('client.auth_backup.viewLogin', compact('orderCount','categories'));
     }
     // public function viewLogin()
     // {
@@ -38,17 +40,23 @@ class AuthController extends Controller
     public function loginSuccess()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.auth_backup.loginSuccess', compact('categories'));
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+        return view('client.auth_backup.loginSuccess', compact('orderCount','categories'));
     }
     public function account()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.auth_backup.account', compact('categories'));
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+        return view('client.auth_backup.account', compact('orderCount','categories'));
     }
     public function viewEditAcc()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.auth_backup.editAcc', compact('categories'));
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+        return view('client.auth_backup.editAcc', compact('orderCount','categories'));
     }
     public function editAcc(Request $request)
     {
@@ -91,7 +99,9 @@ class AuthController extends Controller
     public function viewRegister()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.auth_backup.register', compact('categories'));
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+        return view('client.auth_backup.register', compact('orderCount','categories'));
     }
     public function register(Request $request)
     {

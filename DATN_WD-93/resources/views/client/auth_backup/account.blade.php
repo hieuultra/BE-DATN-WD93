@@ -35,14 +35,18 @@
                                     </h1>
                                 </div>
                                     <div class="text-center text-primary mt-4 font-weight-bold border px-3 mr-1">
-                                       HELLO <br />
-                                        {{ Auth::user()->name }}
+                                       HELLO <br />@if (Auth::check())
+                                      <p>{{ Auth::user()->name }}</p>
                                     </div>
                                     <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
                                         <img src="{{asset('upload/'.Auth::user()->image) }}" alt="" width="400" height="200">
                                     </div>
+                                    @else
+                                        <p>Please log in to see your name.</p><br>
+                                        <a href="{{ route('viewLogin') }}"><input type="submit" href="#" class="btn btn-lg btn-primary" value="Login" name="dangnhap"></a>
+                                    @endif
                                     <div class="form-group">
-                                            <li><a href="">My order </a></li>
+                                            <li><a href="{{ route('orders.index') }}">My order </a></li>
                                            <li>  @if (Route::has('password.request'))
                                             <a href="{{ route('password.request') }}">
                                                 {{ __('Forgot Password?') }}

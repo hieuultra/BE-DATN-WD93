@@ -42,7 +42,7 @@
                                         <img src="{{asset('upload/'.Auth::user()->image) }}" alt="" width="400" height="200">
                                     </div>
                                     <div class="form-group">
-                                            <li><a href="">My order </a></li>
+                                            <li><a href="{{ route('orders.index') }}">My order </a></li>
                                            <li>  @if (Route::has('password.request'))
                                             <a href="{{ route('password.request') }}">
                                                 {{ __('Forgot Password?') }}

@@ -132,7 +132,7 @@
 
       <div class="collapse" id="collapsebill" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="">List Bill</a>
+          <a class="nav-link" href="{{ route('admin.bills.index') }}">List Bill</a>
         </nav>
       </div>
 

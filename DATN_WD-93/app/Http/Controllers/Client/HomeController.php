@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -20,11 +21,15 @@ class HomeController extends Controller
 
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
 
-        return view('client.home.home', compact('categories', 'newProducts','newProducts1', 'bestsellerProducts', 'instockProducts'));
+        return view('client.home.home', compact('orderCount', 'categories', 'newProducts', 'newProducts1', 'bestsellerProducts', 'instockProducts'));
     }
     function products(Request $request)
     {
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
         $kyw = $request->input('query');
         $category_id = $request->input('category_id');
 
@@ -34,7 +39,7 @@ class HomeController extends Controller
         } else {
             $products = Product::orderBy('id', 'desc')->paginate(12); //phan trang 9sp/1page
         }
-        return view('client.home.products', compact('categories', 'products', 'kyw', 'category_id'));
+        return view('client.home.products', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
     }
     function detail(Request $request) //truyen id o route vao phai co request
     {
@@ -57,8 +62,10 @@ class HomeController extends Controller
                 ->get();
 
             $categories = Category::orderBy('name', 'asc')->get();
+            $user = Auth::user();
+            $orderCount = $user->bill()->count();
 
-            return view('client.home.detail', compact('sp', 'splq', 'categories'));
+            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories'));
         }
 
         return redirect()->route('products')->with('error', 'Không tìm thấy sản phẩm.');
@@ -66,6 +73,8 @@ class HomeController extends Controller
     function search(Request $request)
     {
         $categories = Category::orderBy('name', 'ASC')->get();
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
 
         $kyw = $request->input('query');
         $category_id = $request->input('category_id');
@@ -73,6 +82,6 @@ class HomeController extends Controller
         // $products = Product::where('name', 'LIKE', "%$kyw%")->orWhere('description', 'LIKE', "%$kyw%")->orderBy('id', 'DESC')->paginate(9);
         $products = Product::where('name', 'LIKE', "%$kyw%")->orderBy('id', 'DESC')->paginate(9);
         // echo var_dump($dssp);
-        return view('client.home.proSearch', compact('categories', 'products', 'kyw', 'category_id'));
+        return view('client.home.proSearch', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
     }
 }

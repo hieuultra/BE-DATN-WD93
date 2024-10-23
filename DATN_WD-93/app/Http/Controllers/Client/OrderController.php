@@ -22,13 +22,15 @@ class OrderController extends Controller
     {
         $categories = Category::orderBy('name', 'asc')->get();
         $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get();  //tro den class bill ben model user
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
 
         $statusBill = Bill::status_bill;
 
         $type_cho_xac_nhan = Bill::CHO_XAC_NHAN;
         $type_dang_van_chuyen = Bill::DANG_VAN_CHUYEN;
 
-        return view('client.orders.index', compact('categories', 'Bills', 'statusBill', 'type_cho_xac_nhan', 'type_dang_van_chuyen'));
+        return view('client.orders.index', compact('orderCount','categories', 'Bills', 'statusBill', 'type_cho_xac_nhan', 'type_dang_van_chuyen'));
     }
 
     /**
@@ -37,6 +39,8 @@ class OrderController extends Controller
     public function create()
     {
         $categories = Category::orderBy('name', 'asc')->get();
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
         $carts = session()->get('cart', []);
         if (!empty($carts)) {
             $total = 0;
@@ -46,7 +50,7 @@ class OrderController extends Controller
             }
             $shipping = 50;
             $total = $subtotal + $shipping;
-            return view('client.orders.create', compact('categories', 'carts', 'total', 'shipping', 'subtotal'));
+            return view('client.orders.create', compact('orderCount','categories', 'carts', 'total', 'shipping', 'subtotal'));
         }
         return redirect()->route('cart.listCart');
     }
@@ -110,10 +114,12 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $categories = Category::orderBy('name', 'asc')->get();
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
         $bill = Bill::query()->findOrFail($id);
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;
-        return view('client.orders.show', compact('bill', 'statusBill', 'status_payment_method', 'categories'));
+        return view('client.orders.show', compact('orderCount','bill', 'statusBill', 'status_payment_method', 'categories'));
     }
 
     /**
