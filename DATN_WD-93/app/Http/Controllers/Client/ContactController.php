@@ -12,8 +12,11 @@ class ContactController extends Controller
     function contact()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         return view('client.home.contact', compact('orderCount', 'categories'));
     }
 }

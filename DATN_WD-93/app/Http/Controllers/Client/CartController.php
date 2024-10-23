@@ -13,8 +13,11 @@ class CartController extends Controller
     public function listCart()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         $cart = session()->get('cart', default: []);
 
         // $tt = $cart['price'] - (($cart['price']  * $cart['discount']) / 100);

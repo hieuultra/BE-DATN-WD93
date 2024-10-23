@@ -22,8 +22,11 @@ class OrderController extends Controller
     {
         $categories = Category::orderBy('name', 'asc')->get();
         $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get();  //tro den class bill ben model user
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
 
         $statusBill = Bill::status_bill;
 
@@ -39,8 +42,11 @@ class OrderController extends Controller
     public function create()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         $carts = session()->get('cart', []);
         if (!empty($carts)) {
             $total = 0;
@@ -114,8 +120,11 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         $bill = Bill::query()->findOrFail($id);
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;

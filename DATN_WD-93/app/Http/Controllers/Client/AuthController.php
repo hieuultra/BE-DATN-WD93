@@ -14,8 +14,11 @@ class AuthController extends Controller
     public function viewLogin()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         return view('client.auth_backup.viewLogin', compact('orderCount','categories'));
     }
     // public function viewLogin()
@@ -40,22 +43,31 @@ class AuthController extends Controller
     public function loginSuccess()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         return view('client.auth_backup.loginSuccess', compact('orderCount','categories'));
     }
     public function account()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         return view('client.auth_backup.account', compact('orderCount','categories'));
     }
     public function viewEditAcc()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         return view('client.auth_backup.editAcc', compact('orderCount','categories'));
     }
     public function editAcc(Request $request)
@@ -99,8 +111,11 @@ class AuthController extends Controller
     public function viewRegister()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         return view('client.auth_backup.register', compact('orderCount','categories'));
     }
     public function register(Request $request)

@@ -21,15 +21,22 @@ class HomeController extends Controller
 
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
 
         return view('client.home.home', compact('orderCount', 'categories', 'newProducts', 'newProducts1', 'bestsellerProducts', 'instockProducts'));
     }
     function products(Request $request)
     {
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         $kyw = $request->input('query');
         $category_id = $request->input('category_id');
 
@@ -62,8 +69,11 @@ class HomeController extends Controller
                 ->get();
 
             $categories = Category::orderBy('name', 'asc')->get();
-            $user = Auth::user();
-            $orderCount = $user->bill()->count();
+            $orderCount = 0; // Mặc định nếu chưa đăng nhập
+            if (Auth::check()) {
+                $user = Auth::user();
+                $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+            }
 
             return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories'));
         }
@@ -73,9 +83,11 @@ class HomeController extends Controller
     function search(Request $request)
     {
         $categories = Category::orderBy('name', 'ASC')->get();
-        $user = Auth::user();
-        $orderCount = $user->bill()->count();
-
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
         $kyw = $request->input('query');
         $category_id = $request->input('category_id');
 
