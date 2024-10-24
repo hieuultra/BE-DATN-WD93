@@ -3,7 +3,41 @@
 @section('title','Welcome')
 
 @section('content')
+<style>
+    .product-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 
+.product-code {
+    font-weight: bold;
+    color: #555;
+}
+
+.views-count {
+    color: #777;
+}
+
+.inventory-status {
+    font-size: 14px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.product-description {
+    line-height: 1.6;
+}
+
+.text-danger {
+    color: #dc3545;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+</style>
 
  <!-- Breadcrumb Start -->
  <div class="container-fluid">
@@ -49,9 +83,9 @@
 
         <div class="col-lg-7 h-auto mb-30">
             <div class="h-100 bg-light p-30">
-                <h3>{{ $sp->name }}</h3>
+                <h3 class="product-name">{{ $sp->name }}</h3>
                 <div class="d-flex mb-3">
-                    <small class="px-2 pt-1">Code:{{ $sp->idProduct }}</small>
+                    <small class="product-code px-2 pt-1">Code:{{ $sp->idProduct }}</small>
                     <div class="text-primary mr-2">
                         <small class="fas fa-star"></small>
                         <small class="fas fa-star"></small>
@@ -59,14 +93,14 @@
                         <small class="fas fa-star-half-alt"></small>
                         <small class="far fa-star"></small>
                     </div>
-                    <small class="pt-1">{{ $sp->view }} Views</small>
+                    <small class="views-count ml-auto">{{ $sp->view }} Views</small>
                 </div>
                 <div style="display: flex; align-items: center;">
                     <h3 class="font-weight-semi-bold mb-4 text-danger">{{ number_format($tt, 0, ",", ".") }} $</h3>
                     <h4 class="font-weight-semi-bold mb-4"><del>{{ number_format($sp->price, 0, ",", ".") }} $</del></h4>
                 </div>
                 <div class="">
-                    <p id="quantity-display">Inventory Quantity: {{ $sp->quantity }}</p>
+                    <p class="inventory-status" id="quantity-display">Inventory Quantity: {{ $sp->quantity }}</p>
               </div>
                 <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p>
                 <div class="d-flex mb-3">

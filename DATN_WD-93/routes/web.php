@@ -15,6 +15,8 @@ use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
@@ -156,4 +158,26 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/userUpdate', [UserController::class, 'userUpdate'])->name('userUpdate');
                 Route::delete('/userDestroy/{id}', [UserController::class, 'userDestroy'])->name('userDestroy');
             });
+        //specialty
+        Route::prefix('specialties')
+            ->as('specialties.')
+            ->group(function () {
+                Route::get('/specialtyDoctorList', [SpecialtyController::class, 'specialtyDoctorList'])->name('specialtyDoctorList');
+                Route::get('/viewSpecialtyAdd', [SpecialtyController::class, 'viewSpecialtyAdd'])->name('viewSpecialtyAdd');
+                Route::post('/specialtyAdd', [SpecialtyController::class, 'specialtyAdd'])->name('specialtyAdd');
+                Route::get('/specialtyUpdateForm/{id}', [SpecialtyController::class, 'specialtyUpdateForm'])->name('specialtyUpdateForm');
+                Route::post('/specialtyUpdate', [SpecialtyController::class, 'specialtyUpdate'])->name('specialtyUpdate');
+                Route::delete('/specialtyDestroy/{id}', [SpecialtyController::class, 'specialtyDestroy'])->name('specialtyDestroy');
+            });
+             //specialty
+        Route::prefix('doctors')
+        ->as('doctors.')
+        ->group(function () {
+            Route::get('/doctorList', [DoctorController::class, 'doctorList'])->name('doctorList');
+            Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
+            Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
+            Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
+            Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');
+            Route::delete('/doctorDestroy/{id}', [DoctorController::class, 'doctorDestroy'])->name('doctorDestroy');
+        });
     });
