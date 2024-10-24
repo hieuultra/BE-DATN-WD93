@@ -5,306 +5,271 @@
 @section('content')
 
 
- <!-- Breadcrumb Start -->
- <div class="container-fluid">
-    <div class="row px-xl-5">
-        <div class="col-12">
-            <nav class="breadcrumb bg-light mb-30">
-                <a class="breadcrumb-item text-dark" href="#">Home</a>
-                <a class="breadcrumb-item text-dark" href="#">Shop</a>
-                <span class="breadcrumb-item active">Shop Detail</span>
+ <!-- LinkTitle Start -->
+ <div class="container-detail-product mb-2">
+    <div class="row">
+        <div class="col" style="padding-left: 0px">
+            <nav class=" d-flex justify-content-start bg-light mb-30 text-link-title">
+                <a class="nav-link" href="#">Trang Chủ</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
+                  </svg>
+                <a class="nav-link" href="#">Sinh Lý - Nội Tiết Tố</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
+                  </svg>
+                <span class="nav-link" >Cân bằng nội tiết tố</span>
             </nav>
         </div>
     </div>
 </div>
-<!-- Breadcrumb End -->
+<!-- LinkTitle End -->
 
-
-<!-- Shop Detail Start -->
-<div class="container-fluid pb-5">
-    <div class="row px-xl-5">
-        <div class="col-lg-5 mb-30">
-            <div id="product-carousel" class="carousel slide" data-ride="carousel">
-                @php
-                $tt = $sp['price'] - (($sp['price']  * $sp['discount']) / 100);
-                     @endphp
-                <div class="carousel-inner bg-light">
-                    <div class="carousel-item active">
-                        <img class="w-100 h-100" src="{{ asset('upload/' . $sp->img) }}" alt="Image">
+<!-- Product Detail Start -->
+    <div class="container-detail-product">
+        <div class="row detailPro">
+            <div class="col-4">
+                <div class="row">
+                    <div class="d-flex justify-content-center">
+                        <img  class="imgDetailPro" src="https://cdn.nhathuoclongchau.com.vn/unsafe/636x0/filters:quality(90)/https://cms-prod.s3-sgn09.fptcloud.com/00500122_vien_uong_ho_tro_can_bang_noi_tiet_to_leana_ocavill_60v_7335_628b_large_f28d3d0fc2_2968dd9c90.jpg">
                     </div>
-                    @foreach($sp->imageProduct as $index => $imgs)
-                    <div class="carousel-item">
-                        <img class="w-100 h-100" src="{{ Storage::url($imgs->image) }}" alt="Image">
-                    </div>
-                    @endforeach
                 </div>
-                <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
-                    <i class="fa fa-2x fa-angle-left text-dark"></i>
-                </a>
-                <a class="carousel-control-next" href="#product-carousel" data-slide="next">
-                    <i class="fa fa-2x fa-angle-right text-dark"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-lg-7 h-auto mb-30">
-            <div class="h-100 bg-light p-30">
-                <h3>{{ $sp->name }}</h3>
-                <div class="d-flex mb-3">
-                    <small class="px-2 pt-1">Code:{{ $sp->idProduct }}</small>
-                    <div class="text-primary mr-2">
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star-half-alt"></small>
-                        <small class="far fa-star"></small>
-                    </div>
-                    <small class="pt-1">{{ $sp->view }} Views</small>
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <h3 class="font-weight-semi-bold mb-4 text-danger">{{ number_format($tt, 0, ",", ".") }} $</h3>
-                    <h4 class="font-weight-semi-bold mb-4"><del>{{ number_format($sp->price, 0, ",", ".") }} $</del></h4>
-                </div>
-                <div class="">
-                    <p id="quantity-display">Inventory Quantity: {{ $sp->quantity }}</p>
-              </div>
-                <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p>
-                <div class="d-flex mb-3">
-                    <strong class="text-dark mr-3">Product Classification</strong>
-
-                </div>
-                {{-- <div class="d-flex mb-4">
-                    <strong class="text-dark mr-3">Colors:</strong>
-
-                </div> --}}
-                <div class="d-flex align-items-center mb-4 pt-2">
-                    <form action="{{ route('cart.addCart') }}" method="post" class="d-flex align-items-center" id="add-to-cart-form">
-                        @csrf
-                        <div class="d-flex align-items-center me-4">
-                            <h6 class="mb-0 me-2">Qty:</h6>
-                            <div class="input-group" style="width: 130px;">
-                                <button class="btn btn-outline-primary" type="button" id="btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                                <input type="text" class="form-control text-center" value="1" name="quantity" id="quantity-input">
-                                <button class="btn btn-outline-primary" type="button" id="btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                            <input type="hidden" name="productId" value="{{ $sp->id }}">
+                <div class="row mt-5 " style="padding: 0px;  margin-left: 5px; display: flex; justify-content: space-between">
+                   
+                        <div class="abImg">
+                            <img src="https://cdn.nhathuoclongchau.com.vn/unsafe/375x0/filters:quality(90)/https://cms-prod.s3-sgn09.fptcloud.com/00500122_vien_uong_ho_tro_can_bang_noi_tiet_to_leana_ocavill_60v_7335_628b_large_f28d3d0fc2_2968dd9c90.jpg" alt="" srcset="">
                         </div>
-                        <button type="submit" class="btn btn-primary ms-4">Add to Cart</button>
-                    </form>
-                </div>
+                
+                   
+                        <div class="abImg">
+                            <img src="https://cdn.nhathuoclongchau.com.vn/unsafe/375x0/filters:quality(90)/https://cms-prod.s3-sgn09.fptcloud.com/00500122_vien_uong_ho_tro_can_bang_noi_tiet_to_leana_ocavill_60v_1653290867_c587619fb0.jpg" alt="" srcset="">
+                        </div>
+                 
+              
+                        <div class="abImg">
+                            <img src="https://cdn.nhathuoclongchau.com.vn/unsafe/375x0/filters:quality(90)/https://cms-prod.s3-sgn09.fptcloud.com/00500122_vien_uong_ho_tro_can_bang_noi_tiet_to_leana_ocavill_60v_8390_628b_large_20bc2b2b0b.jpg" alt="" srcset="">
+                        </div>
 
-                <div class="d-flex pt-2">
-                    <strong class="text-dark mr-2">Share on:</strong>
-                    <div class="d-inline-flex">
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a class="text-dark px-2" href="">
-                            <i class="fab fa-pinterest"></i>
-                        </a>
+                        <div class="abImg">
+                            <img  src="https://cdn.nhathuoclongchau.com.vn/unsafe/375x0/filters:quality(90)/https://cms-prod.s3-sgn09.fptcloud.com/00500122_vien_uong_ho_tro_can_bang_noi_tiet_to_leana_ocavill_60v_4969_628b_large_ada4fa0e68.jpg" alt="" srcset="">
+                        </div>
+                
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="trade-mark">
+                    <span>Thương Hiệu: </span>
+                    <span><a href="">OCAVILL</a></span>
+                </div>
+                <div class="name-product">
+                    <span>Viên uống LéAna Ocavill hỗ trợ cân bằng nội tiết tố (60 viên)</span>      {{-- name product --}}
+                </div>
+                <div class="code-product">
+                    <span>000512</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                    </svg>
+                    <svg style="color: yellow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                    </svg>
+                    <span>4.9</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                    </svg>
+                    <a href="" style="color: blue; text-decoration: none">44 đánh giá</a>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                    </svg>
+                    <a href="" style="color: blue; text-decoration: none">439 bình luận</a>
+                </div>
+                <div class="price-product">
+                    <span>544.000 đ</span>
+                    <span>/Hộp</span>
+                </div>
+                <div class="variant-product">
+                    <span>Chọn đơn vị tính:</span>
+                    <button type="button">Hộp</button>
+                    <button type="button">Vỉ</button>
+                    <button type="button">Chai</button>
+                    <button type="button">Lọ</button>
+                </div>
+                <div class="row info-product mt-5">
+                    <div class="col" style="padding: 0px">
+                        <span class="title-info-product">Danh Mục:</span>
+                    </div>
+                    <div class="col">
+                        <span class="content-info-product">Cân Bằng Nội Tiết Tố</span>
+                    </div>
+                </div>
+                <div class="row info-product">
+                    <div class="col " style="padding: 0px">
+                        <span class="title-info-product">Dạng Bào Chế:</span>
+                    </div>
+                    <div class="col ">
+                        <span class="content-info-product"> Viên Nén Mềm</span>
+                    </div>
+                </div>
+                <div class="row info-product">
+                    <div class="col " style="padding: 0px">
+                        <span class="title-info-product">Quy Cách:</span>
+                    </div>
+                    <div class="col ">
+                        <span class="content-info-product"> Hộp 60 viên</span>
+                    </div>
+                </div>
+                <div class="row info-product">
+                    <div class="col " style="padding: 0px">
+                        <span class="title-info-product">Xuất Xứ Thương Hiệu:</span>
+                    </div>
+                    <div class="col ">
+                        <span class="content-info-product"> Bulgaria</span>
+                    </div>
+                </div>
+                <div class="row info-product">
+                    <div class="col " style="padding: 0px">
+                        <span class="title-info-product">Nhà Sản Xuất:</span>
+                    </div>
+                    <div class="col ">
+                        <span class="content-info-product"> PHYTOPHARMA LTD</span>
+                    </div>
+                </div>
+                <div class="row info-product">
+                    <div class="col " style="padding: 0px">
+                        <span class="title-info-product">Nước Sản Xuất:</span>
+                    </div>
+                    <div class="col ">
+                        <span class="content-info-product"> Bulgaria</span>
+                    </div>
+                </div>
+                <div class="row info-product">
+                    <div class="col " style="padding: 0px">
+                        <span class="title-info-product">Thành Phần:</span>
+                    </div>
+                    <div class="col ">
+                        <span class="content-info-product">Tinh dầu hoa anh thảo, Vitamin E, Nhân Sâm, Lepidium meyenii, Trinh nữ</span>
+                    </div>
+                </div>
+                <div class="row info-product">
+                    <div class="col " style="padding: 0px">
+                        <span class="title-info-product">Mô Tả Ngắn:</span>
+                    </div>
+                    <div class="col ">
+                        <span class="content-info-product">
+                            Léana Ocavill hỗ trợ cân bằng nội tiết tố. Hỗ trợ cải thiện các triệu chứng thời kỳ tiền mãn kinh,
+                            mãn kinh do suy giảm nội tiết tố. Hỗ trợ hạn chế quá trình lão hóa, giúp đẹp da.</span>
+                    </div>
+                </div>
+                <div class="row info-product">
+                    <div class="col " style="padding: 0px">
+                        <span class="title-info-product">Số Đăng Ký:</span>
+                    </div>
+                    <div class="col ">
+                        <span class="content-info-product">9677/2021/ĐKSP</span>
+                    </div>
+                </div>
+                {{-- Tăng giảm số lượng --}}
+                <div class="d-flex info-product pt-3 ">
+                    <p class="title-info-product">Chọn số lượng: </p>
+                    <div class="d-flex  justify-content-center btn-cart px-5">
+                        <button type="button" class="drop"  onclick="decreaseQuantity()">
+                              <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                 <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                              </svg>
+                        </button>
+                        <input type="button" class="quantity"  id="quantityInput" value="1">
+                        <button type="button" class="plus" id="plus"  onclick="increaseQuantity()">
+                           <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                           </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between info-product ">
+                    <button class="btn-addCart">Chọn Mua</button>
+                    <button class="btn-seachCart">Tìm Tại Cửa Hàng</button>
+                </div>
+                <hr class="info-product">
+                <div class="info-product d-flex">
+                    <div class="d-flex justify-content-start">
+                        <svg style="padding-top: 8px; color:blue" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
+                            <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z"/>
+                        </svg>
+                        <div>
+                            <p style="margin-bottom:0px; color: black; font-size: 16px">Đổi trả trong 30 ngày</p>
+                            <p style="color: gray; font-size: 14px">kể từ ngày mua hàng</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-start ps-3 px-3">
+                        <svg style="padding-top: 8px; color:blue" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                            <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9"/>
+                            <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z"/>
+                          </svg>
+                        <div>
+                            <p style="margin-bottom:0px; color: black; font-size: 16px">Miễn phí 100%</p>
+                            <p>đổi thuốc</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        <svg style="padding-top: 8px; color:blue" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
+                            <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                          </svg>
+                        <div>
+                            <p style="margin-bottom:0px; color: black; font-size: 16px">Miễn phí vận chuyển</p>
+                            <p style="color: gray; font-size: 14px">theo chính sách mua hàng</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- content product -->
+        <div class="row contentPro">
+            <div class="col col-lg-2 pt-3">
+                <p style="color: black">Mô Tả Sản Phẩm</p>
+            </div>
+            <div class="col-8 pt-3">
+                <h4>Tên sản phẩm</h4>                  {{-- đổ tên sản phẩm ở đây --}}
+                <hr>
+                <span>Nội dung dài của sản phẩm</span>  {{-- đổ mô tả dài ở đây --}}
+            </div>
+        </div>
+        <!-- content end -->
     </div>
-    <div class="row px-xl-5">
-        <div class="col">
-            <div class="bg-light p-30">
-                <div class="nav nav-tabs mb-4">
-                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Description</a>
-                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Information</a>
-                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Reviews (0)</a>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="tab-pane-1">
-                        <h4 class="mb-3">Product Description</h4>
-                        <p class="mb-4">{!! $sp->description !!}</p>
-                    </div>
-                    <div class="tab-pane fade" id="tab-pane-2">
-                        <h4 class="mb-3">Additional Information</h4>
-                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item px-0">
-                                        Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                    </li>
-                                  </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item px-0">
-                                        Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                    </li>
-                                  </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="tab-pane-3">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h4 class="mb-4">1 review for "Product Name"</h4>
-                                <div class="media mb-4">
-                                    <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                    <div class="media-body">
-                                        <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
-                                        <div class="text-primary mb-2">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
-                                            <i class="far fa-star"></i>
-                                        </div>
-                                        <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <h4 class="mb-4">Leave a review</h4>
-                                <small>Your email address will not be published. Required fields are marked *</small>
-                                <div class="d-flex my-3">
-                                    <p class="mb-0 mr-2">Your Rating * :</p>
-                                    <div class="text-primary">
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                    </div>
-                                </div>
-                                <form>
-                                    <div class="form-group">
-                                        <label for="message">Your Review *</label>
-                                        <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">Your Name *</label>
-                                        <input type="text" class="form-control" id="name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Your Email *</label>
-                                        <input type="email" class="form-control" id="email">
-                                    </div>
-                                    <div class="form-group mb-0">
-                                        <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Shop Detail End -->
-
-
+<!-- Product Detail End -->
+    {{-- show list sản phẩm --}}
 <!-- Products Start -->
-<div class="container-fluid py-5">
-    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">You May Also Like</span></h2>
-    <div class="row px-xl-5">
-        <div class="col">
-            <div class="owl-carousel related-carousel">
-                @foreach($splq as $s)
-                @php $tt = $s->price - (($s->price * $s->discount) / 100); @endphp
-                <div class="product-item bg-light">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" src="{{ asset('upload/'.$s->img) }}" alt="">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="{{ route('productDetail', $s->id) }}"><i class="fa fa-search"></i></a>
-                        </div>
-                    </div>
-                    <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $s->id) }}">{{ $s->name }}</a>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} VND</h5><h6 class="text-muted ml-2"><del>{{ number_format($s->price, 0, ',', '.') }} VNĐ</del></h6>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small>(99)</small>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</div>
+
 <!-- Products End -->
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('add-to-cart-form');
-    const quantityInput = document.getElementById('quantity-input');
+// Hàm để giảm số lượng
+var newQuanti = '';
+         function decreaseQuantity() {
+                  var input = document.getElementById("quantityInput" );
+                  var currentValue = parseInt(input.value);
 
-    form.addEventListener('submit', function(e) {
-        var value = parseInt(quantityInput.value, 10);
-        if (isNaN(value) || value < 1) {
-            alert('Quantity must be a number >= 1');
-            quantityInput.value = 1; // Reset giá trị về 1
-            e.preventDefault(); // Ngăn không cho form submit
+                  if (currentValue > 0) {
+                     input.value = currentValue -1;
+                  }
+                  newQuanti = input.value;
+                  if (newQuanti == 0) {
+                     var confirmDelete = confirm('Số lượng tối thiểu phải là 1');
+                     if (confirmDelete) {
+                        input.value = currentValue;
+                        newQuanti = input.value;
+                     }
+                  }
+            }
+        // Hàm để tăng số lượng
+        function increaseQuantity() {
+            var input = document.getElementById("quantityInput");
+            var currentValue = parseInt(input.value);
+            input.value = currentValue + 1;
+            newQuanti =input.value;
+
         }
-    });
-
-    // Existing code for plus/minus buttons
-    const btnPlus = document.getElementById('btn-plus');
-    const btnMinus = document.getElementById('btn-minus');
-
-    btnPlus.addEventListener('click', function() {
-        quantityInput.value = parseInt(quantityInput.value) + 1;
-    });
-
-    btnMinus.addEventListener('click', function() {
-        if (parseInt(quantityInput.value) > 1) {
-            quantityInput.value = parseInt(quantityInput.value) - 1;
-        }
-    });
-
-    // Existing change event to handle manual input
-    $('#quantity-input').on('change', function(){
-        var value = parseInt($(this).val(), 10);
-        if (isNaN(value) || value < 1) {
-            alert('Quantity must be a number >= 1');
-            $(this).val(1);
-        }
-    });
-});
 
 </script>
 @endsection
