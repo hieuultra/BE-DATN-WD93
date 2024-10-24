@@ -465,7 +465,7 @@
                   <div class="product-img position-relative overflow-hidden">
                     <img class="img-fluid w-100" src="{{ asset('upload/'.$item->img) }}" alt="" />
                     <div class="product-action">
-                      <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"><i class="fa fa-shopping-cart"></i></a>
+                      <a class="btn btn-outline-dark btn-square" href="{{ route('cart.list') }}"><i class="fa fa-shopping-cart"></i></a>
                       <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
                       <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
                       <a class="btn btn-outline-dark btn-square" href="{{ route('productDetail', $item->id) }}"><i class="fa fa-search"></i></a>
@@ -480,7 +480,7 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light">
                         <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <form action="{{ route('cart.addCart') }}" method="post">
+                        <form action="{{ route('cart.add') }}" method="post">
                             @csrf
                                 <input type="hidden" name="quantity" value="1">
                                <input type="hidden" name="productId" value="{{ $item->id }}">
@@ -512,7 +512,7 @@
                   <div class="product-img position-relative overflow-hidden">
                     <img class="img-fluid w-100" src="{{ asset('upload/'.$item->img) }}" alt="" />
                     <div class="product-action">
-                      <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"><i class="fa fa-shopping-cart"></i></a>
+                      <a class="btn btn-outline-dark btn-square" href="{{ route('cart.list') }}"><i class="fa fa-shopping-cart"></i></a>
                       <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
                       <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
                       <a class="btn btn-outline-dark btn-square" href="{{ route('productDetail', $item->id) }}"><i class="fa fa-search"></i></a>
@@ -528,7 +528,7 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light">
                         <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <form action="{{ route('cart.addCart') }}" method="post">
+                        <form action="{{ route('cart.add') }}" method="post">
                             @csrf
                                 <input type="hidden" name="quantity" value="1">
                                <input type="hidden" name="productId" value="{{ $item->id }}">
@@ -631,7 +631,7 @@
               alt=""
             />
             <div class="product-action">
-              <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"
+              <a class="btn btn-outline-dark btn-square" href="{{ route('cart.list') }}"
                 ><i class="fa fa-shopping-cart"></i
               ></a>
               <a class="btn btn-outline-dark btn-square" href=""
@@ -657,7 +657,7 @@
             </div>
             <div class="card-footer d-flex justify-content-between bg-light">
                 <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                <form action="{{ route('cart.addCart') }}" method="post">
+                <form action="{{ route('cart.add') }}" method="post">
                     @csrf
                         <input type="hidden" name="quantity" value="1">
                        <input type="hidden" name="productId" value="{{ $item->id }}">

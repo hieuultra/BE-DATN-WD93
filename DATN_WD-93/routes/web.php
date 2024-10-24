@@ -55,10 +55,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/viewEditAcc', [AuthController::class, 'viewEditAcc'])->name('viewEditAcc');
 Route::post('/editAcc', [AuthController::class, 'editAcc'])->name('editAcc');
 
-Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
-Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
-Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
-
+Route::middleware(['auth'])->prefix('cart')->as('cart.')->group(function(){
+    Route::get('/list', [CartController::class, 'list'])->name('list');
+    Route::post('/add', [CartController::class, 'add'])->name('add');
+    Route::post('/update', [CartController::class, 'update'])->name('update');
+    Route::post('/remove', [CartController::class, 'remove'])->name('remove');
+});
 //order
 // Route::middleware('auth')->prefix('orders')
 //     ->as('orders.')
