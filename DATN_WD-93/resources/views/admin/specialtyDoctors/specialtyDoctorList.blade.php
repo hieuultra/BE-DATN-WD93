@@ -100,7 +100,7 @@
                 <i class="fas fa-table me-1"></i>
                 List Doctors
               </div>
-              <a href="{{ route('admin.productVariant.viewProductVariantAdd') }}">
+              <a href="{{ route('admin.doctors.viewDoctorAdd') }}">
                 <input type="submit" class="btn btn-primary" name="them" value="ADD">
               </a>
             </div>
@@ -143,7 +143,7 @@
                 </td>
 
                 <td>
-                        <img src="{{ asset('upload/'.$doc->img)  }}" width="150" height="90" alt="">
+                        <img src="{{ asset('upload/'.$doc->image)  }}" width="150" height="90" alt="">
                 </td>
                 <td>
                              {{$doc->phone}}

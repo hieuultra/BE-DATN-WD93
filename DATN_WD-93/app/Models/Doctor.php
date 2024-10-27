@@ -11,6 +11,12 @@ class Doctor extends Model
     protected $fillable = [
         'user_id',
         'specialty_id',
+        'title',
+        'experience_years',
+        'position',
+        'workplace',
+        'min_age',
+        'examination_fee',
         'bio'
     ];
     public function user()
@@ -38,5 +44,9 @@ class Doctor extends Model
     public function review()
     {
         return $this->hasMany(Review::class);
+    }
+    public function doctorAchievement()
+    {
+        return $this->hasMany(doctorAchievement::class);
     }
 }

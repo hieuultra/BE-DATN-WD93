@@ -19,7 +19,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        return view('client.auth_backup.viewLogin', compact('orderCount','categories'));
+        return view('client.auth_backup.viewLogin', compact('orderCount', 'categories'));
     }
     // public function viewLogin()
     // {
@@ -48,7 +48,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        return view('client.auth_backup.loginSuccess', compact('orderCount','categories'));
+        return view('client.auth_backup.loginSuccess', compact('orderCount', 'categories'));
     }
     public function account()
     {
@@ -58,7 +58,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        return view('client.auth_backup.account', compact('orderCount','categories'));
+        return view('client.auth_backup.account', compact('orderCount', 'categories'));
     }
     public function viewEditAcc()
     {
@@ -68,7 +68,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        return view('client.auth_backup.editAcc', compact('orderCount','categories'));
+        return view('client.auth_backup.editAcc', compact('orderCount', 'categories'));
     }
     public function editAcc(Request $request)
     {
@@ -84,6 +84,12 @@ class AuthController extends Controller
         $id = $request->id;
         $user = User::findOrFail($id);
         // $user = Auth::user();
+        // Kiểm tra xem email đã tồn tại và không phải của tài khoản hiện tại
+        $emailExists = User::where('email', $request->email)->where('id', '!=', $id)->exists();
+        if ($emailExists) {
+            return redirect()->back()->withErrors(['email' => 'Email đã tồn tại trong hệ thống.']);
+        }
+
 
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
@@ -116,7 +122,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        return view('client.auth_backup.register', compact('orderCount','categories'));
+        return view('client.auth_backup.register', compact('orderCount', 'categories'));
     }
     public function register(Request $request)
     {

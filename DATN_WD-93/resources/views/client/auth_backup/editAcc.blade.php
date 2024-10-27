@@ -26,6 +26,17 @@
                                 {{ session('error') }}
                             </div>
                         @endif
+
+                        {{-- Display validation errors --}}
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                             <div class="m-sm-4">
                                 <form action="{{ route('editAcc') }}" method="post" enctype="multipart/form-data">
                                     @csrf

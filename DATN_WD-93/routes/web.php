@@ -173,7 +173,6 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::prefix('doctors')
         ->as('doctors.')
         ->group(function () {
-            Route::get('/doctorList', [DoctorController::class, 'doctorList'])->name('doctorList');
             Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
             Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
             Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
