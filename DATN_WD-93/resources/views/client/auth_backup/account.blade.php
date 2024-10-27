@@ -41,10 +41,7 @@
                                     <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
                                         <img src="{{asset('upload/'.Auth::user()->image) }}" alt="" width="400" height="200">
                                     </div>
-                                    @else
-                                        <p>Please login/register to use our services..</p><br>
-                                        <a href="{{ route('viewLogin') }}"><input type="submit" href="#" class="btn btn-lg btn-primary" value="Login" name="dangnhap"></a>
-                                    @endif
+
                                     <div class="form-group">
                                             <li><a href="{{ route('orders.index') }}">My order </a></li>
                                            <li>  @if (Route::has('password.request'))
@@ -61,6 +58,10 @@
                                                 {{-- <li><a href="{{ route('logout') }}">Log out </a></li> --}}
                                             </form>
                                     </div>
+                                    @else
+                                    <p>Please login/register to use our services..</p><br>
+                                    <a href="{{ route('viewLogin') }}"><input type="submit" href="#" class="btn btn-lg btn-primary" value="Login" name="dangnhap"></a>
+                                    @endif
                             </div>
                         </div>
                     </div>
