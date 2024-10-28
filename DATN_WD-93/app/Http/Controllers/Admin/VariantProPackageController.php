@@ -15,7 +15,7 @@ class VariantProPackageController extends Controller
     {
         $packages = VariantPackage::orderBy('id', 'asc')->get();
         $product = Product::orderBy('id')->get();
-        $variantPro = VariantProduct::orderBy('id')->get();
+        $variantPro = VariantProduct::orderBy('updated_at','desc')->get();
         $cates = Category::orderBy('id')->get();
         return view('admin.variantProducts.variantProList', compact('packages', 'product', 'variantPro', 'cates'));
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\VariantPackage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +19,8 @@ class HomeController extends Controller
         $bestsellerProducts = Product::bestsellerProducts(6)->get();
 
         $instockProducts = Product::instockProducts(8)->get();
+        // Lấy 8 sản phẩm có lượt xem nhiều nhất
+        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)->get();
 
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
@@ -28,7 +31,7 @@ class HomeController extends Controller
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
 
-        return view('client.home.home', compact('orderCount', 'categories', 'newProducts', 'newProducts1', 'bestsellerProducts', 'instockProducts'));
+        return view('client.home.home', compact('orderCount', 'categories', 'newProducts', 'newProducts1', 'bestsellerProducts', 'instockProducts','mostViewedProducts'));
     }
     function products(Request $request)
     {
@@ -50,12 +53,6 @@ class HomeController extends Controller
     }
     function detail(Request $request) //truyen id o route vao phai co request
     {
-        // if ($request->product_id) {
-        //     $sp = Product::find($request->product_id);
-        //     $splq = Product::where('category_id', $sp->category_id)->where('id', '<>', $sp->id)->get(); //lay sp co cung id vs sp hien tai va khac id vs spht
-        //     $categories = Category::orderBy('name', 'asc')->get();
-        //     return view('client.detailSearch.detail', compact('sp', 'splq','categories'));
-        // }
         if ($request->product_id) {
             // Lấy sản phẩm
             $sp = Product::find($request->product_id);
@@ -68,6 +65,21 @@ class HomeController extends Controller
                 ->where('id', '<>', $sp->id)
                 ->get();
 
+            // Lấy danh sách các biến thể của sản phẩm
+            $variants = $sp->variantProduct;
+
+            // // Tạo mảng chứa tên các biến thể
+            $nameVariants = [];
+            foreach ($variants as $variant) {
+                // Lấy tên biến thể từ variantPackage
+                $nameVariants[] = $variant->variantPackage ? $variant->variantPackage->name : 'Chưa có tên biến thể'; // Kiểm tra nếu variantPackage tồn tại
+            }
+
+
+
+            $sp->view += 1; // tăng lượt xem sản phẩm
+            $sp->save(); // lưu lại số lượt xem sản phẩm
+
             $categories = Category::orderBy('name', 'asc')->get();
             $orderCount = 0; // Mặc định nếu chưa đăng nhập
             if (Auth::check()) {
@@ -75,7 +87,7 @@ class HomeController extends Controller
                 $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
             }
 
-            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories'));
+            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'nameVariants'));
         }
 
         return redirect()->route('products')->with('error', 'Không tìm thấy sản phẩm.');

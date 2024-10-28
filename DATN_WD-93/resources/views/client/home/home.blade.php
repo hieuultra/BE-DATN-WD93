@@ -615,11 +615,11 @@
      <!-- Title -->
      <div class="text-center mb-4">
       <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-        <span class="px-2">Family medicine cabinet</span>
+        <span class="px-2">Most Viewed</span>
       </h2>
     </div>
     <div class="row px-xl-5">
-        @foreach ($instockProducts as $item)
+        @foreach ($mostViewedProducts as $item)
         @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
         <!-- Product 5 -->
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
@@ -653,7 +653,7 @@
               class="d-flex align-items-center justify-content-center mt-2"
             >
               <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
-              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $/del></h6>
+              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
             </div>
             <div class="card-footer d-flex justify-content-between bg-light">
                 <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>

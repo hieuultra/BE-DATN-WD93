@@ -15,6 +15,6 @@ class VariantPackage extends Model
     //dn khoa chinh/khoa ngoai
     public function variantProduct()
     {
-        return $this->hasMany(VariantProduct::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
+        return $this->hasMany(VariantProduct::class, 'id_variant'); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
     }
 }

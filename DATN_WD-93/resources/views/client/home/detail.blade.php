@@ -37,6 +37,36 @@
     color: #6c757d;
 }
 
+/* Container cho các ô vuông biến thể */
+.variant-container {
+    display: flex;
+    gap: 10px; /* Khoảng cách giữa các ô */
+    flex-wrap: wrap; /* Gói các ô xuống hàng nếu không đủ chỗ */
+}
+
+/* Các ô vuông biến thể */
+.variant-box {
+    padding: 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Hiệu ứng khi di chuột qua */
+.variant-box:hover {
+    background-color: #f0f0f0;
+    border-color: #333;
+}
+
+/* Kiểu dáng khi ô biến thể được chọn */
+.variant-box.selected {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+}
+
 </style>
 
  <!-- Breadcrumb Start -->
@@ -95,6 +125,14 @@
                     </div>
                     <small class="views-count ml-auto">{{ $sp->view }} Views</small>
                 </div>
+                <div class="d-flex mb-3 border-box">
+                    <div class="variant-container">
+                        @foreach ($nameVariants as $nameVariant)
+                            <div class="variant-box">{{ $nameVariant }}</div>
+                        @endforeach
+                    </div>
+                </div>
+
                 <div style="display: flex; align-items: center;">
                     <h3 class="font-weight-semi-bold mb-4 text-danger">{{ number_format($tt, 0, ",", ".") }} $</h3>
                     <h4 class="font-weight-semi-bold mb-4"><del>{{ number_format($sp->price, 0, ",", ".") }} $</del></h4>
@@ -103,10 +141,6 @@
                     <p class="inventory-status" id="quantity-display">Inventory Quantity: {{ $sp->quantity }}</p>
               </div>
                 <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p>
-                <div class="d-flex mb-3">
-                    <strong class="text-dark mr-3">Product Classification</strong>
-
-                </div>
                 {{-- <div class="d-flex mb-4">
                     <strong class="text-dark mr-3">Colors:</strong>
 
@@ -348,6 +382,18 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Quantity must be a number >= 1');
             $(this).val(1);
         }
+    });
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const variantBoxes = document.querySelectorAll('.variant-box');
+    variantBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            variantBoxes.forEach(b => b.classList.remove('selected')); // Xóa chọn ô khác
+            box.classList.add('selected'); // Thêm lớp 'selected' vào ô nhấn
+        });
     });
 });
 

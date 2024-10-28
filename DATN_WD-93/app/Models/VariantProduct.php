@@ -22,6 +22,6 @@ class VariantProduct extends Model
     }
     public function variantPackage()
     {
-        return $this->belongsTo(VariantPackage::class);
+        return $this->belongsTo(VariantPackage::class, 'id_variant');
     }
 }
