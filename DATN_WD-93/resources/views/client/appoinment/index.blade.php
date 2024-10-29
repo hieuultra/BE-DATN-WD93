@@ -23,14 +23,15 @@
     <div class="title">
       <p>NỀN TẢNG Y TẾ</p>
       <p>CHĂM SÓC SỨC KHỎE TOÀN DIỆN</p>
-      <input type="text" placeholder="Nhập Nội Dung Cần Tìm" />
+        <input type="text" placeholder="Nhập Nội Dung Cần Tìm" style="font-size: 26px"/>
+        <i class="fas fa-search"></i>
     </div>
   </div>
   <div class="chosse">
-    <div class="container d-flex justify-content-center">
+    <div class="container d-flex justify-content-center">1
       <div class="row">
         <div class="chosse-banner d-flex justify-content-center">
-          <a href="">
+          <a href="{{ route('appoinment.specialistExamination') }}">
             <div class="col text-center">
               <div class="chosse-icon">
                 <svg
@@ -143,6 +144,7 @@
       </div>
       <div class="chuyenkhoa mt-4 mb-4">
         <div class="row">
+            @foreach ($specialties as $item)
           <div class="col">
             <div>
               <a href="">
@@ -154,71 +156,15 @@
                       border: 2px solid lightgray;
                       border-radius: 10px;
                     "
-                    src="https://cdn.bookingcare.vn/fo/w384/2023/12/26/101627-co-xuong-khop.png"
+                    src="{{ asset('upload/'.$item->image) }}"
                     alt=""
                   />
                 </div>
-                <p class="pt-2 pb-2">Cơ Xương Khớp</p>
+                <p class="pt-2 pb-2">{{ $item->name }}</p>
               </a>
             </div>
           </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: auto;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w384/2023/12/26/101739-than-kinh.png"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Thần Kinh</p>
-              </a>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: auto;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w384/2023/12/26/101713-tieu-hoa.png"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Tiêu Hóa</p>
-              </a>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: auto;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w384/2023/12/26/101713-tim-mach.png"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Tim Mạch</p>
-              </a>
-            </div>
-          </div>
+          @endforeach
         </div>
       </div>
       <div class="title-chuyenkhoa">
@@ -318,7 +264,7 @@
                   <img
                     style="
                       width: 90%;
-                      height: auto;
+                      height: 140px;
                       border: 2px solid lightgray;
                       border-radius: 10px;
                     "
@@ -400,6 +346,10 @@
       </div>
       <div class="chuyenkhoa mt-4 mb-4">
         <div class="row">
+            @foreach ($doctors as $item)
+            @php
+            $u = $item->user;
+           @endphp
           <div class="col">
             <div>
               <a href="">
@@ -411,7 +361,7 @@
                       border-radius: 50%;
                       border: 2px solid lightgray;
                     "
-                    src="https://cdn.bookingcare.vn/fo/w128/2020/03/17/114430-bshung.jpg"
+                    src="{{ asset('upload/'.$u->image) }}"
                     alt=""
                   />
                 </div>
@@ -419,90 +369,14 @@
                   class="pt-2"
                   style="text-align: center; margin-bottom: 0px"
                 >
-                  Phó Giáo sư, Tiến sĩ, Bác sĩ cao cấp <br />
-                  Nguyễn Duy Hưng
+                  {{ $item->title }} <br />
+                  {{ $u->name }}
                 </p>
               </a>
-              <p style="text-align: center; color: gray">Da Liễu</p>
+              <p style="text-align: center; color: gray">{{ $item->position }}</p>
             </div>
           </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div class="d-flex justify-content-center">
-                  <img
-                    style="
-                      width: 150px;
-                      height: 150px;
-                      border-radius: 50%;
-                      border: 2px solid lightgray;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w128/2021/01/18/105401-bsckii-tran-minh-khuyen.jpg"
-                    alt=""
-                  />
-                </div>
-                <p
-                  class="pt-2"
-                  style="text-align: center; margin-bottom: 0px"
-                >
-                  Bác sĩ Chuyên khoa II Trần Minh Khuyên
-                </p>
-              </a>
-              <p style="text-align: center; color: gray">
-                Sức khỏe tâm thần - Tư vấn, trị liệu Tâm lý
-              </p>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div class="d-flex justify-content-center">
-                  <img
-                    style="
-                      width: 150px;
-                      height: 150px;
-                      border-radius: 50%;
-                      border: 2px solid lightgray;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w128/2019/09/04/094041pho-giao-su-nguyen-van-lieu.jpg"
-                    alt=""
-                  />
-                </div>
-                <p
-                  class="pt-2"
-                  style="text-align: center; margin-bottom: 0px"
-                >
-                  Phó Giáo sư, Tiến sĩ, Bác sĩ Nguyễn Văn Liệu
-                </p>
-              </a>
-              <p style="text-align: center; color: gray">Thần Kinh</p>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div class="d-flex justify-content-center">
-                  <img
-                    style="
-                      width: 150px;
-                      height: 150px;
-                      border-radius: 50%;
-                      border: 2px solid lightgray;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w128/2021/11/29/104016-bs-nga.jpg"
-                    alt=""
-                  />
-                </div>
-                <p
-                  class="pt-2"
-                  style="text-align: center; margin-bottom: 0px"
-                >
-                  Tiến sĩ Bác sĩ Bùi Thị Phương Nga
-                </p>
-              </a>
-              <p style="text-align: center; color: gray">Sản Phụ khoa</p>
-            </div>
-          </div>
+          @endforeach
         </div>
       </div>
     </div>

@@ -51,7 +51,12 @@ Route::middleware('auth')->group(function () {
     });
 });
 //appoinment
-Route::get('/appoinment', [AppoinmentController::class, 'appoinment'])->name('appoinment');
+Route::prefix('appoinment')
+    ->as('appoinment.')
+    ->group(function () {
+        Route::get('/', [AppoinmentController::class, 'appoinment'])->name('index');
+        Route::get('specialistExamination', [AppoinmentController::class, 'specialistExamination'])->name('specialistExamination');
+    });
 
 Auth::routes();
 //user management

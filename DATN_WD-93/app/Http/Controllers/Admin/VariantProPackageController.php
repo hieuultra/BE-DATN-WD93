@@ -13,7 +13,7 @@ class VariantProPackageController extends Controller
 {
     public function variantProList()
     {
-        $packages = VariantPackage::orderBy('id', 'asc')->get();
+        $packages = VariantPackage::orderBy('updated_at', 'desc')->get();
         $product = Product::orderBy('id')->get();
         $variantPro = VariantProduct::orderBy('updated_at','desc')->get();
         $cates = Category::orderBy('id')->get();

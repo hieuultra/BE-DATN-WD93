@@ -11,8 +11,8 @@ class SpecialtyController extends Controller
 {
     public function specialtyDoctorList()
     {
-        $specialty = Specialty::orderBy('id', 'asc')->get();
-        $doctor = Doctor::orderBy('id')->get();
+        $specialty = Specialty::orderBy('updated_at', 'desc')->get();
+        $doctor = Doctor::orderBy('updated_at', 'desc')->get();
         return view('admin.specialtyDoctors.specialtyDoctorList', compact('specialty', 'doctor'));
     }
     public function viewSpecialtyAdd()

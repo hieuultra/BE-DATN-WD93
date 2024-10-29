@@ -52,7 +52,7 @@
             <div class="navbar-nav mr-auto py-0">
               <a href="{{ route('home') }}" class="nav-item nav-link active">Home</a>
               <a href="{{ route('products') }}" class="nav-item nav-link">Functional Food</a>
-              <a href="{{ route('appoinment') }}" class="nav-item nav-link">Make an appointment</a>
+              <a href="{{ route('appoinment.index') }}" class="nav-item nav-link">Make an appointment</a>
               <div class="nav-item dropdown">
                 <a
                   href="#"
