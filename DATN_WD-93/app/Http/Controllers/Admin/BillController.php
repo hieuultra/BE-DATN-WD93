@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 
 class BillController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -52,9 +52,13 @@ class BillController extends Controller
         if (array_search($newStatus, $status) < array_search($currentStatus, $status)) {
             return redirect()->route('admin.bills.index')->with('error', 'New Status must be after current status');
         }
-        if ($request->has('da_giao_hang')) {
-            // Cập nhật trạng thái thanh toán thành ĐÃ THANH TOÁN nếu đã giao hàng
-            $bill->update(['status_payment_method' => Bill::DA_THANH_TOAN]);
+        // if ($request->has('da_giao_hang')) {
+        //     // Cập nhật trạng thái thanh toán thành ĐÃ THANH TOÁN nếu đã giao hàng
+        //     $bill->update(['status_payment_method' => Bill::DA_THANH_TOAN]);
+        // }
+        // Only update payment status if bill status is set to delivered
+        if ($newStatus === Bill::DA_GIAO_HANG) {
+            $bill->status_payment_method = Bill::DA_THANH_TOAN;
         }
 
         $bill->status_bill = $newStatus;

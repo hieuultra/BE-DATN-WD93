@@ -21,7 +21,7 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
-
+use App\Http\Controllers\Client\AppoinmentController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -50,6 +50,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     });
 });
+//appoinment
+Route::get('/appoinment', [AppoinmentController::class, 'appoinment'])->name('appoinment');
 
 Auth::routes();
 //user management

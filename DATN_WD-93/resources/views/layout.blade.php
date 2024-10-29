@@ -30,16 +30,20 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('css/style1.css') }}" rel="stylesheet" />
+
+    {{-- <link rel="stylesheet" href="{{ asset('css/styleAppoinment.css') }}"> --}}
   </head>
 
   <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
       <div class="row bg-secondary py-1 px-xl-5">
-        <marquee behavior="scroll" direction="left" scrollamount="5">
-          <span style="font-size: 18px; color: red"
+        <marquee behavior="scroll" direction="left" scrollamount="9">
+          {{-- <span style="font-size: 18px; color: red"
             >Free exchange for 30 days.</span
-          >
+          > --}}
+          <img src="{{asset('img/9eaf8645b78d6bc41a5b06a4db109296.png') }}" alt="">
+          <img src="{{asset('img/eaa44ae488d28a2bf8329e21e1146ece.png') }}" alt="">
         </marquee>
         <div class="col-lg-6 d-none d-lg-block">
           <div class="d-inline-flex align-items-center h-100">

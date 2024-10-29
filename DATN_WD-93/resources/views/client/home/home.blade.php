@@ -31,26 +31,26 @@
                 src="{{ asset('img/20240909015811-0-Slide banner - 1590x604px (1).webp') }}"
                 style="object-fit: cover"
               />
-              <div
+              {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
               >
                 <div class="p-3" style="max-width: 700px">
-                  <!-- <h1
+                   <h1
                     class="display-4 text-white mb-3 animate__animated animate__fadeInDown"
                   >
                     Men Fashion
-                  </h1> -->
-                  <!-- <p class="mx-md-5 px-5 animate__animated animate__bounceIn">
+                  </h1>
+                  <p class="mx-md-5 px-5 animate__animated animate__bounceIn">
                     Lorem rebum magna amet lorem magna erat diam stet. Sadips
                     duo stet amet amet ndiam elitr ipsum diam
-                  </p> -->
+                  </p>
                   <a
                     class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
                     href="#"
                     >Shop Now</a
                   >
                 </div>
-              </div>
+              </div> --}}
             </div>
             <div
               class="carousel-item position-relative"
@@ -61,11 +61,11 @@
                 src="{{ asset('img/20240905071756-0-389x143_2 3.png') }}"
                 style="object-fit: cover"
               />
-              <div
+              {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
               >
                 <div class="p-3" style="max-width: 700px">
-                  <!-- <h1
+                  <h1
                     class="display-4 text-white mb-3 animate__animated animate__fadeInDown"
                   >
                     Women Fashion
@@ -73,14 +73,14 @@
                   <p class="mx-md-5 px-5 animate__animated animate__bounceIn">
                     Lorem rebum magna amet lorem magna erat diam stet. Sadips
                     duo stet amet amet ndiam elitr ipsum diam
-                  </p> -->
+                  </p>
                   <a
                     class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
                     href="#"
                     >Shop Now</a
                   >
                 </div>
-              </div>
+              </div> --}}
             </div>
             <div
               class="carousel-item position-relative"
@@ -91,11 +91,11 @@
                 src="{{ asset('img/20240510022448-0-THUCUDOIMOI BANNERWEB_590x604.webp') }}"
                 style="object-fit: cover"
               />
-              <div
+              {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
               >
                 <div class="p-3" style="max-width: 700px">
-                  <!-- <h1
+                   <h1
                     class="display-4 text-white mb-3 animate__animated animate__fadeInDown"
                   >
                     Kids Fashion
@@ -103,14 +103,14 @@
                   <p class="mx-md-5 px-5 animate__animated animate__bounceIn">
                     Lorem rebum magna amet lorem magna erat diam stet. Sadips
                     duo stet amet amet ndiam elitr ipsum diam
-                  </p> -->
+                  </p>
                   <a
                     class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
                     href="#"
                     >Shop Now</a
                   >
                 </div>
-              </div>
+              </div> --}}
             </div>
           </div>
         </div>
@@ -122,11 +122,11 @@
             src="{{ asset('img/20240909015811-0-Slide banner - 1590x604px (1) (1).webp') }}"
             alt=""
           />
-          <div class="offer-text">
+          {{-- <div class="offer-text">
             <h6 class="text-white text-uppercase">Save 20%</h6>
             <h3 class="text-white mb-3">Special Offer</h3>
             <a href="" class="btn btn-primary">Shop Now</a>
-          </div>
+          </div> --}}
         </div>
         <div class="product-offer mb-30" style="height: 200px">
           <img
@@ -134,11 +134,11 @@
             src="{{ asset('img/20240731045253-0-Slide banner 1.webp') }}"
             alt=""
           />
-          <div class="offer-text">
+          {{-- <div class="offer-text">
             <h6 class="text-white text-uppercase">Save 20%</h6>
             <h3 class="text-white mb-3">Special Offer</h3>
             <a href="" class="btn btn-primary">Shop Now</a>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>

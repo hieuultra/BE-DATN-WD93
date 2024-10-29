@@ -44,7 +44,7 @@
                             <td class="text-danger text-center">{{ $bill->billCode }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Name User :</th>
+                            <th class="text-center">Consignee name :</th>
                             <td class="text-center">{{ $bill->nameUser }}</td>
                         </tr>
                         <tr>
