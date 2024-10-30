@@ -1,0 +1,364 @@
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: sans-serif;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+.c-img {
+    position: relative;
+    display: block;
+    padding-top: 100%;
+}
+
+.c-img img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+@media (max-width: 1440px) {
+    .container {
+        max-width: 1028px;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        max-width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+.ChuyenKhoa {
+    background: #EDFFFA;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.menuChuyenKhoa {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.menuChuyenKhoa ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+
+}
+
+@media (max-width: 768px) {
+    .menuChuyenKhoa ul {
+        display: none;
+    }
+}
+
+.menuChuyenKhoa ul li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.menuChuyenKhoa ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+.menuChuyenKhoa ul li .title {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.menuNavCK i {
+    font-size: 2rem;
+}
+
+
+.breackrum {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: blue;
+    font-size: 1rem;
+}
+
+.breackrum p {
+    color: black;
+}
+
+.layout_item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.layout_item .items_ck {
+    width: 23%;
+}
+
+@media (max-width: 768px) {
+    .layout_item .items_ck {
+        width: 31%;
+    }
+}
+
+@media (max-width: 520px) {
+    .layout_item .items_ck {
+        width: 47%;
+    }
+}
+
+.layout_item .items_ck .img_item {
+    padding-top: 10%;
+}
+
+.layout_item .items_ck .title_items {
+    text-decoration: none;
+    font-weight: 700;
+    color: black;
+    margin-top: 1rem;
+    display: block;
+}
+
+.banner-container {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.banner-img {
+    width: 100%;
+    height: auto;
+}
+
+.banner-heading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /* Thêm hiệu ứng bóng cho chữ */
+}
+
+.search-form {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    background-color: #ffc107;
+    /* Màu vàng nền của form */
+    padding: 20px;
+    border-radius: 0px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+    border-radius: 8px;
+}
+
+.search-btn:hover {
+    background-color: #b5b0a9;
+}
+
+.refresh-btn {
+    background-color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.refresh-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.form-select {
+    border-radius: 8px;
+}
+
+.container-content {
+    width: 80%;
+    /* Hoặc giá trị mong muốn */
+    margin: 100px auto 0;
+    /* Căn giữa theo chiều ngang và cách phía trên 100px */
+    text-align: center;
+}
+
+.danh-muc {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+    gap: 30px;
+    /* Tạo khoảng cách giữa các slide là 5px */
+    /* overflow-x: scroll; */
+}
+
+.slide {
+    min-width: 15%;
+    min-height: 15%;
+    text-align: center;
+
+}
+
+.slide img {
+    width: 200px;
+    /* Chiều rộng của hình ảnh */
+    height: 200px;
+    /* Chiều cao của hình ảnh để tạo thành hình vuông */
+    object-fit: cover;
+    /* Đảm bảo hình ảnh không bị méo khi thay đổi kích thước */
+    border-radius: 10px;
+    /* Nếu muốn bo góc, bạn có thể chỉnh sửa giá trị này */
+    display: block;
+    margin: 0 auto;
+    border-radius: 50%;
+}
+/* Tổng thể container */
+.featured-packages {
+    margin: 20px;
+  }
+
+  /* Tiêu đề và nút XEM THÊM */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .header .view-more {
+    font-size: 14px;
+    color: #00aaff;
+    text-decoration: none;
+  }
+
+  .header .view-more:hover {
+    text-decoration: underline;
+  }
+
+  /* Dòng gạch dưới */
+  hr {
+    margin: 10px 0;
+    border: 0.5px solid #ddd;
+  }
+
+  /* Phần danh sách các gói khám */
+  .package-list {
+    display: flex;
+    flex-wrap: wrap; /* Cho phép phần tử xuống dòng */
+    gap: 20px; /* Khoảng cách giữa các phần tử */
+  }
+
+  /* Mỗi gói khám */
+  .package-item {
+    width: calc(25% - 20px); /* Chia đều thành 4 phần và trừ khoảng cách giữa các gói */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+
+  .package-item img {
+    width: 100%;
+    height: auto;
+  }
+
+  .package-info {
+    padding: 15px;
+  }
+
+  .package-info h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .package-info p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 8px;
+  }
+
+  .package-info .price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+  }
+  .medical-facilities {
+    margin: 20px;
+  }
+  .facility-list {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  /* Mỗi cơ sở y tế */
+  .facility-item {
+    width: 18%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .facility-item img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .facility-item p {
+    font-size: 14px;
+    color: #333;
+  }

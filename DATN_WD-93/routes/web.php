@@ -56,6 +56,7 @@ Route::prefix('appoinment')
     ->group(function () {
         Route::get('/', [AppoinmentController::class, 'appoinment'])->name('index');
         Route::get('specialistExamination', [AppoinmentController::class, 'specialistExamination'])->name('specialistExamination');
+        Route::get('/doctors/{specialty_id}', [AppoinmentController::class, 'doctors'])->name('doctorsBySpecialtyId');
     });
 
 Auth::routes();
