@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -47,16 +49,30 @@ class OrderController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        $carts = session()->get('cart', []);
-        if (!empty($carts)) {
+        $carts = Cart::where('user_id', Auth::id())->with("items.product", "items.variant")->first();
+        // if (!empty($carts->items->count() > 0)) {
+        //     $total = 0;
+        //     $subtotal = 0;
+        //     foreach ($carts as $item) {
+        //         $subtotal += $item['quantity'] * $item['price'];
+        //     }
+        //     $shipping = 50;
+        //     $total = $subtotal + $shipping;
+        //     return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subtotal'));
+        // }
+        if ($carts && $carts->items->count() > 0) {
             $total = 0;
-            $subtotal = 0;
-            foreach ($carts as $item) {
-                $subtotal += $item['quantity'] * $item['price'];
-            }
+            $subTotal = 0;
             $shipping = 50;
-            $total = $subtotal + $shipping;
-            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subtotal'));
+            foreach ($carts->items as  $item) {
+                $price = is_numeric($item['price']) ? $item['price'] : 0;
+                $quantity = is_numeric($item['quantity']) ? $item['quantity'] : 0;
+                // Kiểm tra nếu các khóa cần thiết tồn tại trong mục giỏ hàng
+                // Tính toán tổng phụ
+                $subTotal += $price * $quantity;
+            }
+            $total = $subTotal + $shipping;
+            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal'));
         }
         return redirect()->route('cart.listCart');
     }
