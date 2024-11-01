@@ -67,12 +67,15 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/viewEditAcc', [AuthController::class, 'viewEditAcc'])->name('viewEditAcc');
 Route::post('/editAcc', [AuthController::class, 'editAcc'])->name('editAcc');
 
-Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
-Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
-Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
+    Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
+    Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
+    Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
+});
 // order
-Route::middleware('auth')->prefix('orders')
+Route::middleware(['auth'])->prefix('orders')
     ->as('orders.')
     ->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
@@ -177,14 +180,14 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/specialtyUpdate', [SpecialtyController::class, 'specialtyUpdate'])->name('specialtyUpdate');
                 Route::delete('/specialtyDestroy/{id}', [SpecialtyController::class, 'specialtyDestroy'])->name('specialtyDestroy');
             });
-             //specialty
+        //specialty
         Route::prefix('doctors')
-        ->as('doctors.')
-        ->group(function () {
-            Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
-            Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
-            Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
-            Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');
-            Route::delete('/doctorDestroy/{id}', [DoctorController::class, 'doctorDestroy'])->name('doctorDestroy');
-        });
+            ->as('doctors.')
+            ->group(function () {
+                Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
+                Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
+                Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
+                Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');
+                Route::delete('/doctorDestroy/{id}', [DoctorController::class, 'doctorDestroy'])->name('doctorDestroy');
+            });
     });
