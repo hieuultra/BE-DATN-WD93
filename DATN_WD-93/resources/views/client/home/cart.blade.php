@@ -45,6 +45,7 @@
             {{ session('error') }}
         </div>
     @endif
+    @if ($cart && $cart->items->count() > 0)
         <form action="{{ route('cart.updateCart') }}" method="POST">
             @csrf
         <table class="table table-bordered">
@@ -59,19 +60,21 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($cart as $key => $item)
+                {{-- @foreach($cart as $key => $item) --}}
+                @foreach ($cart->items as $item)
+                <input type="hidden" name="id" value="{{ $item['id'] }}" id="">
                 <tr>
-                    <td class="pro-thumbnail"><a href="{{ route('productDetail', $key) }}">
-                        <img class="img-fluid" src="{{ asset('upload/'.$item['img']) }}" width="80" height="30" alt="Product" />
-                        <input type="hidden" name="cart[{{ $key }}][img]" value="{{ $item['img'] }}" id="">
+                    <td class="pro-thumbnail"><a href="{{ route('productDetail',  $item->product_id) }}">
+                        <img class="img-fluid" src="{{ asset('upload/'.$item['image']) }}" width="80" height="30" alt="Product" />
+                        <input type="hidden" name="image" value="{{ $item['img'] }}" id="">
                     </a></td>
                     <td class="pro-title">
-                        <a href="{{ route('productDetail', $key) }}">{{ $item['name'] }}</a>
-                        <input type="hidden" name="cart[{{ $key }}][name]" value="{{ $item['name'] }}" id="">
+                        <a href="{{ route('productDetail',  $item->product_id) }}">{{ $item['name'] }}</a>
+                        <input type="hidden" name="name" value="{{ $item['name'] }}" id="">
                     </td>
                     <td class="pro-price">
                         <span>{{ number_format($item['price'],0,',','.') }}$</span>
-                        <input type="hidden" name="cart[{{ $key }}][price]" value="{{ $item['price'] }}" id="">
+                        <input type="hidden" name="price" value="{{ $item['price'] }}" id="">
                     </td>
                     <td class="pro-quantity">
                         <div class="d-flex align-items-center me-4">
@@ -80,14 +83,17 @@
                                     <i class="fa fa-minus"></i>
                                 </button>
                                 <input type="text" class="form-control text-center quantity-input"
-                                data-price="{{ $item['price'] }}" value="{{ $item['quantity'] }}" name="cart[{{ $key }}][quantity]">
+                                data-price="{{ $item['price'] }}" value="{{ $item['quantity'] }}" name="quantity">
                                 <button class="btn btn-outline-primary btn-plus">
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
                         </div>
                     </td>
-                    <td class="pro-subtotal"><span class="subtotal">{{  number_format($item['price'] * $item['quantity'],0,',','.') }} $</span></td>
+                    <td class="pro-subtotal"><span class="subtotal">{{  number_format($item['price'] * $item['quantity'],0,',','.') }} $</span>
+                        <input type="hidden" name="total"
+                        value="{{ $item['price'] * $item['quantity'] }}">
+                    </td>
                     <td class="pro-remove text-center"><a href="#"><i class="fa fa-trash"></i></a></td>
                 </tr>
                 @endforeach
@@ -97,6 +103,9 @@
             <button type="submit" href="" class="btn btn-primary">Update Cart</button>
         </div>
     </form>
+    @else
+    <h3 style="text-align: center;color: rgb(222, 80, 80)">Giỏ hàng rỗng</h3>
+   @endif
       </div>
 
 
@@ -147,21 +156,66 @@
             const btnMinus = container.querySelector('.btn-minus');
 
             btnPlus.addEventListener('click', function() {
+                event.preventDefault();
                 let currentValue = parseInt(quantityInput.value, 10);
                 quantityInput.value = currentValue + 1;
                 updateSubtotal(container);
-                updateTotal(); // Cập nhật tổng số khi thay đổi số lượng
+                updateTotal();
+
+                // Gửi yêu cầu AJAX để cập nhật số lượng sản phẩm
+                updateCartAjax();
             });
 
             btnMinus.addEventListener('click', function() {
+                event.preventDefault();
                 let currentValue = parseInt(quantityInput.value, 10);
                 if (currentValue > 1) {
                     quantityInput.value = currentValue - 1;
                     updateSubtotal(container);
-                    updateTotal(); // Cập nhật tổng số khi thay đổi số lượng
+                    updateTotal();
+
+                    // Gửi yêu cầu AJAX để cập nhật số lượng sản phẩm
+                    updateCartAjax();
                 }
             });
+
         });
+
+        function updateCartAjax() {
+            var formData = $('form').serialize();
+            $.ajax({
+                url: '/updateCart', // Đường dẫn xử lý cập nhật giỏ hàng
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Thông báo cập nhật thành công
+                    console.log('Cart updated successfully');
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', xhr.responseText);
+                    // Xử lý lỗi khi cập nhật giỏ hàng
+                    alert('Error updating cart');
+                }
+            });
+        }
+
+        function removeCartAjax() {
+            var formData = $('form').serialize();
+            $.ajax({
+                url: '/removeCart', // Đường dẫn để xử lý xóa sản phẩm
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Thông báo sản phẩm đã được xóa thành công
+                    console.log('Product removed successfully');
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', xhr.responseText);
+                    alert('Error removing product');
+                }
+            });
+        }
+
 
         // Cập nhật subtotal cho từng sản phẩm
         function updateSubtotal(container) {
@@ -178,7 +232,8 @@
         function formatCurrency(value) {
             const formatted = value.toFixed(0); // Làm tròn xuống số nguyên
             if (formatted.length > 3) {
-                return formatted.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' $'; // Thêm dấu chấm phân tách hàng nghìn
+                return formatted.replace(/\B(?=(\d{3})+(?!\d))/g, '.') +
+                    ' $'; // Thêm dấu chấm phân tách hàng nghìn
             }
             return formatted + ' $'; // Trả về giá trị cho các số dưới 1000
         }
@@ -186,51 +241,54 @@
         // Xử lý khi người dùng nhập số âm
         document.querySelectorAll('.quantity-input').forEach(function(input) {
             input.addEventListener('change', function() {
+                event.preventDefault();
                 const value = parseInt(input.value, 10);
                 if (isNaN(value) || value < 1) {
                     alert('Quantity must be a number >= 1');
                     input.value = 1;
-                    updateSubtotal(input.closest('.quantity-container'));
                 }
+                updateSubtotal(input.closest('.quantity-container'));
+                updateTotal();
+                updateCartAjax();
             });
         });
-          // Xử lý xóa sản phẩm trong giỏ hàng
-               document.querySelectorAll('.pro-remove').forEach(function(removeButton) {
-        removeButton.addEventListener('click', function(event) {
-            event.preventDefault(); // Ngăn chặn hành vi mặc định của liên kết
-            const row = this.closest('tr'); // Tìm hàng gần nhất
-            if (row) {
-                row.remove(); // Xóa hàng
-                updateTotal(); // Cập nhật tổng số khi xóa hàng
-            }
-        });
-    });
+        // Xử lý xóa sản phẩm trong giỏ hàng
+        document.querySelectorAll('.pro-remove').forEach(function(removeButton) {
+            removeButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                const row = this.closest('tr');
+                row.remove(); // Xóa sản phẩm khỏi giao diện
+                updateTotal();
+                removeCartAjax();
+            });
 
-// Hàm cập nhật tổng số
-       function updateTotal() {
-        let subTotal = 0;
-        // Tính tổng các sản phẩm có trong giỏ hàng
-        document.querySelectorAll('.quantity-input').forEach(function(input) {
-            const price = parseFloat(input.dataset.price);
-            const quantity = parseInt(input.value, 10);
-            subTotal += price * quantity;
         });
 
-        // Lấy số tiền vận chuyển
-        const shipping = parseFloat(document.querySelector('.shipping').textContent.replace(/\./g, '').replace(' $', ''));
-        const total = subTotal + shipping;
+        // Hàm cập nhật tổng số
+        function updateTotal() {
+            let subTotal = 0;
+            // Tính tổng các sản phẩm có trong giỏ hàng
+            document.querySelectorAll('.quantity-input').forEach(function(input) {
+                const price = parseFloat(input.dataset.price);
+                const quantity = parseInt(input.value, 10);
+                subTotal += price * quantity;
+            });
 
-        // Cập nhật giá trị
-        document.querySelector('.subTotal').textContent = formatCurrency(subTotal);
-        document.querySelector('.total_amount').textContent = formatCurrency(total);
-    }
+            // Lấy số tiền vận chuyển
+            const shipping = parseFloat(document.querySelector('.shipping').textContent.replace(/\./g, '')
+                .replace(' $', ''));
+            const total = subTotal + shipping;
 
-    // Cập nhật tổng số khi trang được tải
-    updateTotal();
+            // Cập nhật giá trị
+            document.querySelector('.subTotal').textContent = formatCurrency(subTotal);
+            document.querySelector('.total_amount').textContent = formatCurrency(total);
+        }
+
+        // Cập nhật tổng số khi trang được tải
+        updateTotal();
 
     });
+</script>
 
-
-    </script>
 
 @endsection

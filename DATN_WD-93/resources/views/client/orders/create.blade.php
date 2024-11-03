@@ -103,11 +103,11 @@
                 <div class="card-body">
                     <h5 class="font-weight-medium mb-3">Products</h5>
                     <div class="product-list">
-                        @foreach($carts as $key => $item)
+                        @foreach($carts->items as $item)
                             <div class="product-item d-flex align-items-center mb-2">
-                                <img src="{{ asset('upload/'.$item['img']) }}" height="50px" class="me-2">
+                                <img src="{{ asset('upload/' . $item['image']) }}" height="50px" class="me-2">
                                 <div class="product-info me-3">
-                                    <a href="{{ route('productDetail', $key) }}"><p class="mb-0">{{ $item['name'] }}</p></a>
+                                    <a href="{{ route('productDetail', $item->product_id) }}"><p class="mb-0">{{ $item['name'] }}</p></a>
                                     <p class="mb-0">{{ number_format($item['price'] * $item['quantity'],0,',','.') }}$</p>
                                 </div>
                                 <span class="text-muted">x {{ $item['quantity'] }}</span>
@@ -117,8 +117,8 @@
                     <hr class="mt-0" />
                     <div class="d-flex justify-content-between mb-3 pt-1">
                         <h6 class="font-weight-medium">Subtotal</h6>
-                        <h6 class="font-weight-medium">{{ number_format($subtotal,0,',','.') }}$ </h6>
-                        <input type="hidden" name="moneyProduct" value="{{ $subtotal }}">
+                        <h6 class="font-weight-medium">{{ number_format($subTotal,0,',','.') }}$ </h6>
+                        <input type="hidden" name="moneyProduct" value="{{ $subTotal }}">
                     </div>
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>

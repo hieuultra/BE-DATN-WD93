@@ -123,6 +123,7 @@
                       <nav class="sb-sidenav-menu-nested nav">
                           <a class="nav-link" href="{{ route('admin.specialties.specialtyDoctorList') }}">List Specialty</a>
                           <a class="nav-link" href="{{ route('admin.specialties.specialtyDoctorList') }}">List Doctor</a>
+                          <a class="nav-link" href="{{ route('admin.timeslot.timeslotList') }}">List Timeslot</a>
                       </nav>
                   </div>
 

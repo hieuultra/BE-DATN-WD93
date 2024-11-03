@@ -57,6 +57,7 @@ Route::prefix('appoinment')
         Route::get('/', [AppoinmentController::class, 'appoinment'])->name('index');
         Route::get('specialistExamination', [AppoinmentController::class, 'specialistExamination'])->name('specialistExamination');
         Route::get('/doctors/{specialty_id}', [AppoinmentController::class, 'doctors'])->name('doctorsBySpecialtyId');
+        Route::post('/schedule', [AppoinmentController::class, 'schedule'])->name('schedule');
     });
 
 Auth::routes();
@@ -70,6 +71,7 @@ Route::post('/editAcc', [AuthController::class, 'editAcc'])->name('editAcc');
 Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
 Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
 Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
+Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
 
 // order
 Route::middleware('auth')->prefix('orders')
@@ -177,14 +179,25 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/specialtyUpdate', [SpecialtyController::class, 'specialtyUpdate'])->name('specialtyUpdate');
                 Route::delete('/specialtyDestroy/{id}', [SpecialtyController::class, 'specialtyDestroy'])->name('specialtyDestroy');
             });
-             //specialty
+        //doctor
         Route::prefix('doctors')
-        ->as('doctors.')
-        ->group(function () {
-            Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
-            Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
-            Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
-            Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');
-            Route::delete('/doctorDestroy/{id}', [DoctorController::class, 'doctorDestroy'])->name('doctorDestroy');
-        });
+            ->as('doctors.')
+            ->group(function () {
+                Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
+                Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
+                Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
+                Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');
+                Route::delete('/doctorDestroy/{id}', [DoctorController::class, 'doctorDestroy'])->name('doctorDestroy');
+            });
+        //timeslot
+        Route::prefix('timeslot')
+            ->as('timeslot.')
+            ->group(function () {
+                Route::get('/timeslotList', [DoctorController::class, 'timeslotList'])->name('timeslotList');
+                Route::get('/viewTimeslotAdd/{id}', [DoctorController::class, 'viewTimeslotAdd'])->name('viewTimeslotAdd');
+                Route::post('{doctorId}/timeslotAdd', [DoctorController::class, 'timeslotAdd'])->name('timeslotAdd');
+                Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
+                Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
+                Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
+            });
     });

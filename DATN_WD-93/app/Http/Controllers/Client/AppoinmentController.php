@@ -51,12 +51,12 @@ class AppoinmentController extends Controller
         }
         $specialty_id = $request->input('specialty_id');
 
-        $specialties = Specialty::orderBy('name', 'asc')->get();
+        $specialty = Specialty::find($request->specialty_id);
         if ($request->specialty_id) {
             $doctors = Doctor::where('specialty_id', $request->specialty_id)->orderBy('id', 'desc')->paginate(12);
         } else {
             $doctors = Doctor::orderBy('id', 'desc')->paginate(12); //phan trang 9sp/1page
         }
-        return view('client.appoinment.doctors', compact('orderCount', 'specialties', 'doctors', 'specialty_id', 'categories'));
+        return view('client.appoinment.doctors', compact('orderCount', 'specialty', 'doctors', 'specialty_id', 'categories'));
     }
 }

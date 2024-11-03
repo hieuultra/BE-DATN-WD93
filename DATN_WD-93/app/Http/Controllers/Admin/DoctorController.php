@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
+use App\Models\Doctor;
 use App\Models\Specialty;
 use Illuminate\Http\Request;
+use App\Models\AvailableTimeslot;
 use App\Http\Controllers\Controller;
-use App\Models\Doctor;
-use App\Models\User;
 
 class DoctorController extends Controller
 {
@@ -74,4 +75,31 @@ class DoctorController extends Controller
         $package->delete();
         return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Variant đã được xóa thành công.');
     }
+    //timeslot
+    public function viewTimeslotAdd($id)
+    {
+        $doctors = Doctor::orderBy('id')->get();
+        $doctor = Doctor::find($id); //tim id
+        return view('admin.specialtyDoctors.timeslot.viewTimeslotAdd', compact('doctor'));
+    }
+    public function timeslotAdd(Request $request, $doctorId)
+{
+    $request->validate([
+        'dayOfWeek' => 'required|string',
+        'startTime' => 'required|date_format:H:i',
+        'endTime' => 'required|date_format:H:i|after:startTime',
+        'date' => 'nullable|date',
+    ]);
+
+    AvailableTimeslot::create([
+        'doctor_id' => $doctorId,
+        'dayOfWeek' => $request->dayOfWeek,
+        'startTime' => $request->startTime,
+        'endTime' => $request->endTime,
+        'date' => $request->date,
+        'isAvailable' => true,
+    ]);
+
+    return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Thêm khung giờ thành công.');
+}
 }

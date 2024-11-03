@@ -77,7 +77,7 @@
                 @foreach ($secondBatch as $item)
                 <div class="col" >
                     <div>
-                        <a href="">
+                        <a href="{{ route('appoinment.doctorsBySpecialtyId', $item->id) }}">
                             <div>
                                 <img style="width: 90%; height: auto; border: 2px solid lightgray; border-radius: 10px;"
                                      src="{{ asset('upload/'.$item->image) }}" alt="">

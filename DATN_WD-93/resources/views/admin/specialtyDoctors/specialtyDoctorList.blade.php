@@ -2,7 +2,14 @@
 @section('titlepage','')
 
 @section('content')
+<style>
+    .time-icon {
+    font-size: 24px; /* Adjust size */
+    color: #333;     /* Adjust color */
+    cursor: pointer;
+}
 
+</style>
 <main>
     <div class="container-fluid px-4">
       <h1 class="mt-4">List Specialties</h1>
@@ -153,6 +160,10 @@
                 </td>
                 <td>{{$docs->name}}</td>
                 <td class="text-center">
+                    <div class="time-icon">
+                        <a href="{{ route('admin.timeslot.viewTimeslotAdd', $d->id) }}"><i class="fas fa-clock"></i></a>
+                    </div>
+
                   <a href="" class="btn btn-warning">
                     <form action="{{ route('admin.doctors.doctorUpdateForm', $d->id) }}" method="GET">
                         <button style="background: none;  border: none; outline: none;" type="submit">

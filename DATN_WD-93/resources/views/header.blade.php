@@ -81,7 +81,7 @@
                 <span
                   class="badge text-secondary border border-secondary rounded-circle"
                   style="padding-bottom: 2px"
-                  >{{ session('cart') ? count(session('cart')) : '0' }}</span
+                  > {{ \App\Models\Cart::where('user_id', Auth::id())->withCount('items')->first()->items_count ?? 0 }}</span
                 >
               </a>
               <a href="{{ route('orders.index') }}" class="btn px-0">

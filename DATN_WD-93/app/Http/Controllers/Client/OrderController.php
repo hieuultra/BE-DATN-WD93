@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Models\Bill;
+use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Category;
 use App\Mail\OrderConfirm;
@@ -47,16 +48,20 @@ class OrderController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        $carts = session()->get('cart', []);
-        if (!empty($carts)) {
+        $carts = Cart::where('user_id', Auth::id())->with("items.product", "items.variant")->first();
+        if ($carts && $carts->items->count() > 0) {
             $total = 0;
-            $subtotal = 0;
-            foreach ($carts as $item) {
-                $subtotal += $item['quantity'] * $item['price'];
-            }
+            $subTotal = 0;
             $shipping = 50;
-            $total = $subtotal + $shipping;
-            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subtotal'));
+            foreach ($carts->items as  $item) {
+                $price = is_numeric($item['price']) ? $item['price'] : 0;
+                $quantity = is_numeric($item['quantity']) ? $item['quantity'] : 0;
+                // Kiểm tra nếu các khóa cần thiết tồn tại trong mục giỏ hàng
+                // Tính toán tổng phụ
+                $subTotal += $price * $quantity;
+            }
+            $total = $subTotal + $shipping;
+            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal'));
         }
         return redirect()->route('cart.listCart');
     }
@@ -75,11 +80,16 @@ class OrderController extends Controller
                 $bill = Bill::query()->create($params);
                 $billId = $bill->id;
 
-                $carts = session()->get('cart', []);
+                // $carts = session()->get('cart', []);
+                // Lấy cart của người dùng từ database
+                $carts = Cart::where('user_id', Auth::id())->with('items')->first();
+                if (!$carts || $carts->items->isEmpty()) {
+                    return redirect()->route('cart.listCart')->with('error', 'Your cart is empty');
+                }
 
-                foreach ($carts as $key => $item) {
+                foreach ($carts->items as $item) {
                     // Kiểm tra số lượng tồn kho trước khi tạo đơn hàng
-                    $product = Product::findOrFail($key);
+                    $product = Product::findOrFail($item->product_id);
                     if ($product->quantity < $item['quantity']) {
                         DB::rollBack();
                         return redirect()->route('cart.listCart')->with('error', 'Not enough stock for product ' . $product->name);
@@ -88,7 +98,7 @@ class OrderController extends Controller
                     $tt = $item['price'] * $item['quantity'];
                     $bill->order_detail()->create([
                         'bill_id' => $billId,
-                        'product_id' => $key,
+                       'product_id' => $item->product_id,
                         'unitPrice' => $item['price'],
                         'quantity' => $item['quantity'],
                         'totalMoney' => $tt
@@ -105,7 +115,7 @@ class OrderController extends Controller
                 //gui mail khi dat hang tc
                 Mail::to($bill->emailUser)->queue(new OrderConfirm($bill));
 
-                session()->put('cart', []);
+                $carts->items()->delete();
                 return redirect()->route('orders.index')->with('success', 'Bill have created successfully');
             } catch (\Exception $e) {
                 DB::rollBack();

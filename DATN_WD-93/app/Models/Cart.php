@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Cart extends Model
 {
     use HasFactory;
-    protected $fillable = ['namePro', 'imagePro', 'pricePro', 'quantity', 'total', 'product_id'];
+    protected $fillable = ['total_price', 'user_id'];
 
-    public function product()
+    public function items()
     {
-        return $this->belongsTo(Product::class); //$this đại diện cho thể hiện hiện tại của lớp Product
-        //Phương thức belongsTo của Eloquent ORM được sử dụng để xác định mối quan hệ "belongs to" (thuộc về) giữa mô hình Product và mô hình Category.
+        return $this->hasMany(CartItem::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
