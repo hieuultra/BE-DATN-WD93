@@ -124,6 +124,13 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::delete('/soft-delete/{id}', [ProductController::class, 'softDelete'])->name('softDelete');
                 Route::delete('/hard-delete/{id}', [ProductController::class, 'hardDelete'])->name('hardDelete');
                 Route::get('/restore/{id}', [ProductController::class, 'restore'])->name('restore');
+                //
+                Route::get('/productVariant/{id}', [ProductController::class, 'productVariant'])->name('productVariant');
+                Route::get('/productVariantAdd', [ProductController::class, 'productVariantAdd'])->name('productVariantAdd');
+                Route::post('/get-variant-quantity', [ProductController::class, 'getQuantity'])->name('getVariantQuantity');
+                Route::post('/get-variant-product-update', [VariantProductsController::class, 'variantProductUpdate'])->name('variantProductUpdate');
+                Route::delete('/get-variant-product-delete', [VariantProductsController::class, 'VariantProductDestroy'])->name('variantProductDestroy');
+
             });
         //variantPackages
         Route::prefix('variantPros')
@@ -144,7 +151,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/VariantProductAdd', [VariantProductsController::class, 'variantProductAdd'])->name('variantProductAdd');
                 Route::get('/VariantProductUpdate/{id}', [VariantProductsController::class, 'VariantProductUpdateForm'])->name('viewVariantProductUpdate');
                 Route::post('/VariantProductUpdate', [VariantProductsController::class, 'VariantProductUpdate'])->name('variantProductUpdate');
-                Route::delete('/VariantProductDestroy/{id}', [VariantProductsController::class, 'VariantProductDestroy'])->name('VariantProductDestroy');
+                // Route::delete('/VariantProductDestroy', [VariantProductsController::class, 'VariantProductDestroy'])->name('VariantProductDestroy');
             });
         // order
         Route::prefix('bills')
