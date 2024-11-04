@@ -45,18 +45,14 @@ class BillController extends Controller
         $status = array_keys(Bill::status_bill);
 
         //kiem tra neu bill da huy thi ko dc change status
-        if ($currentStatus === Bill::DA_HUY) {
-            return redirect()->route('admin.bills.index')->with('error', 'Bill had unset can not change status');
+        if ($currentStatus === Bill::DA_HUY || $currentStatus === Bill::KHACH_HANG_TU_CHOI) {
+            return redirect()->route('admin.bills.index')->with('error', 'Cannot change the status of a canceled or refused bill');
         }
         //kiem tra neu status moi ko dc nam sau status hien tai
         if (array_search($newStatus, $status) < array_search($currentStatus, $status)) {
             return redirect()->route('admin.bills.index')->with('error', 'New Status must be after current status');
         }
-        // if ($request->has('da_giao_hang')) {
         //     // Cập nhật trạng thái thanh toán thành ĐÃ THANH TOÁN nếu đã giao hàng
-        //     $bill->update(['status_payment_method' => Bill::DA_THANH_TOAN]);
-        // }
-        // Only update payment status if bill status is set to delivered
         if ($newStatus === Bill::DA_GIAO_HANG) {
             $bill->status_payment_method = Bill::DA_THANH_TOAN;
         }
@@ -72,11 +68,15 @@ class BillController extends Controller
     public function destroy(string $id)
     {
         $bill = Bill::query()->findOrFail($id);
-        if ($bill && $bill->status_bill == Bill::DA_HUY) {
-            $bill->order_detail()->delete();
-            $bill->delete();
-            return redirect()->back()->with('success', 'Delete bill successfully');
+
+        if ($bill->status_bill == Bill::DA_HUY) {
+            return redirect()->back()->with('error', 'Bill has already been canceled');
         }
-        return redirect()->back()->with('error', 'Can Not Delete Bill');
+
+        // Cập nhật trạng thái thành 'DA_HUY' thay vì xóa
+        $bill->status_bill = Bill::DA_HUY;
+        $bill->save();
+
+        return redirect()->back()->with('success', 'Bill has been canceled successfully');
     }
 }

@@ -27,6 +27,7 @@ class Bill extends Model
         'da_xac_nhan' => 'Đã xác nhận',
         'dang_chuan_bi' => 'Đang chuẩn bị',
         'dang_van_chuyen' => 'Đang vận chuyển',
+        'khach_hang_tu_choi' => 'Khách hàng từ chối',
         'da_giao_hang' => 'Đã giao hàng',
         'da_huy' => 'Đơn hàng đã hủy',
     ];
@@ -38,6 +39,7 @@ class Bill extends Model
     const DA_XAC_NHAN = 'da_xac_nhan';
     const DANG_CHUAN_BI = 'dang_chuan_bi';
     const DANG_VAN_CHUYEN = 'dang_van_chuyen';
+    const KHACH_HANG_TU_CHOI = 'khach_hang_tu_choi';
     const DA_GIAO_HANG = 'da_giao_hang';
     const DA_HUY = 'da_huy';
     const CHUA_THANH_TOAN = 'chua_thanh_toan';

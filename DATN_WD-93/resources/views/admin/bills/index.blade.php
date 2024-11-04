@@ -74,16 +74,16 @@
                     </td>
                     <td class="text-center">
                         <a href="{{ route('admin.bills.show', $item->id) }}" class="btn btn-primary">View</a>
-                        @if ($item->status_bill === $type_da_huy)
+                        {{-- @if ($item->status_bill === $type_da_huy)
                         <form action="{{ route('admin.bills.destroy', $item->id) }}" method="POST" class="d-inline">
                             @csrf
-                            @method('DELETE')
+                            @method('DELETE') --}}
                             {{-- Sử dụng @method('DELETE') trong đoạn mã nhằm mục đích gửi một yêu cầu HTTP DELETE từ form HTML.  --}}
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">
+                            {{-- <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">
                                 Delete
                             </button>
                         </form>
-                        @endif
+                        @endif --}}
                     </td>
                 </tr>
                 @endforeach
