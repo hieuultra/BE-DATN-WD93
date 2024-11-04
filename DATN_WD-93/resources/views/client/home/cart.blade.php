@@ -4,6 +4,7 @@
 
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <style>
     .pro-quantity {
         text-align: center; /* Center horizontally */
@@ -83,7 +84,7 @@
                                     <i class="fa fa-minus"></i>
                                 </button>
                                 <input type="text" class="form-control text-center quantity-input"
-                                data-price="{{ $item['price'] }}" value="{{ $item['quantity'] }}" name="quantity">
+                                data-price="{{ $item['price'] }}" value="{{ $item['quantity'] }}" name="items[{{ $item['id'] }}][quantity]">
                                 <button class="btn btn-outline-primary btn-plus">
                                     <i class="fa fa-plus"></i>
                                 </button>
@@ -94,14 +95,14 @@
                         <input type="hidden" name="total"
                         value="{{ $item['price'] * $item['quantity'] }}">
                     </td>
-                    <td class="pro-remove text-center"><a href="#"><i class="fa fa-trash"></i></a></td>
+                    <td class="pro-remove text-center" data-item-id="{{ $item['id'] }}"><a href="#"><i class="fa fa-trash"></i></a></td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
-        <div class="cart-update" style="float: right">
+        {{-- <div class="cart-update" style="float: right">
             <button type="submit" href="" class="btn btn-primary">Update Cart</button>
-        </div>
+        </div> --}}
     </form>
     @else
     <h3 style="text-align: center;color: rgb(222, 80, 80)">Giỏ hàng rỗng</h3>
@@ -162,8 +163,8 @@
                 updateSubtotal(container);
                 updateTotal();
 
-                // Gửi yêu cầu AJAX để cập nhật số lượng sản phẩm
-                updateCartAjax();
+                  // Gửi yêu cầu AJAX để cập nhật số lượng sản phẩm
+                  updateCartAjax(); // Pass product ID and new quantity
             });
 
             btnMinus.addEventListener('click', function() {
@@ -175,46 +176,47 @@
                     updateTotal();
 
                     // Gửi yêu cầu AJAX để cập nhật số lượng sản phẩm
-                    updateCartAjax();
+                    updateCartAjax(); // Pass product ID and new quantity
                 }
             });
 
         });
 
         function updateCartAjax() {
-            var formData = $('form').serialize();
-            $.ajax({
-                url: '/updateCart', // Đường dẫn xử lý cập nhật giỏ hàng
-                method: 'POST',
-                data: formData,
-                success: function(response) {
-                    // Thông báo cập nhật thành công
-                    console.log('Cart updated successfully');
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error:', xhr.responseText);
-                    // Xử lý lỗi khi cập nhật giỏ hàng
-                    alert('Error updating cart');
-                }
-            });
-        }
+                var formData = $('form').serialize();
+                $.ajax({
+                    url: '/updateCart', // Đường dẫn xử lý cập nhật giỏ hàng
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Thông báo cập nhật thành công
+                        console.log('Cart updated successfully');
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error:', xhr.responseText);
+                        // Xử lý lỗi khi cập nhật giỏ hàng
+                        alert('Error updating cart');
+                    }
+                });
+            }
 
-        function removeCartAjax() {
-            var formData = $('form').serialize();
-            $.ajax({
-                url: '/removeCart', // Đường dẫn để xử lý xóa sản phẩm
-                method: 'POST',
-                data: formData,
-                success: function(response) {
-                    // Thông báo sản phẩm đã được xóa thành công
-                    console.log('Product removed successfully');
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error:', xhr.responseText);
-                    alert('Error removing product');
-                }
-            });
+        function removeCartAjax(cartItemId) {
+    $.ajax({
+        url: '/removeCart',
+        method: 'POST',
+        data: {
+            id: cartItemId, // Pass the cart item ID
+            _token: '{{ csrf_token() }}' // Include CSRF token for security
+        },
+        success: function(response) {
+            console.log('Product removed successfully:', response.message);
+        },
+        error: function(xhr, status, error) {
+            console.log('Error:', xhr.responseText);
+            alert('Error removing product');
         }
+    });
+}
 
 
         // Cập nhật subtotal cho từng sản phẩm
@@ -253,16 +255,21 @@
             });
         });
         // Xử lý xóa sản phẩm trong giỏ hàng
-        document.querySelectorAll('.pro-remove').forEach(function(removeButton) {
-            removeButton.addEventListener('click', function(event) {
-                event.preventDefault();
-                const row = this.closest('tr');
-                row.remove(); // Xóa sản phẩm khỏi giao diện
-                updateTotal();
-                removeCartAjax();
-            });
+document.querySelectorAll('.pro-remove').forEach(function(removeButton) {
+    removeButton.addEventListener('click', function(event) {
+        event.preventDefault();
 
-        });
+        const row = this.closest('tr');
+        const cartItemId = this.getAttribute('data-item-id'); // Get the ID of the item to remove
+
+        // Remove the product from the UI
+        row.remove();
+        updateTotal();
+
+        // Call the removeCartAjax function with the cart item ID
+        removeCartAjax(cartItemId); // Pass the item ID to the function
+    });
+});
 
         // Hàm cập nhật tổng số
         function updateTotal() {
