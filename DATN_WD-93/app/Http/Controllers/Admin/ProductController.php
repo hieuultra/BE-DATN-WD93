@@ -7,6 +7,8 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ImageProduct;
+use App\Models\VariantPackage;
+use App\Models\VariantProduct;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -221,5 +223,31 @@ class ProductController extends Controller
         }
 
         return redirect()->route('admin.products.productList')->with('error', 'Sản phẩm không tồn tại.');
+    }
+    public function productVariant($id)
+    {
+        $categories = Category::orderBy('name', 'ASC')->get();
+        $products = Product::orderBy('id', 'DESC')->paginate(10);
+        $product = Product::find($id); //tim id
+        $variants = VariantPackage::orderBy('name',  'DESC')->get();
+        $variantPros = VariantProduct::where('id_product',$id)->get();
+        $variantPro = VariantProduct::orderBy("id")->get();
+        return view('admin.products.productVariant', compact('categories', 'products', 'product','variants', 'variantPros', 'variantPro'));
+    }
+    public function getQuantity(Request $request){
+        $variantId = $request->input('variantId');
+        $variantPros = VariantProduct::where('id_variant',$variantId)->first();
+        if ($variantPros) {
+            return response()->json([
+                'status' => 'success',
+                'quantity' => $variantPros->quantity,
+                'price' => $variantPros->price,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => '0.',
+            ]);
+        }
     }
 }
