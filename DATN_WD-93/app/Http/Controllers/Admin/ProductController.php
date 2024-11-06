@@ -231,7 +231,8 @@ class ProductController extends Controller
         $product = Product::find($id); //tim id
         $variants = VariantPackage::orderBy('name',  'DESC')->get();
         $variantPros = VariantProduct::where('id_product',$id)->get();
-        return view('admin.products.productVariant', compact('categories', 'products', 'product','variants', 'variantPros'));
+        $variantPro = VariantProduct::orderBy("id")->get();
+        return view('admin.products.productVariant', compact('categories', 'products', 'product','variants', 'variantPros', 'variantPro'));
     }
     public function getQuantity(Request $request){
         $variantId = $request->input('variantId');

@@ -163,7 +163,10 @@
                                 @if ($product->id == $vp->id_product)
                                     @foreach ($variants as $v)
                                         @if ($vp->id_variant == $v->id)
-                                        <button class="variant-button"  id="btnQuantity-{{$v->id}}"  style="width: 60px; height: 40px; margin-left: 20px; border: 2px solid lightskyblue; border-radius:10px " type="button">{{$v->name}}</button> 
+                                        <button class="variant-button" data-id="{{$vp->id}}" id="btnQuantity-{{$v->id}}"  style="width: 60px; height: 40px; margin-left: 20px; border: 2px solid lightskyblue; border-radius:10px " type="button">
+                                            {{$v->name}}
+                                            <input type="hidden" class="idVariantProduct" value="{{$vp->id}}">
+                                        </button> 
                                         @endif
                                     @endforeach
                                 @endif
@@ -183,10 +186,9 @@
                         </div>
                         <input type="hidden" name="" id="idProduct" value="{{ $product->id }}">
                         <button class="btn btn-primary" id="editProductVariant">Save</button>
-                        {{-- <form action="{{ route('admin.products.variantProductDestroy') }}" method="POST">
-                            <input type="hidden" name="" id="idProduct" value="{{ $product->id }}">
-                            <button id="destroy" class="btn btn-danger">DEL</button>
-                        </form> --}}
+                    </form>
+                    <form action="{{ route('admin.productVariant.VariantProductDestroy') }}">
+                        <button class=" btn btn-danger mt-3" style="width: 60px;" id="deleteProductVariant">DEL</button>
                     </form>
                    
                 </div>
@@ -366,25 +368,26 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
             });
         });
-        // $("#destroy").click(function (e) { 
-        //     e.preventDefault();
-        //     var inputIdValue = variantId;
-        //     var inputIdProductValue = $('#idProduct').val();
-        //     console.log(inputIdValue);
-        //     console.log(inputIdProductValue);
-        //     $.ajax({
-        //         type: "DELETE",
-        //         url: '{{ route("admin.products.variantProductDestroy") }}',
-        //         data: {
-        //             idProduct:inputIdProductValue,
-        //             variantId:inputIdValue
-        //         },
-        //         success: function (response) {
-        //             console.log('Gửi Thành Công');
-                    
-        //         }
-        //     });
-        // });
+        //delete
+        var inputId;
+        $(".variant-button").click(function (e) { 
+            e.preventDefault();
+            inputId = $(this).find('.idVariantProduct').val();
+        });
+        $("#deleteProductVariant").click(function (e) { 
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: '{{ route("admin.productVariant.VariantProductDestroy") }}',
+                    data: {
+                        id:inputId,
+                    },
+                    success: function (response) {
+                      console.log('Thành Công!!!');
+                        
+                    }
+                });
+        });
     });
    </script>
 

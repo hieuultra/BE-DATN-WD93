@@ -74,22 +74,19 @@ class VariantProductsController extends Controller
         }
     }
     //Destroy
-    // public function VariantProductDestroy( Request $request)
-    // {
-    //     $validatedData = $request->validate([
-    //         'variantId' => 'required|integer|exists:variant_packages,id', 
-    //         'idProduct' => 'required|integer|exists:variant_products,id' 
-    //     ]);
-    //      // Lấy giá trị đã xác thực
-    //      $variantId = $validatedData['variantId'];
-    //      $id = $validatedData['idProduct'];
-    //      $variantProduct = VariantProduct::where('id_product', $id)->where('id_variant',$variantId)->first();
-    //      if ($variantProduct) {
-    //         $variantProduct->delete();
-    //         return response()->json(['success' => true, 'message' => 'Xóa thành công']);
-    //      }else {
-    //         return response()->json(['success' => true, 'message' => 'Không thành công']);
-    //      }
-    // }
+   public function VariantProductDestroy(Request $request){
+    $validatedData = $request->validate([ 
+        'id' => 'required|integer|exists:variant_products,id' 
+    ]);
+    $id = $validatedData['id'];
+    $variantProduct = VariantProduct::findOrFail($id);
+    $variantProduct->delete();
+    if ($variantProduct) {
+        return response()->json(['success' => true, 'message' => 'Xóa thành công']);
+    }else {
+        return response()->json(['success' => false, 'message' => 'Xóa không thành công']);
+
+    }
+   }
     
 }
