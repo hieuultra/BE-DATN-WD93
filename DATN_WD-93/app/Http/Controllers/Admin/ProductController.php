@@ -236,7 +236,7 @@ class ProductController extends Controller
     }
     public function getQuantity(Request $request){
         $variantId = $request->input('variantId');
-        $variantPros = VariantProduct::where('id_variant',$variantId)->first();
+        $variantPros = VariantProduct::where('id',$variantId)->first();
         if ($variantPros) {
             return response()->json([
                 'status' => 'success',

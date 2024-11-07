@@ -163,9 +163,9 @@
                                 @if ($product->id == $vp->id_product)
                                     @foreach ($variants as $v)
                                         @if ($vp->id_variant == $v->id)
-                                        <button class="variant-button" data-id="{{$vp->id}}" id="btnQuantity-{{$v->id}}"  style="width: 60px; height: 40px; margin-left: 20px; border: 2px solid lightskyblue; border-radius:10px " type="button">
+                                        <button class="variant-button" data-id="{{$vp->id}}" id="btnQuantity-{{$v->id}}"  style="width: auto; height: 40px; margin-left: 20px; border: 2px solid lightskyblue; border-radius:10px " type="button">
                                             {{$v->name}}
-                                            <input type="hidden" class="idVariantProduct" value="{{$vp->id}}">
+                                            <input type="hidden" class="idVariantProduct-{{$vp->id}}" value="{{$vp->id}}">
                                         </button>
                                         @endif
                                     @endforeach
@@ -321,8 +321,8 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         });
         $('.variant-button').on('click', function() {
-            var buttonId = $(this).attr('id');
-            variantId = buttonId.split('-')[1];
+            variantId = $(this).attr('data-id');
+            // alert(variantId);
             $.ajax({
                 type: "POST",
                 url: '{{ route("admin.products.getVariantQuantity") }}',
@@ -349,14 +349,14 @@ document.addEventListener('DOMContentLoaded', function(){
             e.preventDefault();
             var inputQuantiValue = $('#quantity-display').val();
             var inputPriceValue = $('#price-display').val();
-            var inputIdValue = $('.variant-button').val();
-            var inputIdProductValue = $('#idProduct').val();
+            // var inputIdValue = $('.variant-button').val();
+            // var inputIdProductValue = $('#idProduct').val();
             $.ajax({
                 type: "POST",
                 url:  '{{ route("admin.products.variantProductUpdate") }}',
                 data: {
-                    variantId:inputIdValue,
-                    idProduct:inputIdProductValue,
+                    variantId:variantId,
+                    // idProduct:inputIdProductValue,
                     quantity:inputQuantiValue,
                     price:inputPriceValue
                 },
@@ -370,7 +370,8 @@ document.addEventListener('DOMContentLoaded', function(){
          var inputId;
         $(".variant-button").click(function (e) {
             e.preventDefault();
-            inputId = $(this).find('.idVariantProduct').val();
+            inputId = $(this).attr('data-id');
+            // alert(inputId);
         });
         $("#deleteProductVariant").click(function (e) {
                 e.preventDefault();

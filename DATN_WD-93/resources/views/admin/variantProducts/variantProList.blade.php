@@ -125,7 +125,7 @@
                   <th scope="col">Variant</th>
                   <th scope="col">Price</th>
                   <th scope="col">Quantity</th>
-                  <th class="text-center" style="width: 190px;" scope="col">Action</th>
+                  {{-- <th class="text-center" style="width: 190px;" scope="col">Action</th> --}}
                 </tr>
               </thead>
               <tbody>
@@ -168,7 +168,7 @@
                 </td>
                 <td>{{$vpPro->price}}</td>
                 <td>{{$vpPro->quantity}}</td>
-                <td class="text-center">
+                {{-- <td class="text-center">
                   <a href="" class="btn btn-warning">
                     <form action="{{ route('admin.productVariant.viewVariantProductUpdate', $vpPro->id) }}" method="GET">
                         <button style="background: none;  border: none; outline: none;" type="submit">
@@ -177,21 +177,21 @@
                           </svg>
                        </button>
                         </form>
-                   </a>
+                   </a> --}}
                  <!-- Thêm nút delete -->
-                 <a href="" class="btn btn-danger">
+                 {{-- <a href="" class="btn btn-danger">
                     <form action="{{ route('admin.productVariant.VariantProductDestroy', $vpPro->id) }}" method="POST">
                         @csrf
-                        @method('DELETE')
+                        @method('DELETE') --}}
                         {{-- Sử dụng @method('DELETE') trong đoạn mã nhằm mục đích gửi một yêu cầu HTTP DELETE từ form HTML.  --}}
-                        <button  style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">
+                        {{-- <button  style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
                           </svg>
                         </button>
                     </form>
                  </a>
-                </td>
+                </td> --}}
               </tr>
                @endforeach
               </tbody>

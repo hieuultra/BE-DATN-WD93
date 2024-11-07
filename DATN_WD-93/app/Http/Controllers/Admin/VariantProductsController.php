@@ -54,7 +54,6 @@ class VariantProductsController extends Controller
     {
         $validatedData = $request->validate([
             'variantId' => 'required|integer|exists:variant_packages,id',
-            'idProduct' => 'required|integer|exists:variant_products,id',
             'quantity' => 'required|numeric',
             'price' => 'required|numeric|min:0',
         ]);
@@ -62,10 +61,9 @@ class VariantProductsController extends Controller
         $quantity = $validatedData['quantity'];
         $price = $validatedData['price'];
         $variantId = $validatedData['variantId'];
-        $id = $validatedData['idProduct'];
 
         // Tìm bản ghi cần cập nhật
-        $variantProduct = VariantProduct::find($id);
+        $variantProduct = VariantProduct::find($variantId);
 
         if ($variantProduct) {
             // Cập nhật các trường
