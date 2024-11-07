@@ -83,19 +83,18 @@
               </div>
             </div>
             <div class="btn-group">
-              <button
-                type="button"
-                class="btn btn-sm btn-light dropdown-toggle"
-                data-toggle="dropdown"
-              >
-                EN
-              </button>
-              <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button">FR</button>
-                <button class="dropdown-item" type="button">AR</button>
-                <button class="dropdown-item" type="button">RU</button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-light dropdown-toggle"
+                  data-toggle="dropdown"
+                >
+                  EN
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <button class="dropdown-item" type="button" onclick="changeLanguage('en')">English</button>
+                  <button class="dropdown-item" type="button" onclick="changeLanguage('vi')">Vietnamese</button>
+                </div>
               </div>
-            </div>
           </div>
           <div class="d-inline-flex align-items-center d-block d-lg-none">
             <a href="" class="btn px-0 ml-2">
@@ -199,6 +198,26 @@ var Tawk_API = Tawk_API || {},
 })();
 </script>
 <!--End of Tawk.to Script-->
+<script>
+    function changeLanguage(lang) {
+      localStorage.setItem('preferredLanguage', lang);
+      location.reload();
+    }
+
+    // Load preferred language on page load
+    document.addEventListener("DOMContentLoaded", function() {
+      const lang = localStorage.getItem('preferredLanguage') || 'en';
+      document.documentElement.lang = lang; // Set language attribute in HTML for accessibility
+
+      if (lang === 'vi') {
+        // Adjust content for Vietnamese
+        // e.g., replace text or load language-specific resources
+      } else {
+        // Adjust content for English or default language
+      }
+    });
+  </script>
+
 </body>
 
 </html>

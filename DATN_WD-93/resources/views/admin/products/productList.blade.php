@@ -118,28 +118,43 @@ table th, table td {
                          {{-- </form>
                      </a> --}}
                      <!-- Nút xóa mềm -->
-<form action="{{ route('admin.products.softDelete', $item->id) }}" method="POST" style="display:inline-block;">
-    @csrf
-    @method('DELETE')
-    <button  style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa mềm không?')">
-        <svg style="color: orange" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
-            <path d="M12.643 1H3.357L3 2v10h10V2l-.357-1zM8 3.5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5zm-3 1A.5.5 0 0 1 5.5 5v3a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5zm6 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5z"/>
-        </svg>
-        SoftDelete
-    </button>
-</form>
+                     <a href="" class="btn btn-danger">
+                        <form action="{{ route('admin.products.softDelete', $item->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button  style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa mềm không?')">
+                                <svg style="color: orange" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
+                                    <path d="M12.643 1H3.357L3 2v10h10V2l-.357-1zM8 3.5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5zm-3 1A.5.5 0 0 1 5.5 5v3a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5zm6 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5z"/>
+                                </svg>
+                                SoftDelete
+                            </button>
+                        </form>
+                     </a>
 
-<!-- Nút xóa cứng -->
-<form action="{{ route('admin.products.hardDelete', $item->id) }}" method="POST" style="display:inline-block;">
-    @csrf
-    @method('DELETE')
-    <button  style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa cứng không?')">
-        <svg style="color: red" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-        </svg>
-        HardDelete
-    </button>
-</form>
+                  <!-- Nút xóa cứng -->
+                  <a href="" class="btn btn-light mt-3">
+                        <form action="{{ route('admin.products.hardDelete', $item->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button  style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa cứng không?')">
+                                <svg style="color: red" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                                </svg>
+                                HardDelete
+                            </button>
+                        </form>
+                  </a>
+                  {{-- Variant - Product --}}
+                  <a href="" class="btn btn-primary mt-3">
+                    <!-- Thêm nút update -->
+                      <form action="{{ route('admin.products.productVariant', $item->id) }}" method="GET">
+                        <button style="background: none;  border: none; outline: none;" type="submit">
+                          <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                          </svg>
+                         </button>
+                     </form>
+                    </a>
                     </td>
                   </tr>
                   @endforeach
