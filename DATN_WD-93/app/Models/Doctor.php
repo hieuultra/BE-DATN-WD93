@@ -11,12 +11,16 @@ class Doctor extends Model
     protected $fillable = [
         'user_id',
         'specialty_id',
+<<<<<<< Updated upstream
         'title',
         'experience_years',
         'position',
         'workplace',
         'min_age',
         'examination_fee',
+=======
+        'price',
+>>>>>>> Stashed changes
         'bio'
     ];
     public function user()

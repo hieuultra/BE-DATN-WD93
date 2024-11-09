@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AvailableTimeslot extends Model
 {
     use HasFactory;
+    protected $table = 'available_timeslots';
     protected $fillable = ['doctor_id', 'dayOfWeek', 'startTime', 'endTime', 'date', 'isAvailable'];
 
     public function doctor()

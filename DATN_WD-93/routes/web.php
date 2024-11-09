@@ -10,18 +10,27 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Client\AboutController;
+<<<<<<< Updated upstream
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+=======
+use App\Http\Controllers\Client\BookingDoctorController;
+>>>>>>> Stashed changes
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Client\ContactController;
+<<<<<<< Updated upstream
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Client\AppoinmentController;
+=======
+//
+>>>>>>> Stashed changes
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -42,6 +51,30 @@ Route::get('/account', [AuthController::class, 'account'])->name('account');
 Route::get('/viewRegister', [AuthController::class, 'viewRegister'])->name('viewRegister');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+// bookingdoctor
+Route::get('/viewBookingDoctor', [BookingDoctorController::class, 'viewBookingDoctor'])->name('viewBookingDoctor');
+Route::get('/appointmentHistory/{id}', [BookingDoctorController::class, 'appointmentHistory'])->name('appointmentHistory');
+Route::get('/booKingCare/{id}', [BookingDoctorController::class, 'booKingCare'])->name('booKingCare');
+Route::get('/doctorDetails/{id}', [BookingDoctorController::class, 'doctorDetails'])->name('doctorDetails');
+Route::get('/formbookingdt/{id}', [BookingDoctorController::class, 'formbookingdt'])->name('formbookingdt');
+Route::get('/search-autocomplete', [BookingDoctorController::class, 'autocompleteSearch'])->name('autocompleteSearch');
+Route::post('/bookAnAppointment', [BookingDoctorController::class, 'bookAnAppointment'])->name('bookAnAppointment');
+Route::post('/appointments/{id}/cancel', [BookingDoctorController::class, 'cancel'])->name('appointments.cancel');
+Route::get('/generalExamination', [BookingDoctorController::class, 'generalExamination'])->name('generalExamination');
+Route::get('/statistics/{id}', [BookingDoctorController::class, 'statistics'])->name('statistics');
+Route::post('/medical-chat', [BookingDoctorController::class, 'ask']);
+Route::get('/viewSikibidi', function () {
+    return view('client.bookingdoctor.viewSikibidi');
+});
+Route::get('/chat-ai', function () {
+    return view('client.bookingdoctor.chatAI');
+});
+Route::get('/chat-zalo', function () {
+    return view('client.bookingdoctor.chatZalo');
+});
+
 
 //login success + admin
 Route::middleware('auth')->group(function () {
@@ -177,17 +210,26 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::prefix('specialties')
             ->as('specialties.')
             ->group(function () {
+<<<<<<< Updated upstream
                 Route::get('/specialtyDoctorList', [SpecialtyController::class, 'specialtyDoctorList'])->name('specialtyDoctorList');
                 Route::get('/viewSpecialtyAdd', [SpecialtyController::class, 'viewSpecialtyAdd'])->name('viewSpecialtyAdd');
                 Route::post('/specialtyAdd', [SpecialtyController::class, 'specialtyAdd'])->name('specialtyAdd');
                 Route::get('/specialtyUpdateForm/{id}', [SpecialtyController::class, 'specialtyUpdateForm'])->name('specialtyUpdateForm');
                 Route::post('/specialtyUpdate', [SpecialtyController::class, 'specialtyUpdate'])->name('specialtyUpdate');
                 Route::delete('/specialtyDestroy/{id}', [SpecialtyController::class, 'specialtyDestroy'])->name('specialtyDestroy');
+=======
+                Route::get('/specialtyList', [SpecialtyController::class, 'index'])->name('specialtyList');
+                Route::post('/specialtyAdd', [SpecialtyController::class, 'store']);
+                Route::get('/specialtyedit/{id}', [SpecialtyController::class, 'edit'])->name('specialtyedit');
+                Route::put('/specialtyUpdate/{id}', [SpecialtyController::class, 'update'])->name('specialtyUpdate');
+                Route::delete('/specialtyDestroy/{id}', [SpecialtyController::class, 'destroy']);
+>>>>>>> Stashed changes
             });
         //doctor
         Route::prefix('doctors')
             ->as('doctors.')
             ->group(function () {
+<<<<<<< Updated upstream
                 Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
                 Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
                 Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
@@ -204,5 +246,36 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
                 Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
                 Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
+=======
+                Route::get('/doctorsList', [DoctorController::class, 'index'])->name('doctors.index');
+                Route::post('/doctorsAdd', [DoctorController::class, 'store'])->name('doctors.store');
+                Route::get('/doctorsEdit/{id}', [DoctorController::class, 'show'])->name('doctors.show');
+                Route::get('/doctorsDetails/{id}', [DoctorController::class, 'showDetails']);
+                Route::put('/doctorsUpdate/{id}', [DoctorController::class, 'update'])->name('doctors.update');
+                Route::delete('/doctorsDestroy/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
+                Route::get('/physicianManagement/{id}', [DoctorController::class, 'physicianManagement'])->name('physicianManagement');
+
+                // Appointment routes
+                Route::get('/appointments/pending', [DoctorController::class, 'getPendingAppointments'])->name('appointments.pending');
+                Route::patch('/appointments/{id}/confirm', [DoctorController::class, 'confirmAppointment'])->name('appointments.confirm');
+                Route::patch('/appointments/{id}/confirmhuy', [DoctorController::class, 'confirmAppointmenthuy'])->name('appointments.confirmhuy');
+                Route::get('/appointments/get-details', [DoctorController::class, 'getDetails']);
+                Route::post('/confirmAppointmentkoden', [DoctorController::class, 'confirmAppointmentkoden'])->name('confirmAppointmentkoden');
+                Route::get('/appointments/get_patient_info', [DoctorController::class, 'getPatientInfo']);
+                Route::post('/confirmAppointmentHistories', [DoctorController::class, 'confirmAppointmentHistories'])->name('confirmAppointmentHistories');
+                Route::post('/appointments/get-review-data', [DoctorController::class, 'getReviewData'])->name('appointments.getReviewData');
+                Route::post('/reviewDortor', [DoctorController::class, 'reviewDortor'])->name('reviewDortor');
+                Route::get('/reviews/{id}/edit', [DoctorController::class, 'edit']);
+                Route::put('/reviews/{id}', [DoctorController::class, 'updateReview']);
+
+
+
+
+                Route::get('/doctor/schedule/{doctorId}', [DoctorController::class, 'showSchedule'])->name('doctor.schedule');
+                Route::post('/doctor/scheduleAdd', [DoctorController::class, 'scheduleAdd'])->name('scheduleAdd');
+                Route::get('/doctor/scheduleEdit/{id}', [DoctorController::class, 'scheduleEdit']);
+                Route::put('/doctor/scheduleUpdate/{id}', [DoctorController::class, 'scheduleUpdate'])->name('scheduleUpdate');
+                Route::delete('/doctor/scheduleDestroy/{id}', [DoctorController::class, 'scheduleDestroy']);
+>>>>>>> Stashed changes
             });
     });
