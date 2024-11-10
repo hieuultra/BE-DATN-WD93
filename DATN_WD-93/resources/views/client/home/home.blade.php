@@ -3,6 +3,31 @@
 @section('title','Welcome')
 
 @section('content')
+<style>
+    .slideshow-container11 {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      margin-top: 30px; /* Add space between featured items and slideshow */
+    }
+
+    .slideshow-wrapper {
+      display: flex;
+      transition: transform 1s ease-in-out;
+    }
+
+    .slideshow-image {
+      width: 100%; /* Each image will take the full width of the container */
+      height: auto;
+      object-fit: cover; /* Ensures images cover the container */
+    }
+
+    /* Set the width of the slideshow-wrapper to hold both images side by side */
+    .slideshow-wrapper {
+      width: 200%; /* Since there are 2 images, each image will occupy 50% */
+    }
+  </style>
+
 <!-- Carousel Start -->
 <div class="container-fluid mb-3">
     <div class="row px-xl-5">
@@ -119,7 +144,7 @@
         <div class="product-offer mb-30" style="height: 200px">
           <img
             class="img-fluid"
-            src="{{ asset('img/20240909015811-0-Slide banner - 1590x604px (1) (1).webp') }}"
+            src="{{ asset('img/20241104090355-0-Sieuqua-1590x604px.avif') }}"
             alt=""
           />
           {{-- <div class="offer-text">
@@ -146,7 +171,7 @@
   <!-- Carousel End -->
 
   <!-- Featured Start -->
-  <div class="container-fluid pt-5">
+  <div class="container-fluid pt-3">
     <div class="row px-xl-5 pb-3">
       <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
         <div
@@ -154,7 +179,7 @@
           style="padding: 30px"
         >
           <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
-          <h5 class="font-weight-semi-bold m-0">Super Fast elivery</h5>
+          <h5 class="font-weight-semi-bold m-0">Super Fast Delivery</h5>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -184,12 +209,20 @@
           <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
         </div>
       </div>
+
+      <div class="slideshow-container11">
+        <div class="slideshow-wrapper">
+          <img src="{{ asset('img/53ea83e5e8786bfd65824c9d0e73d011.png') }}" class="slideshow-image" alt="Image 1" />
+          <img src="{{ asset('img/21481b827dcf2d53dd6827cdc4cf7ab4.png') }}" class="slideshow-image" alt="Image 2" />
+        </div>
+      </div>
+
     </div>
   </div>
   <!-- Featured End -->
 
   <!-- Categories Start -->
-  <div class="container-fluid pt-5">
+  <div class="container-fluid pt-1">
     <!-- Title -->
     <div class="text-center mb-4">
       <h2 class="section-title px-5">
@@ -722,5 +755,17 @@
     </div>
   </div>
   <!-- Vendor End -->
+<script>
+  let currentIndex = 0;
+  const slides = document.querySelectorAll('.slideshow-image');
+  const slideshowWrapper = document.querySelector('.slideshow-wrapper');
+  const totalSlides = slides.length;
 
+  function autoSlide() {
+    currentIndex = (currentIndex + 1) % totalSlides; // Loop back to the first image when reaching the end
+    slideshowWrapper.style.transform = `translateX(-${currentIndex * 50}%)`; // Move the slideshow
+  }
+
+  setInterval(autoSlide, 3000); // Change image every 3 seconds
+</script>
 @endsection

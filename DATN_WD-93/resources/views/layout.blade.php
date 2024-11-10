@@ -34,7 +34,80 @@
     {{-- <link rel="stylesheet" href="{{ asset('css/styleAppoinment.css') }}"> --}}
   </head>
 
+<!-- CSS for Popup -->
   <body>
+    <!-- Kiểm tra route và chỉ hiển thị popup khi ở trang chủ -->
+    @if (request()->routeIs('home'))
+    <!-- Popup Modal -->
+    <div id="popup-modal" class="popup-modal" onclick="closePopupOutside(event)">
+      <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+        <img src="{{ asset('img/20241108071509-0-PopupNgaydoi-1086x612px.webp') }}" alt="Thông báo" style="width:100%; height:auto;">
+        <p style="text-align: center; font-size: 1.2em; color: #ffea00;">Chào mừng bạn đến với cửa hàng của chúng tôi!</p>
+      </div>
+    </div>
+
+    <!-- CSS for Popup -->
+    <style>
+      .popup-modal {
+        display: flex;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+      }
+      .popup-content {
+        position: relative;
+        background-color: transparent; /* Loại bỏ nền trắng */
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 400px;
+        box-shadow: none; /* Loại bỏ bóng */
+        text-align: center;
+      }
+      .popup-content img {
+        border-radius: 10px;
+      }
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: white; /* Thay đổi màu nếu cần */
+      }
+    </style>
+
+    <!-- JavaScript to Handle Popup Display -->
+    <script>
+      // Display the popup on page load
+      document.addEventListener("DOMContentLoaded", function() {
+        var popup = document.getElementById("popup-modal");
+        popup.style.display = "flex";
+      });
+
+      // Function to close the popup
+      function closePopup() {
+        var popup = document.getElementById("popup-modal");
+        popup.style.display = "none";
+      }
+
+      // Close popup when clicking outside of the popup content
+      function closePopupOutside(event) {
+        var popupContent = document.querySelector(".popup-content");
+        if (!popupContent.contains(event.target)) {
+          closePopup();
+        }
+      }
+    </script>
+@endif
+
     <!-- Topbar Start -->
     <div class="container-fluid">
       <div class="row bg-secondary py-1 px-xl-5">
@@ -160,6 +233,9 @@
     </main>
 
     @include('footer')
+
+
+
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"
 ><i class="fa fa-angle-double-up"></i

@@ -4,46 +4,71 @@
 @section('content')
 
 <div class="container-fluid mt-4 px-4">
-
     <h3>Thêm khung giờ khám cho bác sĩ {{ $doctor->user->name }}</h3>
 
     <form action="{{ route('admin.timeslot.timeslotAdd', $doctor->id) }}" method="POST">
         @csrf
-        <!-- Day of the Week or Specific Date -->
-        <div class="form-group">
-            <label for="dayOfWeek">Chọn ngày trong tuần</label>
-            <select name="dayOfWeek" class="form-control" id="dayOfWeek" required>
-                <option value="Monday">Thứ hai</option>
-                <option value="Tuesday">Thứ ba</option>
-                <option value="Wednesday">Thứ tư</option>
-                <option value="Thursday">Thứ năm</option>
-                <option value="Friday">Thứ sáu</option>
-                <option value="Saturday">Thứ bảy</option>
-                <option value="Sunday">Chủ nhật</option>
-            </select>
-        </div>
 
-        <!-- Specific Date (optional) -->
-        <div class="form-group">
-            <label for="date">Ngày cụ thể (nếu có)</label>
-            <input type="date" name="date" class="form-control" id="date">
-        </div>
+        <!-- Day of the Week -->
+        <label>Day of Week:</label>
+        <input type="text" name="dayOfWeek" placeholder="e.g., Monday">
 
-        <!-- Start and End Time -->
-        <div class="form-group">
-            <label for="startTime">Thời gian bắt đầu</label>
-            <input type="time" name="startTime" class="form-control" id="startTime" required>
+        <!-- Specific Dates -->
+        <div id="date-container">
+            <label>Specific Date:</label>
+            <input type="date" name="date[0][date]" required>
+            <div class="time-slots">
+                <!-- Time slots for the first date -->
+                <label>Start Time:</label>
+                <input type="time" name="date[0][timeslots][0][startTime]" required>
+                <label>End Time:</label>
+                <input type="time" name="date[0][timeslots][0][endTime]" required>
+            </div>
         </div>
+        <button type="button" onclick="addDate()">Add Another Date</button>
 
-        <div class="form-group">
-            <label for="endTime">Thời gian kết thúc</label>
-            <input type="time" name="endTime" class="form-control" id="endTime" required>
-        </div>
-
-        <input type="submit" class="btn btn-primary mt-3" value="Thêm khung giờ">
-        <a href="{{ route('admin.specialties.specialtyDoctorList') }}"> <input type="button" class="btn btn-primary mt-3" value="List Doctors"></a>
+        <button type="submit">Save Time Slots</button>
     </form>
+
+    <!-- JavaScript to Dynamically Add Dates and Time Slots -->
+    <script>
+        let dateIndex = 1;
+        let timeslotIndex = 1;
+
+        // Add another date with its own time slots
+        function addDate() {
+            const container = document.getElementById('date-container');
+            const newDate = document.createElement('div');
+            newDate.classList.add('date-group');
+            newDate.innerHTML = `
+                <label>Specific Date:</label>
+                <input type="date" name="date[${dateIndex}][date]" required>
+                <div class="time-slots">
+                    <label>Start Time:</label>
+                    <input type="time" name="date[${dateIndex}][timeslots][0][startTime]" required>
+                    <label>End Time:</label>
+                    <input type="time" name="date[${dateIndex}][timeslots][0][endTime]" required>
+                </div>
+                <button type="button" onclick="addTimeslot(${dateIndex})">Add Another Time Slot</button>
+            `;
+            container.appendChild(newDate);
+            dateIndex++;
+        }
+
+        // Add another time slot for a specific date
+        function addTimeslot(dateIdx) {
+            const dateGroup = document.querySelector(`.date-group:nth-child(${dateIdx + 1}) .time-slots`);
+            const newTimeslot = document.createElement('div');
+            newTimeslot.innerHTML = `
+                <label>Start Time:</label>
+                <input type="time" name="date[${dateIdx}][timeslots][${timeslotIndex}][startTime]" required>
+                <label>End Time:</label>
+                <input type="time" name="date[${dateIdx}][timeslots][${timeslotIndex}][endTime]" required>
+            `;
+            dateGroup.appendChild(newTimeslot);
+            timeslotIndex++;
+        }
+    </script>
+
 </div>
-
-
 @endsection

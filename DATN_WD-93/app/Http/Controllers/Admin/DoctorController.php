@@ -83,23 +83,35 @@ class DoctorController extends Controller
         return view('admin.specialtyDoctors.timeslot.viewTimeslotAdd', compact('doctor'));
     }
     public function timeslotAdd(Request $request, $doctorId)
-{
-    $request->validate([
-        'dayOfWeek' => 'required|string',
-        'startTime' => 'required|date_format:H:i',
-        'endTime' => 'required|date_format:H:i|after:startTime',
-        'date' => 'nullable|date',
-    ]);
+    {
+    //     $data = $request->validate([
+    //         'dayOfWeek' => 'required|string',
+    //         'date' => 'required|array',
+    //         'date.*.date' => 'required|date',
+    //         'date.*.timeslots' => 'required|array',
+    //         'date.*.timeslots.*.startTime' => 'required|date_format:H:i',
+    //         'date.*.timeslots.*.endTime' => 'required|date_format:H:i',
+    //     ]);
 
-    AvailableTimeslot::create([
-        'doctor_id' => $doctorId,
-        'dayOfWeek' => $request->dayOfWeek,
-        'startTime' => $request->startTime,
-        'endTime' => $request->endTime,
-        'date' => $request->date,
-        'isAvailable' => true,
-    ]);
+    //     foreach ($data['date'] as $dateData) {
+    //         // Save the date
+    //         $date = new TimeslotDate();
+    //         $date->doctor_id = $doctorId;
+    //         $date->date = $dateData['date'];
+    //         $date->save();
 
-    return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Thêm khung giờ thành công.');
+    //         // Save each time slot for this date
+    //         foreach ($dateData['timeslots'] as $slot) {
+    //             $timeslot = new Timeslot();
+    //             $timeslot->timeslot_date_id = $date->id;
+    //             $timeslot->start_time = $slot['startTime'];
+    //             $timeslot->end_time = $slot['endTime'];
+    //             $timeslot->save();
+    //         }
+    //     }
+
+    //     return redirect()->back()->with('success', 'Time slots added successfully');
+    // }
+
 }
 }
