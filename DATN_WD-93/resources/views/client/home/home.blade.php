@@ -26,6 +26,117 @@
     .slideshow-wrapper {
       width: 200%; /* Since there are 2 images, each image will occupy 50% */
     }
+
+      /* Gradient and Shadow Effect */
+      .stylish-text {
+    font-size: 1.3em; /* Smaller font size */
+    font-weight: bold;
+    color: #ffcc00;
+    background: linear-gradient(45deg, #ff6f91, #ff9671);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0.5px 0.5px 3px rgba(0, 0, 0, 0.1), 0 0 5px #ffcc00, 0 0 10px #ffcc00;
+    animation: textGlow 1.5s ease-in-out infinite alternate;
+  }
+
+  /* Glow Effect */   @keyframes textGlow {
+    0% {
+      text-shadow: 0.5px 0.5px 3px rgba(0, 0, 0, 0.1), 0 0 5px #ffcc00, 0 0 10px #ffcc00;
+    }
+    100% {
+      text-shadow: 0.5px 0.5px 3px rgba(0, 0, 0, 0.1), 0 0 8px #ffcc00, 0 0 15px #ffcc00;
+    }
+  }
+  /* Optional Text Animation */
+  .stylish-text {
+    position: relative;
+    overflow: hidden;
+  }
+  .stylish-text::before {
+    content: 'FOR YOU';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    -webkit-background-clip: text;
+    animation: shine 2s linear infinite;
+  }
+
+  @keyframes shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  .stylish-text-top-sellers {
+    font-size: 1.3em; /* Increased font size for clarity */
+    font-weight: bold;
+    background: linear-gradient(45deg, #ffcc00, #ff5733); /* Gradient from yellow to orange */
+    background-clip: text;
+    -webkit-background-clip: text; /* For Safari compatibility */
+    color: transparent; /* Make the text transparent to show the gradient */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1), 0 0 12px #ff5733, 0 0 18px #ff5733; /* Stronger shadow effect */
+    animation: textGlowTopSellers 1.5s ease-in-out infinite alternate; /* Glow effect */
+  }
+
+  /* Animation for glowing effect */
+  @keyframes textGlowTopSellers {
+    0% {
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1), 0 0 12px #ffcc00, 0 0 18px #ffcc00;
+      opacity: 1;
+    }
+    50% {
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4), 0 0 20px #ff5733, 0 0 25px #ff5733;
+      opacity: 1; /* Ensures text stays visible */
+    }
+    100% {
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 12px #ffcc00, 0 0 18px #ffcc00;
+      opacity: 1;
+    }
+  }
+
+  .stylish-text-most-viewed {
+    font-size: 1.3em; /* Font size */
+    font-weight: 700; /* Increased font weight for better clarity */
+    color: #FFD700; /* Gold/yellow color */
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* Dark shadow to make the text stand out more */
+    letter-spacing: 2px; /* Slight spacing between letters */
+    animation: textGlowMostViewed 1.5s ease-in-out infinite alternate; /* Optional glow effect */
+  }
+
+  /* Optional Glow Effect Animation */
+  @keyframes textGlowMostViewed {
+    0% {
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3), 0 0 12px #FFD700, 0 0 18px #FFD700;
+    }
+    50% {
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4), 0 0 18px #FFD700, 0 0 22px #FFD700;
+    }
+    100% {
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3), 0 0 12px #FFD700, 0 0 18px #FFD700;
+    }
+  }
+  /* Stylish Text with Yellow Color and Bold Effect */
+  .stylish-text-best-sellers {
+    font-size: 1.3em; /* Font size */
+    font-weight: 700; /* Increased font weight for better clarity */
+    color: #FFD700; /* Gold/yellow color */
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* Dark shadow to make the text stand out more */
+    letter-spacing: 2px; /* Slight spacing between letters */
+    animation: textGlowBestSellers 1.5s ease-in-out infinite alternate; /* Optional glow effect */
+  }
+
+  /* Optional Glow Effect Animation */
+  @keyframes textGlowBestSellers {
+    0% {
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3), 0 0 12px #FFD700, 0 0 18px #FFD700;
+    }
+    50% {
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4), 0 0 18px #FFD700, 0 0 22px #FFD700;
+    }
+    100% {
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3), 0 0 12px #FFD700, 0 0 18px #FFD700;
+    }
+  }
   </style>
 
 <!-- Carousel Start -->
@@ -226,7 +337,7 @@
     <!-- Title -->
     <div class="text-center mb-4">
       <h2 class="section-title px-5">
-        <span class="px-2">FOR YOU</span>
+        <span class="px-2 stylish-text">FOR YOU</span>
       </h2>
     </div>
     <div class="row px-xl-5 pb-3">
@@ -482,7 +593,7 @@
     <!-- Title -->
     <div class="text-center mb-4">
       <h2 class="section-title px-5">
-        <span class="px-2">TOP SELLERS NATIONWIDE</span>
+        <span class="px-2 stylish-text-top-sellers">TOP SELLERS NATIONWIDE</span>
       </h2>
     </div>
 
@@ -648,7 +759,7 @@
      <!-- Title -->
      <div class="text-center mb-4">
       <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-        <span class="px-2">Most Viewed</span>
+        <span class="px-2 stylish-text-most-viewed">Most Viewed</span>
       </h2>
     </div>
     <div class="row px-xl-5">
@@ -720,7 +831,7 @@
       <!-- Title -->
       <div class="text-center mb-4">
         <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-          <span class="px-2">Best-selling brands</span>
+            <span class="px-2 stylish-text-best-sellers">Best-selling brands</span>
         </h2>
       </div>
     <div class="row px-xl-5">
