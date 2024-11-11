@@ -22,6 +22,8 @@ use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Client\AppoinmentController;
+use App\Models\Category;
+use App\Models\Doctor;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -55,10 +57,66 @@ Route::prefix('appoinment')
     ->as('appoinment.')
     ->group(function () {
         Route::get('/', [AppoinmentController::class, 'appoinment'])->name('index');
+        Route::get('/booKingCare/{id}', [AppoinmentController::class, 'booKingCare'])->name('booKingCare');
+        Route::get('/search-autocomplete', [AppoinmentController::class, 'autocompleteSearch'])->name('autocompleteSearch');
+        Route::get('/appointmentHistory/{id}', [AppoinmentController::class, 'appointmentHistory'])->name('appointmentHistory');
+        Route::get('/physicianManagement/{id}', [AppoinmentController::class, 'physicianManagement'])->name('physicianManagement');
+        Route::get('/doctorDetails/{id}', [AppoinmentController::class, 'doctorDetails'])->name('doctorDetails');
+        Route::get('/formbookingdt/{id}', [AppoinmentController::class, 'formbookingdt'])->name('formbookingdt');
+        Route::post('/bookAnAppointment', [AppoinmentController::class, 'bookAnAppointment'])->name('bookAnAppointment');
+        Route::get('/appointmentHistory/{id}', [AppoinmentController::class, 'appointmentHistory'])->name('appointmentHistory');
+        Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
+        Route::get('/statistics/{id}', [AppoinmentController::class, 'statistics'])->name('statistics');
+        Route::get('/appointments/pending', [AppoinmentController::class, 'getPendingAppointments'])->name('appointments.pending');
+        Route::patch('/appointments/{id}/confirm', [AppoinmentController::class, 'confirmAppointment'])->name('appointments.confirm');
+        Route::patch('/appointments/{id}/confirmhuy', [AppoinmentController::class, 'confirmAppointmenthuy'])->name('appointments.confirmhuy');
+        Route::post('/confirmAppointmentkoden', [AppoinmentController::class, 'confirmAppointmentkoden'])->name('confirmAppointmentkoden');
+        Route::post('/confirmAppointmentHistories', [AppoinmentController::class, 'confirmAppointmentHistories'])->name('confirmAppointmentHistories');
+        Route::get('/appointments/get-details', [AppoinmentController::class, 'getDetails']);
+        Route::get('/appointments/get_patient_info', [AppoinmentController::class, 'getPatientInfo']);
+
+        //
+        Route::post('/appointments/get-review-data', [AppoinmentController::class, 'getReviewData'])->name('appointments.getReviewData');
+        Route::get('/reviews/{id}/edit', [AppoinmentController::class, 'edit']);
+        Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
+        Route::put('/reviews/{id}', [AppoinmentController::class, 'updateReview']);
+        Route::post('/appointments/{id}/cancel', [AppoinmentController::class, 'cancel'])->name('appointments.cancel');
+        
+
         Route::get('specialistExamination', [AppoinmentController::class, 'specialistExamination'])->name('specialistExamination');
         Route::get('/doctors/{specialty_id}', [AppoinmentController::class, 'doctors'])->name('doctorsBySpecialtyId');
         Route::post('/schedule', [AppoinmentController::class, 'schedule'])->name('schedule');
     });
+
+    Route::get('/viewSikibidi', function () {
+        $orderCount = 1;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count();
+        }
+        $categories = Category::orderBy('name', 'asc')->get();
+        return view('client.ai.viewSikibidi', compact('orderCount', 'categories'));
+    });
+    Route::get('/chat-ai', function () {
+        $orderCount = 1;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count();
+        }
+        $categories = Category::orderBy('name', 'asc')->get();
+        return view('client.ai.chatAI', compact('orderCount', 'categories'));
+    });
+    Route::get('/chat-zalo', function () {
+        $orderCount = 1;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count();
+        }
+        $categories = Category::orderBy('name', 'asc')->get();
+        return view('client.ai.chatZalo', compact('orderCount', 'categories'));
+    });
+    
+
 
 Auth::routes();
 //user management
@@ -198,11 +256,19 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::prefix('timeslot')
             ->as('timeslot.')
             ->group(function () {
-                Route::get('/timeslotList', [DoctorController::class, 'timeslotList'])->name('timeslotList');
-                Route::get('/viewTimeslotAdd/{id}', [DoctorController::class, 'viewTimeslotAdd'])->name('viewTimeslotAdd');
-                Route::post('{doctorId}/timeslotAdd', [DoctorController::class, 'timeslotAdd'])->name('timeslotAdd');
-                Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
-                Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
-                Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
+                Route::get('/schedule/{doctorId}', [DoctorController::class, 'showSchedule'])->name('doctor.schedule');
+                Route::post('/scheduleAdd', [DoctorController::class, 'scheduleAdd'])->name('scheduleAdd');
+                Route::get('/scheduleEdit/{id}', [DoctorController::class, 'scheduleEdit']);
+                Route::put('/scheduleUpdate/{id}', [DoctorController::class, 'scheduleUpdate'])->name('scheduleUpdate');
+                Route::delete('/scheduleDestroy/{id}', [DoctorController::class, 'scheduleDestroy']);
+            });
+
+        Route::prefix('achievements')
+            ->as('achievements.')
+            ->group(function () {
+                Route::get('/achievements/{doctorId}', [DoctorController::class, 'showAchievements'])->name('doctor.achievements');
+                Route::post('/achievementsAdd', [DoctorController::class, 'achievementsAdd'])->name('achievementsAdd');
+                Route::delete('/achievementsds/{id}', [DoctorController::class, 'destroy']);
+                Route::post('/achievementsUpdate', [DoctorController::class, 'achievementsUpdate'])->name('achievementsUpdate');
             });
     });

@@ -56,4 +56,8 @@ class Appoinment extends Model
     {
         return $this->hasMany(AppoinmentHistory::class);
     }
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

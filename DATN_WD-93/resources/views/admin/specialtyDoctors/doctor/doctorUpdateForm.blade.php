@@ -119,6 +119,39 @@
             </div>
         </div>
 
+        <div class="row">
+            <h2>Địa chỉ phòng khám</h2>
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label">clinic name</label>
+                    <input type="text" class="form-control @error('clinic_name') is-invalid @enderror" name="clinic_name" value="{{$clinic->clinic_name}}">
+                    @error('clinic_name')
+                    <p class="text-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label">city</label>
+                    <input type="text" class="form-control @error('city') is-invalid @enderror" name="city" value="{{$clinic->city}}">
+                    @error('city')
+                    <p class="text-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label">address</label>
+                    <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{$clinic->address}}">
+                    @error('address')
+                    <p class="text-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
         <input type="submit" class="btn btn-primary" value="Edit">
         <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
             <input type="button" class="btn btn-primary" value="LIST_SPECIALTY_DOCTOR">

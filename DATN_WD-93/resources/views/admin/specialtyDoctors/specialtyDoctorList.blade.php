@@ -161,7 +161,10 @@
                 <td>{{$docs->name}}</td>
                 <td class="text-center">
                     <div class="time-icon">
-                        <a href="{{ route('admin.timeslot.viewTimeslotAdd', $d->id) }}"><i class="fas fa-clock"></i></a>
+                        <a href="{{ route('admin.timeslot.doctor.schedule', $d->id) }}"><i class="fas fa-clock"></i></a>
+                    </div>
+                    <div class="time-icon">
+                        <a style="text-decoration: none;" href="{{ route('admin.achievements.doctor.achievements', $d->id) }}">Thành tựu bác sĩ</a>
                     </div>
 
                   <a href="" class="btn btn-warning">
