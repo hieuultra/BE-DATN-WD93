@@ -98,7 +98,7 @@ class OrderController extends Controller
                     $tt = $item['price'] * $item['quantity'];
                     $bill->order_detail()->create([
                         'bill_id' => $billId,
-                       'product_id' => $item->product_id,
+                        'product_id' => $item->product_id,
                         'unitPrice' => $item['price'],
                         'quantity' => $item['quantity'],
                         'totalMoney' => $tt

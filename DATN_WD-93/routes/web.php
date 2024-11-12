@@ -10,18 +10,19 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\ReviewController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\DoctorController;
-use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Admin\SpecialtyController;
+use App\Http\Controllers\Client\AppoinmentController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
-use App\Http\Controllers\Client\AppoinmentController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -83,6 +84,8 @@ Route::middleware('auth')->prefix('orders')
         Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
         Route::put('{id}/update', [OrderController::class, 'update'])->name('update');
     });
+//review
+Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 
 //admin
 Route::middleware(['auth', 'auth.admin'])->prefix('admin')
