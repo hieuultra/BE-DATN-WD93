@@ -271,7 +271,7 @@
                                 </h4>
                                     @foreach($product->review as $review)
                                         <div class="media mb-4">
-                                            <img src="{{ asset('upload/' . $review->user->image) }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                            <img src="{{ asset('upload/' . $review->user->image) }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px; height:55px">
                                             <div class="media-body">
                                                 <h6>{{ $review->user->name }}<small> - <i>{{ $review->created_at->format('d M Y') }}</i></small></h6>
                                                 <div class="text-primary mb-2">

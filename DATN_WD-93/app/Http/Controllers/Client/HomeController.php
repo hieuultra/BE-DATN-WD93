@@ -24,6 +24,8 @@ class HomeController extends Controller
         $instockProducts = Product::instockProducts(8)->get();
         // Lấy 8 sản phẩm có lượt xem nhiều nhất
         $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)->get();
+        // Lấy 8 sản phẩm có giảm giá cao nhất
+        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)->get();
 
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
@@ -34,7 +36,7 @@ class HomeController extends Controller
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
 
-        return view('client.home.home', compact('orderCount', 'categories', 'newProducts', 'newProducts1', 'bestsellerProducts', 'instockProducts', 'mostViewedProducts'));
+        return view('client.home.home', compact('orderCount', 'categories', 'newProducts', 'newProducts1', 'bestsellerProducts', 'instockProducts', 'mostViewedProducts', 'highestDiscountProducts'));
     }
     function products(Request $request)
     {
@@ -120,7 +122,8 @@ class HomeController extends Controller
         }
 
         return redirect()->route('products')->with('error', 'Không tìm thấy sản phẩm.');
-    }private function canReviewProduct($productId, $billId)
+    }
+    private function canReviewProduct($productId, $billId)
     {
         $userId = auth()->id();
 
