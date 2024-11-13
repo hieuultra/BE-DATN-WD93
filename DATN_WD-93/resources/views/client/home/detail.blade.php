@@ -143,12 +143,17 @@
                 <h3 class="product-name">{{ $sp->name }}</h3>
                 <div class="d-flex mb-3">
                     <small class="product-code px-2 pt-1">Code:{{ $sp->idProduct }}</small>
-                    <div class="text-primary mr-2">
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star"></small>
-                        <small class="fas fa-star-half-alt"></small>
-                        <small class="far fa-star"></small>
+                    <div class="mr-2">
+                        @php
+                        $averageRating = round($sp->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có
+                        $reviewCount = $sp->review_count ?? 0; // mặc định 0 nếu không có
+                    @endphp
+
+                    @for ($i = 1; $i <= 5; $i++)
+                        <small class="fa fa-star {{ $i <= $averageRating ? 'text-primary' : '' }} mr-1"></small>
+                    @endfor
+
+                    <small>({{ $reviewCount }})</small>
                     </div>
                     <small class="views-count ml-auto">{{ $sp->view }} Views</small>
                 </div>
@@ -387,12 +392,16 @@
                             </form>
                           </div>
                         <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small>(99)</small>
+                            @php
+                            $averageRating = round($s->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có
+                            $reviewCount = $s->review_count ?? 0; // mặc định 0 nếu không có
+                        @endphp
+
+                        @for ($i = 1; $i <= 5; $i++)
+                            <small class="fa fa-star {{ $i <= $averageRating ? 'text-primary' : '' }} mr-1"></small>
+                        @endfor
+
+                        <small>({{ $reviewCount }})</small>
                         </div>
                     </div>
                 </div>

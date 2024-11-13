@@ -16,17 +16,13 @@ class HomeController extends Controller
 {
     function index()
     {
-        $newProducts = Product::newProducts(4)->get();
-        $newProducts1 = Product::limit(4)->get();
+        $newProducts = Product::newProducts(4)->withCount('review')->withAvg('review', 'rating')->get();
+        $newProducts1 = Product::limit(4)->withCount('review')->withAvg('review', 'rating')->get();
+        $bestsellerProducts = Product::bestsellerProducts(6)->withCount('review')->withAvg('review', 'rating')->get();
+        $instockProducts = Product::instockProducts(8)->withCount('review')->withAvg('review', 'rating')->get();
 
-        $bestsellerProducts = Product::bestsellerProducts(6)->get();
-
-        $instockProducts = Product::instockProducts(8)->get();
-        // Lấy 8 sản phẩm có lượt xem nhiều nhất
-        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)->get();
-        // Lấy 8 sản phẩm có giảm giá cao nhất
-        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)->get();
-
+        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)->withCount('review')->withAvg('review', 'rating')->get();
+        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)->withCount('review')->withAvg('review', 'rating')->get();
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
 
@@ -50,9 +46,17 @@ class HomeController extends Controller
 
         $categories = Category::orderBy('name', 'ASC')->get();
         if ($request->category_id) {
-            $products = Product::where('category_id', $request->category_id)->orderBy('id', 'desc')->paginate(12);
+            $products = Product::where('category_id', $request->category_id)
+                ->withCount('review') // Đếm số lượt đánh giá
+                ->withAvg('review', 'rating') // Tính trung bình số sao
+                ->orderBy('id', 'desc')
+                ->paginate(12);
         } else {
-            $products = Product::orderBy('id', 'desc')->paginate(12); //phan trang 9sp/1page
+            $products = Product::withCount('review') // Đếm số lượt đánh giá
+                ->withAvg('review', 'rating') // Tính trung bình số sao
+                ->orderBy('id', 'desc')
+                ->paginate(12);
+            //phan trang 9sp/1page
         }
         return view('client.home.products', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
     }
@@ -60,7 +64,11 @@ class HomeController extends Controller
     {
         if ($request->product_id) {
             // Lấy sản phẩm
-            $sp = Product::find($request->product_id);
+            $sp = Product::where('id', $request->product_id)
+                ->withAvg('review', 'rating')  // Lấy trung bình số sao
+                ->withCount('review')          // Đếm số lượt đánh giá
+                ->first();  // Dùng first() để lấy một sản phẩm duy nhất
+
             if (!$sp) {
                 return redirect()->route('products')->with('error', 'Sản phẩm không tồn tại.');
             }
@@ -68,6 +76,8 @@ class HomeController extends Controller
             // Lấy sản phẩm liên quan
             $splq = Product::where('category_id', $sp->category_id)
                 ->where('id', '<>', $sp->id)
+                ->withAvg('review', 'rating') // Lấy trung bình số sao
+                ->withCount('review')         // Đếm số lượt đánh giá
                 ->get();
 
             // Lấy danh sách các biến thể của sản phẩm
@@ -179,7 +189,8 @@ class HomeController extends Controller
         $category_id = $request->input('category_id');
 
         // $products = Product::where('name', 'LIKE', "%$kyw%")->orWhere('description', 'LIKE', "%$kyw%")->orderBy('id', 'DESC')->paginate(9);
-        $products = Product::where('name', 'LIKE', "%$kyw%")->orderBy('id', 'DESC')->paginate(9);
+        $products = Product::where('name', 'LIKE', "%$kyw%")->withCount('review')
+            ->withAvg('review', 'rating')->orderBy('id', 'DESC')->paginate(9);
         // echo var_dump($dssp);
         return view('client.home.proSearch', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
     }

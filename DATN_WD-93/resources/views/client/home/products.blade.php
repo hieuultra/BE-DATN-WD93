@@ -199,21 +199,25 @@
                                     <h5 class="text-danger">  {{ number_format($tt, 0, ",", ".")  }} $</h5><h6 class="text-muted ml-2"><del> {{ number_format($item->price,0,',','.') }} $</del></h6>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between bg-light">
-                                    <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                    <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
                                     <form action="{{ route('cart.addCart') }}" method="post">
                                         @csrf
                                             <input type="hidden" name="quantity" value="1">
                                            <input type="hidden" name="productId" value="{{ $item->id }}">
-                                        <input type="submit" value="Add To Cart" class="btn btn-sm text-dark p-0" name="addtocart"><i class="fas fa-shopping-cart text-primary mr-1"></i>
+                                        <input type="submit" value="Thêm vào giỏ" class="btn btn-sm text-dark p-0" name="addtocart"><i class="fas fa-shopping-cart text-primary mr-1"></i>
                                     </form>
                                   </div>
                                 <div class="d-flex align-items-center justify-content-center mb-1">
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small>(99)</small>
+                                    @php
+                                    $averageRating = round($item->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có
+                                    $reviewCount = $item->review_count ?? 0; // mặc định 0 nếu không có
+                                @endphp
+
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <small class="fa fa-star {{ $i <= $averageRating ? 'text-primary' : '' }} mr-1"></small>
+                                @endfor
+
+                                <small>({{ $reviewCount }})</small>
                                 </div>
                             </div>
                         </div>
