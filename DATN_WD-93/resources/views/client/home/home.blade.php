@@ -53,7 +53,7 @@
     overflow: hidden;
   }
   .stylish-text::before {
-    content: 'FOR YOU';
+    content: 'CÁC TIỆN ÍCH';
     position: absolute;
     top: 0;
     left: -100%;

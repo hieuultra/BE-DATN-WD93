@@ -19,10 +19,11 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, $status = null)
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get();  //tro den class bill ben model user
+        $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get(); // Lấy tất cả các đơn hàng
+
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -30,12 +31,44 @@ class OrderController extends Controller
         }
 
         $statusBill = Bill::status_bill;
-
         $type_cho_xac_nhan = Bill::CHO_XAC_NHAN;
         $type_dang_van_chuyen = Bill::DANG_VAN_CHUYEN;
+        $type_da_giao_hang = Bill::DA_GIAO_HANG;
 
-        return view('client.orders.index', compact('orderCount', 'categories', 'Bills', 'statusBill', 'type_cho_xac_nhan', 'type_dang_van_chuyen'));
+        // Lấy trạng thái từ tham số URL (nếu có)
+        $status = $status ?? $request->get('status');
+
+        // Tìm kiếm theo mã đơn hàng hoặc tên sản phẩm
+        $searchTerm = $request->get('search');
+
+        // Lọc đơn hàng theo trạng thái và tìm kiếm (nếu có)
+        $billsQuery = Auth::user()->bill()->orderBy('created_at', 'desc');
+
+        // Lọc theo trạng thái bill nếu có
+        if ($status) {
+            $billsQuery->where('status_bill', $status);
+        }
+
+        // Nếu có từ khóa tìm kiếm, lọc theo mã đơn hàng hoặc tên sản phẩm
+        if ($searchTerm) {
+            $billsQuery->where(function ($query) use ($searchTerm) {
+                $query->where('billCode', 'like', '%' . $searchTerm . '%')
+                    ->orWhereHas('order_detail', function ($query) use ($searchTerm) {
+                        $query->whereHas('product', function ($query) use ($searchTerm) {
+                            $query->where('name', 'like', '%' . $searchTerm . '%');
+                        });
+                    });
+            });
+        }
+
+        // Lấy kết quả tìm kiếm và trạng thái
+        $bills = $billsQuery->get();
+
+        $allStatusBill = Bill::status_bill;
+
+        return view('client.orders.index', compact('orderCount', 'categories', 'Bills', 'statusBill', 'type_cho_xac_nhan', 'type_dang_van_chuyen', 'allStatusBill', 'bills', 'type_da_giao_hang'));
     }
+
 
     /**
      * Show the form for creating a new resource.
