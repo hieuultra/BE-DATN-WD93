@@ -98,7 +98,7 @@
                          {{ number_format($item->totalPrice,0,',','.') }}$
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('orders.show', $item->id) }}" class="btn btn-primary">View</a>
+                        <a href="{{ route('orders.show', $item->id) }}" class="btn btn-primary">Xem</a>
                         <form action="{{ route('orders.update', $item->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('PUT')
@@ -111,7 +111,7 @@
                             @endif
                         </form>
                         @if ($item->status_bill == $type_da_giao_hang) <!-- Trạng thái đã giao hàng -->
-                        <a href="{{ route('orders.review', $item->id) }}" class="btn btn-warning">Đánh giá</a> <!-- Nút đánh giá -->
+                        <a href="" class="btn btn-warning">Đánh giá</a> <!-- Nút đánh giá -->
                     @endif
                     </td>
                 </tr>
