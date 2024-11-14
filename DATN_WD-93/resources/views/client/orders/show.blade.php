@@ -98,6 +98,7 @@
                                 <th>Unit Price</th>
                                 <th>Quantity</th>
                                 <th>Total Price</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,6 +113,9 @@
                                 <td>{{ number_format($detail->unitPrice,0,',','.') }}$</td>
                                 <td>{{ $detail->quantity }}</td>
                                 <td>{{ number_format($detail->totalMoney,0,',','.') }}$</td>
+                                @if ($bill->status_bill == $type_da_giao_hang)
+                                 <th><a href="{{ route('productDetail', $detail->product_id) }}" class="btn btn-warning">Đánh giá</a></th>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

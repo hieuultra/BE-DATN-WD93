@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Models\Bill;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\CartItem;
 use App\Models\Category;
 use App\Mail\OrderConfirm;
 use Illuminate\Http\Request;
@@ -34,6 +35,8 @@ class OrderController extends Controller
         $type_cho_xac_nhan = Bill::CHO_XAC_NHAN;
         $type_dang_van_chuyen = Bill::DANG_VAN_CHUYEN;
         $type_da_giao_hang = Bill::DA_GIAO_HANG;
+        $type_da_huy = Bill::DA_HUY;
+        $type_khach_hang_tu_choi = Bill::KHACH_HANG_TU_CHOI;
 
         // Lấy trạng thái từ tham số URL (nếu có)
         $status = $status ?? $request->get('status');
@@ -66,7 +69,19 @@ class OrderController extends Controller
 
         $allStatusBill = Bill::status_bill;
 
-        return view('client.orders.index', compact('orderCount', 'categories', 'Bills', 'statusBill', 'type_cho_xac_nhan', 'type_dang_van_chuyen', 'allStatusBill', 'bills', 'type_da_giao_hang'));
+        return view('client.orders.index', compact(
+            'orderCount',
+            'categories',
+            'Bills',
+            'statusBill',
+            'type_cho_xac_nhan',
+            'type_dang_van_chuyen',
+            'allStatusBill',
+            'bills',
+            'type_da_giao_hang',
+            'type_da_huy',
+            'type_khach_hang_tu_choi'
+        ));
     }
 
 
@@ -171,7 +186,8 @@ class OrderController extends Controller
         $bill = Bill::query()->findOrFail($id);
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;
-        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories'));
+        $type_da_giao_hang = Bill::DA_GIAO_HANG;
+        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories', 'type_da_giao_hang'));
     }
 
     /**
@@ -216,5 +232,32 @@ class OrderController extends Controller
             $orderCode = 'ORD-' . Auth::id() . '-' . now()->timestamp;
         } while (Bill::where('billCode', $orderCode)->exists());
         return $orderCode;  //tra ve unique code cho don hang
+    }
+    public function reorder($id)
+    {
+        // Tìm đơn hàng theo ID
+        $order = Bill::findOrFail($id);
+
+        // Kiểm tra nếu trạng thái đơn hàng là 'Đã giao hàng' hoặc 'Đã hủy'
+        if ($order->status_bill == Bill::DA_GIAO_HANG || $order->status_bill == Bill::DA_HUY || $order->status_bill == Bill::KHACH_HANG_TU_CHOI) {
+            // Lặp qua tất cả sản phẩm trong đơn hàng
+            foreach ($order->products as $product) {
+                // Thêm từng sản phẩm vào giỏ hàng của người dùng
+                CartItem::updateOrCreate(
+                    [
+                        'user_id' => Auth::id(),
+                        'product_id' => $product->id
+                    ],
+                    [
+                        'quantity' => DB::raw('quantity + ' . $product->pivot->quantity)
+                    ]
+                );
+            }
+
+            // Thông báo thành công
+            return redirect()->route('cart.index')->with('success', 'Đã thêm các sản phẩm vào giỏ hàng.');
+        } else {
+            return redirect()->back()->with('error', 'Không thể mua lại đơn hàng này.');
+        }
     }
 }

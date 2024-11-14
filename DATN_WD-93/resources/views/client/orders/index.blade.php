@@ -110,9 +110,9 @@
                             <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you received the goods?')">Order received</button>
                             @endif
                         </form>
-                        @if ($item->status_bill == $type_da_giao_hang) <!-- Trạng thái đã giao hàng -->
-                        <a href="" class="btn btn-warning">Đánh giá</a> <!-- Nút đánh giá -->
-                    @endif
+                        @if ($item->status_bill == $type_da_giao_hang || $item->status_bill == $type_da_huy || $item->status_bill == $type_khach_hang_tu_choi)
+                            <a href="{{ route('orders.reorder', $item->id) }}" class="btn btn-success">Mua lại</a>
+                         @endif
                     </td>
                 </tr>
                 @endforeach
