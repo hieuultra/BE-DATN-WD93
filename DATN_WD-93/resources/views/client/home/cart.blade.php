@@ -52,12 +52,12 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="pro-thumbnail">Thumbnail</th>
-                    <th class="pro-title">Product</th>
-                    <th class="pro-price">Price</th>
-                    <th class="pro-quantity">Quantity</th>
-                    <th class="pro-subtotal">Total</th>
-                    <th class="pro-remove">Remove</th>
+                    <th class="pro-thumbnail">Ảnh</th>
+                    <th class="pro-title">Sản phẩm</th>
+                    <th class="pro-price">Giá</th>
+                    <th class="pro-quantity">Số lượng</th>
+                    <th class="pro-subtotal">Tổng</th>
+                    <th class="pro-remove">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -115,31 +115,31 @@
           <div class="input-group">
             <input type="text" class="form-control p-4" placeholder="Coupon Code" />
             <div class="input-group-append">
-              <button class="btn btn-primary">Apply Coupon</button>
+              <button class="btn btn-primary">Áp dụng mã giảm giá</button>
             </div>
           </div>
         </form>
         <div class="card border-secondary mb-5">
           <div class="card-header bg-secondary border-0">
-            <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+            <h4 class="font-weight-semi-bold m-0">Tóm tắt giỏ hàng</h4>
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-between mb-3 pt-1">
-              <h6 class="font-weight-medium"> Sub Total</h6>
+              <h6 class="font-weight-medium">Tạm tính</h6>
               <h6 class="font-weight-medium subTotal">{{ number_format($subTotal,0,',','.') }}$</h6>
             </div>
             <div class="d-flex justify-content-between">
-              <h6 class="font-weight-medium">Shipping</h6>
+              <h6 class="font-weight-medium">Vận chuyển</h6>
               <h6 class="font-weight-medium shipping">{{ number_format($shipping,0,',','.') }}$</h6>
             </div>
           </div>
           <div class="card-footer border-secondary bg-transparent">
             <div class="d-flex justify-content-between mt-2">
-              <h5 class="font-weight-bold">Total</h5>
+              <h5 class="font-weight-bold">Tổng cộng</h5>
               <h5 class="font-weight-bold total_amount">{{ number_format($total,0,',','.') }}$</h5>
             </div>
               <a href="{{ route('orders.create') }}" class="btn btn-block btn-primary my-3 py-3">
-                Proceed To Checkout
+                Tiến hành thanh toán
             </a>
           </div>
         </div>

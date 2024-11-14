@@ -73,11 +73,11 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="text-center">Code Bill</th>
-                    <th class="text-center">Date Order</th>
-                    <th class="text-center">Status Bill</th>
-                    <th class="text-center">Total Bill</th>
-                    <th class="text-center">Action</th>
+                    <th class="text-center">Mã đơn hàng</th>
+                    <th class="text-center">Thời gian đặt</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th class="text-center">Tổng đơn</th>
+                    <th class="text-center">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -104,10 +104,10 @@
                             @method('PUT')
                             @if ($item->status_bill == $type_cho_xac_nhan)
                             <input type="hidden" name="da_huy" value="1">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure unset bill right?')">Unset</button>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure unset bill right?')">Hủy dơn</button>
                             @elseif ($item->status_bill == $type_dang_van_chuyen)
                             <input type="hidden" name="da_giao_hang" value="1">
-                            <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you received the goods?')">Order received</button>
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you received the goods?')">Đã nhận hàng</button>
                             @endif
                         </form>
                         @if ($item->status_bill == $type_da_giao_hang || $item->status_bill == $type_da_huy || $item->status_bill == $type_khach_hang_tu_choi)

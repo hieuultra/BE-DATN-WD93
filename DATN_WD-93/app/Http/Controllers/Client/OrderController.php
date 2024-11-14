@@ -132,7 +132,7 @@ class OrderController extends Controller
                 // Lấy cart của người dùng từ database
                 $carts = Cart::where('user_id', Auth::id())->with('items')->first();
                 if (!$carts || $carts->items->isEmpty()) {
-                    return redirect()->route('cart.listCart')->with('error', 'Your cart is empty');
+                    return redirect()->route('cart.listCart')->with('error', 'Giỏ hàng của bạn trống');
                 }
 
                 foreach ($carts->items as $item) {
@@ -140,7 +140,7 @@ class OrderController extends Controller
                     $product = Product::findOrFail($item->product_id);
                     if ($product->quantity < $item['quantity']) {
                         DB::rollBack();
-                        return redirect()->route('cart.listCart')->with('error', 'Not enough stock for product ' . $product->name);
+                        return redirect()->route('cart.listCart')->with('error', 'Không đủ số lượng tồn kho cho ' . $product->name);
                     }
                     // Tạo chi tiết đơn hàng
                     $tt = $item['price'] * $item['quantity'];
@@ -164,10 +164,10 @@ class OrderController extends Controller
                 Mail::to($bill->emailUser)->queue(new OrderConfirm($bill));
 
                 $carts->items()->delete();
-                return redirect()->route('orders.index')->with('success', 'Bill have created successfully');
+                return redirect()->route('orders.index')->with('success', 'Tạo đơn hàng thành công');
             } catch (\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('cart.listCart')->with('error', 'Order failed');
+                return redirect()->route('cart.listCart')->with('error', 'Tạo đơn hàng thất bại');
             }
         }
     }
@@ -216,10 +216,10 @@ class OrderController extends Controller
             //Sử dụng DB::commit() để xác nhận thay đổi nếu mọi thứ thành công.
             //Nếu có lỗi, sử dụng DB::rollBack() để hoàn tác tất cả các thay đổi.
             DB::commit();
-            return redirect()->route('orders.index')->with('success', 'Bill updated successfully');
+            return redirect()->route('orders.index')->with('success', 'Hủy đơn hàng thành công');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('orders.index')->with('error', 'Bill update failed');
+            return redirect()->route('orders.index')->with('error', 'Cập nhập đơn hàng thất bại');
         }
     }
 
