@@ -73,6 +73,7 @@ Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCar
 Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
 Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
+Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
 
 // order
 Route::middleware('auth')->prefix('orders')
@@ -84,7 +85,6 @@ Route::middleware('auth')->prefix('orders')
         Route::post('/store', [OrderController::class, 'store'])->name('store');
         Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
         Route::put('{id}/update', [OrderController::class, 'update'])->name('update');
-        Route::get('{order}/reorder', [OrderController::class, 'reorder'])->name('reorder');
     });
 //review
 Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');

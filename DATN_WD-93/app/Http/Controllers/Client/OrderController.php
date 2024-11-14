@@ -233,31 +233,4 @@ class OrderController extends Controller
         } while (Bill::where('billCode', $orderCode)->exists());
         return $orderCode;  //tra ve unique code cho don hang
     }
-    public function reorder($id)
-    {
-        // Tìm đơn hàng theo ID
-        $order = Bill::findOrFail($id);
-
-        // Kiểm tra nếu trạng thái đơn hàng là 'Đã giao hàng' hoặc 'Đã hủy'
-        if ($order->status_bill == Bill::DA_GIAO_HANG || $order->status_bill == Bill::DA_HUY || $order->status_bill == Bill::KHACH_HANG_TU_CHOI) {
-            // Lặp qua tất cả sản phẩm trong đơn hàng
-            foreach ($order->products as $product) {
-                // Thêm từng sản phẩm vào giỏ hàng của người dùng
-                CartItem::updateOrCreate(
-                    [
-                        'user_id' => Auth::id(),
-                        'product_id' => $product->id
-                    ],
-                    [
-                        'quantity' => DB::raw('quantity + ' . $product->pivot->quantity)
-                    ]
-                );
-            }
-
-            // Thông báo thành công
-            return redirect()->route('cart.index')->with('success', 'Đã thêm các sản phẩm vào giỏ hàng.');
-        } else {
-            return redirect()->back()->with('error', 'Không thể mua lại đơn hàng này.');
-        }
-    }
 }

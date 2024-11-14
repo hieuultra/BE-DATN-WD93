@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Models\Bill;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\CartItem;
@@ -77,21 +78,6 @@ class CartController extends Controller
         }
         return redirect()->back();
     }
-    // public function updateCart(Request $request)
-    // {
-    //     $cartItemId = $request->input('id');
-    //     $quantity = $request->input('quantity');
-
-    //     $cartItem = CartItem::query()->findOrFail($cartItemId);
-    //     $total = $cartItem->price * $quantity;
-
-    //     $param['quantity'] = $quantity;
-    //     $param['total'] = $total;
-
-    //     $cartItem->update($param);
-    //     // Trả về phản hồi thành công
-    //     return response()->json(['message' => 'Giỏ hàng đã được cập nhật thành công'], 200);
-    // }
     public function updateCart(Request $request)
     {
         $items = $request->input('items');
@@ -132,5 +118,40 @@ class CartController extends Controller
         }
 
         return response()->json(['message' => 'Item not found'], 404);
+    }
+    public function reorder($orderId)
+    {
+        $order = Bill::with('products')->findOrFail($orderId);
+        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+
+        foreach ($order->products as $product) {
+            // Tính toán giá sản phẩm sau khi áp dụng giảm giá
+            $totalPrice = $product->price - (($product->price * $product->discount) / 100);
+
+            // Kiểm tra nếu sản phẩm đã tồn tại trong giỏ hàng
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_id', $product->id)
+                ->first();
+
+            if ($cartItem) {
+                // Nếu sản phẩm đã có trong giỏ hàng, cập nhật số lượng và tổng giá
+                $cartItem->quantity += 1; // có thể điều chỉnh số lượng tùy ý
+                $cartItem->total = $totalPrice * $cartItem->quantity; // Cập nhật tổng giá
+                $cartItem->save();
+            } else {
+                // Nếu chưa có, tạo một mục giỏ hàng mới
+                CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_id' => $product->id,
+                    'name' => $product->name,
+                    'image' => $product->img,
+                    'price' => $totalPrice,
+                    'quantity' => 1, // có thể đặt lại số lượng mặc định
+                    'total' => $totalPrice
+                ]);
+            }
+        }
+
+        return redirect()->route('orders.index')->with('success', 'Các sản phẩm từ đơn hàng đã được thêm vào giỏ hàng.');
     }
 }

@@ -111,8 +111,11 @@
                             @endif
                         </form>
                         @if ($item->status_bill == $type_da_giao_hang || $item->status_bill == $type_da_huy || $item->status_bill == $type_khach_hang_tu_choi)
-                            <a href="{{ route('orders.reorder', $item->id) }}" class="btn btn-success">Mua lại</a>
-                         @endif
+                        <form action="{{ route('cart.reorder', $item->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-success">Mua lại</button>
+                        </form>
+                    @endif
                     </td>
                 </tr>
                 @endforeach
