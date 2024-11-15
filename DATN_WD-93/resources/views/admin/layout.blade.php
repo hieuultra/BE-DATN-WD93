@@ -240,7 +240,7 @@
 
       <div class="collapse" id="collapsefb" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="?act=list_fb">List Feedback</a>
+            <a class="nav-link" href="{{route('admin.reviews.listReviews')}}">List Feedback</a>
         </nav>
       </div>
             </div>

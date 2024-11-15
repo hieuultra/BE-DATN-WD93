@@ -23,10 +23,8 @@ use App\Http\Controllers\Client\AppoinmentController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
@@ -209,5 +207,13 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
                 Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
                 Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
+            });
+        Route::prefix('reviews')
+            ->as('reviews.')
+            ->group(function () {
+                Route::get('/list', [AdminReviewController::class, 'list'])->name('listReviews');
+                Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('destroyReviews');
+                Route::get('/listDeleted', [AdminReviewController::class, 'listDeleted'])->name('listDeletedReviews');
+                Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
             });
     });
