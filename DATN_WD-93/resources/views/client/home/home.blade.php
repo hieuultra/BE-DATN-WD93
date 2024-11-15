@@ -137,6 +137,13 @@
       text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3), 0 0 12px #FFD700, 0 0 18px #FFD700;
     }
   }
+  .discount {
+    background-color: #ffe6e6; /* Nền màu nhạt để làm nổi bật */
+    border-radius: 5px; /* Bo góc mềm mại */
+    padding: 5px 10px; /* Khoảng cách trong */
+    font-size: 1.2rem; /* Kích thước chữ vừa đủ */
+    font-weight: bold; /* Chữ đậm */
+}
   </style>
 
 <!-- Carousel Start -->
@@ -619,8 +626,9 @@
                     <a class="h6 text-decoration-none text-truncate" href="{{ route('productDetail', $item->id) }}"
                         style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" >{{ $item->name }}</a>
                     <div class="d-flex align-items-center justify-content-center mt-2">
-                      <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
-                      <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
+                      <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} VND</h5>
+                      <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} VND</del></h6>
+                      <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light">
                         <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
@@ -671,8 +679,9 @@
                         style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                         {{ $item->name }}</a>
                     <div class="d-flex align-items-center justify-content-center mt-2">
-                      <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
-                      <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
+                      <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} VND</h5>
+                      <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} VND</del></h6>
+                      <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light">
                         <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
@@ -805,8 +814,9 @@
             <div
               class="d-flex align-items-center justify-content-center mt-2"
             >
-              <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
-              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
+              <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} VND</h5>
+              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} VND</del></h6>
+              <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
             </div>
             <div class="card-footer d-flex justify-content-between bg-light">
                 <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
@@ -881,8 +891,9 @@
             <div
               class="d-flex align-items-center justify-content-center mt-2"
             >
-              <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
-              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
+              <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} VND</h5>
+              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} VND</del></h6>
+              <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
             </div>
             <div class="card-footer d-flex justify-content-between bg-light">
                 <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>

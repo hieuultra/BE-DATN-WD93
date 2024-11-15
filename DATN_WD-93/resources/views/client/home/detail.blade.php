@@ -82,7 +82,36 @@
     background-color: #f8d7da;
     color: #721c24;
 }
+.price {
+    font-size: 1.8rem; /* Giá đã giảm lớn và nổi bật */
+}
 
+.original-price {
+    font-size: 1.5rem; /* Giá gốc nhỏ hơn và mờ đi */
+    color: #6c757d; /* Màu xám để làm nổi bật giá giảm */
+}
+
+.discount {
+    background-color: #ffe6e6; /* Nền màu nhạt để làm nổi bật */
+    border-radius: 5px; /* Bo góc mềm mại */
+    padding: 5px 10px; /* Khoảng cách trong */
+    font-size: 1.2rem; /* Kích thước chữ vừa đủ */
+    font-weight: bold; /* Chữ đậm */
+}
+.rating-count {
+    font-size: 0.9rem;
+    color: #555;
+    margin-left: 5px;
+}
+
+.sold-info {
+    font-weight: bold;
+    color: #28a745; /* Màu xanh lá cho số lượng đã bán */
+}
+
+.views-count {
+    color: #6c757d; /* Màu xám nhạt cho số lượt xem */
+}
 
 </style>
 
@@ -141,8 +170,8 @@
         <div class="col-lg-7 h-auto mb-30">
             <div class="h-100 bg-light p-30">
                 <h3 class="product-name">{{ $sp->name }}</h3>
-                <div class="d-flex mb-3">
-                    <small class="product-code px-2 pt-1">Code:{{ $sp->idProduct }}</small>
+                <div class="product-info d-flex align-items-center mb-3">
+                    <small class="product-code px-2 pt-1">Mã:{{ $sp->idProduct }}</small>
                     <div class="mr-2">
                         @php
                         $averageRating = round($sp->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có
@@ -153,9 +182,11 @@
                         <small class="fa fa-star {{ $i <= $averageRating ? 'text-primary' : '' }} mr-1"></small>
                     @endfor
 
-                    <small>({{ $reviewCount }})</small>
+                    <small class="rating-count">({{ $reviewCount }}) đánh giá</small>
+                    <small class="sold-info ml-3">{{ $soldQuantity }} đã bán</small>
+
                     </div>
-                    <small class="views-count ml-auto">{{ $sp->view }} Views</small>
+                    <small class="views-count ml-auto">{{ $sp->view }} Lượt xem</small>
                 </div>
                 <div class="d-flex mb-3 border-box">
                     <div class="variant-container">
@@ -164,15 +195,19 @@
                         @endforeach
                     </div>
                 </div>
-
-                <div style="display: flex; align-items: center;">
-                    <h3 class="font-weight-semi-bold mb-4 text-danger">{{ number_format($tt, 0, ",", ".") }} $</h3>
-                    <h4 class="font-weight-semi-bold mb-4"><del>{{ number_format($sp->price, 0, ",", ".") }} $</del></h4>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <h3 class="price font-weight-semi-bold mb-0 text-danger">
+                        {{ number_format($tt, 0, ",", ".") }} VND
+                    </h3>
+                    <h4 class="original-price font-weight-semi-bold mb-0">
+                        <del>{{ number_format($sp->price, 0, ",", ".") }} VND</del>
+                    </h4>
+                    <p class="discount text-danger mb-0">-{{ $sp->discount ?? 0 }}%</p>
                 </div>
                 <div class="">
-                    <p class="inventory-status" id="quantity-display">Inventory Quantity: {{ $sp->quantity }}</p>
+                    <p class="inventory-status" id="quantity-display">Tồn kho: {{ $sp->quantity }}</p>
               </div>
-                <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p>
+                {{-- <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p> --}}
                 {{-- <div class="d-flex mb-4">
                     <strong class="text-dark mr-3">Colors:</strong>
 
@@ -181,7 +216,7 @@
                     <form action="{{ route('cart.addCart') }}" method="post" class="d-flex align-items-center" id="add-to-cart-form">
                         @csrf
                         <div class="d-flex align-items-center me-4">
-                            <h6 class="mb-0 me-2">Qty:</h6>
+                            <h6 class="mb-0 me-2">Số lượng:</h6>
                             <div class="input-group" style="width: 130px;">
                                 <button class="btn btn-outline-primary" type="button" id="btn-minus">
                                     <i class="fa fa-minus"></i>
@@ -193,12 +228,12 @@
                             </div>
                             <input type="hidden" name="productId" value="{{ $sp->id }}">
                         </div>
-                        <button type="submit" class="btn btn-primary ms-4">Add to Cart</button>
+                        <button type="submit" class="btn btn-primary ms-4">Thêm vào giỏ hàng</button>
                     </form>
                 </div>
 
                 <div class="d-flex pt-2">
-                    <strong class="text-dark mr-2">Share on:</strong>
+                    <strong class="text-dark mr-2">Chia sẻ:</strong>
                     <div class="d-inline-flex">
                         <a class="text-dark px-2" href="">
                             <i class="fab fa-facebook-f"></i>
@@ -221,19 +256,18 @@
         <div class="col">
             <div class="bg-light p-30">
                 <div class="nav nav-tabs mb-4">
-                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Description</a>
-                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Information</a>
-                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">{{ $product->review ? $product->review->count() : 0 }} review(s)</a>
+                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Mô tả sản phẩm</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Chi tiết sản phẩm</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">{{ $product->review ? $product->review->count() : 0 }} đánh giá</a>
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
-                        <h4 class="mb-3">Product Description</h4>
                         <p class="mb-4">{!! $sp->description !!}</p>
                     </div>
                     <div class="tab-pane fade" id="tab-pane-2">
-                        <h4 class="mb-3">Additional Information</h4>
-                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                        <div class="row">
+                        <p class="mb-3" style="font-weight: bold"> Instinct Pharmacy > {{ $sp->category->name }} > {{ $sp->name }}</p>
+                        <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p>
+                        {{-- <div class="row">
                             <div class="col-md-6">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item px-0">
@@ -266,13 +300,13 @@
                                     </li>
                                   </ul>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="tab-pane fade" id="tab-pane-3">
                         <div class="row">
                             <div class="col-md-6">
                                 <h4 class="mb-4">
-                                    {{ $product->review ? $product->review->count() : 0 }} review(s) for "{{ $product->name }}"
+                                    {{ $product->review ? $product->review->count() : 0 }} đánh giá cho "{{ $product->name }}"
                                 </h4>
                                     @foreach($product->review as $review)
                                         <div class="media mb-4">
@@ -359,7 +393,7 @@
 
 <!-- Products Start -->
 <div class="container-fluid py-5">
-    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">You May Also Like</span></h2>
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Sản phẩm tương tự</span></h2>
     <div class="row px-xl-5">
         <div class="col">
             <div class="owl-carousel related-carousel">
@@ -381,6 +415,7 @@
                             {{ $s->name }}</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
                             <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} VND</h5><h6 class="text-muted ml-2"><del>{{ number_format($s->price, 0, ',', '.') }} VNĐ</del></h6>
+                            <p class="discount text-danger mb-0">-{{ $s->discount ?? 0 }}%</p>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light">
                             <a href="{{ route('productDetail', $s->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>

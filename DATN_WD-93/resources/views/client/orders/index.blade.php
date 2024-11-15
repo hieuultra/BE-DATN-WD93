@@ -95,7 +95,7 @@
                         {{ $statusBill[$item->status_bill] }}
                     </td>
                     <td class="text-center">
-                         {{ number_format($item->totalPrice,0,',','.') }}$
+                         {{ number_format($item->totalPrice,0,',','.') }}VND
                     </td>
                     <td class="text-center">
                         <a href="{{ route('orders.show', $item->id) }}" class="btn btn-primary">Xem</a>

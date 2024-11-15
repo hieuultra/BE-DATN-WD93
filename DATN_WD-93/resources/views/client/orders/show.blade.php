@@ -73,15 +73,15 @@
                         </tr>
                         <tr>
                             <th class="text-center">Số tiền hàng:</th>
-                            <td class="text-center">{{ number_format($bill->moneyProduct,0,',','.') }}$</td>
+                            <td class="text-center">{{ number_format($bill->moneyProduct,0,',','.') }}VND</td>
                         </tr>
                         <tr>
                             <th class="text-center">Tiền vận chuyển:</th>
-                            <td class="text-center">{{ number_format($bill->moneyShip,0,',','.') }}$</td>
+                            <td class="text-center">{{ number_format($bill->moneyShip,0,',','.') }}VND</td>
                         </tr>
                         <tr>
                             <th class="text-center">Tổng:</th>
-                            <td class="text-center">{{ number_format($bill->totalPrice,0,',','.') }}$</td>
+                            <td class="text-center">{{ number_format($bill->totalPrice,0,',','.') }}VND</td>
                         </tr>
                     </table>
                 </div>
@@ -110,9 +110,9 @@
                                 <td>{{ $product->idProduct }}</td>
                                 <td><a href="{{ route('productDetail', $detail->product_id) }}">{{ $product->name }}</a></td>
                                 <td><img class="img-fluid" src="{{ asset('upload/'.$product->img) }}" width="75px"></td>
-                                <td>{{ number_format($detail->unitPrice,0,',','.') }}$</td>
+                                <td>{{ number_format($detail->unitPrice,0,',','.') }}VND</td>
                                 <td>{{ $detail->quantity }}</td>
-                                <td>{{ number_format($detail->totalMoney,0,',','.') }}$</td>
+                                <td>{{ number_format($detail->totalMoney,0,',','.') }}VND</td>
                                 @if ($bill->status_bill == $type_da_giao_hang)
                                  <th><a href="{{ route('productDetail', $detail->product_id) }}" class="btn btn-warning">Đánh giá</a></th>
                                 @endif

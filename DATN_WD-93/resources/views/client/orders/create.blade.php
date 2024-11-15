@@ -108,7 +108,7 @@
                                 <img src="{{ asset('upload/' . $item['image']) }}" height="50px" class="me-2">
                                 <div class="product-info me-3">
                                     <a href="{{ route('productDetail', $item->product_id) }}"><p class="mb-0">{{ $item['name'] }}</p></a>
-                                    <p class="mb-0">{{ number_format($item['price'] * $item['quantity'],0,',','.') }}$</p>
+                                    <p class="mb-0">{{ number_format($item['price'] * $item['quantity'],0,',','.') }}VND</p>
                                 </div>
                                 <span class="text-muted">x {{ $item['quantity'] }}</span>
                             </div>
@@ -117,19 +117,19 @@
                     <hr class="mt-0" />
                     <div class="d-flex justify-content-between mb-3 pt-1">
                         <h6 class="font-weight-medium">Tạm tính</h6>
-                        <h6 class="font-weight-medium">{{ number_format($subTotal,0,',','.') }}$ </h6>
+                        <h6 class="font-weight-medium">{{ number_format($subTotal,0,',','.') }}VND</h6>
                         <input type="hidden" name="moneyProduct" value="{{ $subTotal }}">
                     </div>
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Vận chuyển</h6>
-                        <h6 class="font-weight-medium">{{ number_format($shipping,0,',','.') }}$</h6>
+                        <h6 class="font-weight-medium">{{ number_format($shipping,0,',','.') }}VND</h6>
                         <input type="hidden" name="moneyShip" value="{{ $shipping }}">
                     </div>
                 </div>
                 <div class="card-footer border-secondary bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
                         <h5 class="font-weight-bold">Tổng</h5>
-                        <h5 class="font-weight-bold">{{ number_format($total,0,',','.') }}$</h5>
+                        <h5 class="font-weight-bold">{{ number_format($total,0,',','.') }}VND</h5>
                         <input type="hidden" name="totalPrice" value="{{ $total }}">
                     </div>
                 </div>

@@ -72,6 +72,8 @@ class HomeController extends Controller
             if (!$sp) {
                 return redirect()->route('products')->with('error', 'Sản phẩm không tồn tại.');
             }
+            // Tính tổng số lượng đã bán
+            $soldQuantity = $sp->orderDetail()->sum('quantity'); // Lấy tổng số lượng từ bảng order_details
 
             // Lấy sản phẩm liên quan
             $splq = Product::where('category_id', $sp->category_id)
@@ -128,7 +130,7 @@ class HomeController extends Controller
             $product = Product::with('review.user')->findOrFail($productId);
 
             // Trả về view với các thông tin cần thiết
-            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'nameVariants', 'canReview', 'product', 'billId'));
+            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'nameVariants', 'canReview', 'product', 'billId', 'soldQuantity'));
         }
 
         return redirect()->route('products')->with('error', 'Không tìm thấy sản phẩm.');
