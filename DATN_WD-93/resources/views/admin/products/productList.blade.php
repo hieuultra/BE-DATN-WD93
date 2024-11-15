@@ -133,7 +133,7 @@ table th, table td {
                      </a>
 
                   <!-- Nút xóa cứng -->
-                  <a href="" class="btn btn-light mt-3">
+                  {{-- <a href="" class="btn btn-light mt-3">
                         <form action="{{ route('admin.products.hardDelete', $item->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
@@ -144,7 +144,7 @@ table th, table td {
                                 HardDelete
                             </button>
                         </form>
-                  </a>
+                  </a> --}}
                   {{-- Variant - Product --}}
                   <a href="" class="btn btn-primary mt-3">
                     <!-- Thêm nút update -->
