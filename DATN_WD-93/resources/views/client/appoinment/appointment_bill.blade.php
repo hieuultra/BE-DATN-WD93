@@ -13,6 +13,11 @@
         <p><strong>Khoa Khám:</strong> {{ $appointment->doctor->specialty->name }}</p>
         <p><strong>Số tiền:</strong> {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} VND</p>
         <p><strong>Ngày hẹn:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y') }}</p>
+        @if($appointment->meet_link)
+            <li><strong>Link meet:</strong> {{ $appointment->meet_link }}</li>
+        @else
+            <li><strong>Link meet:</strong> Không có link meet nào</li>
+        @endif
     </div>
 </div>
 <a href="/appoinment/">Quay trở về</a>

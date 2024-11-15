@@ -24,14 +24,16 @@ class AppoinmentController extends Controller
     function appoinment()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $specialties = Specialty::orderBy('name', 'asc')->get();
+        $specialties = Specialty::where('classification', 'chuyen_khoa')->orderBy('name', 'asc')->get();
+
+        $specialtiestx = Specialty::where('classification', 'kham_tu_xa')->orderBy('name', 'asc')->get();
         $doctors = Doctor::orderBy('updated_at', 'desc')->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        return view('client.appoinment.index', compact('orderCount', 'categories', 'specialties', 'doctors'));
+        return view('client.appoinment.index', compact('orderCount', 'categories', 'specialties', 'doctors', 'specialtiestx'));
     }
 
     public function booKingCare($id)
@@ -122,6 +124,8 @@ class AppoinmentController extends Controller
     {
         $dc = $request->tinh_thanh . '-' . $request->quan_huyen . '-' . $request->dia_chi;
         $timeSlotId = AvailableTimeslot::where('id', $request->available_timeslot_id)->first();
+        $doctor = Doctor::where('id', $request->doctor_id)->first();
+        $specialtie = Specialty::where('id', $doctor->specialty_id)->first();
 
         if ($timeSlotId->isAvailable == 0) {
             return redirect()->back()->with('error', 'Thời gian hẹn đã có người đặt. Vui lòng chọn thời gian khác.');
@@ -138,6 +142,10 @@ class AppoinmentController extends Controller
                 $appoinment->name = $request->name;
                 $appoinment->phone = $request->phone;
                 $appoinment->address = $dc;
+                if($specialtie->classification == 'kham_tu_xa'){
+                    $meetLink = 'https://meet.jit.si/' . uniqid();
+                    $appoinment->meet_link = $meetLink;
+                }
                 $appoinment->save();
 
                 $available = AvailableTimeslot::where('id', $request->available_timeslot_id)->first();
@@ -165,6 +173,10 @@ class AppoinmentController extends Controller
                 $appoinment->notes = $request->notes;
                 $appoinment->status_payment_method = $request->status_payment_method;
                 $appoinment->classify = 'ban_than';
+                if($specialtie->classification == 'kham_tu_xa'){
+                    $meetLink = 'https://meet.jit.si/' . uniqid();
+                    $appoinment->meet_link = $meetLink;
+                }
                 $appoinment->save();
 
                 $available = AvailableTimeslot::where('id', $request->available_timeslot_id)->first();
@@ -271,10 +283,47 @@ class AppoinmentController extends Controller
         $appoinmentHistories->notes = $request->notes;
         $appoinmentHistories->save();
 
-        if (!empty($request->follow_up_date)) {
+        if (!empty($request->selected_time_slot_id)) {
             $appointment = Appoinment::where('id', $request->appoinment_id)->first();
             $appointment->status_appoinment = 'can_tai_kham';
             $appointment->save();
+
+            if($appointment->classify == 'ban_than'){
+                $appoinments = new Appoinment();
+                $appoinments->user_id = $request->user_id;
+                $appoinments->doctor_id = $request->doctor_id;
+                $appoinments->available_timeslot_id = $request->selected_time_slot_id;
+                $appoinments->appointment_date = $request->selected_date;
+                $appoinments->notes = 'Cần tái khám';
+                $appoinments->status_appoinment = 'da_xac_nhan';
+                $appoinments->status_payment_method = 'tại cơ sở y tế';
+                $appoinments->classify = 'ban_than';
+                $appoinments->save();
+
+                $timeSlot = AvailableTimeslot::where('id', $request->selected_time_slot_id)->first();
+                $timeSlot->isAvailable = 0;
+                $timeSlot->save();
+            }else{
+                $appoinments = new Appoinment();
+                $appoinments->user_id = $request->user_id;
+                $appoinments->doctor_id = $request->doctor_id;
+                $appoinments->available_timeslot_id = $request->selected_time_slot_id;
+                $appoinments->appointment_date = $request->selected_date;
+                $appoinments->notes = 'Cần tái khám';
+                $appoinments->status_appoinment = 'da_xac_nhan';
+                $appoinments->status_payment_method = 'tại cơ sở y tế';
+                $appoinments->classify = 'cho_gia_dinh';
+
+                $appoinments->name = $appointment->name;
+                $appoinments->phone = $appointment->phone;
+                $appoinments->address = $appointment->address;
+                $appoinments->save();
+
+                $timeSlot = AvailableTimeslot::where('id', $request->selected_time_slot_id)->first();
+                $timeSlot->isAvailable = 0;
+                $timeSlot->save();
+            }
+
         } else {
             $appointment = Appoinment::where('id', $request->appoinment_id)->first();
             $appointment->status_appoinment = 'kham_hoan_thanh';
@@ -379,7 +428,7 @@ class AppoinmentController extends Controller
         $appointment->status_appoinment = 'da_xac_nhan';
         $appointment->save();
 
-        return response()->json(['success' => 'Appointment confirmed successfully.']);
+        return redirect()->back()->with('success', 'Lịch hẹn đã được xác nhận thành công.');
     }
 
     public function confirmAppointmenthuy($id)
@@ -392,8 +441,15 @@ class AppoinmentController extends Controller
         $time->isAvailable = 1;
         $time->save();
 
-        return response()->json(['success' => 'Appointment confirmed successfully.']);
+        return redirect()->back()->with('success', 'Lịch hẹn đã được xác nhận hủy.');
     }
+
+    public function getAppointmentHistory($appointment_id)
+    {
+        $history = AppoinmentHistory::where('appoinment_id', $appointment_id)->first();
+        return response()->json($history);
+    }
+
 
     public function getReviewData(Request $request)
     {
@@ -503,9 +559,28 @@ class AppoinmentController extends Controller
         }
         $categories = Category::orderBy('name', 'asc')->get();
 
-        return view('client.appoinment.statistics', compact('doctor', 'averageRating', 'totalRevenue', 'totalComments', 
-        'completedAppointments', 'cancelledAppointments', 
-        'date', 'month', 'year', 'lostRevenue', 'orderCount', 'categories', 'positiveReviewsCount', 'negativeReviewsCount', 'neutralReviewsCount'));
+        return view('client.appoinment.statistics', compact(
+            'doctor',
+            'averageRating',
+            'totalRevenue',
+            'totalComments',
+            'completedAppointments',
+            'cancelledAppointments',
+            'date',
+            'month',
+            'year',
+            'lostRevenue',
+            'orderCount',
+            'categories',
+            'positiveReviewsCount',
+            'negativeReviewsCount',
+            'neutralReviewsCount'
+        ));
+    }
+
+    public function getPrescriptions($appointmentId) {
+        $prescriptions = AppoinmentHistory::where('appointment_id', $appointmentId)->pluck('prescription');
+        return response()->json(['prescriptions' => $prescriptions]);
     }
 
     public function specialistExamination()

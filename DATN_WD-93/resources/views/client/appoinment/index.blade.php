@@ -8,21 +8,20 @@
     </title>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-   
+
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet" />
 
-  
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
 
     <style>
-        
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
         }
 
-       
+
         .hero-section {
             background: url('https://upanh123.com/wp-content/uploads/2021/03/anh-gia-dinh-hoat-hinh2.png') no-repeat center center;
             background-size: cover;
@@ -47,7 +46,6 @@
             text-align: left;
             max-height: 400px;
             overflow-y: auto;
-            background: black;
             position: absolute;
             top: 100%;
             left: 0;
@@ -65,7 +63,7 @@
             color: black;
         }
 
-        
+
         .services.hidden {
             display: none;
         }
@@ -98,7 +96,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        
+
         .services {
             display: flex;
             justify-content: center;
@@ -121,14 +119,14 @@
             font-size: 1rem;
         }
 
-        
+
         .section-title {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
         }
 
-       
+
         .specialty-card {
             background-color: #fff;
             border: none;
@@ -234,6 +232,17 @@
             border-radius: 8px;
         }
 
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+
         .specialty-cards:hover {
             transform: scale(1.05);
         }
@@ -325,7 +334,9 @@
             <form>
                 <div class="search-bar">
                     <input type="text" id="search-input" placeholder="Tìm phòng khám" autocomplete="off">
-                    <div id="search-results" class="search-results"></div>
+                    <div id="search-results" class="search-results">
+                        <button id="close-search" class="close-btn">X</button>
+                    </div>
                 </div>
             </form>
             <div class="services" id="services-section">
@@ -352,6 +363,7 @@
                     <p style="color: #fff;">Sét nghiệm y học</p>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -383,7 +395,7 @@
                     <div class="carousel-item">
                         <div class="d-flex justify-content-between align-items-center">
                             @foreach($specialties->slice(3, 3) as $item)
-                            <a href="{{ route('booKingCare', $item->id) }}" style="text-decoration: none;">
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                                     <p>{{$item->name}}</p>
@@ -395,7 +407,7 @@
                     <div class="carousel-item">
                         <div class="d-flex justify-content-between align-items-center">
                             @foreach($specialties->slice(6, 3) as $item)
-                            <a href="{{ route('booKingCare', $item->id) }}" style="text-decoration: none;">
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                                     <p>{{$item->name}}</p>
@@ -407,7 +419,7 @@
                     <div class="carousel-item">
                         <div class="d-flex justify-content-between align-items-center">
                             @foreach($specialties->slice(9, 3) as $item)
-                            <a href="{{ route('booKingCare', $item->id) }}" style="text-decoration: none;">
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                                     <p>{{$item->name}}</p>
@@ -453,7 +465,7 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <div class="d-flex justify-content-between align-items-center">
-                            @foreach($specialties->slice(0, 3) as $item)
+                            @foreach($specialtiestx->slice(0, 3) as $item)
                             <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
@@ -465,7 +477,7 @@
                     </div>
                     <div class="carousel-item">
                         <div class="d-flex justify-content-between align-items-center">
-                            @foreach($specialties->slice(3, 3) as $item)
+                            @foreach($specialtiestx->slice(3, 3) as $item)
                             <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
@@ -488,7 +500,7 @@
         </div>
         <div id="specialtyContent2" style="display: none;">
             <div class="specialty-containerht">
-                @foreach($specialties as $item)
+                @foreach($specialtiestx as $item)
                 <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
                     <div class="specialty-cards">
                         <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
@@ -624,7 +636,7 @@
             $(document).ready(function() {
                 $('#search-input').on('focus', function() {
                     $('#services-section').addClass('hidden');
-                    $('#search-results').empty().show();
+                    $('#search-results').empty().show().append('<button id="close-search" class="close-btn">X</button>');
                 });
 
                 $('#search-input').on('input', function() {
@@ -639,18 +651,18 @@
                             },
                             success: function(data) {
                                 let resultsDiv = $('#search-results');
-                                resultsDiv.empty();
+                                resultsDiv.empty().append('<button id="close-search" class="close-btn">X</button>');
 
                                 if (data.length > 0) {
                                     data.forEach(function(clinics) {
                                         resultsDiv.append(`
-                                            <a href="/booKingCare/${clinics.id}">
-                                                <div>
-                                                    ${clinics.name} 
-                                                    <img style="width: 100px; height: 100px;" src="/upload/${clinics.image}">
-                                                </div>
-                                            </a>
-                                        `);
+                                <a href="/appoinment/booKingCare/${clinics.id}" class="clinic-link">
+                                    <div>
+                                        ${clinics.name} 
+                                        <img style="width: 100px; height: 100px;" src="/upload/${clinics.image}">
+                                    </div>
+                                </a>
+                            `);
                                     });
                                 } else {
                                     resultsDiv.append('<div>Không tìm thấy phòng khám</div>');
@@ -663,16 +675,18 @@
                     }
                 });
 
-                $(document).on('click', function(event) {
-                    if (!$(event.target).closest('#search-input, #search-results').length) {
-                        if ($('#search-input').val().length === 0) {
-                            $('#services-section').removeClass('hidden');
-                            $('#search-results').hide();
-                        }
-                    }
+                // Đóng kết quả tìm kiếm khi nhấn nút "X"
+                $(document).on('click', '#close-search', function() {
+                    $('#search-results').hide();
+                    $('#services-section').removeClass('hidden');
+                });
+
+                // Điều hướng khi nhấn vào liên kết trong #search-results
+                $('#search-results').on('click', '.clinic-link', function(event) {
+                    event.preventDefault(); // Ngăn chặn hành động mặc định
+                    window.location.href = $(this).attr('href'); // Điều hướng thủ công
                 });
             });
-
 
             function toggleContent() {
                 const carousel = document.getElementById("specialtyCarousel1");

@@ -17,45 +17,74 @@ class DoctorController extends Controller
     public function viewDoctorAdd()
     {
         $specialty = Specialty::orderBy('id')->get();
-
-        // Lấy danh sách user_id đã tồn tại trong bảng doctors
         $existingUserIds = Doctor::pluck('user_id')->toArray();
-
-        // Lấy danh sách tất cả người dùng mà user_id không tồn tại trong bảng doctors
         $user = User::whereNotIn('id', $existingUserIds)
             ->orderBy('id')
             ->get();
         return view('admin.specialtyDoctors.doctor.viewDoctorAdd', compact('specialty', 'user'));
     }
 
+    public function filterSpecialty(Request $request)
+    {
+        $classification = $request->get('classification');
+        $specialtyQuery = Specialty::query();
+
+        if ($classification) {
+            $specialtyQuery->where('classification', $classification);
+        }
+
+        $specialty = $specialtyQuery->get();
+
+        return response()->json($specialty);
+    }
+
+
     public function doctorAdd(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'specialty_id' => 'required|integer|exists:specialties,id',
-            'title' => 'required|string|max:255',
-            'experience_years' => 'required|numeric',
-            'position' => 'required|string|max:255',
-            'workplace' => 'required|string|max:255',
-            'min_age' => 'nullable|numeric',
-            'examination_fee' => 'required|numeric',
-            'bio' => 'nullable|string',
+        if ($request->classification == 'chuyen_khoa') {
+            $validatedData = $request->validate([
+                'user_id' => 'required|integer|exists:users,id',
+                'specialty_id' => 'required|integer|exists:specialties,id',
+                'title' => 'required|string|max:255',
+                'experience_years' => 'required|numeric',
+                'position' => 'required|string|max:255',
+                'workplace' => 'required|string|max:255',
+                'min_age' => 'nullable|numeric',
+                'examination_fee' => 'required|numeric',
+                'bio' => 'nullable|string',
 
-            'clinic_name' => 'required|string|max:255',
-            'city' => 'required|string|max:100',
-            'address' => 'required|string|max:255',
-        ]);
+                'clinic_name' => 'required|string|max:255',
+                'city' => 'required|string|max:100',
+                'address' => 'required|string|max:255',
+            ]);
 
-        $doctor = Doctor::create($validatedData);
-        $clinic = new Clinic();
-        $clinic->doctor_id = $doctor->id;
-        $clinic->clinic_name = $request->clinic_name;
-        $clinic->city = $request->city;
-        $clinic->address = $request->address;
-        $clinic->save();
+            $doctor = Doctor::create($validatedData);
+
+            $clinic = new Clinic();
+            $clinic->doctor_id = $doctor->id;
+            $clinic->clinic_name = $request->clinic_name;
+            $clinic->city = $request->city;
+            $clinic->address = $request->address;
+            $clinic->save();
 
 
-        return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Thêm doctor thành công'); //Chuyển hướng người dùng đến route productList và kèm theo thông báo thành công.
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Thêm doctor thành công');
+        } elseif ($request->classification == 'kham_tu_xa') {
+            $validatedData = $request->validate([
+                'user_id' => 'required|integer|exists:users,id',
+                'specialty_id' => 'required|integer|exists:specialties,id',
+                'title' => 'required|string|max:255',
+                'experience_years' => 'required|numeric',
+                'position' => 'required|string|max:255',
+                'workplace' => 'required|string|max:255',
+                'min_age' => 'nullable|numeric',
+                'examination_fee' => 'required|numeric',
+                'bio' => 'nullable|string',
+            ]);
+
+            $doctor = Doctor::create($validatedData);
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Thêm doctor thành công');
+        }
     }
 
     public function doctorUpdateForm($id)
@@ -63,39 +92,102 @@ class DoctorController extends Controller
         $specialty = Specialty::orderBy('id')->get();
         $user = User::orderBy('id')->get();
         $doctors = Doctor::orderBy('id')->get();
-        $doctor = Doctor::find($id); //tim id
+        $doctor = Doctor::find($id);
         $clinic = Clinic::where('doctor_id', $doctor->id)->first();
         return view('admin.specialtyDoctors.doctor.doctorUpdateForm', compact('specialty', 'user', 'doctors', 'doctor', 'clinic'));
     }
 
     public function doctorUpdate(Request $request)
     {
-        $validatedData = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'specialty_id' => 'required|integer|exists:specialties,id',
-            'title' => 'required|string|max:255',
-            'experience_years' => 'required|numeric',
-            'position' => 'required|string|max:255',
-            'workplace' => 'required|string|max:255',
-            'min_age' => 'required|numeric',
-            'examination_fee' => 'required|numeric',
-            'bio' => 'nullable|string',
-        ]);
+        $specialty = Specialty::where('id', $request->specialty_id)->first();
+        $doctor = Doctor::where('id', $request->id)->first();
 
-        $id = $request->id;
-        $doctor = Doctor::findOrFail($id);
+        if (!$doctor) {
+            return redirect()->back()->with('error', 'Không tìm thấy bác sĩ.');
+        }
 
-        $doctor->update($validatedData);
+        $clinic = Clinic::where('doctor_id', $doctor->id)->first();
 
-        $clinic = Clinic::where('doctor_id', $id)->first();
-        $clinic->doctor_id = $doctor->id;
-        $clinic->clinic_name = $request->clinic_name;
-        $clinic->city = $request->city;
-        $clinic->address = $request->address;
-        $clinic->save();
+        if ($specialty->classification == 'chuyen_khoa' && !empty($clinic)) {
+            $validatedData = $request->validate([
+                'user_id' => 'required|integer|exists:users,id',
+                'specialty_id' => 'required|integer|exists:specialties,id',
+                'title' => 'required|string|max:255',
+                'experience_years' => 'required|numeric',
+                'position' => 'required|string|max:255',
+                'workplace' => 'required|string|max:255',
+                'min_age' => 'required|numeric',
+                'examination_fee' => 'required|numeric',
+                'bio' => 'nullable|string',
+            ]);
 
-        return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+            $doctor->update($validatedData);
+
+            $clinic->clinic_name = $request->clinic_name;
+            $clinic->city = $request->city;
+            $clinic->address = $request->address;
+            $clinic->save();
+
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+        } elseif ($specialty->classification == 'chuyen_khoa' && empty($clinic)) {
+            $validatedData = $request->validate([
+                'user_id' => 'required|integer|exists:users,id',
+                'specialty_id' => 'required|integer|exists:specialties,id',
+                'title' => 'required|string|max:255',
+                'experience_years' => 'required|numeric',
+                'position' => 'required|string|max:255',
+                'workplace' => 'required|string|max:255',
+                'min_age' => 'required|numeric',
+                'examination_fee' => 'required|numeric',
+                'bio' => 'nullable|string',
+            ]);
+
+            $doctor->update($validatedData);
+
+            $clinic = new Clinic();
+            $clinic->doctor_id = $doctor->id;
+            $clinic->clinic_name = $request->clinic_name;
+            $clinic->city = $request->city;
+            $clinic->address = $request->address;
+            $clinic->save();
+
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+        } elseif ($specialty->classification == 'kham_tu_xa' && empty($clinic)) {
+            $validatedData = $request->validate([
+                'user_id' => 'required|integer|exists:users,id',
+                'specialty_id' => 'required|integer|exists:specialties,id',
+                'title' => 'required|string|max:255',
+                'experience_years' => 'required|numeric',
+                'position' => 'required|string|max:255',
+                'workplace' => 'required|string|max:255',
+                'min_age' => 'required|numeric',
+                'examination_fee' => 'required|numeric',
+                'bio' => 'nullable|string',
+            ]);
+
+            $doctor->update($validatedData);
+
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+        } elseif ($specialty->classification == 'kham_tu_xa' && !empty($clinic)) {
+            $validatedData = $request->validate([
+                'user_id' => 'required|integer|exists:users,id',
+                'specialty_id' => 'required|integer|exists:specialties,id',
+                'title' => 'required|string|max:255',
+                'experience_years' => 'required|numeric',
+                'position' => 'required|string|max:255',
+                'workplace' => 'required|string|max:255',
+                'min_age' => 'required|numeric',
+                'examination_fee' => 'required|numeric',
+                'bio' => 'nullable|string',
+            ]);
+
+            $doctor->update($validatedData);
+
+            $clinic->delete();
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+        }
     }
+
 
     public function doctorDestroy($id)
     {
@@ -134,23 +226,25 @@ class DoctorController extends Controller
                 if (isset($shifts[$day])) {
                     foreach ($shifts[$day] as $timeSlot) {
                         list($startTime, $endTime) = explode('-', $timeSlot);
+
                         $existingSchedule = AvailableTimeslot::where('doctor_id', $doctorId)
-                            ->where('date', $date)
+                            ->where('date', $date->format('Y-m-d'))
                             ->where('startTime', $startTime)
                             ->where('endTime', $endTime)
                             ->exists();
 
                         if ($existingSchedule) {
                             return back()->with('error', 'Lịch làm việc đã tồn tại vào ngày ' . $dateString . ' từ ' . $startTime . ' đến ' . $endTime . '.');
+                        } else {
+                            $availableTimeslot = new AvailableTimeslot();
+                            $availableTimeslot->doctor_id = $doctorId;
+                            $availableTimeslot->dayOfWeek = $dayOfWeek;
+                            $availableTimeslot->startTime = $startTime;
+                            $availableTimeslot->endTime = $endTime;
+                            $availableTimeslot->date = $date;
+                            $availableTimeslot->isAvailable = $isAvailable;
+                            $availableTimeslot->save();
                         }
-                        $availableTimeslot = new AvailableTimeslot();
-                        $availableTimeslot->doctor_id = $doctorId;
-                        $availableTimeslot->dayOfWeek = $dayOfWeek;
-                        $availableTimeslot->startTime = $startTime;
-                        $availableTimeslot->endTime = $endTime;
-                        $availableTimeslot->date = $date;
-                        $availableTimeslot->isAvailable = $isAvailable;
-                        $availableTimeslot->save();
                     }
                 }
             } else {
@@ -159,6 +253,7 @@ class DoctorController extends Controller
         }
         return back()->with('success', 'Lịch làm việc được thêm thành công.');
     }
+
 
     public function scheduleEdit($id)
     {

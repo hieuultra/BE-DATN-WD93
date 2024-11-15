@@ -26,7 +26,7 @@ use App\Models\Category;
 use App\Models\Doctor;
 
 // Route::get('/', function () {
-//     return view('welcome');
+//     return view('welcome'); physicianManagement
 // });
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -66,16 +66,20 @@ Route::prefix('appoinment')
         Route::post('/bookAnAppointment', [AppoinmentController::class, 'bookAnAppointment'])->name('bookAnAppointment');
         Route::get('/appointmentHistory/{id}', [AppoinmentController::class, 'appointmentHistory'])->name('appointmentHistory');
         Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
+
         Route::get('/statistics/{id}', [AppoinmentController::class, 'statistics'])->name('statistics');
         Route::get('/appointments/pending', [AppoinmentController::class, 'getPendingAppointments'])->name('appointments.pending');
-        Route::patch('/appointments/{id}/confirm', [AppoinmentController::class, 'confirmAppointment'])->name('appointments.confirm');
-        Route::patch('/appointments/{id}/confirmhuy', [AppoinmentController::class, 'confirmAppointmenthuy'])->name('appointments.confirmhuy');
+
+        Route::post('/appointments/{id}/confirm', [AppoinmentController::class, 'confirmAppointment'])->name('appointments.confirm');
+        Route::post('/appointments/{id}/confirmhuy', [AppoinmentController::class, 'confirmAppointmenthuy'])->name('appointments.confirmhuy');
         Route::post('/confirmAppointmentkoden', [AppoinmentController::class, 'confirmAppointmentkoden'])->name('confirmAppointmentkoden');
+        Route::get('/appointment-history/{appointment_id}', [AppoinmentController::class, 'getAppointmentHistory'])->name('appointment.history');
+
         Route::post('/confirmAppointmentHistories', [AppoinmentController::class, 'confirmAppointmentHistories'])->name('confirmAppointmentHistories');
         Route::get('/appointments/get-details', [AppoinmentController::class, 'getDetails']);
         Route::get('/appointments/get_patient_info', [AppoinmentController::class, 'getPatientInfo']);
 
-        //
+        //siuuu
         Route::post('/appointments/get-review-data', [AppoinmentController::class, 'getReviewData'])->name('appointments.getReviewData');
         Route::get('/reviews/{id}/edit', [AppoinmentController::class, 'edit']);
         Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
@@ -86,6 +90,8 @@ Route::prefix('appoinment')
         Route::get('specialistExamination', [AppoinmentController::class, 'specialistExamination'])->name('specialistExamination');
         Route::get('/doctors/{specialty_id}', [AppoinmentController::class, 'doctors'])->name('doctorsBySpecialtyId');
         Route::post('/schedule', [AppoinmentController::class, 'schedule'])->name('schedule');
+
+        Route::get('/appointment_histories/{appointment}/prescriptions',  [AppoinmentController::class, 'getPrescriptions']);
     });
 
     Route::get('/viewSikibidi', function () {
@@ -247,6 +253,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
             ->as('doctors.')
             ->group(function () {
                 Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
+                Route::get('/filter-specialty', [DoctorController::class, 'filterSpecialty'])->name('filterSpecialty');
                 Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
                 Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
                 Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');

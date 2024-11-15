@@ -132,6 +132,19 @@
         .appointment-item2:hover {
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
+        .appointment-history-link {
+            border: 2px solid #1E90FF;
+            background-color: #1E90FF; 
+            color: #ffffff;
+            padding: 5px 10px; 
+            border-radius: 5px; 
+            text-decoration: none; 
+        }
+
+        .appointment-history-link:hover {
+            background-color: #187bcd; 
+            color: #f0f0f0;
+        }
 
         .appointment-actions {
             display: flex;
@@ -319,13 +332,18 @@
                                     <p style="color: red;">Lịch hẹn đã bị hủy</p>
                                 @elseif($appoinment->status_appoinment === 'da_xac_nhan')
                                 <div class="appointment-actions">
+                                    <a href="{{ $appoinment->meet_link }}" target="_blank" rel="noopener noreferrer">
+                                        {{ $appoinment->meet_link }}
+                                    </a>
                                     <a href="#" class="action-link confirm" data-appointment-id="{{ $appoinment->id }}" style="text-decoration: none;">Xác nhận đang khám</a>
                                     <a style="text-decoration: none;" href="#" class="action-link pending" data-user-id="{{ $appoinment->user_id }}" data-appointment-id="{{ $appoinment->id }}" data-doctor-id="{{ $doctor->id }}">Bệnh nhân chưa đến</a>
                                 </div>
                                 @elseif($appoinment->status_appoinment === 'kham_hoan_thanh')
                                     <p style="color: blue;">Đã khám thành công</p>
+                                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
                                 @elseif($appoinment->status_appoinment === 'can_tai_kham')
                                     <p style="color: blueviolet;">Cần tái khám</p> 
+                                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
                                 @elseif($appoinment->status_appoinment === 'benh_nhan_khong_den')
                                     <p style="color: green;">Bệnh nhân vắng mặt</p>    
                                 @endif
@@ -333,6 +351,21 @@
                         @endif
                     @endforeach
                 @endforeach
+            </div>
+        </div>
+
+        
+        <div class="modal fade" id="appointmentHistoryModal" tabindex="-1" aria-labelledby="appointmentHistoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="appointmentHistoryModalLabel">Chi tiết hóa đơn</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="appointmentHistoryContent">
+                        
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -353,19 +386,98 @@
 
                             <div class="mb-3">
                                 <label for="" class="form-label">Chuẩn đoán</label>
-                                <textarea class="form-control" name="diagnosis" rows="3" placeholder="Chuẩn đoán"></textarea>
+                                <textarea class="form-control" name="diagnosis" rows="3" placeholder="Chuẩn đoán" required></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="" class="form-label">Toa thuốc hoặc chỉ định</label>
-                                <textarea class="form-control" name="prescription" rows="3" placeholder="Toa thuốc hoặc chỉ định"></textarea>
+                                <textarea class="form-control" name="prescription" rows="3" placeholder="Toa thuốc hoặc chỉ định" required></textarea>
                             </div>
+
                             <div class="mb-3">
-                                <label for="" class="form-label">lịch khám lại nếu có</label><br>
-                                <input type="date" name="follow_up_date">
+                                <label for="dateSelect-{{ $doctor->id }}" class="form-label">Chọn Thứ, Ngày, Tháng</label>
+                                <select id="dateSelect-{{ $doctor->id }}" class="form-select date-select" aria-label="Chọn ngày">
+                                    <option value="" selected disabled>Chọn Thứ, Ngày, Tháng</option>
+                                    @php
+                                    $availableDates = $doctor->timeSlot->filter(function ($timeSlot) {
+                                        return $timeSlot->isAvailable == 1;
+                                    })->unique(function ($item) {
+                                        return \Carbon\Carbon::parse($item->date)->format('Y-m-d');
+                                    });
+                                    @endphp
+                                    @foreach($availableDates as $timeSlots)
+                                        @php
+                                        $formattedDate = \Carbon\Carbon::parse($timeSlots->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
+                                        $formattedDateValue = \Carbon\Carbon::parse($timeSlots->date)->format('Y-m-d');
+                                        @endphp
+                                        <option value="{{ $formattedDateValue }}">{{ $formattedDate }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+
+                            <div class="time-slot mt-3">
+                                @foreach($doctor->timeSlot as $timeSlot)
+                                    @php
+                                    $formattedDateValue = \Carbon\Carbon::parse($timeSlot->date)->format('Y-m-d');
+                                    @endphp
+                                    @if($timeSlot->isAvailable == 1)
+                                        <button type="button" 
+                                                class="btn btn-outline-primary time-slot-item" 
+                                                data-date="{{ $formattedDateValue }}" 
+                                                data-id="{{ $timeSlot->id }}" 
+                                                data-start-time="{{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }}" 
+                                                data-end-time="{{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}"
+                                                style="display: none;">
+                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} - 
+                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
+                                        </button>
+                                    @endif
+                                @endforeach
+                            </div>
+
+                            <input type="hidden" name="selected_date" id="selectedDate">
+                            <input type="hidden" name="selected_time_slot" id="selectedTimeSlot">
+                            <input type="hidden" name="selected_time_slot_id" id="selectedTimeSlotId">
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const dateSelect = document.getElementById('dateSelect-{{ $doctor->id }}');
+                                    const timeSlotItems = document.querySelectorAll('.time-slot-item');
+                                    const selectedDateInput = document.getElementById('selectedDate');
+                                    const selectedTimeSlotInput = document.getElementById('selectedTimeSlot');
+                                    const selectedTimeSlotIdInput = document.getElementById('selectedTimeSlotId');
+
+                                    dateSelect.addEventListener('change', function () {
+                                        const selectedDate = dateSelect.value;
+                                        selectedDateInput.value = selectedDate;
+
+                                        timeSlotItems.forEach(item => {
+                                            item.style.display = 'none';
+                                            item.classList.remove('btn-primary');
+                                            item.classList.add('btn-outline-primary');
+                                        });
+
+                                        timeSlotItems.forEach(item => {
+                                            if (item.getAttribute('data-date') === selectedDate) {
+                                                item.style.display = 'inline-block';
+                                            }
+                                        });
+                                    });
+
+                                    timeSlotItems.forEach(item => {
+                                        item.addEventListener('click', function () {
+                                            timeSlotItems.forEach(btn => btn.classList.replace('btn-primary', 'btn-outline-primary'));
+
+                                            selectedTimeSlotInput.value = `${item.getAttribute('data-start-time')} - ${item.getAttribute('data-end-time')}`;
+                                            selectedTimeSlotIdInput.value = item.getAttribute('data-id'); // Store the time slot ID
+                                            item.classList.replace('btn-outline-primary', 'btn-primary');
+                                        });
+                                    });
+                                });
+                            </script>
+
                             <div class="mb-3">
                                 <label for="" class="form-label">Ghi chu thêm</label>
-                                <textarea class="form-control" name="notes" rows="3" placeholder="Ghi chu thêm"></textarea>
+                                <textarea class="form-control" name="notes" rows="3" placeholder="Ghi chu thêm" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Xác nhận</button>
                         </form>
@@ -409,109 +521,122 @@
             </div>
         </div>
 
+        <div class="schedule" style="margin-top: 10px;">
+            <h5 for="dateSelect-{{ $doctor->id }}">Lịch khám chưa có người đặt</h5>
+             <select id="dateSelect-{{ $doctor->id }}" class="form-select date-select" aria-label="Chọn ngày">
+                @php
+                $availableDates = $doctor->timeSlot->filter(function ($timeSlot) {
+                return $timeSlot->isAvailable == 1;
+                })->unique(function ($item) {
+                return \Carbon\Carbon::parse($item->date)->format('Y-m-d');
+                });
+                @endphp
+                @foreach($availableDates as $timeSlots)
+                @php
+                $formattedDate = \Carbon\Carbon::parse($timeSlots->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
+                $formattedDateValue = \Carbon\Carbon::parse($timeSlots->date)->format('Y-m-d');
+                @endphp
+                    <option value="{{ $formattedDateValue }}">{{ $formattedDate }}</option>
+                @endforeach
+                </select>
 
-
-        
-            
-                <div class="schedule" style="margin-top: 10px;">
-                    <h5 for="dateSelect-{{ $doctor->id }}">Lịch khám chưa có người đặt</h5>
-                    <select id="dateSelect-{{ $doctor->id }}" class="form-select date-select" aria-label="Chọn ngày">
-                        @php
-                        $availableDates = $doctor->timeSlot->filter(function ($timeSlot) {
-                        return $timeSlot->isAvailable == 1;
-                        })->unique(function ($item) {
-                        return \Carbon\Carbon::parse($item->date)->format('Y-m-d');
-                        });
-                        @endphp
-                        @foreach($availableDates as $timeSlots)
-                        @php
-                        $formattedDate = \Carbon\Carbon::parse($timeSlots->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
-                        $formattedDateValue = \Carbon\Carbon::parse($timeSlots->date)->format('Y-m-d');
-                        @endphp
-                        <option value="{{ $formattedDateValue }}">{{ $formattedDate }}</option>
-                        @endforeach
-                    </select>
-
-                    <div class="time-slot mt-3">
-                        @foreach($doctor->timeSlot as $timeSlot)
-                        @php
-                        $formattedDateValue = \Carbon\Carbon::parse($timeSlot->date)->format('Y-m-d');
-                        @endphp
-                        @if($timeSlot->isAvailable == 1)
-                        <div class="time-slot-item" data-date="{{ $formattedDateValue }}">
-                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
-                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
-                        </div>
-                        @endif
-                        @endforeach
+            <div class="time-slot mt-3">
+                @foreach($doctor->timeSlot as $timeSlot)
+                @php
+                $formattedDateValue = \Carbon\Carbon::parse($timeSlot->date)->format('Y-m-d');
+                @endphp
+                @if($timeSlot->isAvailable == 1)
+                    <div class="time-slot-item" data-date="{{ $formattedDateValue }}">
+                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
+                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
                     </div>
-                </div>
-
-                <div class="appointments mt-3">
-                    <h5>Lịch hẹn đã được đặt</h5>
-
-                    <label for="filterSelect">Lọc theo:</label>
-                    <select id="filterSelect" class="form-select" aria-label="Lọc lịch hẹn">
-                        <option value="all">Tất cả</option>
-                        <option value="monday">Thứ Hai</option>
-                        <option value="tuesday">Thứ Ba</option>
-                        <option value="wednesday">Thứ Tư</option>
-                        <option value="thursday">Thứ Năm</option>
-                        <option value="friday">Thứ Sáu</option>
-                        <option value="saturday">Thứ Bảy</option>
-                        <option value="sunday">Chủ Nhật</option>
-                    </select>
-
-                    <div class="appointments-grid">
-                        @foreach($doctor->timeSlot as $timeSlot)
-                        @foreach($timeSlot->appoinment as $appoinment)
-                        @if($appoinment->status_appoinment !== null)
-                        @php
-                        $formattedDateTime = \Carbon\Carbon::parse($timeSlot->date . ' ' . $timeSlot->startTime)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
-                        $dayOfWeek = \Carbon\Carbon::parse($timeSlot->date)->isoFormat('dddd'); // Lấy thứ bằng tiếng Việt
-                        @endphp
-                        <div class="appointment-item" data-day="{{ strtolower($dayOfWeek) }}">
-                            <p>Ngày: {{ $formattedDateTime }}</p>
-                            <p>Thời gian: {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
-                                {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
-                            </p>
-                            @if($appoinment->status_appoinment === 'yeu_cau_huy')
-                            <p class="text-danger">Đang chờ xác nhận hủy</p>
-                            @elseif($appoinment->status_appoinment === 'cho_xac_nhan')
-                            <p style="color: #007bff;">Đang chờ xác nhận</p>
-                            @elseif($appoinment->status_appoinment === 'huy_lich_hen')
-                            <p style="color: red;">lịch hẹn đã bị hủy</p>
-                            @elseif($appoinment->status_appoinment === 'kham_hoan_thanh')
-                            <p style="color: pink;">Khám hoàn tất</p>
-                            @elseif($appoinment->status_appoinment === 'can_tai_kham')
-                            <p style="color: palegreen;">Cần tái khám</p>
-                            @elseif($appoinment->status_appoinment === 'benh_nhan_khong_den')
-                            <p style="color: greenyellow;">bênh nhân vắng mặt</p>
-                            @else
-                            <p style="color: blue;">Đã xác nhận</p>
-                            @endif
-                        </div>
-                        @endif
-                        @endforeach
-                        @endforeach
-                    </div>
-                </div>
-
+                @endif
+                @endforeach
             </div>
         </div>
+  
+                
+        <div class="appointments mt-3">
+            <h5>Tra cứu lịch hẹn</h5>
+
+            <label for="filterSelect">Lọc theo thứ trong tuần:</label>
+            <select id="filterSelect" class="form-select" aria-label="Lọc lịch hẹn">
+                <option value="all">Tất cả</option>
+                <option value="monday">Thứ Hai</option>
+                <option value="tuesday">Thứ Ba</option>
+                <option value="wednesday">Thứ Tư</option>
+                <option value="thursday">Thứ Năm</option>
+                <option value="friday">Thứ Sáu</option>
+                <option value="saturday">Thứ Bảy</option>
+                <option value="sunday">Chủ Nhật</option>
+            </select>
+
+            <input type="text" id="filterName" class="form-control mt-2" placeholder="Lọc theo tên người đặt">
+            <input type="text" id="filterId" class="form-control mt-2" placeholder="Lọc theo ID lịch hẹn">
+            <input type="date" id="filterDate" class="form-control mt-2" placeholder="Lọc theo ngày đặt">
+            
+            <div class="appointments-grid mt-3">
+                @foreach($doctor->timeSlot as $timeSlot)
+                    @foreach($timeSlot->appoinment as $appoinment)
+                        @if($appoinment->status_appoinment !== null)
+                            @php
+                                $formattedDateTime = \Carbon\Carbon::parse($timeSlot->date . ' ' . $timeSlot->startTime)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
+                                $dayOfWeek = \Carbon\Carbon::parse($timeSlot->date)->isoFormat('dddd');
+                            @endphp
+                            <div class="appointment-item" 
+                                data-day="{{ strtolower($dayOfWeek) }}"
+                                data-name="{{ strtolower($appoinment->user->name) }}"
+                                data-id="{{ $appoinment->id }}"
+                                data-date="{{ $timeSlot->date }}">
+                                <p>Mã lịch khám: {{$appoinment->id}}</p>
+                                <p>Tên bệnh nhân: {{$appoinment->user->name}}</p>
+                                <p>Ngày: {{ $formattedDateTime }}</p>
+                                <p>Thời gian: {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} - 
+                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
+                                </p>
+                                @if($appoinment->status_appoinment === 'yeu_cau_huy')
+                                    <p class="text-danger">Đang chờ xác nhận hủy</p>
+                                @elseif($appoinment->status_appoinment === 'cho_xac_nhan')
+                                    <p style="color: #007bff;">Đang chờ xác nhận</p>
+                                @elseif($appoinment->status_appoinment === 'huy_lich_hen')
+                                    <p style="color: red;">lịch hẹn đã bị hủy</p>
+                                @elseif($appoinment->status_appoinment === 'kham_hoan_thanh')
+                                    <p style="color: pink;">Khám hoàn tất</p>
+                                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
+                                @elseif($appoinment->status_appoinment === 'can_tai_kham')
+                                    <p style="color: palegreen;">Cần tái khám</p>
+                                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
+                                @elseif($appoinment->status_appoinment === 'benh_nhan_khong_den')
+                                    <p style="color: greenyellow;">bênh nhân vắng mặt</p>
+                                @else
+                                    <p style="color: blue;">Đã xác nhận</p>
+                                @endif
+                            </div>
+                        @endif
+                    @endforeach
+                @endforeach
+            </div>
+        </div>
+
+    </div>
+</div>
             <div style="margin-top: 10px;">
                 <h5>ĐỊA CHỈ KHÁM</h5>
+                @if(empty($clinic) != 'Null')
                 <p>{{$clinic->address}}, {{$clinic->city}}</p>
                 <p>{{$clinic->clinic_name}}</p>
+                @else
+                <p>Khám qua vieo call</p>
+                @endif
                 <h5>GIÁ KHÁM: {{ number_format($doctor->examination_fee, 0, ',', '.') }} VND</h5>
             </div>
             <div style="margin-top: 10px;">
                 <h3>Đánh giá cho bác sĩ: {{ $doctor->user->name }}</h3>
 
                 @foreach($doctorrv->review as $review)
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                <div class="rating">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="rating">
                                 <input value="5" @if($review->rating == 5) checked @endif type="radio" disabled>
                                 <label title="text" for="star5"></label>
                                 <input value="4" @if($review->rating == 4) checked @endif type="radio" disabled>
@@ -533,13 +658,23 @@
                 @if($doctorrv->review->isEmpty())
                     <p>Chưa có đánh giá nào cho bác sĩ này.</p>
                 @endif
-            </div>
+        </div>
     </div>
    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                title: 'Thành công!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
     <script>
         $(document).on('click', '.action-link.confirm', function(event) {
             event.preventDefault();
@@ -562,6 +697,66 @@
             });
         });
 
+        $(document).on('click', '.appointment-history-link', function(event) {
+            event.preventDefault();
+            const appointmentId = $(this).data('appointment-id');
+            
+            $.ajax({
+                url: `/appoinment/appointment-history/${appointmentId}`,
+                type: 'GET',
+                success: function(data) {
+                    let content = `<p>ID lịch hẹn: ${data.appoinment_id}</p>`;
+                    content += `<p>Chẩn đoán: ${data.diagnosis}</p>`;
+                    content += `<p>Đơn thuốc: ${data.prescription}</p>`;
+                    content += `<p>Ngày tái khám: ${data.follow_up_date}</p>`;
+                    content += `<p>Ghi chú: ${data.notes}</p>`;
+                    $('#appointmentHistoryContent').html(content);
+                    
+                    $('#appointmentHistoryModal').modal('show');
+                },
+                error: function() {
+                    alert('Không thể tải chi tiết lịch hẹn.');
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            function filterAppointments() {
+                const selectedDay = $('#filterSelect').val();
+                const filterName = $('#filterName').val().toLowerCase();
+                const filterId = $('#filterId').val();
+                const filterDate = $('#filterDate').val();
+
+                $('.appointment-item').each(function() {
+                    const day = $(this).data('day');
+                    const name = $(this).data('name');
+                    const id = $(this).data('id').toString();
+                    const date = $(this).data('date');
+
+                    let show = true;
+
+                    if (selectedDay !== 'all' && selectedDay !== day) {
+                        show = false;
+                    }
+
+                    if (filterName && !name.includes(filterName)) {
+                        show = false;
+                    }
+
+                    if (filterId && id !== filterId) {
+                        show = false;
+                    }
+
+                    if (filterDate && date !== filterDate) {
+                        show = false;
+                    }
+
+                    $(this).toggle(show);
+                });
+            }
+
+            $('#filterSelect, #filterName, #filterId, #filterDate').on('input change', filterAppointments);
+        });
 
         $(document).on('click', '.action-link.pending', function(event) {
             event.preventDefault();  
@@ -591,83 +786,21 @@
 
 
 
-            function loadPendingAppointments() {
-                $.ajax({
-                    url: "{{ route('appoinment.appointments.pending') }}",
-                    type: 'GET',
-                    data: {
-                    doctor_id: {{ $doctor->id }}
-                    },
-                    success: function(data) {
-                        $('#appointments-grid').html(data);
-                    }
-                });
-            }
-
-            setInterval(loadPendingAppointments, 5000);
-            loadPendingAppointments();
-
-            $(document).on('submit', '.confirm-form', function(event) {
-                event.preventDefault();
-                const form = $(this);
-
-                $.ajax({
-                    url: form.attr('action'),
-                    type: 'PATCH',
-                    data: form.serialize(),
-                    success: function() {
-                        Swal.fire({
-                            title: 'Thành công!',
-                            text: 'Lịch hẹn đã được xác nhận thành công.',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                location.reload();
-                            }
-                        });
-                    },
-                    error: function() {
-                        Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi xác nhận lịch hẹn.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
+        function loadPendingAppointments() {
+            $.ajax({
+                url: "{{ route('appoinment.appointments.pending') }}",
+                type: 'GET',
+                data: {
+                doctor_id: {{ $doctor->id }}
+                },
+                success: function(data) {
+                    $('#appointments-grid').html(data);
+                }
             });
+        }
 
-            $(document).on('submit', '.confirm-form-huy', function(event) {
-                event.preventDefault();
-                const form = $(this);
-
-                $.ajax({
-                    url: form.attr('action'),
-                    type: 'PATCH',
-                    data: form.serialize(),
-                    success: function() {
-                        Swal.fire({
-                            title: 'Thành công!',
-                            text: 'Lịch hẹn yêu cầu hủy đã được xác nhận.',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                location.reload(); 
-                            }
-                        });
-                    },
-                    error: function() {
-                        Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi khi xác nhận yêu cầu hủy.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
-            });
+        setInterval(loadPendingAppointments, 5000);
+        loadPendingAppointments();
 
         document.querySelectorAll('.date-select').forEach(function(select) {
             select.addEventListener('change', function() {

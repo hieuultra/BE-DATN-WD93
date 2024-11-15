@@ -189,10 +189,9 @@
             "thay đổi hành vi hoặc tính cách": "Thay đổi trong hành vi hoặc tính cách có thể chỉ ra các vấn đề về tâm lý, căng thẳng hoặc trầm cảm ở trẻ em.",
             "ngứa ngáy hoặc kích ứng da": "Ngứa ngáy hoặc kích ứng da có thể là dấu hiệu của dị ứng, nhiễm trùng hoặc các bệnh về da như eczema."
         };
-        responses["cách chữa bệnh trầm cảm"] = "Có 7 cách chữa bao gồm Chữa trầm cảm bằng liệu pháp tâm lý trị liệu, Thực hiện chế độ ăn uống lành mạnh, Thường xuyên vận động, rèn luyện thể thao, bạn có thể xem thêm chi tiết tại <a href='http://127.0.0.1:8000/booKingCare/6' target='_blank'>liên kết này</a>";
-        responses["cách chữa viêm amidan"] = "Bạn có thể xem thêm chi tiết tại <a href='http://127.0.0.1:8000/booKingCare/8' target='_blank'>liên kết này</a>";
-        responses["cách chữa các bệnh thần kinh"] = "Bạn có thể xem thêm chi tiết tại <a href='http://127.0.0.1:8000/booKingCare/6' target='_blank'>liên kết này</a>";
-        responses["cách chữa các bệnh cơ xương khớp"] = "Bạn có thể xem thêm chi tiết tại <a href='http://127.0.0.1:8000/booKingCare/4' target='_blank'>liên kết này</a>";
+        responses["Tai Mũi Họng"] = "Tai Mũi Họng (TMH) là một chuyên khoa y tế tập trung vào các vấn đề liên quan đến tai, mũi và họng, cũng như các cấu trúc liên quan ở vùng đầu và cổ <a href='http://127.0.0.1:8000/appoinment/booKingCare/7' target='_blank'>liên kết này</a>";
+        responses["Cơ Xương Khớp"] = "Cơ Xương Khớp là chuyên khoa y tế tập trung vào các vấn đề liên quan đến hệ thống cơ, xương và khớp trong cơ thể<a href='http://127.0.0.1:8000/appoinment/booKingCare/1' target='_blank'>liên kết này</a>";
+        responses["Cột sống"] = "Cột sống là một bộ phận quan trọng của hệ cơ xương khớp, đóng vai trò như trụ chính của cơ thể, hỗ trợ và bảo vệ tủy sống, đồng thời cho phép cơ thể cử động linh hoạt <a href='http://127.0.0.1:8000/appoinment/booKingCare/4' target='_blank'>liên kết này</a>";
 
         function addMessage(sender, message) {
             const messageElement = document.createElement('div');

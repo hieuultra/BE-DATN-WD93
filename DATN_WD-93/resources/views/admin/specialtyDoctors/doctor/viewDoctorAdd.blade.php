@@ -23,8 +23,19 @@
             <!-- Phần bên phải -->
             <div class="col">
                 <div class="mb-3">
+                    <label for="classification" class="form-label">Phân loại:</label>
+                    <select class="form-select" name="classification" id="classification" onchange="filterSpecialty(this.value)">
+                        <option value="">-- Tất cả --</option>
+                        <option value="chuyen_khoa" {{ request('classification') == 'chuyen_khoa' ? 'selected' : '' }}>Chuyên khoa</option>
+                        <option value="kham_tu_xa" {{ request('classification') == 'kham_tu_xa' ? 'selected' : '' }}>Khám từ xa</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="mb-3">
                     <label class="form-label">Specialty Doctor</label>
-                    <select class="form-select" name="specialty_id">
+                    <select class="form-select" name="specialty_id" id="specialty_id">
                         <option value="0">Choose Specialty</option>
                         @foreach($specialty as $vp)
                         <option value="{{ $vp->id }}">{{ $vp->name }}</option>
@@ -110,7 +121,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" id="clinic-address">
             <h2>Địa chỉ phòng khám</h2>
             <div class="col">
                 <div class="mb-3">
@@ -142,7 +153,7 @@
                 </div>
             </div>
         </div>
-        
+
 </div>
 
 <input type="submit" class="btn btn-primary" value="Add">
@@ -152,4 +163,32 @@
 </form>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function filterSpecialty(classification) {
+        $.ajax({
+            url: "{{ route('admin.doctors.filterSpecialty') }}", 
+            type: 'GET',
+            data: {
+                classification: classification
+            },
+            success: function(response) {
+                $('#specialty_id').empty();
+                $('#specialty_id').append('<option value="0">Choose Specialty</option>');
+                response.forEach(function(item) {
+                    $('#specialty_id').append('<option value="' + item.id + '">' + item.name + '</option>');
+                });
+
+                if (classification === 'kham_tu_xa') {
+                    $('#clinic-address').hide();
+                } else {
+                    $('#clinic-address').show();
+                }
+            },
+            error: function() {
+                alert('Có lỗi xảy ra khi lọc chuyên khoa');
+            }
+        });
+    }
+</script>
 @endsection

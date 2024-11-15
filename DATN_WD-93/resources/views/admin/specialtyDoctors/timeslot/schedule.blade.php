@@ -36,74 +36,71 @@
     <div class="table-responsive">
         @php
         $daysOfWeek = [
-        0 => 'Chủ nhật',
+        0 => '',
         1 => 'Thứ 2',
         2 => 'Thứ 3',
         3 => 'Thứ 4',
         4 => 'Thứ 5',
         5 => 'Thứ 6',
-        6 => 'Thứ 7'
+        6 => 'Thứ 7',
+        7 => 'Chủ nhật',
         ];
         @endphp
 
         @foreach ($daysOfWeek as $dayIndex => $dayName)
-        @php
-        $filteredSchedules = $schedules->filter(function($schedule) use ($dayIndex) {
-        return $schedule->dayOfWeek == $dayIndex;
-        });
-        @endphp
+            @php
+            $filteredSchedules = $schedules->filter(function($schedule) use ($dayIndex) {
+            return $schedule->dayOfWeek == $dayIndex;
+            });
+            @endphp
 
-        @if ($filteredSchedules->count() > 0)
-        <h3>{{ $dayName }}</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Ca</th>
-                    <th>Thời gian bắt đầu</th>
-                    <th>Thời gian kết thúc</th>
-                    <th>Ngày</th>
-                    <th>Có sẵn</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($filteredSchedules as $schedule)
-                @if($schedule->isAvailable == 0)
+                @if ($filteredSchedules->count() > 0)
+                <h3>{{ $dayName }}</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ca</th>
+                            <th>Thời gian bắt đầu</th>
+                            <th>Thời gian kết thúc</th>
+                            <th>Ngày</th>
+                            <th>Có sẵn</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($filteredSchedules as $schedule)
+                        @if($schedule->isAvailable == 0)
 
-                @else
-                @php
-                $formattedDate = \Carbon\Carbon::parse($schedule->date)
-                ->locale('vi')
-                ->isoFormat('dddd, D/MM/YYYY');
-                $startTime = \Carbon\Carbon::parse($schedule->startTime);
-                $shift = $startTime->hour < 12 ? 'Ca sáng' : 'Ca chiều' ;
-                    @endphp
-                    <tr id="schedule-row-{{ $schedule->id }}">
-                    <td>{{ $shift }}</td>
-                    <td>{{ $schedule->startTime }}</td>
-                    <td>{{ $schedule->endTime }}</td>
-                    <td>{{ $formattedDate }}</td>
-                    <td>{{ $schedule->isAvailable ? 'Có' : 'Không' }}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm edit-btn"
-                            data-id="{{ $schedule->id }}"
-                            data-day="{{ $schedule->dayOfWeek }}"
-                            data-start="{{ $schedule->startTime }}"
-                            data-end="{{ $schedule->endTime }}"
-                            data-date="{{ $schedule->date }}"
-                            data-available="{{ $schedule->isAvailable }}">Sửa</button>
-                        <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $schedule->id }}">Xóa</button>
-                    </td>
-                    </tr>
-                    @endif
-                    @endforeach
-            </tbody>
-        </table>
-
-        @else
-        <h3>{{ $dayName }}</h3>
-        <p>Không có lịch làm việc nào cho ngày này.</p>
-        @endif
+                        @else
+                        @php
+                        $formattedDate = \Carbon\Carbon::parse($schedule->date)
+                        ->locale('vi')
+                        ->isoFormat('dddd, D/MM/YYYY');
+                        $startTime = \Carbon\Carbon::parse($schedule->startTime);
+                        $shift = $startTime->hour < 12 ? 'Ca sáng' : 'Ca chiều' ;
+                            @endphp
+                            <tr id="schedule-row-{{ $schedule->id }}">
+                            <td>{{ $shift }}</td>
+                            <td>{{ $schedule->startTime }}</td>
+                            <td>{{ $schedule->endTime }}</td>
+                            <td>{{ $formattedDate }}</td>
+                            <td>{{ $schedule->isAvailable ? 'Có' : 'Không' }}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm edit-btn"
+                                    data-id="{{ $schedule->id }}"
+                                    data-day="{{ $schedule->dayOfWeek }}"
+                                    data-start="{{ $schedule->startTime }}"
+                                    data-end="{{ $schedule->endTime }}"
+                                    data-date="{{ $schedule->date }}"
+                                    data-available="{{ $schedule->isAvailable }}">Sửa</button>
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $schedule->id }}">Xóa</button>
+                            </td>
+                            </tr>
+                            @endif
+                            @endforeach
+                    </tbody>
+                </table>
+                @endif
         @endforeach
     </div>
 
@@ -163,8 +160,6 @@
                                     @endfor
                                 @endfor
                             </div>
-
-
                         </div>
 
                         <div class="mb-3" id="shiftSelection" style="display: none;">

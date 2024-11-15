@@ -110,16 +110,22 @@
                     return $rv->doctor_id == $appointment->doctor_id && $rv->appoinment_id == $appointment->id;
                     })->first();
                     @endphp
-
-                    @foreach($clinics as $clinic)
-                    @if($clinic->doctor_id == $appointment->doctor->id)
                     <p><strong>Ngày khám:</strong> {{ $formattedDate }}</p>
                     <p><strong>Thời gian:</strong> {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}</p>
                     <p><strong>Bác sĩ:</strong> {{ $appointment->doctor->user->name }}</p>
+
+                    @foreach($clinics as $clinic)
+                    @if($clinic->doctor_id == $appointment->doctor->id)
                     <p><strong>Địa điểm:</strong> Phòng khám {{ $clinic->address }}, {{$clinic->city}}</p>
-                    <p class="price">Giá: {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} đ</p>
                     @endif
                     @endforeach
+                    @if($appointment->meet_link)
+                    <p><strong>Link meet:</strong> {{ $appointment->meet_link }}</p>
+                    @else
+
+                    @endif
+                    <p class="price">Giá: {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} đ</p>
+                    <p><strong>Lý do khám:</strong> {{ $appointment->notes }}</p>
                     <a href="#" class="btn btn-info btn-custom">Xem thêm</a>
 
                     @if($appointment->status_appoinment == 'cho_xac_nhan')
@@ -333,6 +339,7 @@
                     <p><strong>Bác sĩ:</strong> {{ $appointment->doctor->user->name }}</p>
                     <p><strong>Địa điểm:</strong> Phòng khám {{ $clinic->address }}, {{$clinic->city}}</p>
                     <p class="price">Giá: {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} đ</p>
+                    <p><strong>Lý do khám:</strong> {{ $appointment->notes }}</p>
                     @endif
                     @endforeach
                     <a href="#" class="btn btn-info btn-custom">Xem thêm</a>
@@ -430,7 +437,7 @@
                 var appointmentId = $(this).data('id');
 
                 $.ajax({
-                    url: '/appoinment/appointments/get-review-data', 
+                    url: '/appoinment/appointments/get-review-data',
                     type: 'POST',
                     data: {
                         appointment_id: appointmentId,
@@ -544,7 +551,7 @@
                 const appointmentId = document.getElementById('modalAppointmentId').value;
                 const notes = document.getElementById('notes').value;
 
-                fetch(`/appointments/${appointmentId}/cancel`, {
+                fetch(`/appoinment/appointments/${appointmentId}/cancel`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
