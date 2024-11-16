@@ -30,7 +30,6 @@
 </div>
 <!-- Breadcrumb End -->
 
-
 <div class="container-fluid pt-5">
     <div class="row px-xl-5">
       <div class="col-lg-8 table-responsive mb-5">
@@ -111,14 +110,16 @@
 
 
       <div class="col-lg-4">
-        <form class="mb-5" action="">
-          <div class="input-group">
-            <input type="text" class="form-control p-4" placeholder="Coupon Code" />
-            <div class="input-group-append">
-              <button class="btn btn-primary">Áp dụng mã giảm giá</button>
+        <form class="mb-5" action="{{ route('cart.applyCoupon') }}" method="POST">
+            @csrf
+            <div class="input-group">
+                <input type="text" name="coupon_code" class="form-control p-4" placeholder="Nhập mã giảm giá" />
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Áp dụng mã giảm giá</button>
+                </div>
             </div>
-          </div>
         </form>
+
         <div class="card border-secondary mb-5">
           <div class="card-header bg-secondary border-0">
             <h4 class="font-weight-semi-bold m-0">Tóm tắt giỏ hàng</h4>
@@ -128,6 +129,17 @@
               <h6 class="font-weight-medium">Tạm tính</h6>
               <h6 class="font-weight-medium subTotal">{{ number_format($subTotal,0,',','.') }}VND</h6>
             </div>
+            @if(session('coupon'))
+            <div class="d-flex justify-content-between">
+                <h6 class="font-weight-medium">Mã giảm giá ({{ session('coupon')['code'] }})</h6>
+                <h6 class="font-weight-medium">
+                    -{{ number_format(session('coupon')['type'] === 'percentage'
+                        ? $subTotal * (session('coupon')['value'] / 100)
+                        : session('coupon')['value'], 0, ',', '.')
+                    }} VND
+                </h6>
+            </div>
+        @endif
             <div class="d-flex justify-content-between">
               <h6 class="font-weight-medium">Vận chuyển</h6>
               <h6 class="font-weight-medium shipping">{{ number_format($shipping,0,',','.') }} VND</h6>
@@ -136,7 +148,20 @@
           <div class="card-footer border-secondary bg-transparent">
             <div class="d-flex justify-content-between mt-2">
               <h5 class="font-weight-bold">Tổng cộng</h5>
-              <h5 class="font-weight-bold total_amount">{{ number_format($total,0,',','.') }} VND</h5>
+              <h5 class="font-weight-bold total_amount">
+                @if (session('coupon'))
+                {{ number_format(
+                    $total - (session('coupon')['type'] === 'percentage'
+                        ? $subTotal * (session('coupon')['value'] / 100)
+                        : session('coupon')['value']),
+                    0,
+                    ',',
+                    '.'
+                ) }} VND
+            @else
+                {{ number_format($total, 0, ',', '.') }} VND
+            @endif
+            </h5>
             </div>
               <a href="{{ route('orders.create') }}" class="btn btn-block btn-primary my-3 py-3">
                 Tiến hành thanh toán

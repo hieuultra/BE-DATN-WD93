@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BillController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminCouponController;
 //
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Client\CouponController;
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -72,6 +74,7 @@ Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart'
 Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
 Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
+Route::post('/apply-coupon', [CouponController::class, 'applyCoupon'])->name('cart.applyCoupon');
 
 // order
 Route::middleware('auth')->prefix('orders')
@@ -216,4 +219,5 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/listDeleted', [AdminReviewController::class, 'listDeleted'])->name('listDeletedReviews');
                 Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
             });
+        Route::resource('coupons', AdminCouponController::class);
     });
