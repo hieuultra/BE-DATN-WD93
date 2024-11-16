@@ -216,7 +216,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('destroyReviews');
                 Route::get('/listDeleted', [AdminReviewController::class, 'listDeleted'])->name('listDeletedReviews');
                 Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
-
+            });
         Route::prefix('posts')
             ->as('posts.')
             ->group(function () {
@@ -227,6 +227,5 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])->name('edit');
                 Route::put('/{id}/update',     [AdminBlogController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
-
             });
     });
