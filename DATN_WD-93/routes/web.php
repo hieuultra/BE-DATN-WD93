@@ -23,10 +23,8 @@ use App\Http\Controllers\Client\AppoinmentController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
@@ -73,12 +71,14 @@ Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCar
 Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
 Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
+Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
 
 // order
 Route::middleware('auth')->prefix('orders')
     ->as('orders.')
     ->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/status/{status}', [OrderController::class, 'index'])->name('indexByStatus');
         Route::get('/create', [OrderController::class, 'create'])->name('create');
         Route::post('/store', [OrderController::class, 'store'])->name('store');
         Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
@@ -207,5 +207,13 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
                 Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
                 Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
+            });
+        Route::prefix('reviews')
+            ->as('reviews.')
+            ->group(function () {
+                Route::get('/list', [AdminReviewController::class, 'list'])->name('listReviews');
+                Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('destroyReviews');
+                Route::get('/listDeleted', [AdminReviewController::class, 'listDeleted'])->name('listDeletedReviews');
+                Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
             });
     });

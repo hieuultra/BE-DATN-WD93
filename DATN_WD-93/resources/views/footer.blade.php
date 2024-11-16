@@ -6,12 +6,10 @@
           Instinct Pharmacy System
         </h5>
         <p class="mb-4">
-          With over 12 years of operation, Instinct is proud to be a trusted
-          companion of millions of Vietnamese people on their journey to
-          improve their health. With a system of nearly 1,000 GPP-standard
-          pharmacies nationwide spanning 40 provinces and cities, and a team
-          of nearly 5,000 pharmacists, Instinct brings dedicated healthcare
-          services and convenient shopping experiences to all customers.
+            Với hơn 12 năm hoạt động, Instinct tự hào là người bạn đồng hành đáng tin cậy của hàng triệu người
+            Việt Nam trên hành trình cải thiện sức khỏe. Với hệ thống gần 1.000 nhà thuốc đạt
+             chuẩn GPP trên toàn quốc trải dài 40 tỉnh thành, cùng đội ngũ gần 5.000 dược sĩ,
+             Instinct mang đến dịch vụ chăm sóc sức khỏe tận tâm và trải nghiệm mua sắm tiện lợi cho mọi khách hàng.
         </p>
         <p class="mb-2">
           <i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street,
@@ -27,26 +25,16 @@
       <div class="col-lg-8 col-md-12">
         <div class="row">
           <div class="col-md-4 mb-5">
-            <h5 class="text-secondary text-uppercase mb-4">About Instinct</h5>
+            <h5 class="text-secondary text-uppercase mb-4">Liên kết nhanh</h5>
             <div class="d-flex flex-column justify-content-start">
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Introduction</a
+                ><i class="fa fa-angle-right mr-2"></i>Trang Chủ</a
               >
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Store system</a
+                ><i class="fa fa-angle-right mr-2"></i>Tất Cả Sản Phẩm</a
               >
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Business license</a
-              >
-              <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Operating
-                regulations</a
-              >
-              <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Return policy</a
-              >
-              <a class="text-secondary" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Delivery policy</a
+                ><i class="fa fa-angle-right mr-2"></i>Sản Phẩm Khuyến Mãi</a
               >
             </div>
           </div>
@@ -77,17 +65,17 @@
             </div>
           </div>
           <div class="col-md-4 mb-5">
-            <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
-            <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
+            <h5 class="text-secondary text-uppercase mb-4">Đăng ký nhận tin</h5>
+            <p>Mỗi tháng chúng tôi đều có những đợt giảm giá dịch vụ và sản phẩm nhằm tri ân khách hàng. Để có thể câph nhập kịp thời những đợt giảm giá này, vui lòng nhập địa chỉ email của bạn vào ô dưới đây!</p>
             <form action="">
               <div class="input-group">
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="Your Email Address"
+                  placeholder="Nhập email của bạn"
                 />
                 <div class="input-group-append">
-                  <button class="btn btn-primary">Sign Up</button>
+                  <button class="btn btn-primary">Gửi</button>
                 </div>
               </div>
             </form>

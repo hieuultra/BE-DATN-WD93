@@ -208,7 +208,7 @@
               <input
                 type="text" name="query"
                 class="form-control"
-                placeholder="Search for products" name="kyw"
+                placeholder="Tìm kiếm sản phẩm" name="kyw"
               />
               <div class="input-group-append">
                 <span class="input-group-text bg-transparent text-primary">
@@ -219,7 +219,7 @@
           </form>
         </div>
         <div class="col-lg-4 col-6 text-right">
-          <p class="m-0">Customer Service</p>
+          <p class="m-0">Dịch vụ khách hàng</p>
           <h5 class="m-0">+012 345 6789</h5>
         </div>
       </div>

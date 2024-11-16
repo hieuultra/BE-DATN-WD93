@@ -8,6 +8,13 @@
       height: 300px;
       width: 100%;
     }
+    .discount {
+    background-color: #ffe6e6; /* Nền màu nhạt để làm nổi bật */
+    border-radius: 5px; /* Bo góc mềm mại */
+    padding: 5px 10px; /* Khoảng cách trong */
+    font-size: 1.2rem; /* Kích thước chữ vừa đủ */
+    font-weight: bold; /* Chữ đậm */
+}
   </style>
 
  <!-- Breadcrumb Start -->
@@ -33,32 +40,32 @@
               <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by price</span></h5>
               <div class="bg-light p-4 mb-30">
                   <form>
-                      <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                      <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                           <input type="checkbox" class="custom-control-input" checked id="price-all">
                           <label class="custom-control-label" for="price-all">All Price</label>
                           <span class="badge border font-weight-normal">1000</span>
                       </div>
-                      <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                      <div class=" custom-checkbox d-flex align-items-center justify-content-between mb-3">
                           <input type="checkbox" class="custom-control-input" id="price-1">
                           <label class="custom-control-label" for="price-1">$0 - $100</label>
                           <span class="badge border font-weight-normal">150</span>
                       </div>
-                      <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                      <div class=" custom-checkbox d-flex align-items-center justify-content-between mb-3">
                           <input type="checkbox" class="custom-control-input" id="price-2">
                           <label class="custom-control-label" for="price-2">$100 - $200</label>
                           <span class="badge border font-weight-normal">295</span>
                       </div>
-                      <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                      <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                           <input type="checkbox" class="custom-control-input" id="price-3">
                           <label class="custom-control-label" for="price-3">$200 - $300</label>
                           <span class="badge border font-weight-normal">246</span>
                       </div>
-                      <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                      <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                           <input type="checkbox" class="custom-control-input" id="price-4">
                           <label class="custom-control-label" for="price-4">$300 - $400</label>
                           <span class="badge border font-weight-normal">145</span>
                       </div>
-                      <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                      <div class="custom-checkbox d-flex align-items-center justify-content-between">
                           <input type="checkbox" class="custom-control-input" id="price-5">
                           <label class="custom-control-label" for="price-5">$400 - $500</label>
                           <span class="badge border font-weight-normal">168</span>
@@ -71,32 +78,32 @@
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by Classification</span></h5>
                 <div class="bg-light p-4 mb-30">
                     <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" checked id="color-all">
                             <label class="custom-control-label" for="price-all">All Classification</label>
                             <span class="badge border font-weight-normal">1000</span>
                         </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" id="color-1">
                             <label class="custom-control-label" for="color-1">Black</label>
                             <span class="badge border font-weight-normal">150</span>
                         </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" id="color-2">
                             <label class="custom-control-label" for="color-2">White</label>
                             <span class="badge border font-weight-normal">295</span>
                         </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" id="color-3">
                             <label class="custom-control-label" for="color-3">Red</label>
                             <span class="badge border font-weight-normal">246</span>
                         </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" id="color-4">
                             <label class="custom-control-label" for="color-4">Blue</label>
                             <span class="badge border font-weight-normal">145</span>
                         </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between">
                             <input type="checkbox" class="custom-control-input" id="color-5">
                             <label class="custom-control-label" for="color-5">Green</label>
                             <span class="badge border font-weight-normal">168</span>
@@ -196,24 +203,29 @@
                                     {{ $item->name }}
                                 </a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5 class="text-danger">  {{ number_format($tt, 0, ",", ".")  }} $</h5><h6 class="text-muted ml-2"><del> {{ number_format($item->price,0,',','.') }} $</del></h6>
+                                    <h5 class="text-danger">  {{ number_format($tt, 0, ",", ".")  }} VND</h5><h6 class="text-muted ml-2"><del> {{ number_format($item->price,0,',','.') }} VND</del></h6>
+                                    <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between bg-light">
-                                    <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                    <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
                                     <form action="{{ route('cart.addCart') }}" method="post">
                                         @csrf
                                             <input type="hidden" name="quantity" value="1">
                                            <input type="hidden" name="productId" value="{{ $item->id }}">
-                                        <input type="submit" value="Add To Cart" class="btn btn-sm text-dark p-0" name="addtocart"><i class="fas fa-shopping-cart text-primary mr-1"></i>
+                                        <input type="submit" value="Thêm vào giỏ" class="btn btn-sm text-dark p-0" name="addtocart"><i class="fas fa-shopping-cart text-primary mr-1"></i>
                                     </form>
                                   </div>
                                 <div class="d-flex align-items-center justify-content-center mb-1">
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small>(99)</small>
+                                    @php
+                                    $averageRating = round($item->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có
+                                    $reviewCount = $item->review_count ?? 0; // mặc định 0 nếu không có
+                                @endphp
+
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <small class="fa fa-star {{ $i <= $averageRating ? 'text-primary' : '' }} mr-1"></small>
+                                @endfor
+
+                                <small>({{ $reviewCount }})</small>
                                 </div>
                             </div>
                         </div>

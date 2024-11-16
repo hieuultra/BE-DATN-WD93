@@ -23,7 +23,7 @@
             <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
                 <div class="d-table-cell align-middle">
                     <div class="text-center mt-4">
-                        <h1 class="h2">Account</h1>
+                        <h1 class="h2">Tài khoản của tôi</h1>
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -35,7 +35,7 @@
                                     </h1>
                                 </div>
                                     <div class="text-center text-primary mt-4 font-weight-bold border px-3 mr-1">
-                                       HELLO <br />@if (Auth::check())
+                                       Xin chào<br />@if (Auth::check())
                                       <p>{{ Auth::user()->name }}</p>
                                     </div>
                                     <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
@@ -43,15 +43,15 @@
                                     </div>
 
                                     <div class="form-group">
-                                            <li><a href="{{ route('orders.index') }}">My order </a></li>
+                                            <li><a href="{{ route('orders.index') }}">Đơn mua </a></li>
                                            <li>  @if (Route::has('password.request'))
                                             <a href="{{ route('password.request') }}">
-                                                {{ __('Forgot Password?') }}
+                                                {{ __('Quên mật khẩu?') }}
                                             </a>
                                                 @endif
                                             </li>
-                                            <li> <a href="{{ route('viewEditAcc') }}">Edit account </a> </li>
-                                            <li> <a href="../admin">Login admin </a></li>
+                                            <li> <a href="{{ route('viewEditAcc') }}">Cập nhập tài khoản </a> </li>
+                                            <li> <a href="../admin">Quản trị viên </a></li>
                                             <form action="{{ route('logout') }}" method="POST">
                                                 @csrf
                                                 <li><input type="submit" class="btn btn-danger btn-custom" value="Logout"></li>
@@ -59,7 +59,7 @@
                                             </form>
                                     </div>
                                     @else
-                                    <p>Please login/register to use our services..</p><br>
+                                    <p>Vui lòng đăng nhập/đăng ký để sử dụng các dịch vụ của chúng tôi..</p><br>
                                     <a href="{{ route('viewLogin') }}"><input type="submit" href="#" class="btn btn-lg btn-primary" value="Login" name="dangnhap"></a>
                                     @endif
                             </div>
