@@ -18,6 +18,7 @@ use App\Http\Controllers\Client\ReviewController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Client\AppoinmentController;
 use App\Http\Controllers\Admin\VariantPackageController;
@@ -215,5 +216,17 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('destroyReviews');
                 Route::get('/listDeleted', [AdminReviewController::class, 'listDeleted'])->name('listDeletedReviews');
                 Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
+
+        Route::prefix('posts')
+            ->as('posts.')
+            ->group(function () {
+                Route::get('/index',           [AdminBlogController::class, 'index'])->name('index');
+                Route::get('/create',          [AdminBlogController::class, 'create'])->name('create');
+                Route::post('/store',          [AdminBlogController::class, 'store'])->name('store');
+                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])->name('show');
+                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])->name('edit');
+                Route::put('/{id}/update',     [AdminBlogController::class, 'update'])->name('update');
+                Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
+
             });
     });
