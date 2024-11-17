@@ -9,6 +9,8 @@ use App\Models\CartItem;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\VariantPackage;
+use App\Models\VariantProduct;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -22,6 +24,7 @@ class CartController extends Controller
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
         $cart = Cart::where('user_id', Auth::id())->with("items.product", "items.variant")->first();
+        
         // $cart = session()->get('cart', default: []);
 
         // $tt = $cart['price'] - (($cart['price']  * $cart['discount']) / 100);
@@ -44,6 +47,7 @@ class CartController extends Controller
     }
     public function addCart(Request $request)
     {
+        $id_variant = $request->input('variant_id');
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
         $productId = $request->input('productId');
         $product = Product::query()->findOrFail($productId);
@@ -69,6 +73,7 @@ class CartController extends Controller
             CartItem::create([
                 'cart_id' => $cart->id,
                 'product_id' => $product->id,
+                'variant_id' => $id_variant,
                 'name' => $product->name, // Store product name
                 'image' => $product->img, // Store product image
                 'price' => $totalPrice, // Store price after discount
@@ -153,5 +158,20 @@ class CartController extends Controller
         }
 
         return redirect()->route('orders.index')->with('success', 'Các sản phẩm từ đơn hàng đã được thêm vào giỏ hàng.');
+    }
+    public function getPriceQuantiVariant(Request $request){
+        $namePakeges = $request->input('namePakeges'); //id san pham
+        $idPakage = VariantPackage::where('name',$namePakeges)->select('id')->first(); 
+        $idVp = $idPakage->id;
+        if ($idVp) {
+            $vp = VariantProduct::where('id_variant', $idVp)->select('quantity', 'price','id_variant')->first();
+            return response()->json([
+                'price'=>number_format($vp->price, 0, ',', '.') . ' VNĐ',
+                'quantity'=>$vp->quantity,
+                'id_variant'=>$vp->id_variant,
+            ]);
+        }    
+        //not found
+        return response()->json(['error'=>'Có lỗi đã xảy ra!!!'], 404);
     }
 }

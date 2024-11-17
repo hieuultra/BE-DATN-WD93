@@ -3,6 +3,7 @@
 @section('title','Welcome')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     .product-name {
     font-size: 24px;
@@ -191,12 +192,14 @@
                 <div class="d-flex mb-3 border-box">
                     <div class="variant-container">
                         @foreach ($nameVariants as $nameVariant)
-                            <div class="variant-box">{{ $nameVariant }}</div>
+                            <div class="variant-box" data-id="{{ $sp->id }}" >{{ $nameVariant }}
+                            </div>
                         @endforeach
+                        
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 15px;">
-                    <h3 class="price font-weight-semi-bold mb-0 text-danger">
+                    <h3 id="price" class="price font-weight-semi-bold mb-0 text-danger">
                         {{ number_format($tt, 0, ",", ".") }} VND
                     </h3>
                     <h4 class="original-price font-weight-semi-bold mb-0">
@@ -204,9 +207,10 @@
                     </h4>
                     <p class="discount text-danger mb-0">-{{ $sp->discount ?? 0 }}%</p>
                 </div>
-                <div class="">
-                    <p class="inventory-status" id="quantity-display">Tồn kho: {{ $sp->quantity }}</p>
-              </div>
+                <div class="d-flex">
+                    <p class="inventory-status" id="quantity-display">Tồn kho:</p>
+                    <p class=" inventory-status quantity">{{ $sp->quantity }}</p>
+                </div>
                 {{-- <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p> --}}
                 {{-- <div class="d-flex mb-4">
                     <strong class="text-dark mr-3">Colors:</strong>
@@ -228,7 +232,8 @@
                             </div>
                             <input type="hidden" name="productId" value="{{ $sp->id }}">
                         </div>
-                        <button type="submit" class="btn btn-primary ms-4">Thêm vào giỏ hàng</button>
+                        <input type="text" name="variant_id" id="id_variant" value="">
+                        <button type="submit" class="btn btn-primary ms-4 addToCart">Thêm vào giỏ hàng</button>
                     </form>
                 </div>
 
@@ -496,6 +501,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
+</script>
+<script>
+    var id_variant = '';
+    $(document).ready(function () {
+        // $.ajaxSetup({
+        //     headers: {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     }
+        // });
+        $(".variant-box").click(function (e) { 
+            e.preventDefault();
+                let namePakeges = $(this).html();
+                $.ajax({
+                    type: "GET",
+                    url: "/get-price-quantity-vp",
+                    data: {
+                        namePakeges:namePakeges,
+                    },
+                    success: function (response) {
+                        let price = response.price;
+                        let quantity = response.quantity;
+                        id_variant = response.id_variant,
+                        $("#price").text(price);
+                        $(".quantity").text(quantity);
+                        $("#id_variant").val(id_variant);
+                        
+                    }
+                });
+                
+        });
+        // $(".addToCart").click(function (e) { 
+        //     e.preventDefault();
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/addCart",
+        //         data: {
+        //             id_variant:id_variant,
+        //         },
+        //         dataType: "dataType",
+        //         success: function (response) {
+        //             console.log('Gửi Thành Công');
+                    
+        //         }
+        //     });
+        // });
+    });
 </script>
 @endsection

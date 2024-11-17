@@ -32,7 +32,12 @@ Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
 Route::get('/products', [HomeController::class, 'products'])->name('products');
 Route::get('/search', [HomeController::class, 'search'])->name('products.search');
 Route::get('/products/detail/{product_id}', [HomeController::class, 'detail'])->name('productDetail');
-Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
+Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId'); 
+Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo'); 
+Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant'); 
+Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
+Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant'); 
+
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -68,7 +73,7 @@ Route::get('/viewEditAcc', [AuthController::class, 'viewEditAcc'])->name('viewEd
 Route::post('/editAcc', [AuthController::class, 'editAcc'])->name('editAcc');
 
 Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
-Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
+Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');               //
 Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
 Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
