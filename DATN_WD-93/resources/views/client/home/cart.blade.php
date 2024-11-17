@@ -108,18 +108,18 @@
    @endif
       </div>
 
-
       <div class="col-lg-4">
-        <form class="mb-5" action="{{ route('cart.applyCoupon') }}" method="POST">
-            @csrf
+        <form method="GET" action="{{ route('cart.listCart') }}">
             <div class="input-group">
-                <input type="text" name="coupon_code" class="form-control p-4" placeholder="Nhập mã giảm giá" />
+                <input type="text" name="coupon_code" class="form-control p-4" placeholder="Coupon Code" />
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-primary">Áp dụng mã giảm giá</button>
                 </div>
             </div>
         </form>
-
+        @if (session('error'))
+            <p class="text-danger">{{ session('error') }}</p>
+        @endif
         <div class="card border-secondary mb-5">
           <div class="card-header bg-secondary border-0">
             <h4 class="font-weight-semi-bold m-0">Tóm tắt giỏ hàng</h4>
@@ -127,19 +127,16 @@
           <div class="card-body">
             <div class="d-flex justify-content-between mb-3 pt-1">
               <h6 class="font-weight-medium">Tạm tính</h6>
-              <h6 class="font-weight-medium subTotal">{{ number_format($subTotal,0,',','.') }}VND</h6>
+              <h6 class="font-weight-medium subTotal">
+                {{ number_format($subTotal, 0, ',', '.') }} VND
+            </h6>
             </div>
-            @if(session('coupon'))
-            <div class="d-flex justify-content-between">
-                <h6 class="font-weight-medium">Mã giảm giá ({{ session('coupon')['code'] }})</h6>
-                <h6 class="font-weight-medium">
-                    -{{ number_format(session('coupon')['type'] === 'percentage'
-                        ? $subTotal * (session('coupon')['value'] / 100)
-                        : session('coupon')['value'], 0, ',', '.')
-                    }} VND
+            {{-- <div class="d-flex justify-content-between">
+                <h6 class="font-weight-medium">Giảm giá</h6>
+                <h6 class="font-weight-medium discount">
+                    - {{ number_format($discount ?? 0, 0, ',', '.') }} VND
                 </h6>
-            </div>
-        @endif
+            </div> --}}
             <div class="d-flex justify-content-between">
               <h6 class="font-weight-medium">Vận chuyển</h6>
               <h6 class="font-weight-medium shipping">{{ number_format($shipping,0,',','.') }} VND</h6>
@@ -149,19 +146,8 @@
             <div class="d-flex justify-content-between mt-2">
               <h5 class="font-weight-bold">Tổng cộng</h5>
               <h5 class="font-weight-bold total_amount">
-                @if (session('coupon'))
-                {{ number_format(
-                    $total - (session('coupon')['type'] === 'percentage'
-                        ? $subTotal * (session('coupon')['value'] / 100)
-                        : session('coupon')['value']),
-                    0,
-                    ',',
-                    '.'
-                ) }} VND
-            @else
                 {{ number_format($total, 0, ',', '.') }} VND
-            @endif
-            </h5>
+                </h5>
             </div>
               <a href="{{ route('orders.create') }}" class="btn btn-block btn-primary my-3 py-3">
                 Tiến hành thanh toán
@@ -309,7 +295,15 @@ document.querySelectorAll('.pro-remove').forEach(function(removeButton) {
             // Lấy số tiền vận chuyển
             const shipping = parseFloat(document.querySelector('.shipping').textContent.replace(/\./g, '')
                 .replace(' VND', ''));
-            const total = subTotal + shipping;
+               // Lấy giá trị mã giảm giá và đảm bảo giá trị hợp lệ
+                    const discountText = document.querySelector('.discount')?.textContent || '0 VND';
+                    const discount = parseFloat(discountText.replace(/\./g, '').replace(' VND', ''));
+
+                    if (isNaN(discount)) {
+                        // Nếu giá trị discount không hợp lệ, gán mặc định là 0
+                        discount = 0;
+                    }
+           const total = subTotal + shipping;
 
             // Cập nhật giá trị
             document.querySelector('.subTotal').textContent = formatCurrency(subTotal);

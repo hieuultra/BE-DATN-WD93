@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Models\Bill;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\Category;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function listCart()
+    public function listCart(Request $request)
     {
         $categories = Category::orderBy('name', 'asc')->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
@@ -28,7 +29,8 @@ class CartController extends Controller
 
         $total = 0;
         $subTotal = 0;
-        $shipping = 50;
+        $shipping = 40000;
+        $discount = 0;
         if ($cart && $cart->items->count() > 0) {
             foreach ($cart->items as  $item) {
                 $price = is_numeric($item['price']) ? $item['price'] : 0;
@@ -37,10 +39,20 @@ class CartController extends Controller
                 // Tính toán tổng phụ
                 $subTotal += $price * $quantity;
             }
-            $total = $subTotal + $shipping;
+        }
+        // Xử lý mã giảm giá nếu có
+        if ($request->has('coupon_code')) {
+            $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
+            if ($coupon && $coupon->isValid()) {
+                $discount = $coupon->value;
+            } else {
+                return back()->with('error', 'Mã giảm giá không hợp lệ hoặc đã hết hạn!');
+            }
         }
 
-        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total'));
+        $total = $subTotal + $shipping - $discount;
+
+        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total', 'discount'));
     }
     public function addCart(Request $request)
     {

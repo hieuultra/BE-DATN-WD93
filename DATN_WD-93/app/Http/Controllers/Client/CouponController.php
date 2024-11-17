@@ -2,46 +2,61 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Models\Cart;
 use App\Models\Coupon;
+use App\Models\CartItem;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CouponController extends Controller
 {
     public function applyCoupon(Request $request)
     {
-        $code = $request->input('coupon_code');
+        $couponCode = $request->input('coupon_code');
+        $coupon = Coupon::where('code', $couponCode)->first();
 
-        // Kiểm tra mã giảm giá
-        $coupon = Coupon::where('code', $code)->first();
-
-        if (!$coupon) {
-            return back()->with('error', 'Mã giảm giá không tồn tại.');
+        if (!$coupon || !$coupon->isValid()) {
+            return back()->with('error', 'Mã giảm giá không hợp lệ hoặc đã hết hạn!');
         }
 
-        // Kiểm tra tính hợp lệ của mã giảm giá
-        if (!$coupon->isValid()) {
-            return back()->with('error', 'Mã giảm giá đã hết hạn hoặc không hợp lệ.');
+        // Lấy giỏ hàng và các item trong giỏ
+        $cart = Cart::where('user_id', Auth::id())->with('items')->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return back()->with('error', 'Giỏ hàng của bạn đang trống!');
         }
 
-        // Kiểm tra điều kiện áp dụng (nếu có)
-        $totalOrderValue = $request->input('total_order_value', 0); // Giá trị đơn hàng
-        if ($coupon->min_order_value && $totalOrderValue < $coupon->min_order_value) {
-            return back()->with('error', 'Mã giảm giá chỉ áp dụng cho đơn hàng từ '
-                . number_format($coupon->min_order_value, 0, ',', '.') . ' VND trở lên.');
+        // Tính tổng phụ (subTotal)
+        $subTotal = $cart->items->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+
+        // Kiểm tra giá trị đơn hàng tối thiểu
+        if ($subTotal < $coupon->min_order_value) {
+            return back()->with('error', 'Đơn hàng không đủ giá trị tối thiểu để áp dụng mã giảm giá!');
         }
 
-        // Lưu mã giảm giá vào session
-        session([
-            'coupon' => [
-                'code' => $coupon->code,
-                'type' => $coupon->type, // 'percentage' hoặc 'fixed'
-                'value' => $coupon->value, // Giá trị giảm
-                'min_order_value' => $coupon->min_order_value, // Giá trị tối thiểu
-                'description' => $coupon->description, // Mô tả mã giảm giá (nếu có)
-            ]
-        ]);
+        // Tính giá trị giảm giá (dựa trên % hoặc giá trị cụ thể)
+        $discount = $subTotal * ($coupon->value / 100);
 
-        return back()->with('success', 'Mã giảm giá đã được áp dụng!');
+        // Áp dụng giảm giá lên từng CartItem
+        foreach ($cart->items as $item) {
+            $itemDiscount = $discount * ($item->price * $item->quantity / $subTotal);
+            $item->total -= $itemDiscount; // Cập nhật total sau giảm giá
+            $item->save();
+        }
+
+        // Cập nhật tổng tiền (sau khi giảm giá) nếu cần tính tổng
+        $shipping = 40000;
+        $totalAfterDiscount = $subTotal - $discount + $shipping;
+
+        // Giảm số lần sử dụng của mã giảm giá (nếu có)
+        if ($coupon->usage_limit !== null) {
+            $coupon->decrement('usage_limit');
+        }
+
+        return back()->with('success', 'Áp dụng mã giảm giá thành công!');
     }
+
 }
