@@ -150,6 +150,9 @@
             </div>
         </div>
 
+
+
+
         <div class="row mt-3 mb-3">
                 {{-- box left --}}
                 <div class="col-lg-4">
@@ -346,9 +349,8 @@ document.addEventListener('DOMContentLoaded', function(){
             e.preventDefault();
             var inputQuantiValue = $('#quantity-display').val();
             var inputPriceValue = $('#price-display').val();
-            // alert(variantId);
-            var inputIdValue = $('.variant-button').val();
-            var inputIdProductValue = $('#idProduct').val();
+            // var inputIdValue = $('.variant-button').val();
+            // var inputIdProductValue = $('#idProduct').val();
             $.ajax({
                 type: "POST",
                 url:  '{{ route("admin.products.variantProductUpdate") }}',

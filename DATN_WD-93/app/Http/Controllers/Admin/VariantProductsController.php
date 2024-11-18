@@ -53,7 +53,7 @@ class VariantProductsController extends Controller
     public function variantProductUpdate(Request $request)
     {
         $validatedData = $request->validate([
-            'variantId' => 'required|integer',
+            'variantId' => 'required|integer|exists:variant_packages,id',
             'quantity' => 'required|numeric',
             'price' => 'required|numeric|min:0',
         ]);

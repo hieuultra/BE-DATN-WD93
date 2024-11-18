@@ -30,18 +30,18 @@
                     <div class="sb-nav-link-icon">
                         <i class="fas fa-tachometer-alt"></i>
                     </div>
-                    Bảng điều khiển
+                    Dashboard
                 </a>
 
                 <!--  -->
-                <div class="sb-sidenav-menu-heading">Giao diện</div>
+                <div class="sb-sidenav-menu-heading">Interface</div>
 
                 <!-- Category -->
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCate" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon">
                         <i class="fas fa-columns"></i>
                     </div>
-                    Danh mục
+                    Category
                     <div class="sb-sidenav-collapse-arrow">
                         <i class="fas fa-angle-down"></i>
                     </div>
@@ -49,8 +49,8 @@
 
                 <div class="collapse" id="collapseCate" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="{{ route('admin.categories.categoriesList') }}">Danh sách danh mục</a>
-                        <a class="nav-link" href="{{ route('admin.categories.viewCateAdd') }}">Thêm danh mục</a>
+                        <a class="nav-link" href="{{ route('admin.categories.categoriesList') }}">List categories</a>
+                        <a class="nav-link" href="{{ route('admin.categories.viewCateAdd') }}">Add categories</a>
                     </nav>
                 </div>
 
@@ -77,7 +77,7 @@
                     <div class="sb-nav-link-icon">
                         <i class="fas fa-columns"></i>
                     </div>
-                    Sản phẩm
+                    Product
                     <div class="sb-sidenav-collapse-arrow">
                         <i class="fas fa-angle-down"></i>
                     </div>
@@ -215,7 +215,7 @@
         <div class="sb-nav-link-icon">
           <i class="fas fa-columns"></i>
         </div>
-        Mã giảm giá
+        Comment
         <div class="sb-sidenav-collapse-arrow">
           <i class="fas fa-angle-down"></i>
         </div>
@@ -223,8 +223,7 @@
 
       <div class="collapse" id="collapseComment" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="{{ route('admin.coupons.index') }}">Danh sách mã giảm giá</a>
-          <a class="nav-link" href="{{ route('admin.coupons.create') }}">Thêm mã giảm giá</a>
+          <a class="nav-link" href="?act=list_com">List Comment</a>
         </nav>
       </div>
       <!-- feedback -->
@@ -240,7 +239,7 @@
 
       <div class="collapse" id="collapsefb" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-            <a class="nav-link" href="{{route('admin.reviews.listReviews')}}">List Feedback</a>
+          <a class="nav-link" href="?act=list_fb">List Feedback</a>
         </nav>
       </div>
             </div>

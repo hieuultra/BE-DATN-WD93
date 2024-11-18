@@ -53,22 +53,13 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
-    public function averageRating()
-    {
-        return $this->review()->avg('rating');
-    }
-
-    public function reviewCount()
-    {
-        return $this->review()->count();
-    }
     public function cartItem()
     {
         return $this->hasMany(CartItem::class);
     }
     public function variantProduct()
     {
-        return $this->hasMany(VariantProduct::class, 'id_product');
+        return $this->hasMany(VariantProduct::class,'id_product');
     }
     public function scopeNewProducts($query, $limit) //định nghĩa một query scope có tên là newProducts.
     //Query scope là một cách để thêm điều kiện truy vấn vào Eloquent query một cách dễ dàng.

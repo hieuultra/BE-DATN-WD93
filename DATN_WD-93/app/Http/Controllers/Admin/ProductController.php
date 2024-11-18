@@ -230,14 +230,13 @@ class ProductController extends Controller
         $products = Product::orderBy('id', 'DESC')->paginate(10);
         $product = Product::find($id); //tim id
         $variants = VariantPackage::orderBy('name',  'DESC')->get();
-        $variantPros = VariantProduct::where('id_product', $id)->get();
+        $variantPros = VariantProduct::where('id_product',$id)->get();
         $variantPro = VariantProduct::orderBy("id")->get();
-        return view('admin.products.productVariant', compact('categories', 'products', 'product', 'variants', 'variantPros', 'variantPro'));
+        return view('admin.products.productVariant', compact('categories', 'products', 'product','variants', 'variantPros', 'variantPro'));
     }
-    public function getQuantity(Request $request)
-    {
+    public function getQuantity(Request $request){
         $variantId = $request->input('variantId');
-        $variantPros = VariantProduct::where('id', $variantId)->first();
+        $variantPros = VariantProduct::where('id',$variantId)->first();
         if ($variantPros) {
             return response()->json([
                 'status' => 'success',

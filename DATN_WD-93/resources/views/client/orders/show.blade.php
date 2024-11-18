@@ -33,72 +33,71 @@
     <div class="row px-xl-5">
         <div class="col-lg-12">
             <div class="order-details">
-                <h4>Chi tiết đơn hàng</h4>
+                <h4>Order Details</h4>
 
                 {{-- Thông tin đơn hàng --}}
                 <div class="order-info">
-                    <h5 class="text-center">Thông tin đơn hàng</h5>
+                    <h5 class="text-center">Order Information</h5>
                     <table>
                         <tr>
-                            <th class="text-center">Mã đơn:</th>
+                            <th class="text-center">Order Code:</th>
                             <td class="text-danger text-center">{{ $bill->billCode }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Tên người nhận :</th>
+                            <th class="text-center">Consignee name :</th>
                             <td class="text-center">{{ $bill->nameUser }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Thời gian đặt:</th>
+                            <th class="text-center">Date Ordered:</th>
                             <td class="text-center">{{ $bill->created_at->format('d-m-Y H:i') }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Trạng thái:</th>
+                            <th class="text-center">Status Bill:</th>
                             <td class="text-center">{{ $statusBill[$bill->status_bill] }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Trạng thái thanh toán:</th>
+                            <th class="text-center">Status_payment_method:</th>
                             <td class="text-center">{{ $status_payment_method[$bill->status_payment_method] }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Địa chỉ nhận hàng:</th>
+                            <th class="text-center">Shipping Address:</th>
                             <td class="text-center">{{ $bill->addressUser }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Số điện thoại người nhận:</th>
+                            <th class="text-center">Contact Number:</th>
                             <td class="text-center">{{ $bill->phoneUser }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Email người nhận:</th>
+                            <th class="text-center">Email:</th>
                             <td class="text-center">{{ $bill->emailUser }}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Số tiền hàng:</th>
-                            <td class="text-center">{{ number_format($bill->moneyProduct,0,',','.') }}VND</td>
+                            <th class="text-center">Money Product:</th>
+                            <td class="text-center">{{ number_format($bill->moneyProduct,0,',','.') }}$</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Tiền vận chuyển:</th>
-                            <td class="text-center">{{ number_format($bill->moneyShip,0,',','.') }}VND</td>
+                            <th class="text-center">Money Ship:</th>
+                            <td class="text-center">{{ number_format($bill->moneyShip,0,',','.') }}$</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Tổng:</th>
-                            <td class="text-center">{{ number_format($bill->totalPrice,0,',','.') }}VND</td>
+                            <th class="text-center">Total Price:</th>
+                            <td class="text-center">{{ number_format($bill->totalPrice,0,',','.') }}$</td>
                         </tr>
                     </table>
                 </div>
 
                 {{-- Chi tiết sản phẩm --}}
                 <div class="order-items">
-                    <h5>Sản phẩm</h5>
+                    <h5>Order Items</h5>
                     <table>
                         <thead>
                             <tr>
-                                <th>Mã sản phẩm</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Ảnh</th>
-                                <th>Giá</th>
-                                <th>Số lượng</th>
-                                <th>Tổng</th>
-                                <th>Thao tác</th>
+                                <th>Product Code</th>
+                                <th>Product Name</th>
+                                <th>Image</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th>Total Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -110,12 +109,9 @@
                                 <td>{{ $product->idProduct }}</td>
                                 <td><a href="{{ route('productDetail', $detail->product_id) }}">{{ $product->name }}</a></td>
                                 <td><img class="img-fluid" src="{{ asset('upload/'.$product->img) }}" width="75px"></td>
-                                <td>{{ number_format($detail->unitPrice,0,',','.') }}VND</td>
+                                <td>{{ number_format($detail->unitPrice,0,',','.') }}$</td>
                                 <td>{{ $detail->quantity }}</td>
-                                <td>{{ number_format($detail->totalMoney,0,',','.') }}VND</td>
-                                @if ($bill->status_bill == $type_da_giao_hang)
-                                 <th><a href="{{ route('productDetail', $detail->product_id) }}" class="btn btn-warning">Đánh giá</a></th>
-                                @endif
+                                <td>{{ number_format($detail->totalMoney,0,',','.') }}$</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -124,7 +120,7 @@
 
                 {{-- Nút quay lại --}}
                 <div class="mt-4">
-                    <a href="{{ route('orders.index') }}" class="btn btn-secondary">Quay lại</a>
+                    <a href="{{ route('orders.index') }}" class="btn btn-secondary">Back to Order History</a>
                 </div>
             </div>
         </div>

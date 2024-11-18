@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Client;
 use App\Models\Bill;
 use App\Models\Cart;
 use App\Models\Product;
-use App\Models\CartItem;
 use App\Models\Category;
 use App\Mail\OrderConfirm;
 use Illuminate\Http\Request;
@@ -20,11 +19,10 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, $status = null)
+    public function index()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get(); // Lấy tất cả các đơn hàng
-
+        $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get();  //tro den class bill ben model user
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -32,58 +30,12 @@ class OrderController extends Controller
         }
 
         $statusBill = Bill::status_bill;
+
         $type_cho_xac_nhan = Bill::CHO_XAC_NHAN;
         $type_dang_van_chuyen = Bill::DANG_VAN_CHUYEN;
-        $type_da_giao_hang = Bill::DA_GIAO_HANG;
-        $type_da_huy = Bill::DA_HUY;
-        $type_khach_hang_tu_choi = Bill::KHACH_HANG_TU_CHOI;
 
-        // Lấy trạng thái từ tham số URL (nếu có)
-        $status = $status ?? $request->get('status');
-
-        // Tìm kiếm theo mã đơn hàng hoặc tên sản phẩm
-        $searchTerm = $request->get('search');
-
-        // Lọc đơn hàng theo trạng thái và tìm kiếm (nếu có)
-        $billsQuery = Auth::user()->bill()->orderBy('created_at', 'desc');
-
-        // Lọc theo trạng thái bill nếu có
-        if ($status) {
-            $billsQuery->where('status_bill', $status);
-        }
-
-        // Nếu có từ khóa tìm kiếm, lọc theo mã đơn hàng hoặc tên sản phẩm
-        if ($searchTerm) {
-            $billsQuery->where(function ($query) use ($searchTerm) {
-                $query->where('billCode', 'like', '%' . $searchTerm . '%')
-                    ->orWhereHas('order_detail', function ($query) use ($searchTerm) {
-                        $query->whereHas('product', function ($query) use ($searchTerm) {
-                            $query->where('name', 'like', '%' . $searchTerm . '%');
-                        });
-                    });
-            });
-        }
-
-        // Lấy kết quả tìm kiếm và trạng thái
-        $bills = $billsQuery->get();
-
-        $allStatusBill = Bill::status_bill;
-
-        return view('client.orders.index', compact(
-            'orderCount',
-            'categories',
-            'Bills',
-            'statusBill',
-            'type_cho_xac_nhan',
-            'type_dang_van_chuyen',
-            'allStatusBill',
-            'bills',
-            'type_da_giao_hang',
-            'type_da_huy',
-            'type_khach_hang_tu_choi'
-        ));
+        return view('client.orders.index', compact('orderCount', 'categories', 'Bills', 'statusBill', 'type_cho_xac_nhan', 'type_dang_van_chuyen'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -100,7 +52,7 @@ class OrderController extends Controller
         if ($carts && $carts->items->count() > 0) {
             $total = 0;
             $subTotal = 0;
-            $shipping = 40000;
+            $shipping = 50;
             foreach ($carts->items as  $item) {
                 $price = is_numeric($item['price']) ? $item['price'] : 0;
                 $quantity = is_numeric($item['quantity']) ? $item['quantity'] : 0;
@@ -132,7 +84,7 @@ class OrderController extends Controller
                 // Lấy cart của người dùng từ database
                 $carts = Cart::where('user_id', Auth::id())->with('items')->first();
                 if (!$carts || $carts->items->isEmpty()) {
-                    return redirect()->route('cart.listCart')->with('error', 'Giỏ hàng của bạn trống');
+                    return redirect()->route('cart.listCart')->with('error', 'Your cart is empty');
                 }
 
                 foreach ($carts->items as $item) {
@@ -140,13 +92,13 @@ class OrderController extends Controller
                     $product = Product::findOrFail($item->product_id);
                     if ($product->quantity < $item['quantity']) {
                         DB::rollBack();
-                        return redirect()->route('cart.listCart')->with('error', 'Không đủ số lượng tồn kho cho ' . $product->name);
+                        return redirect()->route('cart.listCart')->with('error', 'Not enough stock for product ' . $product->name);
                     }
                     // Tạo chi tiết đơn hàng
                     $tt = $item['price'] * $item['quantity'];
                     $bill->order_detail()->create([
                         'bill_id' => $billId,
-                        'product_id' => $item->product_id,
+                       'product_id' => $item->product_id,
                         'unitPrice' => $item['price'],
                         'quantity' => $item['quantity'],
                         'totalMoney' => $tt
@@ -164,10 +116,10 @@ class OrderController extends Controller
                 Mail::to($bill->emailUser)->queue(new OrderConfirm($bill));
 
                 $carts->items()->delete();
-                return redirect()->route('orders.index')->with('success', 'Tạo đơn hàng thành công');
+                return redirect()->route('orders.index')->with('success', 'Bill have created successfully');
             } catch (\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('cart.listCart')->with('error', 'Tạo đơn hàng thất bại');
+                return redirect()->route('cart.listCart')->with('error', 'Order failed');
             }
         }
     }
@@ -186,8 +138,7 @@ class OrderController extends Controller
         $bill = Bill::query()->findOrFail($id);
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;
-        $type_da_giao_hang = Bill::DA_GIAO_HANG;
-        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories', 'type_da_giao_hang'));
+        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories'));
     }
 
     /**
@@ -216,10 +167,10 @@ class OrderController extends Controller
             //Sử dụng DB::commit() để xác nhận thay đổi nếu mọi thứ thành công.
             //Nếu có lỗi, sử dụng DB::rollBack() để hoàn tác tất cả các thay đổi.
             DB::commit();
-            return redirect()->route('orders.index')->with('success', 'Hủy đơn hàng thành công');
+            return redirect()->route('orders.index')->with('success', 'Bill updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('orders.index')->with('error', 'Cập nhập đơn hàng thất bại');
+            return redirect()->route('orders.index')->with('error', 'Bill update failed');
         }
     }
 
