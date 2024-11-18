@@ -101,6 +101,7 @@ table th, table td {
                             <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
                               <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
                             </svg>
+                            Update
                          </button>
                      </form>
                     </a>
@@ -132,7 +133,7 @@ table th, table td {
                      </a>
 
                   <!-- Nút xóa cứng -->
-                  <a href="" class="btn btn-light mt-3">
+                  {{-- <a href="" class="btn btn-light mt-3">
                         <form action="{{ route('admin.products.hardDelete', $item->id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
@@ -143,7 +144,7 @@ table th, table td {
                                 HardDelete
                             </button>
                         </form>
-                  </a>
+                  </a> --}}
                   {{-- Variant - Product --}}
                   <a href="" class="btn btn-primary mt-3">
                     <!-- Thêm nút update -->
@@ -152,6 +153,7 @@ table th, table td {
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
+                          Add Variant
                          </button>
                      </form>
                     </a>
