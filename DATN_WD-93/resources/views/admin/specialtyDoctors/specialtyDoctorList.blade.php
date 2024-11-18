@@ -225,6 +225,119 @@
       {{ $doctor->links('pagination::bootstrap-4') }}
     </div>
 
+    {{-- List Product Variant --}}
+    <div class="row">
+      {{-- Package --}}
+      <div class="col">
+        <div class="card mb-4">
+
+          {{-- hien thi tb success --}}
+
+          <div class="card-header d-flex justify-content-between">
+            <div>
+              <i class="fas fa-table me-1"></i>
+              List Packages
+            </div>
+            <a href="{{ route('admin.packages.viewPackagesAdd') }}">
+              <input type="submit" class="btn btn-primary" name="them" value="ADD">
+            </a>
+          </div>
+          <div class="card-body">
+            {{-- Hiển thị thông báo --}}
+            @if (session('success'))
+            <div class="alert alert-success">
+              {{ session('success') }}
+            </div>
+            @endif
+
+            @if (session('error'))
+            <div class="alert alert-danger">
+              {{ session('error') }}
+            </div>
+            @endif
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">STT</th>
+                  <th scope="col" style="width: 280px;">Name</th>
+                  <th scope="col" style="width: 220px;">Image</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Specialty</th>
+                  <th scope="col">Price</th>
+                  <th class="text-center" style="width: 190px;" scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                @foreach($package as $d)
+                @php
+                $pacs = $d->specialty;
+                @endphp
+                <tr>
+                  <th scope="row">{{ $d->id }}</th>
+                  <td>
+                    {{$d->hospital_name}}
+                  </td>
+
+                  <td>
+                    <img src="{{ asset('upload/'.$d->image)  }}" width="150" height="90" alt="">
+                  </td>
+                  <td>
+                    {{$d->address}}
+                  </td>
+                  <td>
+                    {{$pacs->name}}
+                  </td>
+                  <td>
+                    {{$d->price}}
+                  </td>
+                  <td class="text-center">
+                    <div class="time-icon">
+                      <a href="{{ route('admin.timeslot.showPackages', $d->id) }}"><i class="fas fa-clock"></i></a>
+                    </div>
+                    <div class="time-icon">
+                      <a style="text-decoration: none;" href="{{ route('admin.medicalPackages.medicalPackages', $d->id) }}">Danh mục khám</a>
+                    </div>
+
+                    <a href="" class="btn btn-warning">
+                      <form action="{{ route('admin.packages.packageUpdateForm', $d->id) }}" method="GET">
+                        <button style="background: none;  border: none; outline: none;" type="submit">
+                          <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001" />
+                          </svg>
+                        </button>
+                      </form>
+                    </a>
+                    <!-- Thêm nút delete -->
+                    <a href="" class="btn btn-danger">
+                      <form action="{{ route('admin.packages.packageDestroy', $d->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        {{-- Sử dụng @method('DELETE') trong đoạn mã nhằm mục đích gửi một yêu cầu HTTP DELETE từ form HTML.  --}}
+                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">
+                          <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                          </svg>
+                        </button>
+                      </form>
+                    </a>
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          {{ $package->links('pagination::bootstrap-4') }}
+        </ul>
+      </nav>
+    </div>
+
 </main>
 
 @endsection

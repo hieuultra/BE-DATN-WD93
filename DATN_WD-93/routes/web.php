@@ -85,7 +85,7 @@ Route::prefix('appoinment')
         Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
         Route::put('/reviews/{id}', [AppoinmentController::class, 'updateReview']);
         Route::post('/appointments/{id}/cancel', [AppoinmentController::class, 'cancel'])->name('appointments.cancel');
-        
+
 
         Route::get('specialistExamination', [AppoinmentController::class, 'specialistExamination'])->name('specialistExamination');
         Route::get('/doctors/{specialty_id}', [AppoinmentController::class, 'doctors'])->name('doctorsBySpecialtyId');
@@ -94,34 +94,34 @@ Route::prefix('appoinment')
         Route::get('/appointment_histories/{appointment}/prescriptions',  [AppoinmentController::class, 'getPrescriptions']);
     });
 
-    Route::get('/viewSikibidi', function () {
-        $orderCount = 1;
-        if (Auth::check()) {
-            $user = Auth::user();
-            $orderCount = $user->bill()->count();
-        }
-        $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.ai.viewSikibidi', compact('orderCount', 'categories'));
-    });
-    Route::get('/chat-ai', function () {
-        $orderCount = 1;
-        if (Auth::check()) {
-            $user = Auth::user();
-            $orderCount = $user->bill()->count();
-        }
-        $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.ai.chatAI', compact('orderCount', 'categories'));
-    });
-    Route::get('/chat-zalo', function () {
-        $orderCount = 1;
-        if (Auth::check()) {
-            $user = Auth::user();
-            $orderCount = $user->bill()->count();
-        }
-        $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.ai.chatZalo', compact('orderCount', 'categories'));
-    });
-    
+Route::get('/viewSikibidi', function () {
+    $orderCount = 1;
+    if (Auth::check()) {
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+    }
+    $categories = Category::orderBy('name', 'asc')->get();
+    return view('client.ai.viewSikibidi', compact('orderCount', 'categories'));
+});
+Route::get('/chat-ai', function () {
+    $orderCount = 1;
+    if (Auth::check()) {
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+    }
+    $categories = Category::orderBy('name', 'asc')->get();
+    return view('client.ai.chatAI', compact('orderCount', 'categories'));
+});
+Route::get('/chat-zalo', function () {
+    $orderCount = 1;
+    if (Auth::check()) {
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+    }
+    $categories = Category::orderBy('name', 'asc')->get();
+    return view('client.ai.chatZalo', compact('orderCount', 'categories'));
+});
+
 
 
 Auth::routes();
@@ -268,6 +268,10 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/scheduleEdit/{id}', [DoctorController::class, 'scheduleEdit']);
                 Route::put('/scheduleUpdate/{id}', [DoctorController::class, 'scheduleUpdate'])->name('scheduleUpdate');
                 Route::delete('/scheduleDestroy/{id}', [DoctorController::class, 'scheduleDestroy']);
+
+
+                Route::get('/showPackages/{packageId}', [DoctorController::class, 'showPackages'])->name('showPackages');
+                Route::post('/schedulePackageAdd', [DoctorController::class, 'schedulePackageAdd'])->name('schedulePackageAdd');
             });
 
         Route::prefix('achievements')
@@ -277,5 +281,24 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/achievementsAdd', [DoctorController::class, 'achievementsAdd'])->name('achievementsAdd');
                 Route::delete('/achievementsds/{id}', [DoctorController::class, 'destroy']);
                 Route::post('/achievementsUpdate', [DoctorController::class, 'achievementsUpdate'])->name('achievementsUpdate');
+            });
+
+        Route::prefix('packages')
+            ->as('packages.')
+            ->group(function () {
+                Route::get('/viewPackagesAdd', [DoctorController::class, 'viewPackagesAdd'])->name('viewPackagesAdd');
+                Route::post('/PackageAdd', [DoctorController::class, 'PackageAdd'])->name('PackageAdd');
+                Route::get('/packageUpdateForm/{id}', [DoctorController::class, 'packageUpdateForm'])->name('packageUpdateForm');
+                Route::post('/packageUpdate/{id}', [DoctorController::class, 'packageUpdate'])->name('packageUpdate');
+                Route::delete('/packageDestroy/{id}', [DoctorController::class, 'packageDestroy'])->name('packageDestroy');
+            });
+
+        Route::prefix('medicalPackages')
+            ->as('medicalPackages.')
+            ->group(function () {
+                Route::get('/medicalPackages/{doctorId}', [DoctorController::class, 'medicalPackages'])->name('medicalPackages');
+                Route::post('/viewmedicalPackagesAdd', [DoctorController::class, 'viewmedicalPackagesAdd'])->name('viewmedicalPackagesAdd');
+                Route::post('/medicalPackagesUpdate', [DoctorController::class, 'medicalPackagesUpdate'])->name('medicalPackagesUpdate');
+                Route::delete('/medicalPackagesDestroy/{id}', [DoctorController::class, 'medicalPackagesDestroy'])->name('medicalPackagesDestroy');
             });
     });

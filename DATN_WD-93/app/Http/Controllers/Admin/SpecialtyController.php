@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
+use App\Models\Package;
 use App\Models\Specialty;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
@@ -26,8 +27,16 @@ class SpecialtyController extends Controller
                 $query->where('classification', $classification);
             });
         }
-        $doctor = $doctorQuery->paginate(3);        
-        return view('admin.specialtyDoctors.specialtyDoctorList', compact('specialty', 'doctor'));
+        $doctor = $doctorQuery->paginate(3);   
+        
+        $packageQuery = Package::query();
+        if ($classification) {
+            $packageQuery->whereHas('specialty', function ($query) use ($classification) {
+                $query->where('classification', $classification);
+            });
+        }
+        $package = $packageQuery->paginate(3);   
+        return view('admin.specialtyDoctors.specialtyDoctorList', compact('specialty', 'doctor', 'package'));
     }
     public function viewSpecialtyAdd()
     {

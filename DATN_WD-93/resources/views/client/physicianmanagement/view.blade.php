@@ -394,7 +394,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="dateSelect-{{ $doctor->id }}" class="form-label">Chọn Thứ, Ngày, Tháng</label>
+                                <label for="dateSelect-{{ $doctor->id }}" class="form-label">Chọn ngày tái khám</label>
                                 <select id="dateSelect-{{ $doctor->id }}" class="form-select date-select" aria-label="Chọn ngày">
                                     <option value="" selected disabled>Chọn Thứ, Ngày, Tháng</option>
                                     @php

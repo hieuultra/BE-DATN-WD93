@@ -27,6 +27,8 @@ class AppoinmentController extends Controller
         $specialties = Specialty::where('classification', 'chuyen_khoa')->orderBy('name', 'asc')->get();
 
         $specialtiestx = Specialty::where('classification', 'kham_tu_xa')->orderBy('name', 'asc')->get();
+
+        $specialtiestq = Specialty::where('classification', 'tong_quat')->orderBy('name', 'asc')->get();
         $doctors = Doctor::with('user', 'specialty') // Tải kèm thông tin user
             ->withCount('appoinment') // Đếm số lượng lịch hẹn
             ->orderBy('appoinment_count', 'desc') // Sắp xếp theo số lượng lịch hẹn
@@ -40,7 +42,7 @@ class AppoinmentController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        return view('client.appoinment.index', compact('orderCount', 'categories', 'specialties', 'doctors', 'specialtiestx'));
+        return view('client.appoinment.index', compact('orderCount', 'categories', 'specialties', 'doctors', 'specialtiestx', 'specialtiestq'));
     }
 
     public function booKingCare($id)
@@ -286,7 +288,7 @@ class AppoinmentController extends Controller
         $appoinmentHistories->appoinment_id = $request->appoinment_id;
         $appoinmentHistories->diagnosis = $request->diagnosis;
         $appoinmentHistories->prescription = $request->prescription;
-        $appoinmentHistories->follow_up_date = $request->follow_up_date;
+        $appoinmentHistories->follow_up_date = $request->selected_date;
         $appoinmentHistories->notes = $request->notes;
         $appoinmentHistories->save();
 
