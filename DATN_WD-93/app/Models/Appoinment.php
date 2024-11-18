@@ -40,7 +40,6 @@ class Appoinment extends Model
     const DA_HUY = 'da_huy';
     const CHUA_THANH_TOAN = 'chua_thanh_toan';
     const DA_THANH_TOAN = 'da_thanh_toan';
-    
     public function user()
     {
         return $this->belongsTo(User::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
@@ -56,5 +55,9 @@ class Appoinment extends Model
     public function appoinmentHistory()
     {
         return $this->hasMany(AppoinmentHistory::class);
+    }
+    public function review()
+    {
+        return $this->hasMany(Review::class);
     }
 }

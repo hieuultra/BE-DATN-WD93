@@ -7,13 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\VariantPackage;
 use App\Http\Controllers\Controller;
-<<<<<<< Updated upstream
 use Illuminate\Support\Facades\Auth;
-=======
-use App\Models\AvailableTimeslot;
-use App\Models\Doctor;
-use App\Models\Specialty;
->>>>>>> Stashed changes
 
 class HomeController extends Controller
 {

@@ -27,4 +27,8 @@ class Review extends Model
     {
         return $this->belongsTo(Product::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
     }
+    public function appoinment()
+    {
+        return $this->belongsTo(Appoinment::class);
+    }
 }

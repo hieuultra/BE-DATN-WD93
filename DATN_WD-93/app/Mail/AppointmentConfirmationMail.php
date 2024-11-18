@@ -35,6 +35,6 @@ class AppointmentConfirmationMail extends Mailable
     public function build()
     {
         return $this->subject('Appointment Confirmation')
-                    ->view('client.bookingdoctor.appointment_confirmation');
+                    ->view('client.appoinment.appointment_confirmation');
     }
 }

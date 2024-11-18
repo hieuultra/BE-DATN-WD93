@@ -1,386 +1,748 @@
-@extends('layout')
-@section('titlepage','Instinct - Instinct Pharmacy System')
-@section('title','Welcome')
+<html lang="en">
 
-@section('content')
-<link rel="stylesheet" href="{{ asset('css/styleAppoinment.css') }}">
-<style>
-    .chosse {
-  padding: 20px 0;
-  margin-top: 150px;
-}
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+        Healthcare Platform
+    </title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
 
-.chosse-banner {
-  gap: 30px; /* Tăng khoảng cách giữa các mục nếu cần */
-}
-</style>
- <!-- Banner -->
- <div class="banner">
-    <img
-      src="https://pmc.bookingcare.vn/assets/anh/bookingcare-cover-4.jpg"
-      alt=""
-    />
-    <div class="title">
-      <p>NỀN TẢNG Y TẾ</p>
-      <p>CHĂM SÓC SỨC KHỎE TOÀN DIỆN</p>
-        <input type="text" placeholder="Nhập Nội Dung Cần Tìm" style="font-size: 26px"/>
-        <i class="fas fa-search"></i>
-    </div>
-  </div>
-  <div class="chosse">
-    <div class="container d-flex justify-content-center">1
-      <div class="row">
-        <div class="chosse-banner d-flex justify-content-center">
-          <a href="{{ route('appoinment.specialistExamination') }}">
-            <div class="col text-center">
-              <div class="chosse-icon">
-                <svg
-                  class="pt-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="40"
-                  height="40"
-                  fill="currentColor"
-                  class="bi bi-hospital"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8.5 5.034v1.1l.953-.55.5.867L9 7l.953.55-.5.866-.953-.55v1.1h-1v-1.1l-.953.55-.5-.866L7 7l-.953-.55.5-.866.953.55v-1.1zM13.25 9a.25.25 0 0 0-.25.25v.5c0 .138.112.25.25.25h.5a.25.25 0 0 0 .25-.25v-.5a.25.25 0 0 0-.25-.25zM13 11.25a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25zm.25 1.75a.25.25 0 0 0-.25.25v.5c0 .138.112.25.25.25h.5a.25.25 0 0 0 .25-.25v-.5a.25.25 0 0 0-.25-.25zm-11-4a.25.25 0 0 0-.25.25v.5c0 .138.112.25.25.25h.5A.25.25 0 0 0 3 9.75v-.5A.25.25 0 0 0 2.75 9zm0 2a.25.25 0 0 0-.25.25v.5c0 .138.112.25.25.25h.5a.25.25 0 0 0 .25-.25v-.5a.25.25 0 0 0-.25-.25zM2 13.25a.25.25 0 0 1 .25-.25h.5a.25.25 0 0 1 .25.25v.5a.25.25 0 0 1-.25.25h-.5a.25.25 0 0 1-.25-.25z"
-                  />
-                  <path
-                    d="M5 1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1a1 1 0 0 1 1 1v4h3a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h3V3a1 1 0 0 1 1-1zm2 14h2v-3H7zm3 0h1V3H5v12h1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1zm0-14H6v1h4zm2 7v7h3V8zm-8 7V8H1v7z"
-                  />
-                </svg>
-              </div>
-              <p class="chosse-banner-text">
-                Khám <br />
-                Chuyên Khoa
-              </p>
-            </div>
-          </a>
-          <a href="">
-            <div class="col">
-              <div class="chosse-icon">
-                <svg
-                  class="pt-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="40"
-                  height="40"
-                  fill="currentColor"
-                  class="bi bi-telephone-inbound"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M15.854.146a.5.5 0 0 1 0 .708L11.707 5H14.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 1 0v2.793L15.146.146a.5.5 0 0 1 .708 0m-12.2 1.182a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"
-                  />
-                </svg>
-              </div>
-              <p class="chosse-banner-text">
-                Khám <br />
-                Từ Xa
-              </p>
-            </div>
-          </a>
-          <a href="">
-            <div class="col">
-              <div class="chosse-icon">
-                <svg
-                  class="pt-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="40"
-                  height="40"
-                  fill="currentColor"
-                  class="bi bi-journal-check"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0"
-                  />
-                  <path
-                    d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"
-                  />
-                  <path
-                    d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"
-                  />
-                </svg>
-              </div>
-              <p class="chosse-banner-text">Khám <br />Tổng Quát</p>
-            </div>
-          </a>
-          <a href="">
-            <div class="col">
-              <div class="chosse-icon">
-                <svg
-                  class="pt-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="40"
-                  height="40"
-                  fill="currentColor"
-                  class="bi bi-eyedropper"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M13.354.646a1.207 1.207 0 0 0-1.708 0L8.5 3.793l-.646-.647a.5.5 0 1 0-.708.708L8.293 5l-7.147 7.146A.5.5 0 0 0 1 12.5v1.793l-.854.853a.5.5 0 1 0 .708.707L1.707 15H3.5a.5.5 0 0 0 .354-.146L11 7.707l1.146 1.147a.5.5 0 0 0 .708-.708l-.647-.646 3.147-3.146a1.207 1.207 0 0 0 0-1.708zM2 12.707l7-7L10.293 7l-7 7H2z"
-                  />
-                </svg>
-              </div>
-              <p class="chosse-banner-text">
-                Xét Nghiệm <br />
-                Y Học
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End Banner -->
-  <!-- Main -->
-  <div class="main">
-    <div class="container mt-5">
-      <div class="title-chuyenkhoa">
-        <h3>Chuyên Khoa Phổ Biến</h3>
-        <button class="btn-xt" type="submit">Xem Thêm</button>
-      </div>
-      <div class="chuyenkhoa mt-4 mb-4">
-        <div class="row">
-            @foreach ($specialties as $item)
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: auto;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="{{ asset('upload/'.$item->image) }}"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">{{ $item->name }}</p>
-              </a>
-            </div>
-          </div>
-          @endforeach
-        </div>
-      </div>
-      <div class="title-chuyenkhoa">
-        <h3>Bác Sĩ Từ Xa Qua VIDEO</h3>
-        <button class="btn-xt" type="submit">Xem Thêm</button>
-      </div>
-      <div class="chuyenkhoa mt-4 mb-4">
-        <div class="row">
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: auto;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w384/2024/01/04/160245-tam-ly-tu-xa.png"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Tư Vấn Trị Liệu Tâm Lý Từ Xa</p>
-              </a>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: auto;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w384/2024/01/04/103343-tam-than-tu-xa-1.png"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Sức Khỏe Tâm Thần Từ Xa</p>
-              </a>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: auto;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w384/2024/01/04/160245-da-lieu-tu--xa.png"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Bác Sĩ Da Liễu Từ Xa</p>
-              </a>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: auto;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w384/2024/01/04/160245-cxk-tu--xa.png"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Bác Sĩ Cơ-Xương-Khớp Từ Xa</p>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="title-chuyenkhoa">
-        <h3>Cơ Sở Y Tế Nổi Bật</h3>
-        <button class="btn-xt" type="submit">Xem Thêm</button>
-      </div>
-      <div class="chuyenkhoa mt-4 mb-4">
-        <div class="row">
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: 140px;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w640/2018/06/18/083122lo-go-viet-duc.jpg"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Bệnh Viện Hữu Nghị Việt Đức</p>
-              </a>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: 140px;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w640/2019/03/11/152704logo-bvcr-moi.jpg"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">Bệnh Viện Chợ Rẫy</p>
-              </a>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: 140px;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w640/2022/08/26/092249-doctor-check.jpg"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">
-                  Doctor Check - Tầm Soát Bệnh Để<br />
-                  Sống Thọ Hơn
-                </p>
-              </a>
-            </div>
-          </div>
-          <div class="col">
-            <div>
-              <a href="">
-                <div>
-                  <img
-                    style="
-                      width: 90%;
-                      height: 140px;
-                      border: 2px solid lightgray;
-                      border-radius: 10px;
-                    "
-                    src="https://cdn.bookingcare.vn/fo/w640/2022/07/14/155206-logo-y-duoc-1.jpg"
-                    alt=""
-                  />
-                </div>
-                <p class="pt-2 pb-2">
-                  Phòng khám Bệnh viện <br />Đại học Y Dược 1
-                </p>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="title-chuyenkhoa">
-        <h3>Bác Sĩ Nổi Bật Tuần Qua</h3>
-        <button class="btn-xt" type="submit">Xem Thêm</button>
-      </div>
-      <div class="chuyenkhoa mt-4 mb-4">
-        <div class="row">
-            @foreach ($doctors as $item)
-            @php
-            $u = $item->user;
-           @endphp
-          <div class="col">
-            <div>
-              <a href="">
-                <div class="d-flex justify-content-center">
-                  <img
-                    style="
-                      width: 150px;
-                      height: 150px;
-                      border-radius: 50%;
-                      border: 2px solid lightgray;
-                    "
-                    src="{{ asset('upload/'.$u->image) }}"
-                    alt=""
-                  />
-                </div>
-                <p
-                  class="pt-2"
-                  style="text-align: center; margin-bottom: 0px"
-                >
-                  {{ $item->title }} <br />
-                  {{ $u->name }}
-                </p>
-              </a>
-              <p style="text-align: center; color: gray">{{ $item->position }}</p>
-            </div>
-          </div>
-          @endforeach
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End Main -->
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet" />
 
-@endsection
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        .hero-section {
+            background: url('https://upanh123.com/wp-content/uploads/2021/03/anh-gia-dinh-hoat-hinh2.png') no-repeat center center;
+            background-size: cover;
+            text-align: center;
+            color: white;
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .search-results {
+            border: 1px solid #ccc;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            display: none;
+        }
+
+        .search-results div {
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .search-results div:hover {
+            background-color: #f0f0f0;
+            color: black;
+        }
+
+
+        .services.hidden {
+            display: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .hero-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+
+        .search-bar input {
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 100%;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .services {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .service-item {
+            text-align: center;
+            color: black;
+        }
+
+        .service-item img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .service-item p {
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+
+        .specialty-card {
+            background-color: #fff;
+            border: none;
+            text-align: center;
+            padding: 20px;
+            margin: 10px;
+        }
+
+        .specialty-card img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+        }
+
+        .specialty-card p {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+
+        .view-more {
+            background-color: #e0e0e0;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #ccc;
+        }
+
+        .carousel-item .specialty-card {
+            margin-right: 20px;
+        }
+
+        .specialty-card img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            z-index: 10;
+            width: 5%;
+        }
+
+        .carousel-control-prev {
+            left: -40px;
+        }
+
+        .carousel-control-next {
+            right: -40px;
+        }
+
+        .specialty-containerht {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .specialty-cards {
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .specialty-cards img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .specialty-cards:hover {
+            transform: scale(1.05);
+        }
+
+        @media (min-width: 992px) {
+            .specialty-containerht {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .specialty-cards {
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .specialty-cards img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+
+        .specialty-cards:hover {
+            transform: scale(1.05);
+        }
+
+
+        @media (max-width: 768px) {
+            .specialty-card img {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .specialty-card img {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content h2 {
+                font-size: 1.2rem;
+            }
+
+            .specialty-card img {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .carousel-item {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .specialty-card {
+                margin: 10px auto;
+            }
+
+            .carousel-control-prev,
+            .carousel-control-next {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section-title {
+                font-size: 20px;
+            }
+
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-content h2 {
+                font-size: 1rem;
+            }
+
+            .search-bar input {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    @extends('layout')
+    @section('content')
+    <div class="container mt-3">
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
+    </div>
+
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 style="color: #fff;">T1 KHI NHÀ VUA TRỞ LẠI</h1>
+            <h2 style="color: #fff;">NHÀ VÔ DỊCH CKTG 2 NĂM LIÊN TIẾP 2 LẦN</h2>
+            <form>
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Tìm phòng khám" autocomplete="off">
+                    <div id="search-results" class="search-results">
+                        <button id="close-search" class="close-btn">X</button>
+                    </div>
+                </div>
+            </form>
+            <div class="services" id="services-section">
+                <div class="service-item">
+                    <button onclick="toggleContent()" style="background: none; border: none;">
+                        <img src="https://www.cliniclistturkey.com/wp-content/uploads/2023/09/image-308.jpeg" alt="Specialized Examination" height="60" width="60">
+                        <p style="color: #fff;">Chuyên khoa</p>
+                    </button>
+                </div>
+                <div class="service-item">
+                    <button onclick="toggleContent2()" style="background: none; border: none;">
+                        <img src="https://is4-ssl.mzstatic.com/image/thumb/Purple122/v4/3f/50/e5/3f50e5bd-c30c-c586-2216-3976e5ee1542/AppIcons-1x_U007emarketing-0-7-0-85-220.png/1200x630wa.png" alt="Remote Examination">
+                        <p style="color: #fff;">Khám qua video</p>
+                    </button>
+                </div>
+                <div class="service-item">
+                    <a href="/viewSikibidi" style="text-decoration: none;">
+                        <img src="https://v-virtuales-marinela-frontend-assets.s3.amazonaws.com/assets/img/icon-register.png" alt="General Examination" height="60" width="60">
+                        <p style="color: #fff;">Lần đầu bạn đến</p>
+                    </a>
+                </div>
+                <div class="service-item">
+                    <img src="https://www.lipotype.com/wp-content/uploads/2023/12/human_plasma_standard-3.png" alt="Medical Testing">
+                    <p style="color: #fff;">Sét nghiệm y học</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="an">
+        <div class="container mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="section-title">
+                    Chuyên khoa phổ biến
+                </div>
+                <button class="view-more" onclick="toggleContent()">
+                    XEM THÊM
+                </button>
+            </div>
+            <div id="specialtyCarousel1" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($specialties->slice(0, 3) as $item)
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                                    <p>{{$item->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($specialties->slice(3, 3) as $item)
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                                    <p>{{$item->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($specialties->slice(6, 3) as $item)
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                                    <p>{{$item->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($specialties->slice(9, 3) as $item)
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                                    <p>{{$item->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel1" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel1" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div id="specialtyContent" style="display: none;">
+            <div class="specialty-containerht">
+                @foreach($specialties as $item)
+                <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                    <div class="specialty-cards">
+                        <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                        <p>{{$item->name}}</p>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="section-title">
+                    Bác sĩ từ xa qua Video
+                </div>
+                <button class="view-more" onclick="toggleContent2()">
+                    XEM THÊM
+                </button>
+            </div>
+            <div id="specialtyCarousel2" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($specialtiestx->slice(0, 3) as $item)
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                                    <p>{{$item->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($specialtiestx->slice(3, 3) as $item)
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                                    <p>{{$item->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel2" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel2" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div id="specialtyContent2" style="display: none;">
+            <div class="specialty-containerht">
+                @foreach($specialtiestx as $item)
+                <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                    <div class="specialty-cards">
+                        <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                        <p>{{$item->name}}</p>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="section-title">
+                    Khám tổng quát
+                </div>
+                <button class="view-more" onclick="toggleContent3()">
+                    XEM THÊM
+                </button>
+            </div>
+            <div id="specialtyCarousel3" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($specialties->slice(0, 3) as $item)
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                                    <p>{{$item->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($specialties->slice(3, 3) as $item)
+                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                                    <p>{{$item->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel3" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel3" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div id="specialtyContent3" style="display: none;">
+            <div class="specialty-containerht">
+                @foreach($specialties as $item)
+                <a href="" style="text-decoration: none;">
+                    <div class="specialty-cards">
+                        <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
+                        <p>{{$item->name}}</p>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="section-title">
+                    Xếp hạng bác sỹ
+                </div>
+                <button class="view-more" onclick="toggleContent4()">
+                    XEM THÊM
+                </button>
+            </div>
+            <div id="specialtyCarousel4" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($doctors->slice(0, 3) as $item)
+                            <a href="{{ route('appoinment.doctorDetails', $item->id) }}" style="text-decoration: none;">
+                                <div class="specialty-card">
+                                    <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->user->image) }}" />
+                                    <p>{{$item->user->name}}</p>
+                                    <p>Chuyên khoa: {{$item->specialty->name}}</p>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            @foreach($doctors->slice(3, 3) as $item)
+                                <a href="{{ route('appoinment.doctorDetails', $item->id) }}" style="text-decoration: none;">
+                                    <div class="specialty-card">
+                                        <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->user->image) }}" />
+                                        <p>{{$item->user->name}}</p>
+                                        <p>Chuyên khoa: {{$item->specialty->name}}</p>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel4" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel4" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div id="specialtyContent4" style="display: none;">
+            <div class="specialty-containerht">
+                @foreach($doctors as $item)
+                <a href="{{ route('appoinment.doctorDetails', $item->id) }}" style="text-decoration: none;">
+                    <div class="specialty-cards">
+                        <img alt="Image of a joint representing {{$item->user->name}}" src="{{ asset('upload/' . $item->user->image) }}" />
+                        <p>{{$item->user->name}}</p>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function() {
+                $('#search-input').on('focus', function() {
+                    $('#services-section').addClass('hidden');
+                    $('#search-results').empty().show().append('<button id="close-search" class="close-btn">X</button>');
+                });
+
+                $('#search-input').on('input', function() {
+                    let query = $(this).val();
+
+                    if (query.length > 0) {
+                        $.ajax({
+                            url: "{{ route('appoinment.autocompleteSearch') }}",
+                            type: "GET",
+                            data: {
+                                query: query
+                            },
+                            success: function(data) {
+                                let resultsDiv = $('#search-results');
+                                resultsDiv.empty().append('<button id="close-search" class="close-btn">X</button>');
+
+                                if (data.length > 0) {
+                                    data.forEach(function(clinics) {
+                                        resultsDiv.append(`
+                                <a href="/appoinment/booKingCare/${clinics.id}" class="clinic-link">
+                                    <div>
+                                        ${clinics.name} 
+                                        <img style="width: 100px; height: 100px;" src="/upload/${clinics.image}">
+                                    </div>
+                                </a>
+                            `);
+                                    });
+                                } else {
+                                    resultsDiv.append('<div>Không tìm thấy phòng khám</div>');
+                                }
+                            }
+                        });
+                    } else {
+                        $('#search-results').hide();
+                        $('#services-section').removeClass('hidden');
+                    }
+                });
+
+                // Đóng kết quả tìm kiếm khi nhấn nút "X"
+                $(document).on('click', '#close-search', function() {
+                    $('#search-results').hide();
+                    $('#services-section').removeClass('hidden');
+                });
+
+                // Điều hướng khi nhấn vào liên kết trong #search-results
+                $('#search-results').on('click', '.clinic-link', function(event) {
+                    event.preventDefault(); // Ngăn chặn hành động mặc định
+                    window.location.href = $(this).attr('href'); // Điều hướng thủ công
+                });
+            });
+
+            function toggleContent() {
+                const carousel = document.getElementById("specialtyCarousel1");
+                const specialtyContent = document.getElementById("specialtyContent");
+
+                if (carousel.style.display === "none") {
+                    carousel.style.display = "block";
+                    specialtyContent.style.display = "none";
+                } else {
+                    carousel.style.display = "none";
+                    specialtyContent.style.display = "block";
+                }
+            }
+
+            function toggleContent2() {
+                const carousel2 = document.getElementById("specialtyCarousel2");
+                const specialtyContent2 = document.getElementById("specialtyContent2");
+
+                if (carousel2.style.display === "none") {
+                    carousel2.style.display = "block";
+                    specialtyContent2.style.display = "none";
+                } else {
+                    carousel2.style.display = "none";
+                    specialtyContent2.style.display = "block";
+                }
+            }
+
+            function toggleContent3() {
+                const carousel3 = document.getElementById("specialtyCarousel3");
+                const specialtyContent3 = document.getElementById("specialtyContent3");
+
+                if (carousel3.style.display === "none") {
+                    carousel3.style.display = "block";
+                    specialtyContent3.style.display = "none";
+                } else {
+                    carousel3.style.display = "none";
+                    specialtyContent3.style.display = "block";
+                }
+            }
+
+            function toggleContent4() {
+                const carousel4 = document.getElementById("specialtyCarousel4");
+                const specialtyContent4 = document.getElementById("specialtyContent4");
+
+                if (carousel4.style.display === "none") {
+                    carousel4.style.display = "block";
+                    specialtyContent4.style.display = "none";
+                } else {
+                    carousel4.style.display = "none";
+                    specialtyContent4.style.display = "block";
+                }
+            }
+        </script>
+        @endsection
+</body>
+
+</html>

@@ -12,9 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(function () {
-            (new \App\Http\Controllers\Admin\DoctorController)->deleteExpiredSchedules();
-        })->daily(); // Chạy hàng ngày
+        // $schedule->command('inspire')->hourly();
     }
 
     /**
