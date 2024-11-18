@@ -198,20 +198,20 @@
     </style>
 
     <div class="container my-5">
-        <h1 class="text-center mb-4">Tin Tức Nổi Bật</h1>
+        <h1 class="text-center mb-4">Tin Tức Nổi Bật ...</h1>
         <div class="d-flex justify-content-between align-items-center mb-4">
             {{-- <button class="btn btn-primary">Xem danh mục bài viết</button> --}}
 
             <!-- Thanh tìm kiếm -->
-            <form class="d-flex input-group" action="" method="GET" role="search">
-                <input class="form-control me-2" type="search" placeholder="Tìm kiếm bài viết..." aria-label="Search" value="{{ request('search') }}" >
-                <button class="btn btn-outline-warning" type="submit" id="button-addon2">Tìm kiếm</button>
+            <form class="d-flex input-group" role="search">
+                <input class="form-control me-2" type="search" placeholder="Tìm kiếm bài viết..." aria-label="Search">
+                <button class="btn btn-outline-warning" type="button" id="button-addon2">Tìm kiếm</button>
             </form>
         </div>
         <div class="row g-4">
             <!-- Bài viết ngang -->
             <div class="col-md-8">
-                @foreach ($blogTT as $item)
+                @foreach ($blogs as $item)
                     <div class="card rounded mt-3">
                         <div class="row g-0">
                             <!-- Hình ảnh -->
@@ -240,7 +240,7 @@
                     <div class="card-title mt-4 d-flex align-items-center justify-content-center">
                         <h4> Chuyên mục</h4>
                     </div>
-                @foreach ($listTopic as $item)
+                    @foreach ($listTopic as $item)
                     <a href="{{ route('blog.list',  $item->id) }}">
                         <div class="card rounded mx-4 my-2 ">
                             <div class="row">
@@ -264,33 +264,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <!-- Button "Xem danh mục bài viết" -->
-            <h3>Sức khỏe</h3>
-
-            <!-- Thanh tìm kiếm -->
-            <a href="" class="btn btn-primary">Xem thêm >></a>
-        </div>
-        <div class="row g-4 mt-3">
-            <!-- Bài viết 1 -->
-            @foreach ($blogSK as $item)
-                <div class="col-md-4">
-                    <div class="card mt-3" style="height: 100%;"> <!-- Đảm bảo card có chiều cao bằng nhau -->
-                        <img src="{{ Storage::url($item->image) }}" class="image-container" alt="Bài viết 3"
-                            style="object-fit: cover; height: 150px; width: 100%;"> <!-- Chiều cao ảnh cố định -->
-                        <div class="card-body" style="">
-                            <!-- Cố định chiều cao cho phần body -->
-                            <h5 class="card-title" style="">{{ $item->title }}</h5>
-                            <!-- Cố định chiều cao cho tiêu đề -->
-                            <p class="card-text" style="">{{ $item->short_content }}</p>
-                            <!-- Cố định chiều cao cho mô tả -->
-                            <a href="{{ route('blog.show', $item->id) }}" class="btn btn-primary" style="margin-top: auto;">Đọc thêm</a>
-                            <!-- Đẩy nút xuống dưới -->
-                        </div>
-                    </div>
-                </div>
-            @endforeach
         </div>
     </div>
 

@@ -186,8 +186,8 @@
 
       <div class="collapse" id="collapsebl" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="?act=list_blog">Chuyên đề</a>
-          <a class="nav-link" href="?act=add_blog">Bài viết</a>
+          <a class="nav-link" href="{{route('admin.topics.index')}}">Chuyên đề</a>
+          <a class="nav-link" href="{{route('admin.blogs.index')}}">Bài viết</a>
         </nav>
       </div>
 

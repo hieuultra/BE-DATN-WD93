@@ -5,21 +5,22 @@
 
 <div class="container-fluid mt-4 px-4">
     <h1 class="mt-4">Chỉnh sửa chuyên đề</h1>
-    <form action="{{ route('admin.topics.edit') }}" method="post"  enctype="multipart/form-data">
+    <form action="{{ route('admin.topics.update', $topic->id) }}" method="POST"  enctype="multipart/form-data">
         @csrf
+        @method("PUT")
         <input type="hidden" name="id" value="{{ $topic->id }}">
       <div class="mb-3">
-        <label class="form-label">Name</label>
+        <label class="form-label">Tiêu đề chuyên đề</label>
         <input type="text" class="form-control" name="name"  value="{{ $topic->name }}">
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Image</label>
+        <label class="form-label">Ảnh minh họa</label>
         <input type="file" class="form-control" name="img" onchange="showImage(event)">
-        <img id="imgTopic" src="{{ asset('upload/'.$topic->img)}}" width="120" height="100" alt="">
+        <img id="imgTopic" src="{{ Storage::url($topic->img)}}" width="120" height="100" alt="">
       </div>
 
-      <label for="status" class="form-label">Status:</label>
+      <label for="status" class="form-label">Trạng thái:</label>
       <div class="form-check">
         <input class="form-check-input" type="radio" name="status" id="flexRadioDefault1" value="1" {{ $topic->status == 1 ? 'checked' : '' }}>
         <label class="form-check-label" for="flexRadioDefault1">
@@ -33,9 +34,9 @@
         </label>
       </div>
 
-      <input type="submit" class="btn btn-primary" value="Update" name="edit">
+      <input type="submit" class="btn btn-primary" value="Cập nhật" name="edit">
       <a href="{{ route('admin.topics.index') }}">
-        <input type="button" class="btn btn-primary" value="LIST_CAT">
+        <input type="button" class="btn btn-primary" value="Danh sách chuyên mục">
       </a>
     </form>
   </div>

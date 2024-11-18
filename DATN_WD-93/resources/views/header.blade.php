@@ -93,7 +93,7 @@
                   <a href="{{ route('about') }}" class="dropdown-item">Giới Thiệu</a>
                 </div>
               </div>
-              <a href="contact.html" class="nav-item nav-link">Sản phẩm nổi bật</a>
+              <a href="{{route('blog.index')}}" class="nav-item nav-link">Tin tức</a>
             </div>
             <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                 <a href="{{ route('cart.listCart') }}" class="btn icon-container px-0 ml-3">

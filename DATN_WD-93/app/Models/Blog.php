@@ -10,28 +10,14 @@ class Blog extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'idProduct',
-        'name',
-        'img',
-        'description',
-        'price',
-        'discount',
+        'title',
+        'short_content',
+        'image',
         'content',
-        'quantity',
-        'category_id',
-        'is_type',
-        'is_new',
-        'is_hot',
-        'is_hot_deal',
-        'is_show_home',
+        'topic_id',
     ]; //Thuộc tính fillable khai báo các cột trong bảng mà có thể được gán giá trị một cách hàng loạt
 
     protected $cast = [
-        'is_type' => 'boolean',
-        'is_new' => 'boolean',
-        'is_hot' => 'boolean',
-        'is_hot_deal' => 'boolean',
-        'is_show_home' => 'boolean',
     ];
     use SoftDeletes;
 
