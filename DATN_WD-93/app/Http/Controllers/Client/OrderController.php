@@ -100,7 +100,7 @@ class OrderController extends Controller
         if ($carts && $carts->items->count() > 0) {
             $total = 0;
             $subTotal = 0;
-            $shipping = 50;
+            $shipping = 40000;
             foreach ($carts->items as  $item) {
                 $price = is_numeric($item['price']) ? $item['price'] : 0;
                 $quantity = is_numeric($item['quantity']) ? $item['quantity'] : 0;

@@ -6,27 +6,29 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BillController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
-//
 use App\Http\Controllers\Client\AuthController;
+//
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\CouponController;
 use App\Http\Controllers\Client\ReviewController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Admin\AdminBlogController;
-use App\Http\Controllers\Admin\AdminTopicController;
 use App\Http\Controllers\Admin\SpecialtyController;
+use App\Http\Controllers\Admin\AdminTopicController;
+use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Client\AppoinmentController;
+use App\Http\Controllers\Client\ClientBlogController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Http\Controllers\Client\ClientBlogController;
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -75,6 +77,7 @@ Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart'
 Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
 Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
+Route::post('/cart/apply-coupon', [CouponController::class, 'applyCoupon'])->name('cart.applyCoupon');
 
 // Route Blog
 Route::get('/blog',       [ClientBlogController::class, 'index'])->name('blog.index');
@@ -223,6 +226,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/listDeleted', [AdminReviewController::class, 'listDeleted'])->name('listDeletedReviews');
                 Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
             });
+        Route::resource('coupons', AdminCouponController::class);
         Route::prefix('topics')
             ->as('topics.')
             ->group(function () {
