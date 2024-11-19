@@ -395,7 +395,7 @@
                     <div class="carousel-item">
                         <div class="d-flex justify-content-between align-items-center">
                             @foreach($specialties->slice(3, 3) as $item)
-                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                            <a href="{{ route('appoinment.booKingCarePackage', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                                     <p>{{$item->name}}</p>
@@ -407,7 +407,7 @@
                     <div class="carousel-item">
                         <div class="d-flex justify-content-between align-items-center">
                             @foreach($specialties->slice(6, 3) as $item)
-                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                            <a href="{{ route('appoinment.booKingCarePackage', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                                     <p>{{$item->name}}</p>
@@ -430,7 +430,7 @@
         <div id="specialtyContent" style="display: none;">
             <div class="specialty-containerht">
                 @foreach($specialties as $item)
-                <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                <a href="{{ route('appoinment.booKingCarePackage', $item->id) }}" style="text-decoration: none;">
                     <div class="specialty-cards">
                         <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                         <p>{{$item->name}}</p>
@@ -513,7 +513,7 @@
                     <div class="carousel-item active">
                         <div class="d-flex justify-content-between align-items-center">
                             @foreach($specialtiestq->slice(0, 3) as $item)
-                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                            <a href="{{ route('appoinment.booKingCarePackage', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                                     <p>{{$item->name}}</p>
@@ -525,7 +525,7 @@
                     <div class="carousel-item">
                         <div class="d-flex justify-content-between align-items-center">
                             @foreach($specialtiestq->slice(3, 3) as $item)
-                            <a href="{{ route('appoinment.booKingCare', $item->id) }}" style="text-decoration: none;">
+                            <a href="{{ route('appoinment.booKingCarePackage', $item->id) }}" style="text-decoration: none;">
                                 <div class="specialty-card">
                                     <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                                     <p>{{$item->name}}</p>
@@ -548,7 +548,7 @@
         <div id="specialtyContent3" style="display: none;">
             <div class="specialty-containerht">
                 @foreach($specialtiestq as $item)
-                <a href="" style="text-decoration: none;">
+                <a href="{{ route('appoinment.booKingCarePackage', $item->id) }}" style="text-decoration: none;">
                     <div class="specialty-cards">
                         <img alt="Image of a joint representing {{$item->name}}" src="{{ asset('upload/' . $item->image) }}" />
                         <p>{{$item->name}}</p>

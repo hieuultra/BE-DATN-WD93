@@ -12,6 +12,7 @@ use App\Models\AvailableTimeslot;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\doctorAchievement;
+use App\Models\Package;
 use App\Models\Review;
 use App\Models\Specialty;
 use App\Models\User;
@@ -75,6 +76,35 @@ class AppoinmentController extends Controller
         return view('client.appoinment.doctorbooking', compact('doctors', 'specialty', 'categories', 'orderCount', 'clinics'));
     }
 
+    public function booKingCarePackage($id)
+    {
+        $packages = Package::with(['specialty', 'timeSlot'])
+            ->whereHas('specialty', function ($query) use ($id) {
+                $query->where('id', $id);
+            })
+            ->get();
+
+        $now = Carbon::now('Asia/Ho_Chi_Minh');
+        $expiredSchedules = AvailableTimeslot::where('date', '<', $now->toDateString())
+            ->orWhere(function ($query) use ($now) {
+                $query->where('date', '=', $now->toDateString())
+                    ->where('endTime', '<', $now->toTimeString());
+            })
+            ->get();
+        foreach ($expiredSchedules as $schedule) {
+            $schedule->isAvailable = 0;
+            $schedule->save();
+        }
+        $orderCount = 0;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count();
+        }
+        $categories = Category::orderBy('name', 'asc')->get();
+        $specialty = Specialty::where('id', $id)->first();
+        return view('client.appoinment.booKingCarePackage', compact('packages', 'specialty', 'categories', 'orderCount'));
+    }
+
     public function doctorDetails($id)
     {
         $doctor = Doctor::with(['user', 'specialty', 'timeSlot' => function ($query) {
@@ -127,6 +157,28 @@ class AppoinmentController extends Controller
         }
         $categories = Category::orderBy('name', 'asc')->get();
         return view('client.appoinment.formbookingdt', compact('doctor', 'timeSlot', 'orderCount', 'categories'));
+    }
+
+    public function formbookingPackage($id)
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để tiếp tục.');
+        }
+
+        $package = Package::with('specialty', 'timeSlot')
+            ->whereHas('timeSlot', function ($query) use ($id) {
+                $query->where('id', $id);
+            })
+            ->first();
+
+        $timeSlot = AvailableTimeslot::where('id', $id)->first();
+        $orderCount = 0;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count();
+        }
+        $categories = Category::orderBy('name', 'asc')->get();
+        return view('client.appoinment.formbookingPackage', compact('package', 'timeSlot', 'orderCount', 'categories'));
     }
 
     public function bookAnAppointment(Request $request)
@@ -208,6 +260,85 @@ class AppoinmentController extends Controller
         }
     }
 
+    public function bookAnAppointmentPackage(Request $request)
+    {
+        $dc = $request->tinh_thanh . '-' . $request->quan_huyen . '-' . $request->dia_chi;
+        $timeSlotId = AvailableTimeslot::where('id', $request->available_timeslot_id)->first();
+        $package = Package::where('id', $request->package_id)->first();
+        $specialtie = Specialty::where('id', $package->specialty_id)->first();
+
+        if ($timeSlotId->isAvailable == 0) {
+            return redirect()->back()->with('error', 'Thời gian hẹn đã có người đặt. Vui lòng chọn thời gian khác.');
+        } else {
+            if ($request->lua_chon == "cho_nguoi_than") {
+                $appoinment = new Appoinment();
+                $appoinment->user_id = $request->user_id;
+                $appoinment->available_timeslot_id = $request->available_timeslot_id;
+                $appoinment->appointment_date = $request->appointment_date;
+                $appoinment->notes = $request->notes;
+                $appoinment->status_payment_method = $request->status_payment_method;
+                $appoinment->classify = 'cho_gia_dinh';
+                $appoinment->name = $request->name;
+                $appoinment->phone = $request->phone;
+                $appoinment->address = $dc;
+                if ($specialtie->classification == 'kham_tu_xa') {
+                    $meetLink = 'https://meet.jit.si/' . uniqid();
+                    $appoinment->meet_link = $meetLink;
+                }
+                $appoinment->package_id = $request->package_id;
+                $appoinment->save();
+
+                $available = AvailableTimeslot::where('id', $request->available_timeslot_id)->first();
+                $user = $request->name;
+                Mail::to($request->email)->send(new AppointmentConfirmationMail($user, $appoinment, $available));
+
+                $available = AvailableTimeslot::find($request->available_timeslot_id);
+                $available->isAvailable = 0;
+                $available->save();
+
+                $orderCount = 0;
+                if (Auth::check()) {
+                    $user = Auth::user();
+                    $orderCount = $user->bill()->count();
+                }
+                $categories = Category::orderBy('name', 'asc')->get();
+                $appointment = Appoinment::with(['doctor', 'user', 'availabelTimeslot'])->findOrFail($appoinment->id);
+                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories'));
+            } else {
+                $appoinment = new Appoinment();
+                $appoinment->user_id = $request->user_id;
+                $appoinment->available_timeslot_id = $request->available_timeslot_id;
+                $appoinment->appointment_date = $request->appointment_date;
+                $appoinment->notes = $request->notes;
+                $appoinment->status_payment_method = $request->status_payment_method;
+                $appoinment->classify = 'ban_than';
+                if ($specialtie->classification == 'kham_tu_xa') {
+                    $meetLink = 'https://meet.jit.si/' . uniqid();
+                    $appoinment->meet_link = $meetLink;
+                }
+                $appoinment->package_id = $request->package_id;
+                $appoinment->save();
+
+                $available = AvailableTimeslot::where('id', $request->available_timeslot_id)->first();
+                $user = $request->name;
+                Mail::to($request->email)->send(new AppointmentConfirmationMail($user, $appoinment, $available));
+
+                $available = AvailableTimeslot::find($request->available_timeslot_id);
+                $available->isAvailable = 0;
+                $available->save();
+
+                $orderCount = 1;
+                if (Auth::check()) {
+                    $user = Auth::user();
+                    $orderCount = $user->bill()->count();
+                }
+                $categories = Category::orderBy('name', 'asc')->get();
+                $appointment = Appoinment::with(['doctor', 'user', 'availabelTimeslot'])->findOrFail($appoinment->id);
+                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories'));
+            }
+        }
+    }
+
     public function autocompleteSearch(Request $request)
     {
         $query = $request->input('query');
@@ -229,6 +360,16 @@ class AppoinmentController extends Controller
         $clinics = Clinic::All();
         return view('client.appoinment.appointmentHistory', compact('appoinments', 'available', 'reviewDortor', 'orderCount', 'categories', 'clinics'));
     }
+
+    public function fetchHistory($appointmentId)
+    {
+        $histories = AppoinmentHistory::where('appoinment_id', $appointmentId)->get();
+        if ($histories->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No history found.']);
+        }
+        return response()->json(['success' => true, 'histories' => $histories]);
+    }
+
 
     // bác sỹ view
     public function physicianManagement($id)

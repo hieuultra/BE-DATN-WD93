@@ -22,5 +22,13 @@ class Package extends Model
     {
         return $this->belongsTo(Specialty::class);
     }
+    public function timeSlot()
+    {
+        return $this->hasMany(AvailableTimeslot::class);
+    }
+    public function appoinment()
+    {
+        return $this->hasMany(Appoinment::class);
+    }
 }
 

@@ -57,13 +57,22 @@ Route::prefix('appoinment')
     ->as('appoinment.')
     ->group(function () {
         Route::get('/', [AppoinmentController::class, 'appoinment'])->name('index');
+
         Route::get('/booKingCare/{id}', [AppoinmentController::class, 'booKingCare'])->name('booKingCare');
+        Route::get('/booKingCarePackage/{id}', [AppoinmentController::class, 'booKingCarePackage'])->name('booKingCarePackage');
+
         Route::get('/search-autocomplete', [AppoinmentController::class, 'autocompleteSearch'])->name('autocompleteSearch');
         Route::get('/appointmentHistory/{id}', [AppoinmentController::class, 'appointmentHistory'])->name('appointmentHistory');
         Route::get('/physicianManagement/{id}', [AppoinmentController::class, 'physicianManagement'])->name('physicianManagement');
         Route::get('/doctorDetails/{id}', [AppoinmentController::class, 'doctorDetails'])->name('doctorDetails');
+
         Route::get('/formbookingdt/{id}', [AppoinmentController::class, 'formbookingdt'])->name('formbookingdt');
+        Route::get('/formbookingPackage/{id}', [AppoinmentController::class, 'formbookingPackage'])->name('formbookingPackage');
+
         Route::post('/bookAnAppointment', [AppoinmentController::class, 'bookAnAppointment'])->name('bookAnAppointment');
+        Route::post('/bookAnAppointmentPackage', [AppoinmentController::class, 'bookAnAppointmentPackage'])->name('bookAnAppointmentPackage');
+        Route::get('/appointment-history/{appointmentId}', [AppoinmentController::class, 'fetchHistory']);
+
         Route::get('/appointmentHistory/{id}', [AppoinmentController::class, 'appointmentHistory'])->name('appointmentHistory');
         Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
 

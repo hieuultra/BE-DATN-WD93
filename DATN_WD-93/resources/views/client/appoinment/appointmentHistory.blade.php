@@ -112,19 +112,30 @@
                     @endphp
                     <p><strong>Ngày khám:</strong> {{ $formattedDate }}</p>
                     <p><strong>Thời gian:</strong> {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}</p>
+                    @if($appointment->doctor)
                     <p><strong>Bác sĩ:</strong> {{ $appointment->doctor->user->name }}</p>
-
+                    @else
+                    <p><strong>Tên khám tổng quát:</strong> {{ $appointment->package->hospital_name }}</p>
+                    @endif
+                    @if($appointment->doctor)
                     @foreach($clinics as $clinic)
                     @if($clinic->doctor_id == $appointment->doctor->id)
                     <p><strong>Địa điểm:</strong> Phòng khám {{ $clinic->address }}, {{$clinic->city}}</p>
                     @endif
                     @endforeach
+                    @else
+                    <p><strong>Địa chỉ khoa khám:</strong> {{ $appointment->package->address }}</p>
+                    @endif
                     @if($appointment->meet_link)
                     <p><strong>Link meet:</strong> {{ $appointment->meet_link }}</p>
                     @else
 
                     @endif
+                    @if($appointment->doctor)
                     <p class="price">Giá: {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} đ</p>
+                    @else
+                    <p><strong>Giá khám:</strong> {{ number_format($appointment->package->price, 0, ',', '.') }} đ</p>
+                    @endif
                     <p><strong>Lý do khám:</strong> {{ $appointment->notes }}</p>
                     <a href="#" class="btn btn-info btn-custom">Xem thêm</a>
 
@@ -152,7 +163,7 @@
                     @else
                     <a href="#" class="btn btn-custom-yellow review-btn" data-id="{{ $appointment->id }}" style="background-color: yellow; color: black; border: 1px solid yellow;">Đánh giá bác sĩ</a>
                     @endif
-
+                    <a class="btn" onclick="fetchAppointmentHistory({{ $appointment->id }})">Xem đơn thuốc</a>
                     <p style="color: green;">{{ $appointment->status_appoinment == 'kham_hoan_thanh' ? 'Khám hoàn tất' : 'Cần tái khám' }}</p>
 
                     @elseif($appointment->status_appoinment == 'benh_nhan_khong_den')
@@ -314,6 +325,24 @@
             </div>
         </div>
 
+        <div class="modal fade" id="appointmentHistoryModal" tabindex="-1" aria-labelledby="appointmentHistoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="appointmentHistoryModalLabel">Chi tiết đơn thuốc</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="appointmentHistoryContent">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!--Đặt lịch cho người thân-->
         <div id="familyAppointments" style="display: none;">
             <h2>Lịch sử đặt cho người thân</h2>
@@ -323,25 +352,39 @@
             <div class="card mb-3 appointment-card" data-id="{{ $appointment->id }}" data-date="{{ \Carbon\Carbon::parse($time->date)->format('Y-m-d') }}">
                 <div class="card-body">
                     <h5 class="card-title">Mã lịch khám: <span class="text-primary">{{ $appointment->id }}</span></h5>
-
                     @php
                     $formattedDate = \Carbon\Carbon::parse($time->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
-                    // Lọc để lấy review đúng với doctor_id và user_id, và lấy review đầu tiên
                     $review = $reviewDortor->filter(function ($rv) use ($appointment) {
                     return $rv->doctor_id == $appointment->doctor_id && $rv->appoinment_id == $appointment->id;
                     })->first();
                     @endphp
-
-                    @foreach($clinics as $clinic)
-                    @if($clinic->doctor_id == $appointment->doctor->id)
                     <p><strong>Ngày khám:</strong> {{ $formattedDate }}</p>
                     <p><strong>Thời gian:</strong> {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}</p>
+                    @if($appointment->doctor)
                     <p><strong>Bác sĩ:</strong> {{ $appointment->doctor->user->name }}</p>
+                    @else
+                    <p><strong>Tên khám tổng quát:</strong> {{ $appointment->package->hospital_name }}</p>
+                    @endif
+                    @if($appointment->doctor)
+                    @foreach($clinics as $clinic)
+                    @if($clinic->doctor_id == $appointment->doctor->id)
                     <p><strong>Địa điểm:</strong> Phòng khám {{ $clinic->address }}, {{$clinic->city}}</p>
-                    <p class="price">Giá: {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} đ</p>
-                    <p><strong>Lý do khám:</strong> {{ $appointment->notes }}</p>
                     @endif
                     @endforeach
+                    @else
+                    <p><strong>Địa chỉ khoa khám:</strong> {{ $appointment->package->address }}</p>
+                    @endif
+                    @if($appointment->meet_link)
+                    <p><strong>Link meet:</strong> {{ $appointment->meet_link }}</p>
+                    @else
+
+                    @endif
+                    @if($appointment->doctor)
+                    <p class="price">Giá: {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} đ</p>
+                    @else
+                    <p><strong>Giá khám:</strong> {{ number_format($appointment->package->price, 0, ',', '.') }} đ</p>
+                    @endif
+                    <p><strong>Lý do khám:</strong> {{ $appointment->notes }}</p>
                     <a href="#" class="btn btn-info btn-custom">Xem thêm</a>
 
                     @if($appointment->status_appoinment == 'cho_xac_nhan')
@@ -368,7 +411,7 @@
                     @else
                     <a href="#" class="btn btn-custom-yellow review-btn" data-id="{{ $appointment->id }}" style="background-color: yellow; color: black; border: 1px solid yellow;">Đánh giá bác sĩ</a>
                     @endif
-
+                    <a class="btn" onclick="fetchAppointmentHistory({{ $appointment->id }})">Xem đơn thuốc</a>
                     <p style="color: green;">{{ $appointment->status_appoinment == 'kham_hoan_thanh' ? 'Khám hoàn tất' : 'Cần tái khám' }}</p>
 
                     @elseif($appointment->status_appoinment == 'benh_nhan_khong_den')
@@ -573,6 +616,35 @@
                     .catch(error => console.error('Error:', error));
             });
         });
+
+        function fetchAppointmentHistory(appointmentId) {
+            fetch(`/appoinment/appointment-history/${appointmentId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let historyContent = "<h4>Appointment History</h4>";
+                        
+                        data.histories.forEach(history => {
+                            historyContent += `<p>Chẩn đoán: ${history.diagnosis}</p>`;
+                            historyContent += `<p>Đơn thuốc: ${history.prescription}</p>`;
+                            historyContent += `<p>Ngày tái khám: ${history.follow_up_date ? history.follow_up_date : 'Không có lịch hẹn tái khám'}</p>`;
+                            historyContent += `<p>Nhắc nhở thêm: ${history.notes}</p>`;
+                            historyContent += "<hr>";
+                        });
+
+                        document.getElementById('appointmentHistoryContent').innerHTML = historyContent;
+
+                        let appointmentHistoryModal = new bootstrap.Modal(document.getElementById('appointmentHistoryModal'));
+                        appointmentHistoryModal.show();
+                    } else {
+                        alert(data.message || 'Could not fetch appointment history.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching appointment history:', error);
+                });
+        }
+
     </script>
     @endsection
 </body>
