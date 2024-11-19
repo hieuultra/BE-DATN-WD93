@@ -6,26 +6,29 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BillController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\AdminCouponController;
-//
 use App\Http\Controllers\Client\AuthController;
+//
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\CouponController;
 use App\Http\Controllers\Client\ReviewController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\SpecialtyController;
+use App\Http\Controllers\Admin\AdminTopicController;
+use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Client\AppoinmentController;
+use App\Http\Controllers\Client\ClientBlogController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Http\Controllers\Client\CouponController;
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -76,6 +79,10 @@ Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.re
 Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
 Route::post('/cart/apply-coupon', [CouponController::class, 'applyCoupon'])->name('cart.applyCoupon');
 
+// Route Blog
+Route::get('/blog',       [ClientBlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/list/{topic_id}',       [ClientBlogController::class, 'list'])->name('blog.list');
+Route::get('/blog/show/{id}',  [ClientBlogController::class, 'show'])->name('blog.show');
 // order
 Route::middleware('auth')->prefix('orders')
     ->as('orders.')
@@ -220,4 +227,26 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
             });
         Route::resource('coupons', AdminCouponController::class);
+        Route::prefix('topics')
+            ->as('topics.')
+            ->group(function () {
+                Route::get('/index',           [AdminTopicController::class, 'index'])  ->name('index');
+                Route::get('/create',          [AdminTopicController::class, 'create']) ->name('create');
+                Route::post('/store',          [AdminTopicController::class, 'store'])  ->name('store');
+                Route::get('/show/{id}',       [AdminTopicController::class, 'show'])   ->name('show');
+                Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])   ->name('edit');
+                Route::put('/{id}/update',     [AdminTopicController::class, 'update']) ->name('update');
+                Route::delete('/{id}/destroy', [AdminTopicController::class, 'destroy'])->name('destroy');
+            });
+            Route::prefix('blogs')
+            ->as('blogs.')
+            ->group(function () {
+                Route::get('/index',           [AdminBlogController::class, 'index'])  ->name('index');
+                Route::get('/create',          [AdminBlogController::class, 'create']) ->name('create');
+                Route::post('/store',          [AdminBlogController::class, 'store'])  ->name('store');
+                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])   ->name('show');
+                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])   ->name('edit');
+                Route::put('/{id}/update',     [AdminBlogController::class, 'update']) ->name('update');
+                Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
+            });
     });

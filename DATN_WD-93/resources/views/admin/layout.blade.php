@@ -176,9 +176,9 @@
       <!-- blog -->
       <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsebl" aria-expanded="false" aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon">
-          <i class="fas fa-columns"></i>
+          <i class="fas fa-newspaper"></i>
         </div>
-        Blog
+        Tin tức
         <div class="sb-sidenav-collapse-arrow">
           <i class="fas fa-angle-down"></i>
         </div>
@@ -186,8 +186,8 @@
 
       <div class="collapse" id="collapsebl" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="?act=list_blog">List Blog</a>
-          <a class="nav-link" href="?act=add_blog">Add Blog</a>
+          <a class="nav-link" href="{{route('admin.topics.index')}}">Chuyên đề</a>
+          <a class="nav-link" href="{{route('admin.blogs.index')}}">Bài viết</a>
         </nav>
       </div>
 
