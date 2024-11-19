@@ -16,11 +16,8 @@ class Blog extends Model
         'content',
         'topic_id',
     ]; //Thuộc tính fillable khai báo các cột trong bảng mà có thể được gán giá trị một cách hàng loạt
-
-    protected $cast = [
-    ];
+    protected $cast = [];
     use SoftDeletes;
-
     protected $dates = ['deleted_at'];
     public function topic()
     {
