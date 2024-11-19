@@ -113,6 +113,32 @@
 .views-count {
     color: #6c757d; /* Màu xám nhạt cho số lượt xem */
 }
+.radio-buttons input[type="radio"] {
+    display: none;
+}
+
+.radio-buttons label {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.radio-buttons label:hover {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+.radio-buttons input[type="radio"]:checked + label {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
 
 </style>
 
@@ -189,12 +215,20 @@
                     </div>
                     <small class="views-count ml-auto">{{ $sp->view }} Lượt xem</small>
                 </div>
+                <form action="{{ route('cart.addCart') }}" method="post"  >
+                    @csrf
                 <div class="d-flex mb-3 border-box">
                     <div class="variant-container">
-                        @foreach ($nameVariants as $nameVariant)
-                            <div class="variant-box" data-id="{{ $sp->id }}" >{{ $nameVariant }}
+                        {{-- @dd($sp->variantProduct) --}}
+                        <div class="radio-buttons">
+                            @foreach ($sp->variantProduct as $index => $item)
+                            {{-- <div class="variant-box" data-id="{{ $item->id }}" >{{ $item->variantPackage->name }}
                             </div>
-                        @endforeach
+                            <input class="variant-box" type="radio" name="variant_id" id=""> --}}
+                            <input type="radio" id="option-{{$loop->index}}" name="variantId" value="{{ $item->id }}">
+                            <label for="option-{{$loop->index}}">{{ $item->variantPackage->name }}</label>
+                            @endforeach
+                        </div>
                         
                     </div>
                 </div>
@@ -214,11 +248,10 @@
                 {{-- <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p> --}}
                 {{-- <div class="d-flex mb-4">
                     <strong class="text-dark mr-3">Colors:</strong>
-
+                    
                 </div> --}}
                 <div class="d-flex align-items-center mb-4 pt-2">
-                    <form action="{{ route('cart.addCart') }}" method="post" class="d-flex align-items-center" id="add-to-cart-form">
-                        @csrf
+                   
                         <div class="d-flex align-items-center me-4">
                             <h6 class="mb-0 me-2">Số lượng:</h6>
                             <div class="input-group" style="width: 130px;">
@@ -232,10 +265,10 @@
                             </div>
                             <input type="hidden" name="productId" value="{{ $sp->id }}">
                         </div>
-                        <input type="text" name="variant_id" id="id_variant" value="">
+                        {{-- <input type="hidden" name="variantId" id="id_variant" value="{{ $sp->id }}"> --}}
                         <button type="submit" class="btn btn-primary ms-4 addToCart">Thêm vào giỏ hàng</button>
-                    </form>
-                </div>
+                    </div>
+                </form>
 
                 <div class="d-flex pt-2">
                     <strong class="text-dark mr-2">Chia sẻ:</strong>

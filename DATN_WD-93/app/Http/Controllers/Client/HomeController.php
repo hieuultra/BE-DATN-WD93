@@ -84,16 +84,16 @@ class HomeController extends Controller
                 ->get();
 
             // Lấy danh sách các biến thể của sản phẩm
-            $variants = $sp->variantProduct;
+            // $variants = $sp->variantProduct;
 
             // // Tạo mảng chứa tên các biến thể
-            $nameVariants = [];
-            foreach ($variants as $variant) {
-                // Lấy tên biến thể từ variantPackage
-                $nameVariants[] = $variant->variantPackage ? $variant->variantPackage->name : 'Chưa có tên biến thể'; // Kiểm tra nếu variantPackage tồn tại
-            }
-            $product_id = $request->product_id;
-            $variantsId = VariantProduct::where('id_product', $product_id)->select('id');
+            // $nameVariants = [];
+            // foreach ($variants as $variant) {
+            //     // Lấy tên biến thể từ variantPackage
+            //     $nameVariants[] = $variant->variantPackage ? $variant->variantPackage->name : 'Chưa có tên biến thể'; // Kiểm tra nếu variantPackage tồn tại
+            // }
+            // $product_id = $request->product_id;
+            // $variantsId = VariantProduct::where('id_product', $product_id)->select('id');
 
             $sp->view += 1; // tăng lượt xem sản phẩm
             $sp->save(); // lưu lại số lượt xem sản phẩm
@@ -133,7 +133,7 @@ class HomeController extends Controller
             $product = Product::with('review.user')->findOrFail($productId);
 
             // Trả về view với các thông tin cần thiết
-            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'nameVariants', 'canReview', 'product', 'billId', 'soldQuantity', 'variantsId'));
+            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'canReview', 'product', 'billId', 'soldQuantity'));
         }
 
         return redirect()->route('products')->with('error', 'Không tìm thấy sản phẩm.');
