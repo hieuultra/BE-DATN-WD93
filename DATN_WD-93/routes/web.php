@@ -330,7 +330,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/medicalPackagesUpdate', [DoctorController::class, 'medicalPackagesUpdate'])->name('medicalPackagesUpdate');
                 Route::delete('/medicalPackagesDestroy/{id}', [DoctorController::class, 'medicalPackagesDestroy'])->name('medicalPackagesDestroy');
             });
-        //Route::resource('coupons', AdminCouponController::class);
+        Route::resource('coupons', AdminCouponController::class);
         Route::prefix('topics')
             ->as('topics.')
             ->group(function () {
