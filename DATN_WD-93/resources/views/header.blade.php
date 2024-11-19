@@ -66,6 +66,7 @@
                 </div>
               </div>
               <a href="contact.html" class="nav-item nav-link">Selling Products</a>
+              <a href="{{route('blog.index')}}" class="nav-item nav-link">Tin tức</a>
             </div>
             <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
               <a href="" class="btn px-0">
