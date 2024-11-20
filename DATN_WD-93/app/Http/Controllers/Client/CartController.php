@@ -59,39 +59,6 @@ class CartController extends Controller
     }
     public function addCart(Request $request)
     {
-        // $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
-        // $productId = $request->input('productId');
-        // $product = Product::query()->findOrFail($productId);
-
-        // if (!$product) {
-        //     return redirect()->with('error', "Sản phẩm không tồn tại");
-        // }
-        // // Tính toán giá sản phẩm sau khi áp dụng giảm giácod
-        // $totalPrice = $product->price - (($product->price * $product->discount) / 100);
-
-        // // Check if the product is already in the cart
-        // $cartItem = CartItem::where('cart_id', $cart->id)
-        //     ->where('product_id', $product->id)
-        //     ->first();
-
-        // if ($cartItem) {
-        //     // If the product already exists in the cart, update the quantity and total
-        //     $cartItem->quantity += $request->quantity; // Update quantity
-        //     $cartItem->total = $totalPrice * $cartItem->quantity; // Update total price
-        //     $cartItem->save(); // Save the updated item
-        // } else {
-        //     // If it doesn't exist, create a new cart item
-        //     CartItem::create([
-        //         'cart_id' => $cart->id,
-        //         'product_id' => $product->id,
-        //         'name' => $product->name, // Store product name
-        //         'image' => $product->img, // Store product image
-        //         'price' => $totalPrice, // Store price after discount
-        //         'quantity' => $request->quantity, // Store quantity
-        //         'total' => $totalPrice * $request->quantity // Store total price
-        //     ]);
-        // }
-        // return redirect()->back();
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
         $variantID = $request->input('variantId');
         $productId = $request->input('productId');
@@ -105,27 +72,23 @@ class CartController extends Controller
             }
             // Tính toán giá sản phẩm sau khi áp dụng giảm giácod
             $totalPrice = $variantProduct->price - (($variantProduct->price * $variantProduct->product->discount) / 100);
-
-            // Check if the product is already in the cart
             $cartItem = CartItem::where('cart_id', $cart->id)
                 ->where('variant_id', $variantProduct->id)
                 ->first();
             if ($cartItem) {
-                // If the product already exists in the cart, update the quantity and total
-                $cartItem->quantity += $request->quantity; // Update quantity
-                $cartItem->total = $totalPrice * $cartItem->quantity; // Update total price
-                $cartItem->save(); // Save the updated item
+                $cartItem->quantity += $request->quantity; 
+                $cartItem->total = $totalPrice * $cartItem->quantity; 
+                $cartItem->save(); // 
             } else {
-                // If it doesn't exist, create a new cart item
                 CartItem::create([
                     'cart_id' => $cart->id,
                     'product_id' => $variantProduct->product->id,
                     'variant_id' => $variantProduct->id,
-                    'name' => $variantProduct->product->name, // Store product name
-                    'image' => $variantProduct->product->img, // Store product image
-                    'price' => $totalPrice, // Store price after discount
-                    'quantity' => $request->quantity, // Store quantity
-                    'total' => $totalPrice * $request->quantity // Store total price
+                    'name' => $variantProduct->product->name, 
+                    'image' => $variantProduct->product->img, 
+                    'price' => $totalPrice, 
+                    'quantity' => $request->quantity, 
+                    'total' => $totalPrice * $request->quantity 
                 ]);
             }
         } elseif ($request->input('productId')) {

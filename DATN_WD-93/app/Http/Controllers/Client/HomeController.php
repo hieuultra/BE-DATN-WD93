@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Client;
 
 use Log;
 use App\Models\Bill;
+use App\Models\Cart;
 use App\Models\Review;
 use App\Models\Product;
+use App\Models\CartItem;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\VariantPackage;
-use App\Http\Controllers\Controller;
 use App\Models\VariantProduct;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -82,18 +84,6 @@ class HomeController extends Controller
                 ->withAvg('review', 'rating') // Lấy trung bình số sao
                 ->withCount('review')         // Đếm số lượt đánh giá
                 ->get();
-
-            // Lấy danh sách các biến thể của sản phẩm
-            // $variants = $sp->variantProduct;
-
-            // // Tạo mảng chứa tên các biến thể
-            // $nameVariants = [];
-            // foreach ($variants as $variant) {
-            //     // Lấy tên biến thể từ variantPackage
-            //     $nameVariants[] = $variant->variantPackage ? $variant->variantPackage->name : 'Chưa có tên biến thể'; // Kiểm tra nếu variantPackage tồn tại
-            // }
-            // $product_id = $request->product_id;
-            // $variantsId = VariantProduct::where('id_product', $product_id)->select('id');
 
             $sp->view += 1; // tăng lượt xem sản phẩm
             $sp->save(); // lưu lại số lượt xem sản phẩm
@@ -244,5 +234,37 @@ class HomeController extends Controller
         $variant_id = $request->input('packageId'); // variant_id
         $name = $request->input('name'); // name
         $img = $request->input('img'); // img
+        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+        // if ($request->input('packageId')) {
+            // $variantProduct = VariantProduct::query()
+            //     ->where('id_product', $id_product)
+            //     ->where('id_variant', $variant_id)
+            //     ->firstOrFail();
+            // if (!$variantProduct) {
+            //     return redirect()->back()->with('error', "Sản phẩm không tồn tại");
+            // }
+            // // Tính toán giá sản phẩm sau khi áp dụng giảm giácod
+            // $totalPrice = $variantProduct->price - (($variantProduct->price * $variantProduct->product->discount) / 100);
+            // $cartItem = CartItem::where('cart_id', $cart->id)
+            //     ->where('variant_id', $variant_id)
+            //     ->first();
+            // if ($cartItem) {
+            //     $cartItem->quantity += $request->quantity; 
+            //     $cartItem->total = $totalPrice * $cartItem->quantity; 
+            //     $cartItem->save(); // 
+            // } else {
+                CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_id' => $id_product,
+                    'variant_id' => $variant_id,
+                    'name' => $name, 
+                    'image' => $img, 
+                    'price' => $price , 
+                    'quantity' => $quantity, 
+                    'total' => $totalPrice 
+                ]);
+            // }
+            return redirect()->back();
+        // }
     }
 }

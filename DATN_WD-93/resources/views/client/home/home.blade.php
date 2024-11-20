@@ -1134,8 +1134,6 @@
           let quantity = response.quantity;
           $("#price").text(price);
           $("#quantity").text(quantity);
-          // console.log('Thành Công!!');
-          
         }
       });
     });
@@ -1148,18 +1146,11 @@
         let img = $("#productImage").attr("src");
         let replacePrice = price.replace('VNĐ', '');
         let newPrice = replacePrice.replace('.', '');
-        // console.log(quantity);
-        // console.log(price);
-        // console.log(productId);
-        // console.log(packageId);
-        // console.log(name);
-        // console.log(img);
-        // // console.log(quantity);
-        
         $.ajax({
           type: "POST",
           url: "/add-to-cart-home",
           data: {
+            _token: '{{ csrf_token() }}',
             id_product: productId,
             quantity: quantity,
             id_variant:packageId,
@@ -1173,9 +1164,6 @@
             
           }
         });
-        
-        
-        
       });
 });
 
