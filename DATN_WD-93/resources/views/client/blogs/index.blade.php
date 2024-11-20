@@ -274,7 +274,61 @@
         </div>
         <div class="row g-4 mt-3">
             <!-- Bài viết 1 -->
-            @foreach ($blogSK as $item)
+            @foreach ($blog1 as $item)
+                <div class="col-md-4">
+                    <div class="card mt-3" style="height: 100%;"> <!-- Đảm bảo card có chiều cao bằng nhau -->
+                        <img src="{{ Storage::url($item->image) }}" class="image-container" alt="Bài viết 3"
+                            style="object-fit: cover; height: 150px; width: 100%;"> <!-- Chiều cao ảnh cố định -->
+                        <div class="card-body" style="">
+                            <!-- Cố định chiều cao cho phần body -->
+                            <h5 class="card-title" style="">{{ $item->title }}</h5>
+                            <!-- Cố định chiều cao cho tiêu đề -->
+                            <p class="card-text" style="">{{ $item->short_content }}</p>
+                            <!-- Cố định chiều cao cho mô tả -->
+                            <a href="{{ route('blog.show', $item->id) }}" class="btn btn-primary" style="margin-top: auto;">Đọc thêm</a>
+                            <!-- Đẩy nút xuống dưới -->
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <!-- Button "Xem danh mục bài viết" -->
+            <h3>Sức khỏe</h3>
+
+            <!-- Thanh tìm kiếm -->
+            <a href="" class="btn btn-primary">Xem thêm >></a>
+        </div>
+        <div class="row g-4 mt-3">
+            <!-- Bài viết 1 -->
+            @foreach ($blog2 as $item)
+                <div class="col-md-4">
+                    <div class="card mt-3" style="height: 100%;"> <!-- Đảm bảo card có chiều cao bằng nhau -->
+                        <img src="{{ Storage::url($item->image) }}" class="image-container" alt="Bài viết 3"
+                            style="object-fit: cover; height: 150px; width: 100%;"> <!-- Chiều cao ảnh cố định -->
+                        <div class="card-body" style="">
+                            <!-- Cố định chiều cao cho phần body -->
+                            <h5 class="card-title" style="">{{ $item->title }}</h5>
+                            <!-- Cố định chiều cao cho tiêu đề -->
+                            <p class="card-text" style="">{{ $item->short_content }}</p>
+                            <!-- Cố định chiều cao cho mô tả -->
+                            <a href="{{ route('blog.show', $item->id) }}" class="btn btn-primary" style="margin-top: auto;">Đọc thêm</a>
+                            <!-- Đẩy nút xuống dưới -->
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <!-- Button "Xem danh mục bài viết" -->
+            <h3>Sức khỏe</h3>
+
+            <!-- Thanh tìm kiếm -->
+            <a href="" class="btn btn-primary">Xem thêm >></a>
+        </div>
+        <div class="row g-4 mt-3">
+            <!-- Bài viết 1 -->
+            @foreach ($blog3 as $item)
                 <div class="col-md-4">
                     <div class="card mt-3" style="height: 100%;"> <!-- Đảm bảo card có chiều cao bằng nhau -->
                         <img src="{{ Storage::url($item->image) }}" class="image-container" alt="Bài viết 3"

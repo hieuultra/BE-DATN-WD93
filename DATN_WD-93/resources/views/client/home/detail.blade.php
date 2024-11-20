@@ -263,7 +263,7 @@
                         </div>
                         <div class="d-flex">
                             <p class="inventory-status" id="quantity-display">Tồn kho: </p>
-                            <p class=" inventory-status mx-3 quantity">{{ $sp->quantity }}</p>
+                            <p class=" inventory-status mx-3 quantity" id="stock-quantity">{{ $sp->quantity }}</p>
                         </div>
                         {{-- <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p> --}}
                         {{-- <div class="d-flex mb-4">
@@ -274,12 +274,12 @@
 
                             <div class="d-flex align-items-center me-4">
                                 <h6 class="mb-0 me-2">Số lượng: </h6>
-                                <div class="input-group mx-3" style="width: 130px;">
+                                <div class="input-group mx-3" style="width: 150px;">
                                     <div class="btn btn-outline-primary" id="btn-minus">
                                         <i class="fa fa-minus"></i>
                                     </div>
                                     <input type="text" class="form-control text-center" value="1" name="quantity"
-                                        id="quantity-input">
+                                        id="quantity-input" data-max="{{ $sp->quantity }}">
                                     <div class="btn btn-outline-primary" id="btn-plus">
                                         <i class="fa fa-plus"></i>
                                     </div>
@@ -529,11 +529,54 @@
     </div>
     <!-- Products End -->
 
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const input = $('#quantity-input');
+            const maxStock = parseInt(input.data('max'), 10);
+
+            // Đảm bảo giá trị chỉ là số >= 1 khi nhập vào
+            input.on('input', function() {
+                let value = $(this).val();
+
+                // Loại bỏ ký tự không hợp lệ và kiểm tra tồn kho
+                value = value.replace(/[^0-9]/g, '');
+                if (value === '' || parseInt(value, 10) < 1) {
+                    value = 1;
+                } else if (parseInt(value, 10) > maxStock) {
+                    value = maxStock;
+                    alert('Không thể tăng vượt quá số lượng tồn kho!');
+                }
+
+                $(this).val(value);
+            });
+
+            Tăng số lượng
+            $('#btn-plus').on('click', function() {
+                let value = parseInt(input.val(), 10) || 1;
+                if (value < maxStock) {
+                    input.val(value + 1); // Tăng số lượng nếu chưa đạt tối đa
+                } else {
+                    alert('Không thể tăng vượt quá số lượng tồn kho!');
+                }
+            });
+
+            // Giảm số lượng
+            $('#btn-minus').on('click', function() {
+                let value = parseInt(input.val(), 10) || 1;
+                if (value > 1) {
+                    input.val(value - 1);
+                }
+            });
+        });
+        console.log($('#quantity-input').data('max'));
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const variantOptions = document.querySelectorAll('input[name="variantId"]');
             const priceDisplay = document.getElementById('price');
             const quantityDisplay = document.querySelector('.quantity');
+            const quantityInput = document.getElementById('quantity-input'); // Lấy ô nhập số lượng
 
             variantOptions.forEach(option => {
                 option.addEventListener('change', () => {
@@ -541,140 +584,125 @@
                         // Lấy dữ liệu từ data attributes
                         const price = option.dataset.price;
                         const quantity = option.dataset.quantity;
-
-                        // Cập nhật giao diện
                         priceDisplay.textContent = new Intl.NumberFormat('vi-VN').format(price) +
                             ' VND';
                         quantityDisplay.textContent = quantity;
+                        quantityInput.setAttribute('data-max', quantity);
+                        const currentQuantity = parseInt(quantityInput.value, 10);
+                        if (currentQuantity > parseInt(quantity, 10)) {
+                            quantityInput.value = quantity; // Đặt lại số lượng hiện tại
+                            alert('Số lượng bạn chọn đã được cập nhật theo tồn kho mới!');
+                        }
                     }
                 });
             });
         });
-        document.addEventListener('DOMContentLoaded', () => {
-            const btnMinus = document.getElementById('btn-minus');
-            const btnPlus = document.getElementById('btn-plus');
-            const quantityInput = document.getElementById('quantity-input');
-
-            btnMinus.addEventListener('click', () => {
-                let currentQuantity = parseInt(quantityInput.value); // Lấy số lượng hiện tại
-                if (currentQuantity > 1) { // Đảm bảo không giảm dưới 1
-                    quantityInput.value = currentQuantity - 1;
-                }
-            });
-
-            btnPlus.addEventListener('click', () => {
-                let currentQuantity = parseInt(quantityInput.value); // Lấy số lượng hiện tại
-                quantityInput.value = currentQuantity + 1; // Tăng số lượng lên 1
-            });
-
-            // Đảm bảo người dùng không nhập số âm hoặc ký tự không hợp lệ
-            quantityInput.addEventListener('input', () => {
-                let currentQuantity = parseInt(quantityInput.value);
-                if (isNaN(currentQuantity) || currentQuantity < 1) {
-                    quantityInput.value = 1; // Đặt lại số lượng về 1 nếu không hợp lệ
-                }
-            });
+        // Tăng số lượng
+        document.getElementById('btn-plus').addEventListener('click', () => {
+            let value = parseInt(quantityInput.value, 10) || 1; // Lấy giá trị hiện tại
+            const maxStock = parseInt(quantityInput.getAttribute('data-max'),
+            10); // Lấy số lượng tối đa từ data-max
+            if (value < maxStock) {
+                quantityInput.value = value + 1; // Tăng giá trị lên 1 nếu chưa vượt quá tồn kho
+            } else {
+                alert('Không thể tăng vượt quá số lượng tồn kho!');
+            }
         });
-    </script>
 
-
-
-
-    //script của Tấn
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('add-to-cart-form');
-            const quantityInput = document.getElementById('quantity-input');
-
-            form.addEventListener('submit', function(e) {
-                var value = parseInt(quantityInput.value, 10);
-                if (isNaN(value) || value < 1) {
-                    alert('Quantity must be a number >= 1');
-                    quantityInput.value = 1; // Reset giá trị về 1
-                    e.preventDefault(); // Ngăn không cho form submit
-                }
-            });
-
-            // Existing code for plus/minus buttons
-            const btnPlus = document.getElementById('btn-plus');
-            const btnMinus = document.getElementById('btn-minus');
-
-            btnPlus.addEventListener('click', function() {
-                quantityInput.value = parseInt(quantityInput.value) + 1;
-            });
-
-            btnMinus.addEventListener('click', function() {
-                if (parseInt(quantityInput.value) > 1) {
-                    quantityInput.value = parseInt(quantityInput.value) - 1;
-                }
-            });
-
-            // Existing change event to handle manual input
-            $('#quantity-input').on('change', function() {
-                var value = parseInt($(this).val(), 10);
-                if (isNaN(value) || value < 1) {
-                    alert('Quantity must be a number >= 1');
-                    $(this).val(1);
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const variantBoxes = document.querySelectorAll('.variant-box');
-            variantBoxes.forEach(box => {
-                box.addEventListener('click', () => {
-                    variantBoxes.forEach(b => b.classList.remove('selected')); // Xóa chọn ô khác
-                    box.classList.add('selected'); // Thêm lớp 'selected' vào ô nhấn
-                });
-            });
-        });
-    </script>
-    <script>
-        var id_variant = '';
-        $(document).ready(function() {
-            // $.ajaxSetup({
-            //     headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     }
-            // });
-            $(".variant-box").click(function(e) {
-                e.preventDefault();
-                let namePakeges = $(this).html();
-                $.ajax({
-                    type: "GET",
-                    url: "/get-price-quantity-vp",
-                    data: {
-                        namePakeges: namePakeges,
-                    },
-                    success: function(response) {
-                        let price = response.price;
-                        let quantity = response.quantity;
-                        id_variant = response.id_variant,
-                            $("#price").text(price);
-                        $(".quantity").text(quantity);
-                        $("#id_variant").val(id_variant);
-
-                    }
-                });
-
-            });
-            // $(".addToCart").click(function (e) { 
-            //     e.preventDefault();
-            //     $.ajax({
-            //         type: "POST",
-            //         url: "/addCart",
-            //         data: {
-            //             id_variant:id_variant,
-            //         },
-            //         dataType: "dataType",
-            //         success: function (response) {
-            //             console.log('Gửi Thành Công');
-
-            //         }
-            //     });
-            // });
+        // Giảm số lượng
+        document.getElementById('btn-minus').addEventListener('click', () => {
+            let value = parseInt(quantityInput.value, 10) || 1; // Lấy giá trị hiện tại
+            if (value > 1) {
+                quantityInput.value = value - 1; // Giảm giá trị xuống 1 nếu lớn hơn 1
+            }
         });
     </script> --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const variantOptions = document.querySelectorAll('input[name="variantId"]');
+            const priceDisplay = document.getElementById('price');
+            const quantityDisplay = document.querySelector('.quantity');
+            const quantityInput = document.getElementById('quantity-input'); // Lấy ô nhập số lượng
+    
+            // Hàm cập nhật thông tin khi thay đổi biến thể
+            function updateVariantInfo(option) {
+                if (option.checked) {
+                    // Lấy dữ liệu từ data attributes
+                    const price = option.dataset.price;
+                    const quantity = option.dataset.quantity;
+    
+                    // Cập nhật giá và số lượng tồn kho
+                    priceDisplay.textContent = new Intl.NumberFormat('vi-VN').format(price) + ' VND';
+                    quantityDisplay.textContent = quantity;
+    
+                    // Cập nhật lại giá trị data-max cho ô nhập số lượng
+                    quantityInput.setAttribute('data-max', quantity);
+                    quantityInput.value = 1;
+    
+                    // Kiểm tra và cập nhật lại số lượng nếu giá trị hiện tại lớn hơn tồn kho của biến thể
+                    const currentQuantity = parseInt(quantityInput.value, 10);
+                    if (currentQuantity > parseInt(quantity, 10)) {
+                        quantityInput.value = quantity; // Đặt lại số lượng hiện tại
+                        alert('Số lượng bạn chọn đã được cập nhật theo tồn kho mới!');
+                    }
+                    console.log('data-max đã thay đổi thành:', quantityInput.getAttribute('data-max'));
+                }
+            }
+    
+            // Lặp qua tất cả các tùy chọn biến thể và thiết lập sự kiện change
+            variantOptions.forEach(option => {
+                option.addEventListener('change', () => {
+                    updateVariantInfo(option);
+                });
+            });
+    
+            // Cập nhật dữ liệu lần đầu khi một biến thể được chọn mặc định
+            variantOptions.forEach(option => {
+                if (option.checked) {
+                    updateVariantInfo(option);
+                }
+            });
+    
+            // Xử lý các sự kiện cho ô nhập số lượng
+            const input = $('#quantity-input');
+            input.on('input', function() {
+                let value = $(this).val();
+                const maxStock = parseInt(quantityInput.getAttribute('data-max'), 10);;
+                console.log(maxStock);
+                
+                // Loại bỏ ký tự không hợp lệ và kiểm tra tồn kho
+                value = value.replace(/[^0-9]/g, '');
+                if (value === '' || parseInt(value, 10) < 1) {
+                    value = 1;
+                } else if (parseInt(value, 10) > maxStock) {
+                    value = maxStock;
+                    alert('Không thể tăng vượt quá số lượng tồn kho!');
+                }
+    
+                $(this).val(value);
+            });
+    
+            // Tăng số lượng
+            $('#btn-plus').on('click', function() {
+                let value = parseInt(input.val(), 10) || 1;
+                const maxStock = parseInt(quantityInput.getAttribute('data-max'), 10);
+                console.log(maxStock);
+                if (value < maxStock) {
+                    input.val(value + 1); // Tăng số lượng nếu chưa đạt tối đa
+                } else {
+                    alert('Không thể tăng vượt quá số lượng tồn kho!');
+                }
+            });
+    
+            // Giảm số lượng
+            $('#btn-minus').on('click', function() {
+                let value = parseInt(input.val(), 10) || 1;
+                if (value > 1) {
+                    input.val(value - 1); // Giảm số lượng nếu lớn hơn 1
+                }
+            });
+        });
+    </script>
+    
+    
 @endsection
