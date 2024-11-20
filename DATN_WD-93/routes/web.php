@@ -30,6 +30,10 @@ use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
+use App\Http\Controllers\Admin\BrandController;
+
+
+
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
@@ -242,6 +246,19 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
             ->as('blogs.')
             ->group(function () {
                 Route::get('/index',           [AdminBlogController::class, 'index'])  ->name('index');
+                Route::get('/create',          [AdminBlogController::class, 'create']) ->name('create');
+                Route::post('/store',          [AdminBlogController::class, 'store'])  ->name('store');
+                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])   ->name('show');
+                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])   ->name('edit');
+                Route::put('/{id}/update',     [AdminBlogController::class, 'update']) ->name('update');
+                Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
+            });
+            //thương hiệu
+            Route::prefix('brands')
+            ->as('brands.')
+            ->group(function () {
+                Route::get('/index',           [BrandController::class, 'index'])  ->name('index');
+                
                 Route::get('/create',          [AdminBlogController::class, 'create']) ->name('create');
                 Route::post('/store',          [AdminBlogController::class, 'store'])  ->name('store');
                 Route::get('/show/{id}',       [AdminBlogController::class, 'show'])   ->name('show');
