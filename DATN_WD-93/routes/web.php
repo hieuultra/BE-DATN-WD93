@@ -293,6 +293,13 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::prefix('timeslot')
             ->as('timeslot.')
             ->group(function () {
+                Route::get('/timeslotList', [DoctorController::class, 'timeslotList'])->name('timeslotList');
+                Route::get('/viewTimeslotAdd/{id}', [DoctorController::class, 'viewTimeslotAdd'])->name('viewTimeslotAdd');
+                Route::post('{doctorId}/timeslotAdd', [DoctorController::class, 'timeslotAdd'])->name('timeslotAdd');
+                Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
+                Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
+                Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
+                
                 Route::get('/schedule/{doctorId}', [DoctorController::class, 'showSchedule'])->name('doctor.schedule');
                 Route::post('/scheduleAdd', [DoctorController::class, 'scheduleAdd'])->name('scheduleAdd');
                 Route::get('/scheduleEdit/{id}', [DoctorController::class, 'scheduleEdit']);
