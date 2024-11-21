@@ -53,6 +53,7 @@
                 <tr>
                     <th class="pro-thumbnail">Ảnh</th>
                     <th class="pro-title">Sản phẩm</th>
+                    <th class="pro-title">Loại</th>
                     <th class="pro-price">Giá</th>
                     <th class="pro-quantity">Số lượng</th>
                     <th class="pro-subtotal">Tổng</th>
@@ -71,6 +72,11 @@
                     <td class="pro-title">
                         <a href="{{ route('productDetail',  $item->product_id) }}">{{ $item['name'] }}</a>
                         <input type="hidden" name="name" value="{{ $item['name'] }}" id="">
+                    </td>
+                    <td class="pro-title">
+                        <!-- Kiểm tra nếu có variantPackage, nếu không thì hiển thị "mặc định" -->
+                        <span>{{ $item->variant->variantPackage->name ?? 'Mặc định' }}</span>
+                        <input type="hidden" name="name" value="{{ $item->variant_id ?? null }}" id="">
                     </td>
                     <td class="pro-price">
                         <span>{{ number_format($item['price'],0,',','.') }}VND</span>

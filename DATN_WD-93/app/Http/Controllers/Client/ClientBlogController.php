@@ -23,10 +23,12 @@ class ClientBlogController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        $blogTT = Blog::where('topic_id', 2)->take(4)->get();
-        $blogSK = Blog::where('topic_id', 1)->take(3)->get();
+        $blogTT = Blog::orderBy('created_at', 'desc')->take(4)->get();
+        $blog1 = Blog::where('topic_id', 1)->take(3)->get();
+        $blog2 = Blog::where('topic_id', 2)->take(3)->get();
+        $blog3 = Blog::where('topic_id', 3)->take(3)->get();
         $listTopic = Topic::take(9)->get();
-        return view('client.blogs.index', compact('blogSK', 'blogTT', 'listTopic', 'orderCount', 'categories'));
+        return view('client.blogs.index', compact('blog1','blog2','blog3', 'blogTT', 'listTopic', 'orderCount', 'categories'));
     }
     public function list(Request $request)
     {
@@ -47,16 +49,7 @@ class ClientBlogController extends Controller
             //     ->withAvg('review', 'rating') // Tính trung bình số sao
             //     ->orderBy('id', 'desc')
             //     ->paginate(12);
-            //phan trang 9sp/1page
         }
-
-        // if ($request->has('topic') && $request->topic) {
-        //     $query->where('topic_id',$request->topic);
-        // }
-        // if ($request->has('search') && $request->search) {
-        //     $query->where('name', 'like', '%' . $request->search . '%');
-        // }
-        // $blogs = Blog::where('topic_id', $request->topic_id)->paginate(12);
         return view('client.blogs.list', compact('blogs','listTopic',  'orderCount', 'categories'));
     }
     public function show(string $id)

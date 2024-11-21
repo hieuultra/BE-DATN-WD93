@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="Free HTML Templates" name="keywords" />
     <meta content="Free HTML Templates" name="description" />
-
+    
     <!-- fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Favicon -->
@@ -30,6 +30,8 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('css/style1.css') }}" rel="stylesheet" />
+    {{-- Jquery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     {{-- <link rel="stylesheet" href="{{ asset('css/styleAppoinment.css') }}"> --}}
   </head>
