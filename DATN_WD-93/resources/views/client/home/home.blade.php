@@ -1115,19 +1115,20 @@
         }
     });
     var packageId = '';
+    var id_variantProduct = '';
     $(document).on('click', '.option', function() {
       packageId = $(this).data('id'); // Lấy giá trị của data-id
-      let id = '';
+      
       variants.forEach(function(variant){
         if (variant.id_variant == packageId ) {
-          id = variant.id;
+          id_variantProduct = variant.id;
         }
       });
       $.ajax({
         type: "GET",
         url: "/get-price-quantity-variant",
         data: {
-          id:id,
+          id:id_variantProduct,
         },
         success: function (response) {
           let price = response.price;
@@ -1144,24 +1145,29 @@
         let price = $("#price").html();
         let name = $("#productName").html();
         let img = $("#productImage").attr("src");
+        let replaceImg = img.replace('/upload/','');
         let replacePrice = price.replace('VNĐ', '');
         let newPrice = replacePrice.replace('.', '');
+        console.log(id_variantProduct);
         $.ajax({
           type: "POST",
           url: "/add-to-cart-home",
           data: {
             _token: '{{ csrf_token() }}',
             id_product: productId,
+            id_variantProduct: id_variantProduct,
             quantity: quantity,
-            id_variant:packageId,
             price:newPrice,
-            packageId:packageId,
             name:name,
-            img:img,
+            img:replaceImg,
           },
           success: function (response) {
             alert('Thêm thành công');
             console.log("Thêm Sản Phẩm Vào Thành Công!!!");
+            console.log(id_variantProduct);
+            console.log(productId);
+            
+            
 
           }
         });

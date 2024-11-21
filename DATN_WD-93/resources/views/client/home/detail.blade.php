@@ -238,12 +238,13 @@
                             <div class="variant-container">
                                 {{-- @dd($sp->variantProduct) --}}
                                 <div class="radio-buttons">
+                                    {{-- @dd($sp->variantProduct) --}}
                                     @foreach ($sp->variantProduct as $index => $item)
                                         {{-- <div class="variant-box" data-id="{{ $item->id }}" >{{ $item->variantPackage->name }}
                             </div>
                             <input class="variant-box" type="radio" name="variant_id" id=""> --}}
                                         <input type="radio" id="option-{{ $loop->index }}" name="variantId"
-                                            value="{{ $item->id }}" data-price="{{ $item->price }}"
+                                            value="{{ $item->id_variant }}" data-price="{{ $item->price }}"
                                             data-quantity="{{ $item->quantity }}"
                                             data-discount="{{ $item->discount ?? 0 }}">
                                         <label for="option-{{ $loop->index }}">{{ $item->variantPackage->name }}</label>
