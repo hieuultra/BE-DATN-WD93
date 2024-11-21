@@ -43,6 +43,7 @@ Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name
 Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
 Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
+Route::get('/products/filter', [HomeController::class, 'filter'])->name('products.filter');
 
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');

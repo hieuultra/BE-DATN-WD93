@@ -189,7 +189,7 @@ class HomeController extends Controller
         // echo var_dump($dssp);
         return view('client.home.proSearch', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
     }
-    // 
+    //
     function getProductInfo(Request $request)
     {
         $id_product = $request->input('id');
@@ -237,7 +237,7 @@ class HomeController extends Controller
         $id_variantProduct = $request->input('id_variantProduct');
         $quantity = $request->input('quantity'); //số lượng
         $price = $request->input('price'); // giá thành
-        $totalPrice = $quantity * $price; // tổng giá 
+        $totalPrice = $quantity * $price; // tổng giá
         // $variant_id = $request->input('packageId'); // variant_id
         $name = $request->input('name'); // name
         $img = $request->input('img'); // img
@@ -270,4 +270,27 @@ class HomeController extends Controller
         return redirect()->back();
         // }
     }
+    public function filter(Request $request)
+    {
+        $prices = $request->input('price', []);  // Lấy các giá trị khoảng giá người dùng chọn
+
+        $query = Product::query();  // Khởi tạo query để truy vấn sản phẩm
+
+        // Nếu có khoảng giá được chọn
+        if (!empty($prices)) {
+            foreach ($prices as $price) {
+                // Tách min và max từ khoảng giá (VND)
+                list($min, $max) = explode('-', $price);
+
+                // Thêm điều kiện lọc vào query, đảm bảo lọc sản phẩm trong khoảng giá
+                $query->orWhereBetween('price', [(float)$min, (float)$max]);
+            }
+        }
+
+        // Lấy sản phẩm đã lọc và phân trang
+        $products = $query->paginate(12);  // Bạn có thể thay đổi số sản phẩm mỗi trang tùy ý
+
+        return view('client.home.products', compact('products'));
+    }
+
 }

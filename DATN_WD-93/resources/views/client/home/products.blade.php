@@ -106,40 +106,32 @@
             <!-- Shop Sidebar Start -->
             <div class="col-lg-3 col-md-4">
                 <!-- Price Start -->
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by
-                        price</span></h5>
+                <h5 class="section-title position-relative text-uppercase mb-3">
+                    <span class="bg-secondary pr-3">Filter by price</span>
+                </h5>
                 <div class="bg-light p-4 mb-30">
-                    <form>
+                    <form method="GET" action="{{ route('products.filter') }}">
                         <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="price-all">
-                            <label class="custom-control-label" for="price-all">All Price</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class=" custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-1">
-                            <label class="custom-control-label" for="price-1">$0 - $100</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class=" custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-2">
-                            <label class="custom-control-label" for="price-2">$100 - $200</label>
-                            <span class="badge border font-weight-normal">295</span>
+                            <input type="checkbox" class="custom-control-input" name="price[]" value="0-100000" id="price-1">
+                            <label class="custom-control-label" for="price-1">0 VND - 100000 VND</label>
                         </div>
                         <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-3">
-                            <label class="custom-control-label" for="price-3">$200 - $300</label>
-                            <span class="badge border font-weight-normal">246</span>
+                            <input type="checkbox" class="custom-control-input" name="price[]" value="100000-200000" id="price-2">
+                            <label class="custom-control-label" for="price-2">100000 VND - 200000 VND</label>
                         </div>
                         <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-4">
-                            <label class="custom-control-label" for="price-4">$300 - $400</label>
-                            <span class="badge border font-weight-normal">145</span>
+                            <input type="checkbox" class="custom-control-input" name="price[]" value="200000-300000" id="price-3">
+                            <label class="custom-control-label" for="price-3">200000 VND - 300000 VND</label>
                         </div>
-                        <div class="custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="price-5">
-                            <label class="custom-control-label" for="price-5">$400 - $500</label>
-                            <span class="badge border font-weight-normal">168</span>
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" name="price[]" value="300000-400000" id="price-4">
+                            <label class="custom-control-label" for="price-4">300000 VND - 400000 VND</label>
                         </div>
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" name="price[]" value="400000-500000" id="price-5">
+                            <label class="custom-control-label" for="price-5">400000 VND - 500000 VND</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Apply Filter</button>
                     </form>
                 </div>
                 <!-- Price End -->

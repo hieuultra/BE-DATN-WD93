@@ -24,7 +24,21 @@
     padding: 4px 4px;
     font-weight: bold;
 }
+.dropdown-submenu {
+  position: relative;
+}
 
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-left: 0.1rem;
+  margin-top: -0.5rem;
+  display: none;
+}
+
+.dropdown-submenu:hover .dropdown-menu {
+  display: block;
+}
 </style>
 <!-- Navbar Start -->
 <div class="container-fluid bg-dark mb-30">
@@ -79,7 +93,27 @@
           >
             <div class="navbar-nav mr-auto py-0">
               <a href="{{ route('home') }}" class="nav-item nav-link active">Trang Chủ</a>
-              <a href="{{ route('products') }}" class="nav-item nav-link">Tất Cả Sản Phẩm</a>
+              <div class="nav-item dropdown">
+                <a href="{{ route('products') }}" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                  Tất Cả Sản Phẩm
+                </a>
+                <div class="dropdown-menu bg-light rounded-0 border-0 m-0">
+                  @foreach ($categories as $category)
+                    <div class="dropdown-submenu">
+                      <a href="{{ route('productsByCategoryId', $category->id) }}" class="dropdown-item">
+                        {{ $category->name }}
+                      </a>
+                      <div class="dropdown-menu">
+                        @foreach ($category->products as $product)
+                          <a href="{{ route('productDetail', $product->id) }}" class="dropdown-item">
+                            {{ $product->name }}
+                          </a>
+                        @endforeach
+                      </div>
+                    </div>
+                  @endforeach
+                </div>
+              </div>
               <a href="{{ route('appoinment.index') }}" class="nav-item nav-link">Đặt Lịch Khám</a>
               <div class="nav-item dropdown">
                 <a

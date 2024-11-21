@@ -19,7 +19,7 @@
           <i class="fa fa-envelope text-primary mr-3"></i>info@example.com
         </p>
         <p class="mb-0">
-          <i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890
+          <i class="fa fa-phone-alt text-primary mr-3"></i>1900 1806
         </p>
       </div>
       <div class="col-lg-8 col-md-12">
@@ -39,28 +39,28 @@
             </div>
           </div>
           <div class="col-md-4 mb-5">
-            <h5 class="text-secondary text-uppercase mb-4">Categories</h5>
+            <h5 class="text-secondary text-uppercase mb-4">Giờ làm việc</h5>
             <div class="d-flex flex-column justify-content-start">
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Medicines</a
+                ><i class="fa fa-angle-right mr-2"></i>THỜI GIAN LÀM VIỆC TẠI PHÒNG KHÁM</a
               >
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Disease Search</a
+                ><i class="fa fa-angle-right mr-2"></i>Từ thứ Hai đến Chủ Nhật: 7h30 - 20h</a
               >
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Functional Food</a
+                ><i class="fa fa-angle-right mr-2"></i>Cấp cứu: 24/24</a
               >
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Personal Care</a
+                ><i class="fa fa-angle-right mr-2"></i>Liên hệ:</a
               >
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Mother and Baby</a
+                ><i class="fa fa-angle-right mr-2"></i>Cấp cứu 24/7: 0833 015 115</a
               >
               <a class="text-secondary mb-2" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Beauty Care</a
+                ><i class="fa fa-angle-right mr-2"></i>Đặt lịch khám: 1900 1806</a
               >
               <a class="text-secondary" href="#"
-                ><i class="fa fa-angle-right mr-2"></i>Instinct Brand</a
+                ><i class="fa fa-angle-right mr-2"></i>Hotline Tiêm chủng: 0911615115</a
               >
             </div>
           </div>
