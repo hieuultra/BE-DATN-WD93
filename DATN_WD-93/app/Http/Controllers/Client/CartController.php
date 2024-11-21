@@ -63,10 +63,12 @@ class CartController extends Controller
         $variantID = $request->input('variantId');
         $productId = $request->input('productId');
         if ($request->input('variantId')) {
+            // dd($variantID,$productId);
             $variantProduct = VariantProduct::query()
                 ->where('id_product', $productId)
                 ->where('id_variant', $variantID)
                 ->firstOrFail();
+                // dd($variantProduct);
             if (!$variantProduct) {
                 return redirect()->back()->with('error', "Sản phẩm không tồn tại");
             }

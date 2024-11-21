@@ -189,7 +189,7 @@ class HomeController extends Controller
         // echo var_dump($dssp);
         return view('client.home.proSearch', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
     }
-    //
+    // 
     function getProductInfo(Request $request)
     {
         $id_product = $request->input('id');
@@ -214,6 +214,7 @@ class HomeController extends Controller
     }
     function getPriceQuantiVariant(Request $request)
     {
+
         $id = $request->input('id');
         //Lấy price và quantity variant_products
         $variantProduct = VariantProduct::where('id', $id)->select('price', 'quantity', 'id')->first();
@@ -230,33 +231,41 @@ class HomeController extends Controller
     }
     function addToCartHome(Request $request)
     {
-        $id_product = $request->input('id_product'); //id sản phẩm
-        $quantity = $request->input('quantity'); //số lượng
-        $price = $request->input('price'); // giá thành
-        $totalPrice = $quantity * $price; // tổng giá
-        $variant_id = $request->input('packageId'); // variant_id
-        $name = $request->input('name'); // name
-        $img = $request->input('img'); // img
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
 
+        $id_product = $request->input('id_product'); //id sản phẩm
+        $id_variantProduct = $request->input('id_variantProduct');
+        $quantity = $request->input('quantity'); //số lượng
+        $price = $request->input('price'); // giá thành
+        $totalPrice = $quantity * $price; // tổng giá 
+        // $variant_id = $request->input('packageId'); // variant_id
+        $name = $request->input('name'); // name
+        $img = $request->input('img'); // img
         $cartItem = CartItem::where('cart_id', $cart->id)
-            ->where('variant_id', $variant_id)
+            ->where('variant_id', $id_variantProduct)
             ->first();
         if ($cartItem) {
             $cartItem->quantity += $request->quantity;
             $cartItem->total = $totalPrice;
-            $cartItem->save(); //
+            $cartItem->save();
         } else {
-            CartItem::create([
+            $updateStatus = CartItem::create([
                 'cart_id' => $cart->id,
                 'product_id' => $id_product,
-                'variant_id' => $variant_id,
+                'variant_id' => $id_variantProduct,
                 'name' => $name,
                 'image' => $img,
                 'price' => $price,
                 'quantity' => $quantity,
                 'total' => $totalPrice
             ]);
+            if ($updateStatus) {
+                $listCartItem = CartItem::where('cart_id', $cart->id)
+                    ->get();
+                return response()->json([
+                    'count' => count($listCartItem),
+                ]);
+            }
         }
         return redirect()->back();
         // }

@@ -99,7 +99,7 @@
                 <a href="{{ route('cart.listCart') }}" class="btn icon-container px-0 ml-3">
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge-label">
-                        <span class="badge-count">{{ \App\Models\Cart::where('user_id', Auth::id())->withCount('items')->first()->items_count ?? 0 }}</span>
+                        <span class="badge-count" id="count">{{ \App\Models\Cart::where('user_id', Auth::id())->withCount('items')->first()->items_count ?? 0 }}</span>
                         Giỏ hàng
                     </span>
                 </a>
