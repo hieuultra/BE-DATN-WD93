@@ -9,36 +9,36 @@ use App\Models\VariantPackage;
 use App\Models\VariantProduct;
 use App\Http\Controllers\Controller;
 
-class VariantPackageController extends Controller
+class VariantProPackageController extends Controller
 {
-    public function variantPackageList()
+    public function variantProList()
     {
-        $packages = VariantPackage::orderBy('id', 'asc')->get();
+        $packages = VariantPackage::orderBy('updated_at', 'desc')->get();
         $product = Product::orderBy('id')->get();
-        $variantPro = VariantProduct::orderBy('id')->get();
+        $variantPro = VariantProduct::orderBy('updated_at','desc')->get();
         $cates = Category::orderBy('id')->get();
-        return view('admin.variantPackages.variantPackageList', compact('packages', 'product', 'variantPro', 'cates'));
+        return view('admin.variantProducts.variantProList', compact('packages', 'product', 'variantPro', 'cates'));
     }
-    public function viewVariantPackageAdd()
+    public function variantProAdd()
     {
         // $packages = VariantPackageProduct::orderBy('name', 'asc')->get();
-        return view('admin.variantPackages.viewVariantPackageAdd',);
+        return view('admin.variantProducts.package.packageAdd',);
     }
-    public function variantPackageAdd(Request $request)
+    public function packageAdd(Request $request)
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
         ]);
         $packages = VariantPackage::create($validatedData);
 
-        return redirect()->route('admin.variantPackages.variantPackageList')->with('success', 'Thêm biến thể thành công'); //Chuyển hướng người dùng đến route productList và kèm theo thông báo thành công.
+        return redirect()->route('admin.variantPros.variantProList')->with('success', 'Thêm biến thể thành công'); //Chuyển hướng người dùng đến route productList và kèm theo thông báo thành công.
     }
     //Update Form
-    public function packageUpdateForm($id)
+    public function packegeUpdate($id)
     {
         $packages = VariantPackage::orderBy('id', 'DESC')->get();
         $package = VariantPackage::find($id); //tim id
-        return view('admin.variantPackages.packageUpdateForm', compact('packages', 'package'));
+        return view('admin.variantProducts.package.packageUpdateForm', compact('packages', 'package'));
     }
     //Update
     public function packageUpdate(Request $request)
@@ -52,7 +52,7 @@ class VariantPackageController extends Controller
 
         $package->update($validatedData);
 
-        return redirect()->route('admin.variantPackages.variantPackageList')->with('success', 'Cập nhật variant thành công.');
+        return redirect()->route('admin.variantPros.variantProList')->with('success', 'Cập nhật variant thành công.');
     }
     //Destroy
     public function packageDestroy($id)
@@ -60,6 +60,6 @@ class VariantPackageController extends Controller
         $package = VariantPackage::findOrFail($id); //// Tìm sản phẩm với ID được cung cấp. Nếu không tìm thấy, sẽ ném ra một ngoại lệ ModelNotFoundException.
 
         $package->delete();
-        return redirect()->route('admin.variantPackages.variantPackageList')->with('success', 'Variant đã được xóa thành công.');
+        return redirect()->route('admin.variantPros.variantProList')->with('success', 'Variant đã được xóa thành công.');
     }
 }
