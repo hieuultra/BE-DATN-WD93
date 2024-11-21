@@ -268,7 +268,7 @@
                         {{-- <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p> --}}
                         {{-- <div class="d-flex mb-4">
                     <strong class="text-dark mr-3">Colors:</strong>
-                    
+
                 </div> --}}
                         <div class="d-flex align-items-center mb-4 pt-2">
 
@@ -288,7 +288,7 @@
                             </div>
                             {{-- <input type="hidden" name="variantId" id="id_variant" value="{{ $sp->id }}"> --}}
                         </div>
-                        <button type="submit" class="btn btn-primary m-4 addToCart">Thêm vào giỏ hàng</button>
+                        <button type="submit" class="btn btn-primary ms-4 addToCart">Thêm vào giỏ hàng</button>
                     </form>
 
                     <div class="d-flex pt-2">
@@ -623,22 +623,22 @@
             const priceDisplay = document.getElementById('price');
             const quantityDisplay = document.querySelector('.quantity');
             const quantityInput = document.getElementById('quantity-input'); // Lấy ô nhập số lượng
-    
+
             // Hàm cập nhật thông tin khi thay đổi biến thể
             function updateVariantInfo(option) {
                 if (option.checked) {
                     // Lấy dữ liệu từ data attributes
                     const price = option.dataset.price;
                     const quantity = option.dataset.quantity;
-    
+
                     // Cập nhật giá và số lượng tồn kho
                     priceDisplay.textContent = new Intl.NumberFormat('vi-VN').format(price) + ' VND';
                     quantityDisplay.textContent = quantity;
-    
+
                     // Cập nhật lại giá trị data-max cho ô nhập số lượng
                     quantityInput.setAttribute('data-max', quantity);
                     quantityInput.value = 1;
-    
+
                     // Kiểm tra và cập nhật lại số lượng nếu giá trị hiện tại lớn hơn tồn kho của biến thể
                     const currentQuantity = parseInt(quantityInput.value, 10);
                     if (currentQuantity > parseInt(quantity, 10)) {
@@ -648,28 +648,28 @@
                     console.log('data-max đã thay đổi thành:', quantityInput.getAttribute('data-max'));
                 }
             }
-    
+
             // Lặp qua tất cả các tùy chọn biến thể và thiết lập sự kiện change
             variantOptions.forEach(option => {
                 option.addEventListener('change', () => {
                     updateVariantInfo(option);
                 });
             });
-    
+
             // Cập nhật dữ liệu lần đầu khi một biến thể được chọn mặc định
             variantOptions.forEach(option => {
                 if (option.checked) {
                     updateVariantInfo(option);
                 }
             });
-    
+
             // Xử lý các sự kiện cho ô nhập số lượng
             const input = $('#quantity-input');
             input.on('input', function() {
                 let value = $(this).val();
                 const maxStock = parseInt(quantityInput.getAttribute('data-max'), 10);;
                 console.log(maxStock);
-                
+
                 // Loại bỏ ký tự không hợp lệ và kiểm tra tồn kho
                 value = value.replace(/[^0-9]/g, '');
                 if (value === '' || parseInt(value, 10) < 1) {
@@ -678,10 +678,10 @@
                     value = maxStock;
                     alert('Không thể tăng vượt quá số lượng tồn kho!');
                 }
-    
+
                 $(this).val(value);
             });
-    
+
             // Tăng số lượng
             $('#btn-plus').on('click', function() {
                 let value = parseInt(input.val(), 10) || 1;
@@ -693,7 +693,7 @@
                     alert('Không thể tăng vượt quá số lượng tồn kho!');
                 }
             });
-    
+
             // Giảm số lượng
             $('#btn-minus').on('click', function() {
                 let value = parseInt(input.val(), 10) || 1;
@@ -703,6 +703,6 @@
             });
         });
     </script>
-    
-    
+
+
 @endsection

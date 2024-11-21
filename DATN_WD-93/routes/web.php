@@ -37,11 +37,12 @@ Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
 Route::get('/products', [HomeController::class, 'products'])->name('products');
 Route::get('/search', [HomeController::class, 'search'])->name('products.search');
 Route::get('/products/detail/{product_id}', [HomeController::class, 'detail'])->name('productDetail');
-Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId'); 
-Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo'); 
-Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant'); 
+Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
+Route::post('/adminProducts/category', [ProductController::class, 'filterByCategory'])->name('filterByCategory');
+Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo');
+Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
-Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant'); 
+Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
@@ -235,23 +236,23 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::prefix('topics')
             ->as('topics.')
             ->group(function () {
-                Route::get('/index',           [AdminTopicController::class, 'index'])  ->name('index');
-                Route::get('/create',          [AdminTopicController::class, 'create']) ->name('create');
-                Route::post('/store',          [AdminTopicController::class, 'store'])  ->name('store');
-                Route::get('/show/{id}',       [AdminTopicController::class, 'show'])   ->name('show');
-                Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])   ->name('edit');
-                Route::put('/{id}/update',     [AdminTopicController::class, 'update']) ->name('update');
+                Route::get('/index',           [AdminTopicController::class, 'index'])->name('index');
+                Route::get('/create',          [AdminTopicController::class, 'create'])->name('create');
+                Route::post('/store',          [AdminTopicController::class, 'store'])->name('store');
+                Route::get('/show/{id}',       [AdminTopicController::class, 'show'])->name('show');
+                Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])->name('edit');
+                Route::put('/{id}/update',     [AdminTopicController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminTopicController::class, 'destroy'])->name('destroy');
             });
-            Route::prefix('blogs')
+        Route::prefix('blogs')
             ->as('blogs.')
             ->group(function () {
-                Route::get('/index',           [AdminBlogController::class, 'index'])  ->name('index');
-                Route::get('/create',          [AdminBlogController::class, 'create']) ->name('create');
-                Route::post('/store',          [AdminBlogController::class, 'store'])  ->name('store');
-                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])   ->name('show');
-                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])   ->name('edit');
-                Route::put('/{id}/update',     [AdminBlogController::class, 'update']) ->name('update');
+                Route::get('/index',           [AdminBlogController::class, 'index'])->name('index');
+                Route::get('/create',          [AdminBlogController::class, 'create'])->name('create');
+                Route::post('/store',          [AdminBlogController::class, 'store'])->name('store');
+                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])->name('show');
+                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])->name('edit');
+                Route::put('/{id}/update',     [AdminBlogController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
             });
     });

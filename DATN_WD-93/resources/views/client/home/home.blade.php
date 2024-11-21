@@ -174,13 +174,13 @@
     width: 50px;
     height: 40px;
     border: 2px solid gray;
-    border-radius: 5px; 
+    border-radius: 5px;
   }
   .reduce{
     width: 50px;
     height: 40px;
     border: 2px solid gray;
-    border-radius: 5px; 
+    border-radius: 5px;
   }
   .quantityAdd{
     width: 40px;
@@ -188,11 +188,11 @@
     text-align: center
   }
   .addToCart{
-    border: 1px solid aqua; 
-    background-color: aqua; 
-    border-radius: 5px; 
-    width: 100%; 
-    height: 40px; 
+    border: 1px solid aqua;
+    background-color: aqua;
+    border-radius: 5px;
+    width: 100%;
+    height: 40px;
     font-weight: bold;
     color: black;
   }
@@ -712,7 +712,7 @@
               @endforeach
             </div>
           </div>
-          
+
 
 
 
@@ -880,7 +880,7 @@
             <div class="card-footer d-flex justify-content-between bg-light">
                 <a href="{{ route('productDetail', $item->id) }}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
                 <form action="" method="post">
-                 
+
                       <input type="hidden" name="quantity" value="1">
                        <input type="hidden" name="productId" value="{{ $item->id }}">
                     <input type="button" data-id=" {{ $item->id }} "  value="Thêm vào giỏ" class="btn btn-sm text-dark p-0 addToCartShow"><i class="fas fa-shopping-cart text-primary mr-1"></i>
@@ -905,7 +905,7 @@
       </div>
       @endforeach
     </div>
-  </div> 
+  </div>
   <!-- Products End -->
 
   <!-- Vendor Start -->
@@ -984,7 +984,7 @@
     </div>
   </div>
           {{-- popup addtocart --}}
-          
+
           <div id="overlay"></div>
 
           <div id="popup">
@@ -1017,13 +1017,13 @@
                             </div>
                             {{-- Tăng giảm số lượng  --}}
                               <div class="mt-4">
-                                <button  class="reduce" id="reduce"> 
+                                <button  class="reduce" id="reduce">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
                                       <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
                                     </svg>
                                 </button>
                                 <input class="quantityAdd" id="quantityAdd" type="text" disabled value="1">
-                                <button  class="increase" id="increase"> 
+                                <button  class="increase" id="increase">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                                       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                                     </svg>
@@ -1092,7 +1092,7 @@
                 alert('Có lỗi xảy ra khi tải thông tin sản phẩm!');
             }
         });
-     
+
     });
 
     // Đóng popup
@@ -1103,13 +1103,13 @@
   });
   // Tăng giảm số lượng
   $(document).ready(function () {
-    
+
     $("#increase").click(function () {
-        let currentValue = parseInt($("#quantityAdd").val()); 
-        $("#quantityAdd").val(currentValue + 1); 
+        let currentValue = parseInt($("#quantityAdd").val());
+        $("#quantityAdd").val(currentValue + 1);
     });
     $("#reduce").click(function () {
-        let currentValue = parseInt($("#quantityAdd").val()); 
+        let currentValue = parseInt($("#quantityAdd").val());
         if (currentValue > 1) { // Không giảm dưới 1
             $("#quantityAdd").val(currentValue - 1);
         }
@@ -1138,7 +1138,7 @@
       });
     });
     //active button
-    $("#addToCart").click(function (e) { 
+    $("#addToCart").click(function (e) {
         e.preventDefault();
         let quantity = $("#quantityAdd").val();
         let price = $("#price").html();
@@ -1160,8 +1160,9 @@
             img:img,
           },
           success: function (response) {
+            alert('Thêm thành công');
             console.log("Thêm Sản Phẩm Vào Thành Công!!!");
-            
+
           }
         });
       });

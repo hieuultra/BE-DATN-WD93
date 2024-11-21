@@ -189,82 +189,76 @@ class HomeController extends Controller
         // echo var_dump($dssp);
         return view('client.home.proSearch', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
     }
-    // 
-    function getProductInfo (Request $request){
+    //
+    function getProductInfo(Request $request)
+    {
         $id_product = $request->input('id');
         //Lấy thông tin variant product
         $variants = VariantProduct::where('id_product', $id_product)->select('id', 'id_variant')->get();
-         //Lấy id của variant
-         $variant = VariantProduct::where('id_product', $id_product)->pluck('id_variant');
-         //Lấy thông tin packages
-         $packages = VariantPackage::whereIn('id', $variant)->get();
+        //Lấy id của variant
+        $variant = VariantProduct::where('id_product', $id_product)->pluck('id_variant');
+        //Lấy thông tin packages
+        $packages = VariantPackage::whereIn('id', $variant)->get();
         // Lấy thông tin product từ db
         $in4Products = Product::find($id_product);
         if ($in4Products) {
             return response()->json([
-                'name'=>$in4Products->name,
-                'img'=>$in4Products->img, 
-                'packages'=>$packages,
-                'variants'=>$variants,
+                'name' => $in4Products->name,
+                'img' => $in4Products->img,
+                'packages' => $packages,
+                'variants' => $variants,
             ]);
         }
         // not found
         return response()->json(['error' => 'Sản Phẩm Không Tồn Tại!!'], 404);
     }
-    function getPriceQuantiVariant(Request $request){
+    function getPriceQuantiVariant(Request $request)
+    {
         $id = $request->input('id');
         //Lấy price và quantity variant_products
         $variantProduct = VariantProduct::where('id', $id)->select('price', 'quantity', 'id')->first();
         if ($variantProduct) {
             $formattedPrice = number_format($variantProduct->price, 0, ',', '.') . 'VNĐ';
             return response()->json([
-                'price'=>$formattedPrice,
-                'quantity'=>$variantProduct->quantity,
-                'id'=>$variantProduct->id,
+                'price' => $formattedPrice,
+                'quantity' => $variantProduct->quantity,
+                'id' => $variantProduct->id,
             ]);
         }
         //not found
-        return response()->json(['error'=>'Có lỗi đã xảy ra!!!'], 404);
+        return response()->json(['error' => 'Có lỗi đã xảy ra!!!'], 404);
     }
-    function addToCartHome(Request $request){
+    function addToCartHome(Request $request)
+    {
         $id_product = $request->input('id_product'); //id sản phẩm
         $quantity = $request->input('quantity'); //số lượng
         $price = $request->input('price'); // giá thành
-        $totalPrice = $quantity * $price; // tổng giá 
+        $totalPrice = $quantity * $price; // tổng giá
         $variant_id = $request->input('packageId'); // variant_id
         $name = $request->input('name'); // name
         $img = $request->input('img'); // img
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
-        // if ($request->input('packageId')) {
-            // $variantProduct = VariantProduct::query()
-            //     ->where('id_product', $id_product)
-            //     ->where('id_variant', $variant_id)
-            //     ->firstOrFail();
-            // if (!$variantProduct) {
-            //     return redirect()->back()->with('error', "Sản phẩm không tồn tại");
-            // }
-            // // Tính toán giá sản phẩm sau khi áp dụng giảm giácod
-            // $totalPrice = $variantProduct->price - (($variantProduct->price * $variantProduct->product->discount) / 100);
-            // $cartItem = CartItem::where('cart_id', $cart->id)
-            //     ->where('variant_id', $variant_id)
-            //     ->first();
-            // if ($cartItem) {
-            //     $cartItem->quantity += $request->quantity; 
-            //     $cartItem->total = $totalPrice * $cartItem->quantity; 
-            //     $cartItem->save(); // 
-            // } else {
-                CartItem::create([
-                    'cart_id' => $cart->id,
-                    'product_id' => $id_product,
-                    'variant_id' => $variant_id,
-                    'name' => $name, 
-                    'image' => $img, 
-                    'price' => $price , 
-                    'quantity' => $quantity, 
-                    'total' => $totalPrice 
-                ]);
-            // }
-            return redirect()->back();
+
+        $cartItem = CartItem::where('cart_id', $cart->id)
+            ->where('variant_id', $variant_id)
+            ->first();
+        if ($cartItem) {
+            $cartItem->quantity += $request->quantity;
+            $cartItem->total = $totalPrice;
+            $cartItem->save(); //
+        } else {
+            CartItem::create([
+                'cart_id' => $cart->id,
+                'product_id' => $id_product,
+                'variant_id' => $variant_id,
+                'name' => $name,
+                'image' => $img,
+                'price' => $price,
+                'quantity' => $quantity,
+                'total' => $totalPrice
+            ]);
+        }
+        return redirect()->back();
         // }
     }
 }
