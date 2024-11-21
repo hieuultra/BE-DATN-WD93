@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminBlogController;
 use Illuminate\Support\Facades\Auth;
 //
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,7 @@ use App\Http\Controllers\Admin\AdminTopicController;
 // use App\Http\Controllers\Admin\AdminCouponController;
 
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Client\ClientBlogController;
 
 // Route::get('/', function () {
 //     return view('welcome'); physicianManagement
