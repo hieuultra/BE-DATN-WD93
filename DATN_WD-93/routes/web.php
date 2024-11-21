@@ -14,7 +14,7 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Middleware\CheckRoleAdminMiddleware;
+
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\SpecialtyController;
@@ -27,18 +27,9 @@ use App\Models\Category;
 use App\Models\Doctor;
 use App\Http\Controllers\Client\CouponController;
 use App\Http\Controllers\Client\ReviewController;
-use App\Http\Middleware\CheckRoleAdminMiddleware;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Client\ContactController;
-use App\Http\Controllers\Admin\AdminBlogController;
-use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\AdminTopicController;
-use App\Http\Controllers\Admin\AdminCouponController;
-use App\Http\Controllers\Client\AppoinmentController;
-use App\Http\Controllers\Client\ClientBlogController;
-use App\Http\Controllers\Admin\VariantPackageController;
-use App\Http\Controllers\Admin\VariantProductsController;
-use App\Http\Controllers\Admin\VariantProPackageController;
+// use App\Http\Controllers\Admin\AdminCouponController;
+
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
 // Route::get('/', function () {
@@ -330,7 +321,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/medicalPackagesUpdate', [DoctorController::class, 'medicalPackagesUpdate'])->name('medicalPackagesUpdate');
                 Route::delete('/medicalPackagesDestroy/{id}', [DoctorController::class, 'medicalPackagesDestroy'])->name('medicalPackagesDestroy');
             });
-        Route::resource('coupons', AdminCouponController::class);
+        //Route::resource('coupons', AdminCouponController::class);
         Route::prefix('topics')
             ->as('topics.')
             ->group(function () {
