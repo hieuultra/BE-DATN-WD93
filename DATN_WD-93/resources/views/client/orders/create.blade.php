@@ -108,6 +108,7 @@
                                 <img src="{{ asset('upload/' . $item['image']) }}" height="50px" class="me-2">
                                 <div class="product-info me-3">
                                     <a href="{{ route('productDetail', $item->product_id) }}"><p class="mb-0">{{ $item['name'] }}</p></a>
+                                    <span>{{ $item->variant->variantPackage->name ?? 'Mặc định' }}</span>
                                     <p class="mb-0">{{ number_format($item['price'] * $item['quantity'],0,',','.') }}VND</p>
                                 </div>
                                 <span class="text-muted">x {{ $item['quantity'] }}</span>

@@ -94,6 +94,7 @@
                             <tr>
                                 <th>Mã sản phẩm</th>
                                 <th>Tên sản phẩm</th>
+                                <th>Loại</th>
                                 <th>Ảnh</th>
                                 <th>Giá</th>
                                 <th>Số lượng</th>
@@ -109,6 +110,7 @@
                             <tr>
                                 <td>{{ $product->idProduct }}</td>
                                 <td><a href="{{ route('productDetail', $detail->product_id) }}">{{ $product->name }}</a></td>
+                                <td>{{ 'loai'  }}</td>
                                 <td><img class="img-fluid" src="{{ asset('upload/'.$product->img) }}" width="75px"></td>
                                 <td>{{ number_format($detail->unitPrice,0,',','.') }}VND</td>
                                 <td>{{ $detail->quantity }}</td>
