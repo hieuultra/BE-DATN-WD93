@@ -30,6 +30,10 @@ use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
+use App\Http\Controllers\Admin\BrandController;
+
+
+
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
@@ -255,5 +259,16 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])->name('edit');
                 Route::put('/{id}/update',     [AdminBlogController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
+            });
+            //thương hiệu
+            Route::prefix('brands')
+            ->as('brands.')
+            ->group(function () {
+                Route::get('/index',           [BrandController::class, 'index'])  ->name('index');             
+                Route::get('/create',          [BrandController::class, 'create']) ->name('create');
+                Route::post('/store',          [BrandController::class, 'store'])  ->name('store');
+                Route::get('/edit/{id}',       [BrandController::class, 'edit'])   ->name('edit');
+                Route::put('/update/{id}',     [BrandController::class, 'update']) ->name('update');
+                Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('destroyBrand');
             });
     });
