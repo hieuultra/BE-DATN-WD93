@@ -1,6 +1,6 @@
 
 @extends('admin.layout')
-@section('titlepage', 'Tạo thương hiệu')
+@section('titlepage', '')
 
 @section('content')
 <link href="{{ asset('assets/admin/libs/quill/quill.core.js') }}" rel="stylesheet" type="text/css" />

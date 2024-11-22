@@ -197,7 +197,7 @@
         <div class="sb-nav-link-icon">
           <i class="fas fa-columns"></i>
         </div>
-        Brand
+        Thương hiệu
         <div class="sb-sidenav-collapse-arrow">
           <i class="fas fa-angle-down"></i>
         </div>
@@ -205,8 +205,8 @@
 
       <div class="collapse" id="collapseBrand" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="{{route('admin.brands.index')}}">List Brand</a>
-          <a class="nav-link" href="{{route('admin.brands.create')}}">Add Brand</a>
+          <a class="nav-link" href="{{route('admin.brands.index')}}">Danh sách thương hiệu</a>
+          <a class="nav-link" href="{{route('admin.brands.create')}}">Thêm thương hiệu</a>
         </nav>
       </div>
 
