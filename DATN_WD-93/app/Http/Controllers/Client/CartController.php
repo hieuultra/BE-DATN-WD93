@@ -68,7 +68,7 @@ class CartController extends Controller
                 ->where('id_product', $productId)
                 ->where('id_variant', $variantID)
                 ->firstOrFail();
-                // dd($variantProduct);
+            // dd($variantProduct);
             if (!$variantProduct) {
                 return redirect()->back()->with('error', "Sản phẩm không tồn tại");
             }
@@ -78,19 +78,19 @@ class CartController extends Controller
                 ->where('variant_id', $variantProduct->id)
                 ->first();
             if ($cartItem) {
-                $cartItem->quantity += $request->quantity; 
-                $cartItem->total = $totalPrice * $cartItem->quantity; 
-                $cartItem->save(); // 
+                $cartItem->quantity += $request->quantity;
+                $cartItem->total = $totalPrice * $cartItem->quantity;
+                $cartItem->save(); //
             } else {
                 CartItem::create([
                     'cart_id' => $cart->id,
                     'product_id' => $variantProduct->product->id,
                     'variant_id' => $variantProduct->id,
-                    'name' => $variantProduct->product->name, 
-                    'image' => $variantProduct->product->img, 
-                    'price' => $totalPrice, 
-                    'quantity' => $request->quantity, 
-                    'total' => $totalPrice * $request->quantity 
+                    'name' => $variantProduct->product->name,
+                    'image' => $variantProduct->product->img,
+                    'price' => $totalPrice,
+                    'quantity' => $request->quantity,
+                    'total' => $totalPrice * $request->quantity
                 ]);
             }
         } elseif ($request->input('productId')) {
@@ -173,30 +173,34 @@ class CartController extends Controller
         $order = Bill::with('products')->findOrFail($orderId);
         $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
 
-        foreach ($order->products as $product) {
-            // Tính toán giá sản phẩm sau khi áp dụng giảm giá
-            $totalPrice = $product->price - (($product->price * $product->discount) / 100);
+        foreach ($order->order_detail as $orderDetail) {
+            // Lấy sản phẩm biến thể từ chi tiết đơn hàng
+            $productVariant = VariantProduct::findOrFail($orderDetail->variant_id);
+
+            // Tính toán giá sản phẩm biến thể sau khi áp dụng giảm giá
+            $totalPrice = $productVariant->price - (($productVariant->price * $productVariant->discount) / 100);
 
             // Kiểm tra nếu sản phẩm đã tồn tại trong giỏ hàng
             $cartItem = CartItem::where('cart_id', $cart->id)
-                ->where('product_id', $product->id)
+                ->where('variant_id', $productVariant->id) // Kiểm tra dựa trên `variant_id`
                 ->first();
 
             if ($cartItem) {
                 // Nếu sản phẩm đã có trong giỏ hàng, cập nhật số lượng và tổng giá
-                $cartItem->quantity += 1; // có thể điều chỉnh số lượng tùy ý
+                $cartItem->quantity += $orderDetail->quantity; // Thêm số lượng theo đơn hàng trước đó
                 $cartItem->total = $totalPrice * $cartItem->quantity; // Cập nhật tổng giá
                 $cartItem->save();
             } else {
                 // Nếu chưa có, tạo một mục giỏ hàng mới
                 CartItem::create([
                     'cart_id' => $cart->id,
-                    'product_id' => $product->id,
-                    'name' => $product->name,
-                    'image' => $product->img,
+                    'variant_id' => $productVariant->id, // Lưu `variant_id`
+                    'product_id' => $productVariant->id_product, // Liên kết tới sản phẩm chính
+                    'name' => $productVariant->product->name,
+                    'image' => $productVariant->product->img, // Ảnh từ sản phẩm biến thể
                     'price' => $totalPrice,
-                    'quantity' => 1, // có thể đặt lại số lượng mặc định
-                    'total' => $totalPrice
+                    'quantity' => $orderDetail->quantity, // Số lượng theo đơn hàng trước đó
+                    'total' => $totalPrice * $orderDetail->quantity
                 ]);
             }
         }

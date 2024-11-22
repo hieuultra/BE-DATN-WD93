@@ -106,11 +106,12 @@
                             @foreach($bill->order_detail as $detail)
                             @php
                                 $product = $detail->product;
+                                $variant = $detail->productVariant; // Biến thể sản phẩm
                             @endphp
                             <tr>
                                 <td>{{ $product->idProduct }}</td>
                                 <td><a href="{{ route('productDetail', $detail->product_id) }}">{{ $product->name }}</a></td>
-                                <td>{{ 'loai'  }}</td>
+                              <td>{{ $variant->variantPackage->name ?? 'Không xác định' }}</td> <!-- Hiển thị loại sản phẩm -->
                                 <td><img class="img-fluid" src="{{ asset('upload/'.$product->img) }}" width="75px"></td>
                                 <td>{{ number_format($detail->unitPrice,0,',','.') }}VND</td>
                                 <td>{{ $detail->quantity }}</td>

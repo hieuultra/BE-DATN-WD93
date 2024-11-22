@@ -19,13 +19,25 @@ class HomeController extends Controller
 {
     function index()
     {
-        $newProducts = Product::newProducts(4)->withCount('review')->withAvg('review', 'rating')->get();
-        $newProducts1 = Product::limit(4)->withCount('review')->withAvg('review', 'rating')->get();
-        $bestsellerProducts = Product::bestsellerProducts(6)->withCount('review')->withAvg('review', 'rating')->get();
-        $instockProducts = Product::instockProducts(8)->withCount('review')->withAvg('review', 'rating')->get();
+        $newProducts = Product::newProducts(4)
+            ->with(['variantProduct']) // Nạp quan hệ variantProduct
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $newProducts1 = Product::limit(4)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $bestsellerProducts = Product::bestsellerProducts(6)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $instockProducts = Product::instockProducts(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
 
-        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)->withCount('review')->withAvg('review', 'rating')->get();
-        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)->withCount('review')->withAvg('review', 'rating')->get();
+        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
 
@@ -272,25 +284,49 @@ class HomeController extends Controller
     }
     public function filter(Request $request)
     {
-        $prices = $request->input('price', []);  // Lấy các giá trị khoảng giá người dùng chọn
+        $category_id = $request->input('category_id');
+        $categories = Category::orderBy('name', 'ASC')->get();
+        if ($request->category_id) {
+            $products = Product::where('category_id', $request->category_id)
+                ->withCount('review') // Đếm số lượt đánh giá
+                ->withAvg('review', 'rating') // Tính trung bình số sao
+                ->orderBy('id', 'desc')
+                ->paginate(12);
+        } else {
+            $products = Product::withCount('review') // Đếm số lượt đánh giá
+                ->withAvg('review', 'rating') // Tính trung bình số sao
+                ->orderBy('id', 'desc')
+                ->paginate(12);
+            //phan trang 9sp/1page
+        }
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
+        // Lấy danh sách khoảng giá
+        $priceRanges = $request->get('price', []);
 
-        $query = Product::query();  // Khởi tạo query để truy vấn sản phẩm
+        // Nếu không có giá trị lọc, trả về tất cả sản phẩm
+        if (empty($priceRanges)) {
+            $filteredVariants = VariantProduct::all();
+        } else {
+            // Tạo query
+            $query = VariantProduct::query(); //tạo một đối tượng query builder để bắt đầu xây dựng truy vấn.
 
-        // Nếu có khoảng giá được chọn
-        if (!empty($prices)) {
-            foreach ($prices as $price) {
-                // Tách min và max từ khoảng giá (VND)
-                list($min, $max) = explode('-', $price);
+            // Lọc theo khoảng giá
+            $query->where(function ($q) use ($priceRanges) {
+                foreach ($priceRanges as $range) {
+                    [$min, $max] = explode('-', $range); //chia chuỗi khoảng giá (như '0-100000') thành mảng ['0', '100000'].
+                    $q->orWhereBetween('price', [(int)$min, (int)$max]);
+                }
+            });
 
-                // Thêm điều kiện lọc vào query, đảm bảo lọc sản phẩm trong khoảng giá
-                $query->orWhereBetween('price', [(float)$min, (float)$max]);
-            }
+            // Lấy danh sách sản phẩm đã lọc
+            $filteredVariants = $query->get();
         }
 
-        // Lấy sản phẩm đã lọc và phân trang
-        $products = $query->paginate(12);  // Bạn có thể thay đổi số sản phẩm mỗi trang tùy ý
-
-        return view('client.home.products', compact('products'));
+        // Trả về view
+        return view('client.home.filtered', compact('filteredVariants', 'categories', 'orderCount', 'products', 'category_id'));
     }
-
 }
