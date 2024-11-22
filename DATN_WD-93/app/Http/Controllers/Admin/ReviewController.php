@@ -18,7 +18,7 @@ class ReviewController extends Controller
     // Xóa mềm đánh giá
     public function destroy($id)
     {
-        $review = Review::findOrFail($id);
+        $review = Review::find($id);
         $review->delete(); // Xóa mềm
         return redirect()->route('admin.reviews.listReviews')->with('success', 'Review soft deleted successfully');
     }

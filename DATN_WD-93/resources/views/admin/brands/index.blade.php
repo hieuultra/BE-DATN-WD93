@@ -51,6 +51,7 @@
                 Danh sách thương hiệu
             </div>
             <div class="card-body">
+            <a href="{{ route('admin.brands.create') }}" class="btn btn-success mb-4">Thêm Thương Hiệu</a>
                 <table class="table table-striped table-bordered table-hover datatablesSimple">
                     <thead>
                         <tr>
@@ -65,21 +66,22 @@
                         <tr>
                             <td class="text-center">{{ $brand->id }}</td>
                             <td class="text-center">{{ $brand->name }}</td>
+                            
                             <td class="text-center">
-                                <img src="{{ asset('upload/'.$brand->image)  }}" alt="{{ $brand->name }}" style="width: 100px; height: 100px; object-fit: cover;">
-                            </td> >
+                            <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" style="width: 100px; height: 100px; object-fit: cover;">
+                            </td>
                             <td class="text-center">
-                                <form action="{{ route('admin.reviews.destroyReviews', $brand->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('admin.brands.destroyBrand', $brand->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn chắc chắn muốn xóa?')">Delete</button>
                                 </form>
+                                <a href="{{route('admin.brands.edit',$brand->id)}}" class="btn btn-primary">Sửa</a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <a href="{{ route('admin.reviews.listDeletedReviews') }}" class="btn btn-secondary">Danh sách thương hiệu đã xóa</a>
             </div>
         </div>
 

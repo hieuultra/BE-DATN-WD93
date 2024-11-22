@@ -8,8 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Brand extends Model
 {
-    use HasFactory, SoftDeletes;
-
+    use HasFactory;
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $fillable = ['name', 'image'];
-}
 
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'brand_id');
+    }
+}

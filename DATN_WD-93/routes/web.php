@@ -257,13 +257,11 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
             Route::prefix('brands')
             ->as('brands.')
             ->group(function () {
-                Route::get('/index',           [BrandController::class, 'index'])  ->name('index');
-                
-                Route::get('/create',          [AdminBlogController::class, 'create']) ->name('create');
-                Route::post('/store',          [AdminBlogController::class, 'store'])  ->name('store');
-                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])   ->name('show');
-                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])   ->name('edit');
-                Route::put('/{id}/update',     [AdminBlogController::class, 'update']) ->name('update');
-                Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
+                Route::get('/index',           [BrandController::class, 'index'])  ->name('index');             
+                Route::get('/create',          [BrandController::class, 'create']) ->name('create');
+                Route::post('/store',          [BrandController::class, 'store'])  ->name('store');
+                Route::get('/edit/{id}',       [BrandController::class, 'edit'])   ->name('edit');
+                Route::put('/update/{id}',     [BrandController::class, 'update']) ->name('update');
+                Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('destroyBrand');
             });
     });
