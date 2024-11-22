@@ -54,7 +54,8 @@
     <div class="row px-xl-5 pb-3">
         <!-- Product -->
         @foreach ($products as $item)
-        @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+        @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100); @endphp
         <!-- Product 5 -->
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
         <div class="product-item bg-light mb-4">
@@ -87,7 +88,15 @@
               class="d-flex align-items-center justify-content-center mt-2"
             >
               <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
-              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
+              <h6 class="text-muted ml-2">@if ($item->variantProduct->isNotEmpty())
+                @php
+                    $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
+                @endphp
+                <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
+            @else
+                <del>Giá: Không có thông tin</del>
+            @endif
+        </h6>
             </div>
             <div
               class="d-flex align-items-center justify-content-center mb-1"

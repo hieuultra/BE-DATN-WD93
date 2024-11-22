@@ -631,7 +631,10 @@
                     <div class="row px-xl-5">
                         <!-- Product list for the first slide -->
                         @foreach ($newProducts as $item)
-                            @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+                            @php
+                             $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100);
+                            @endphp
                             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                                 <div class="product-item bg-light mb-4">
                                     <div class="product-img position-relative overflow-hidden">
@@ -700,14 +703,12 @@
                     </div>
                 </div>
 
-
-
-
                 <!-- Thêm một carousel-item mới cho các sản phẩm khác -->
                 <div class="carousel-item">
                     <div class="row px-xl-5">
                         @foreach ($newProducts1 as $item)
-                            @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+                            @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100); @endphp
                             <!-- Product 5 -->
                             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                                 <div class="product-item bg-light mb-4">
@@ -835,7 +836,9 @@
         </div>
         <div class="row px-xl-5">
             @foreach ($mostViewedProducts as $item)
-                @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+                @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100);
+                               @endphp
                 <!-- Product 5 -->
                 <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                     <div class="product-item bg-light mb-4">
@@ -908,12 +911,13 @@
         <!-- Title -->
         <div class="text-center mb-4">
             <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-                <span class="px-2 stylish-text-best-sellers">SẢN PHẨM kHUYẾN MÃI</span>
+                <span class="px-2 stylish-text-best-sellers">SẢN PHẨM KHUYẾN MÃI</span>
             </h2>
         </div>
         <div class="row px-xl-5">
             @foreach ($highestDiscountProducts as $item)
-                @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+                @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100); @endphp
                 <!-- Product 5 -->
                 <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                     <div class="product-item bg-light mb-4">

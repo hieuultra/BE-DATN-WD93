@@ -249,7 +249,8 @@
                     </div>
 
                     @foreach ($products as $item)
-                        @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+                        @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100); @endphp
 
                         <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
                             <div class="product-item bg-light mb-4">
@@ -276,8 +277,15 @@
                                     </a>
                                     <div class="d-flex align-items-center justify-content-center mt-2">
                                         <h5 class="text-danger"> {{ number_format($tt, 0, ',', '.') }} VND</h5>
-                                        <h6 class="text-muted ml-2"><del> {{ number_format($item->price, 0, ',', '.') }}
-                                                VND</del></h6>
+                                        <h6 class="text-muted ml-2">@if ($item->variantProduct->isNotEmpty())
+                                            @php
+                                                $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
+                                            @endphp
+                                            <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
+                                        @else
+                                            <del>Giá: Không có thông tin</del>
+                                        @endif
+                                       </h6>
                                         <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between bg-light">
