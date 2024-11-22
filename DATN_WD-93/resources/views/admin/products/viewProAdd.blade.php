@@ -2,12 +2,12 @@
 @section('titlepage','')
 
 @section('content')
- <!-- Quill css -->
- <link href="{{ asset('assets/admin/libs/quill/quill.core.js') }}" rel="stylesheet" type="text/css" />
- <link href="{{ asset('assets/admin/libs/quill/quill.snow.css') }}" rel="stylesheet" type="text/css" />
- <link href="{{ asset('assets/admin/libs/quill/quill.bubble.css') }}" rel="stylesheet" type="text/css" />
- {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
+<!-- Quill css -->
+<link href="{{ asset('assets/admin/libs/quill/quill.core.js') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/admin/libs/quill/quill.snow.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/admin/libs/quill/quill.bubble.css') }}" rel="stylesheet" type="text/css" />
+{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
 
 
 <div class="container-fluid mt-4 px-4">
@@ -47,6 +47,19 @@
                         @enderror
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">Brand</label>
+                        <select class="form-select @error('brand_id') is-invalid @enderror" name="brand_id">
+                            <option value="0">Choose brand</option>
+                            @foreach($brands as $brand)
+                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('brand_id')
+                        <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+
 
                     <div class="mb-3">
                         <label class="form-label">Price</label>
@@ -75,8 +88,8 @@
                     <div class="mb-3">
                         <label class="form-label">Description Short</label>
                         <textarea class="form-control @error('content') is-invalid @enderror"
-                         placeholder="Leave a description product here" style="height: 100px" name="content" >{{ old('content') }}</textarea>
-                         @error('content')
+                            placeholder="Leave a description product here" style="height: 100px" name="content">{{ old('content') }}</textarea>
+                        @error('content')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
@@ -85,13 +98,13 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="is_type" id="flexRadioDefault1" value="1" checked>
                         <label class="form-check-label" for="flexRadioDefault1">
-                          Display
+                            Display
                         </label>
                     </div>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="radio" name="is_type" id="flexRadioDefault2" value="0">
                         <label class="form-check-label" for="flexRadioDefault2">
-                          Hidden
+                            Hidden
                         </label>
                     </div>
 
@@ -141,19 +154,19 @@
                         <label class="form-label">Album Image</label>
                         <i id="add-row" class="mdi mdi-plus text-muted fs-18 rounded-2 border ms-3 p-1" style="cursor: pointer"></i>
                         <table class="table align-middle table-nowrap mb-0">
-                               <tbody id="image-table-body">
+                            <tbody id="image-table-body">
                                 <tr>
                                     <td class="d-flex align-items-center">
                                         <img id="preview_0" src="https://cdn.icon-icons.com/icons2/510/PNG/512/image_icon-icons.com_50366.png"
-                                        class="me-3" alt="Image Product" style="width:50px;">
+                                            class="me-3" alt="Image Product" style="width:50px;">
                                         <input type="file" class="form-control" name="list_img[id_0]" onchange="previewImage(this, 0)">
                                     </td>
                                     <td>
                                         <i class="mdi mdi-delete text-muted fs-18 rounded-2 border p-1"
-                                         style="cursor: pointer" onclick="removeRow(this)"></i>
+                                            style="cursor: pointer" onclick="removeRow(this)"></i>
                                     </td>
                                 </tr>
-                               </tbody>
+                            </tbody>
                         </table>
                     </div>
 
@@ -190,51 +203,51 @@
     </form>
 </div>
 
-   <!-- Quill Editor Js -->
-   <script src="{{ asset('assets/admin/libs/quill/quill.core.js') }}"></script>
-   <script src="{{ asset('assets/admin/libs/quill/quill.min.js') }}"></script>
+<!-- Quill Editor Js -->
+<script src="{{ asset('assets/admin/libs/quill/quill.core.js') }}"></script>
+<script src="{{ asset('assets/admin/libs/quill/quill.min.js') }}"></script>
 
-   <script>
+<script>
     //hien thi image khi add
-    function showImage(event){
+    function showImage(event) {
         const imgPro = document.getElementById('imgPro');
-        const file =  event.target.files[0];
+        const file = event.target.files[0];
         const reader = new FileReader();
-        reader.onload = function(){
+        reader.onload = function() {
             imgPro.src = reader.result;
             imgPro.style.display = "block";
         }
-        if(file){
+        if (file) {
             reader.readAsDataURL(file);
         }
     }
-  </script>
+</script>
 
-   <!-- content -->
-   <script>
-    document.addEventListener('DOMContentLoaded', function(){
+<!-- content -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         var quill = new Quill("#quill-editor", {
             theme: "snow",
+        })
+        //hien thi nd cu
+        var old_content = `{!! old('description') !!}`;
+        quill.root.innerHTML = old_content;
+
+        //update lai textarea an khi content quill_editor thay doi
+        quill.on('text-change', function() {
+            document.getElementById('nd_content').value = quill.root.innerHTML;
+        });
     })
-    //hien thi nd cu
-    var old_content = `{!! old('description') !!}`;
-    quill.root.innerHTML = old_content;
+</script>
 
-    //update lai textarea an khi content quill_editor thay doi
-    quill.on('text-change', function() {
-        document.getElementById('nd_content').value = quill.root.innerHTML;
-    });
-})
-   </script>
-
-   <!-- add album anh -->
-   <script>
-document.addEventListener('DOMContentLoaded', function(){
+<!-- add album anh -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         var rowCount = 1;
-      document.getElementById('add-row').addEventListener('click', function(){
-        var tableBody = document.getElementById('image-table-body');
-        var newRow= document.createElement('tr');
-        newRow.innerHTML= ` <td class="d-flex align-items-center">
+        document.getElementById('add-row').addEventListener('click', function() {
+            var tableBody = document.getElementById('image-table-body');
+            var newRow = document.createElement('tr');
+            newRow.innerHTML = ` <td class="d-flex align-items-center">
                             <img id="preview_${rowCount}" src="https://cdn.icon-icons.com/icons2/510/PNG/512/image_icon-icons.com_50366.png"
                             class="me-3" alt="Image Product" style="width:50px;">
                             <input type="file" class="form-control" name="list_img[id_${rowCount}]" onchange="previewImage(this, ${rowCount})">
@@ -243,27 +256,27 @@ document.addEventListener('DOMContentLoaded', function(){
                             <i class="mdi mdi-delete text-muted fs-18 rounded-2 border p-1"
                             style="cursor: pointer" onclick="removeRow(this)"></i>
                         </td>`;
-                        tableBody.appendChild(newRow);
-                        rowCount++;
-      })
-                    });
-                    //change image cua tung item
-                    function previewImage(input, rowIndex){
-                        if(input.files && input.files[0]){
-                            const reader = new FileReader();
+            tableBody.appendChild(newRow);
+            rowCount++;
+        })
+    });
+    //change image cua tung item
+    function previewImage(input, rowIndex) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
 
-               reader.onload = function(e){
-               document.getElementById(`preview_${rowIndex}`).setAttribute('src', e.target.result);
-                   }
-                   reader.readAsDataURL(input.files[0]);
+            reader.onload = function(e) {
+                document.getElementById(`preview_${rowIndex}`).setAttribute('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
 
-                        }
-                    }
-                    function removeRow(item){
-                        var row = item.closest('tr');
-                        row.remove();
-                    }
+        }
+    }
 
-   </script>
+    function removeRow(item) {
+        var row = item.closest('tr');
+        row.remove();
+    }
+</script>
 
 @endsection

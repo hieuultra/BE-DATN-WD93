@@ -19,13 +19,25 @@ class HomeController extends Controller
 {
     function index()
     {
-        $newProducts = Product::newProducts(4)->withCount('review')->withAvg('review', 'rating')->get();
-        $newProducts1 = Product::limit(4)->withCount('review')->withAvg('review', 'rating')->get();
-        $bestsellerProducts = Product::bestsellerProducts(6)->withCount('review')->withAvg('review', 'rating')->get();
-        $instockProducts = Product::instockProducts(8)->withCount('review')->withAvg('review', 'rating')->get();
+        $newProducts = Product::newProducts(4)
+            ->with(['variantProduct']) // Nạp quan hệ variantProduct
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $newProducts1 = Product::limit(4)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $bestsellerProducts = Product::bestsellerProducts(6)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $instockProducts = Product::instockProducts(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
 
-        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)->withCount('review')->withAvg('review', 'rating')->get();
-        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)->withCount('review')->withAvg('review', 'rating')->get();
+        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
 
@@ -214,6 +226,7 @@ class HomeController extends Controller
     }
     function getPriceQuantiVariant(Request $request)
     {
+
         $id = $request->input('id');
         //Lấy price và quantity variant_products
         $variantProduct = VariantProduct::where('id', $id)->select('price', 'quantity', 'id')->first();
@@ -230,35 +243,90 @@ class HomeController extends Controller
     }
     function addToCartHome(Request $request)
     {
+        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+
         $id_product = $request->input('id_product'); //id sản phẩm
+        $id_variantProduct = $request->input('id_variantProduct');
         $quantity = $request->input('quantity'); //số lượng
         $price = $request->input('price'); // giá thành
         $totalPrice = $quantity * $price; // tổng giá
-        $variant_id = $request->input('packageId'); // variant_id
+        // $variant_id = $request->input('packageId'); // variant_id
         $name = $request->input('name'); // name
         $img = $request->input('img'); // img
-        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
-
         $cartItem = CartItem::where('cart_id', $cart->id)
-            ->where('variant_id', $variant_id)
+            ->where('variant_id', $id_variantProduct)
             ->first();
         if ($cartItem) {
             $cartItem->quantity += $request->quantity;
             $cartItem->total = $totalPrice;
-            $cartItem->save(); //
+            $cartItem->save();
         } else {
-            CartItem::create([
+            $updateStatus = CartItem::create([
                 'cart_id' => $cart->id,
                 'product_id' => $id_product,
-                'variant_id' => $variant_id,
+                'variant_id' => $id_variantProduct,
                 'name' => $name,
                 'image' => $img,
                 'price' => $price,
                 'quantity' => $quantity,
                 'total' => $totalPrice
             ]);
+            if ($updateStatus) {
+                $listCartItem = CartItem::where('cart_id', $cart->id)
+                    ->get();
+                return response()->json([
+                    'count' => count($listCartItem),
+                ]);
+            }
         }
         return redirect()->back();
         // }
+    }
+    public function filter(Request $request)
+    {
+        $category_id = $request->input('category_id');
+        $categories = Category::orderBy('name', 'ASC')->get();
+        if ($request->category_id) {
+            $products = Product::where('category_id', $request->category_id)
+                ->withCount('review') // Đếm số lượt đánh giá
+                ->withAvg('review', 'rating') // Tính trung bình số sao
+                ->orderBy('id', 'desc')
+                ->paginate(12);
+        } else {
+            $products = Product::withCount('review') // Đếm số lượt đánh giá
+                ->withAvg('review', 'rating') // Tính trung bình số sao
+                ->orderBy('id', 'desc')
+                ->paginate(12);
+            //phan trang 9sp/1page
+        }
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
+        // Lấy danh sách khoảng giá
+        $priceRanges = $request->get('price', []);
+
+        // Nếu không có giá trị lọc, trả về tất cả sản phẩm
+        if (empty($priceRanges)) {
+            $filteredVariants = VariantProduct::all();
+        } else {
+            // Tạo query
+            $query = VariantProduct::query(); //tạo một đối tượng query builder để bắt đầu xây dựng truy vấn.
+
+            // Lọc theo khoảng giá
+            $query->where(function ($q) use ($priceRanges) {
+                foreach ($priceRanges as $range) {
+                    [$min, $max] = explode('-', $range); //chia chuỗi khoảng giá (như '0-100000') thành mảng ['0', '100000'].
+                    $q->orWhereBetween('price', [(int)$min, (int)$max]);
+                }
+            });
+
+            // Lấy danh sách sản phẩm đã lọc
+            $filteredVariants = $query->get();
+        }
+
+        // Trả về view
+        return view('client.home.filtered', compact('filteredVariants', 'categories', 'orderCount', 'products', 'category_id'));
     }
 }

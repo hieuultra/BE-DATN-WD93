@@ -9,6 +9,7 @@ use App\Models\CartItem;
 use App\Models\Category;
 use App\Mail\OrderConfirm;
 use Illuminate\Http\Request;
+use App\Models\VariantProduct;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
@@ -136,24 +137,25 @@ class OrderController extends Controller
                 }
 
                 foreach ($carts->items as $item) {
-                    // Kiểm tra số lượng tồn kho trước khi tạo đơn hàng
-                    $product = Product::findOrFail($item->product_id);
-                    if ($product->quantity < $item['quantity']) {
+                    // Kiểm tra số lượng tồn kho của sản phẩm biến thể
+                    $productVariant = VariantProduct::findOrFail($item->variant_id);
+                    if ($productVariant->quantity < $item['quantity']) {
                         DB::rollBack();
-                        return redirect()->route('cart.listCart')->with('error', 'Không đủ số lượng tồn kho cho ' . $product->name);
+                        return redirect()->route('cart.listCart')->with('error', 'Không đủ số lượng tồn kho cho ' .  $productVariant->product->name);
                     }
                     // Tạo chi tiết đơn hàng
                     $tt = $item['price'] * $item['quantity'];
                     $bill->order_detail()->create([
                         'bill_id' => $billId,
-                        'product_id' => $item->product_id,
+                        'product_id' => $productVariant->id_product, // Liên kết tới sản phẩm chính
+                        'variant_id' => $productVariant->id,         // Liên kết tới sản phẩm biến thể
                         'unitPrice' => $item['price'],
                         'quantity' => $item['quantity'],
                         'totalMoney' => $tt
                     ]);
-                    // Giảm số lượng sản phẩm trong kho
-                    $product->quantity -= $item['quantity'];
-                    $product->save();
+                    // Giảm số lượng sản phẩm biến thể trong kho
+                    $productVariant->quantity -= $item['quantity'];
+                    $productVariant->save();
                 }
                 DB::commit();
 
@@ -203,9 +205,9 @@ class OrderController extends Controller
                 $bill->update(['status_bill' => Bill::DA_HUY]);
                 // Hoàn lại số lượng sản phẩm về kho
                 foreach ($bill->order_detail as $orderDetail) {
-                    $product = Product::findOrFail($orderDetail->product_id);
-                    $product->quantity += $orderDetail->quantity;
-                    $product->save();
+                    $productVariant = VariantProduct::findOrFail($orderDetail->variant_id); // Truy vấn sản phẩm biến thể
+                    $productVariant->quantity += $orderDetail->quantity; // Hoàn lại số lượng
+                    $productVariant->save();
                 }
             } elseif ($request->has('da_giao_hang')) {
                 $bill->update(['status_bill' => Bill::DA_GIAO_HANG]);

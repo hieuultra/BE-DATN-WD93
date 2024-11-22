@@ -29,6 +29,9 @@ use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\BrandController;
+
+
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -43,6 +46,7 @@ Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name
 Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
 Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
+Route::post('/products/filter', [HomeController::class, 'filter'])->name('products.filter');
 
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
@@ -254,5 +258,16 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])->name('edit');
                 Route::put('/{id}/update',     [AdminBlogController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
+            });
+        //thương hiệu
+        Route::prefix('brands')
+            ->as('brands.')
+            ->group(function () {
+                Route::get('/index',           [BrandController::class, 'index'])->name('index');
+                Route::get('/create',          [BrandController::class, 'create'])->name('create');
+                Route::post('/store',          [BrandController::class, 'store'])->name('store');
+                Route::get('/edit/{id}',       [BrandController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}',     [BrandController::class, 'update'])->name('update');
+                Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('destroyBrand');
             });
     });

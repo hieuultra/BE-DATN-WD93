@@ -24,4 +24,8 @@ class VariantProduct extends Model
     {
         return $this->belongsTo(VariantPackage::class, 'id_variant');
     }
+    public function orderDetail()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
 }
