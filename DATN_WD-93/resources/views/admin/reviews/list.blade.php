@@ -66,7 +66,7 @@
                             <td class="text-center">{{ $review->id }}</td>
                             <td class="text-center">{{ $review->user->name }}</td>
                             <td class="text-center">{{ $review->user->email }}</td>
-                            <td class="text-center">{{ $review->product->name }}</td>
+                            <td class="text-center">{{ $review->product ? $review->product->name : 'N/A' }}</td>
                             <td class="text-center">{{ $review->rating }} / 5</td>
                             <td class="text-center">{{ $review->comment }}</td>
                             <td class="text-center">{{ $review->created_at->format('d/m/Y') }}</td>

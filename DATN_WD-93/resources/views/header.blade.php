@@ -120,14 +120,15 @@
                   href="#"
                   class="nav-link dropdown-toggle"
                   data-toggle="dropdown"
-                  >Tiện Ích<i class="fa fa-angle-down mt-1"></i
+                  >Về chúng tôi<i class="fa fa-angle-down mt-1"></i
                 ></a>
                 <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                  <a href="{{ route('contact') }}" class="dropdown-item">Liên Hệ</a>
-                  <a href="{{ route('about') }}" class="dropdown-item">Giới Thiệu</a>
+                    <a href="{{ route('about') }}" class="dropdown-item">Giới Thiệu</a>
+                   <a href="" class="dropdown-item">Đội ngũ bác sỹ</a>
                 </div>
               </div>
               <a href="{{route('blog.index')}}" class="nav-item nav-link">Tin tức</a>
+              <a href="{{ route('contact') }}" class="nav-item nav-link">Liên hệ</a>
             </div>
             <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                 <a href="{{ route('cart.listCart') }}" class="btn icon-container px-0 ml-3">

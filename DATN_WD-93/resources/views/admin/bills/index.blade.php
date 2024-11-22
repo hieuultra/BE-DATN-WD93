@@ -35,11 +35,15 @@
           <table id="datatablesSimple">
             <thead>
               <tr>
-                <th class="text-center">Bill Code</th>
-                <th class="text-center">Date Order</th>
-                <th class="text-center">Total Bill</th>
-                <th class="text-center">Status Bill</th>
-                <th class="text-center">Action</th>
+                <th class="text-center">Mã đơn hàng</th>
+                <th class="text-center">Ngày đặt</th>
+                <th class="text-center">Người đặt hàng</th>
+                <th class="text-center">Người nhận hàng</th>
+                <th class="text-center">Địa chỉ giao hàng</th>
+                <th class="text-center">Số điện thoại nhận hàng</th>
+                <th class="text-center">Tổng tiền</th>
+                <th class="text-center">Trạng thái</th>
+                <th class="text-center">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -52,6 +56,18 @@
                     </th>
                     <td class="text-center">
                         {{ $item->created_at->format('d-m-Y') }}
+                    </td>
+                    <td class="text-center">
+                        {{ $item->user->name }}
+                    </td>
+                    <td class="text-center">
+                        {{ $item->nameUser }}
+                    </td>
+                    <td class="text-center">
+                        {{ $item->addressUser }}
+                    </td>
+                    <td class="text-center">
+                        {{ $item->phoneUser }}
                     </td>
                     <td class="text-center">
                          {{ number_format($item->totalPrice,0,',','.') }}$
