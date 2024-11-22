@@ -19,6 +19,7 @@ class Product extends Model
         'content',
         'quantity',
         'category_id',
+        'brand_id',
         'is_type',
         'is_new',
         'is_hot',

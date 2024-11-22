@@ -71,6 +71,7 @@ table th, table td {
               <tr>
                 <th>ID</th>
                 <th>Category name</th>
+                <th>Brand name</th>
                 <th>Product name</th>
                 <th>Image</th>
                 <th>Price</th>
@@ -85,6 +86,7 @@ table th, table td {
                  <tr>
                     <td>{{ $item->idProduct }}</td>
                     <td>{{ $item->category->name }}</td>
+                    <td>{{ $item->brand->name }}</td>
                     <td class="product-name">{{ $item->name }}</td>
                     <td><img src="{{ asset('upload/'.$item->img)  }}" width="200" height="150" alt=""></td>
                     <td>{{ number_format($item->price,0,'.',',')}} $</td>
