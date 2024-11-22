@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Client;
 
 use Log;
 use App\Models\Bill;
+use App\Models\Cart;
 use App\Models\Review;
 use App\Models\Product;
+use App\Models\CartItem;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\VariantPackage;
+use App\Models\VariantProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,13 +19,25 @@ class HomeController extends Controller
 {
     function index()
     {
-        $newProducts = Product::newProducts(4)->withCount('review')->withAvg('review', 'rating')->get();
-        $newProducts1 = Product::limit(4)->withCount('review')->withAvg('review', 'rating')->get();
-        $bestsellerProducts = Product::bestsellerProducts(6)->withCount('review')->withAvg('review', 'rating')->get();
-        $instockProducts = Product::instockProducts(8)->withCount('review')->withAvg('review', 'rating')->get();
+        $newProducts = Product::newProducts(4)
+            ->with(['variantProduct']) // Nạp quan hệ variantProduct
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $newProducts1 = Product::limit(4)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $bestsellerProducts = Product::bestsellerProducts(6)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $instockProducts = Product::instockProducts(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
 
-        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)->withCount('review')->withAvg('review', 'rating')->get();
-        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)->withCount('review')->withAvg('review', 'rating')->get();
+        $mostViewedProducts = Product::orderBy('view', 'desc')->take(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
+        $highestDiscountProducts = Product::orderBy('discount', 'desc')->take(8)
+            ->with(['variantProduct'])
+            ->withCount('review')->withAvg('review', 'rating')->get();
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
 
@@ -82,16 +97,6 @@ class HomeController extends Controller
                 ->withCount('review')         // Đếm số lượt đánh giá
                 ->get();
 
-            // Lấy danh sách các biến thể của sản phẩm
-            $variants = $sp->variantProduct;
-
-            // // Tạo mảng chứa tên các biến thể
-            $nameVariants = [];
-            foreach ($variants as $variant) {
-                // Lấy tên biến thể từ variantPackage
-                $nameVariants[] = $variant->variantPackage ? $variant->variantPackage->name : 'Chưa có tên biến thể'; // Kiểm tra nếu variantPackage tồn tại
-            }
-
             $sp->view += 1; // tăng lượt xem sản phẩm
             $sp->save(); // lưu lại số lượt xem sản phẩm
 
@@ -130,7 +135,7 @@ class HomeController extends Controller
             $product = Product::with('review.user')->findOrFail($productId);
 
             // Trả về view với các thông tin cần thiết
-            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'nameVariants', 'canReview', 'product', 'billId', 'soldQuantity'));
+            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'canReview', 'product', 'billId', 'soldQuantity'));
         }
 
         return redirect()->route('products')->with('error', 'Không tìm thấy sản phẩm.');
@@ -195,5 +200,133 @@ class HomeController extends Controller
             ->withAvg('review', 'rating')->orderBy('id', 'DESC')->paginate(9);
         // echo var_dump($dssp);
         return view('client.home.proSearch', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
+    }
+    //
+    function getProductInfo(Request $request)
+    {
+        $id_product = $request->input('id');
+        //Lấy thông tin variant product
+        $variants = VariantProduct::where('id_product', $id_product)->select('id', 'id_variant')->get();
+        //Lấy id của variant
+        $variant = VariantProduct::where('id_product', $id_product)->pluck('id_variant');
+        //Lấy thông tin packages
+        $packages = VariantPackage::whereIn('id', $variant)->get();
+        // Lấy thông tin product từ db
+        $in4Products = Product::find($id_product);
+        if ($in4Products) {
+            return response()->json([
+                'name' => $in4Products->name,
+                'img' => $in4Products->img,
+                'packages' => $packages,
+                'variants' => $variants,
+            ]);
+        }
+        // not found
+        return response()->json(['error' => 'Sản Phẩm Không Tồn Tại!!'], 404);
+    }
+    function getPriceQuantiVariant(Request $request)
+    {
+
+        $id = $request->input('id');
+        //Lấy price và quantity variant_products
+        $variantProduct = VariantProduct::where('id', $id)->select('price', 'quantity', 'id')->first();
+        if ($variantProduct) {
+            $formattedPrice = number_format($variantProduct->price, 0, ',', '.') . 'VNĐ';
+            return response()->json([
+                'price' => $formattedPrice,
+                'quantity' => $variantProduct->quantity,
+                'id' => $variantProduct->id,
+            ]);
+        }
+        //not found
+        return response()->json(['error' => 'Có lỗi đã xảy ra!!!'], 404);
+    }
+    function addToCartHome(Request $request)
+    {
+        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+
+        $id_product = $request->input('id_product'); //id sản phẩm
+        $id_variantProduct = $request->input('id_variantProduct');
+        $quantity = $request->input('quantity'); //số lượng
+        $price = $request->input('price'); // giá thành
+        $totalPrice = $quantity * $price; // tổng giá
+        // $variant_id = $request->input('packageId'); // variant_id
+        $name = $request->input('name'); // name
+        $img = $request->input('img'); // img
+        $cartItem = CartItem::where('cart_id', $cart->id)
+            ->where('variant_id', $id_variantProduct)
+            ->first();
+        if ($cartItem) {
+            $cartItem->quantity += $request->quantity;
+            $cartItem->total = $totalPrice;
+            $cartItem->save();
+        } else {
+            $updateStatus = CartItem::create([
+                'cart_id' => $cart->id,
+                'product_id' => $id_product,
+                'variant_id' => $id_variantProduct,
+                'name' => $name,
+                'image' => $img,
+                'price' => $price,
+                'quantity' => $quantity,
+                'total' => $totalPrice
+            ]);
+            if ($updateStatus) {
+                $listCartItem = CartItem::where('cart_id', $cart->id)
+                    ->get();
+                return response()->json([
+                    'count' => count($listCartItem),
+                ]);
+            }
+        }
+        return redirect()->back();
+        // }
+    }
+    public function filter(Request $request)
+    {
+        $category_id = $request->input('category_id');
+        $categories = Category::orderBy('name', 'ASC')->get();
+        if ($request->category_id) {
+            $products = Product::where('category_id', $request->category_id)
+                ->withCount('review') // Đếm số lượt đánh giá
+                ->withAvg('review', 'rating') // Tính trung bình số sao
+                ->orderBy('id', 'desc')
+                ->paginate(12);
+        } else {
+            $products = Product::withCount('review') // Đếm số lượt đánh giá
+                ->withAvg('review', 'rating') // Tính trung bình số sao
+                ->orderBy('id', 'desc')
+                ->paginate(12);
+            //phan trang 9sp/1page
+        }
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
+        // Lấy danh sách khoảng giá
+        $priceRanges = $request->get('price', []);
+
+        // Nếu không có giá trị lọc, trả về tất cả sản phẩm
+        if (empty($priceRanges)) {
+            $filteredVariants = VariantProduct::all();
+        } else {
+            // Tạo query
+            $query = VariantProduct::query(); //tạo một đối tượng query builder để bắt đầu xây dựng truy vấn.
+
+            // Lọc theo khoảng giá
+            $query->where(function ($q) use ($priceRanges) {
+                foreach ($priceRanges as $range) {
+                    [$min, $max] = explode('-', $range); //chia chuỗi khoảng giá (như '0-100000') thành mảng ['0', '100000'].
+                    $q->orWhereBetween('price', [(int)$min, (int)$max]);
+                }
+            });
+
+            // Lấy danh sách sản phẩm đã lọc
+            $filteredVariants = $query->get();
+        }
+
+        // Trả về view
+        return view('client.home.filtered', compact('filteredVariants', 'categories', 'orderCount', 'products', 'category_id'));
     }
 }

@@ -257,4 +257,22 @@ class ProductController extends Controller
             ]);
         }
     }
+    public function filterByCategory(Request $request)
+    {
+        $categoryId = $request->input('category_id');
+
+        // Lấy danh sách danh mục (nếu cần hiển thị lại trong view)
+        $categories = Category::all();
+
+        if ($categoryId == 0) {
+            // Nếu không chọn danh mục, trả về tất cả sản phẩm
+            $products = Product::all();
+        } else {
+            // Lọc sản phẩm theo danh mục được chọn
+            $products = Product::where('category_id', $categoryId)->paginate(10);
+        }
+
+        // Trả về view với danh sách sản phẩm và danh mục
+        return view('admin.products.productList', compact('products', 'categories', 'categoryId'));
+    }
 }

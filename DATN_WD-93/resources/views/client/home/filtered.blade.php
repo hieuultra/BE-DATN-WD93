@@ -107,7 +107,7 @@
             <div class="col-lg-3 col-md-4">
                 <!-- Price Start -->
                 <h5 class="section-title position-relative text-uppercase mb-3">
-                    <span class="bg-secondary pr-3">Lọc theo khoảng giá</span>
+                    <span class="bg-secondary pr-3">Filter by price</span>
                 </h5>
                 <div class="bg-light p-4 mb-30">
                     <form method="post" action="{{ route('products.filter') }}">
@@ -138,12 +138,13 @@
                 <!-- Price End -->
 
                 <!-- Color Start -->
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Lọc theo phân loại</span></h5>
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by
+                        Classification</span></h5>
                 <div class="bg-light p-4 mb-30">
-                    <form action="" method="">
+                    <form>
                         <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" checked id="color-all">
-                            <label class="custom-control-label" for="price-all">Tất cả phân loại</label>
+                            <label class="custom-control-label" for="price-all">All Classification</label>
                             <span class="badge border font-weight-normal">1000</span>
                         </div>
                         <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
@@ -248,14 +249,14 @@
                         </div>
                     </div>
 
-                    @foreach ($products as $item)
-                        @php $variant = $item->variantProduct->first();
-                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100); @endphp
-
+                    @forelse ($filteredVariants as $variant)
+                        @php  $item = $variant->product;
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100);
+                               @endphp
                         <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
                             <div class="product-item bg-light mb-4">
                                 <div class="product-img position-relative overflow-hidden">
-                                    <img class="img-fluid w-100 tuan" src="{{ asset('upload/' . $item->img) }}"
+                                    <img class="img-fluid w-100 tuan" src="{{ asset('upload/' . $variant->product->img) }}"
                                         alt="">
                                     <div class="product-action">
                                         <a class="btn btn-outline-dark btn-square" href="{{ route('cart.listCart') }}"><i
@@ -265,15 +266,15 @@
                                         <a class="btn btn-outline-dark btn-square" href=""><i
                                                 class="fa fa-sync-alt"></i></a>
                                         <a class="btn btn-outline-dark btn-square"
-                                            href="{{ route('productDetail', $item->id) }}"><i
+                                            href="{{ route('productDetail', $variant->product->id) }}"><i
                                                 class="fa fa-search"></i></a>
                                     </div>
                                 </div>
                                 <div class="text-center py-4">
                                     <a class="h6 text-decoration-none text-truncate"
-                                        href="{{ route('productDetail', $item->id) }}"
+                                        href="{{ route('productDetail', $variant->product->id) }}"
                                         style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                        {{ $item->name }}
+                                        {{ $variant->product->name }}
                                     </a>
                                     <div class="d-flex align-items-center justify-content-center mt-2">
                                         <h5 class="text-danger"> {{ number_format($tt, 0, ',', '.') }} VND</h5>
@@ -284,27 +285,26 @@
                                             <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
                                         @else
                                             <del>Giá: Không có thông tin</del>
-                                        @endif
-                                       </h6>
-                                        <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
+                                        @endif</h6>
+                                        <p class="discount text-danger mb-0">-{{ $variant->product->discount ?? 0 }}%</p>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between bg-light">
-                                        <a href="{{ route('productDetail', $item->id) }}"
+                                        <a href="{{ route('productDetail', $variant->product->id) }}"
                                             class="btn btn-sm text-dark p-0"><i
                                                 class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
                                         <form action="" method="post">
                                             {{-- @csrf --}}
                                             <input type="hidden" name="quantity" value="1">
-                                            <input type="hidden" name="productId" value="{{ $item->id }}">
-                                            <input type="button" data-id="{{ $item->id }}" value="Thêm vào giỏ"
+                                            <input type="hidden" name="productId" value="{{ $variant->product->id }}">
+                                            <input type="button" data-id="{{ $variant->product->id }}" value="Thêm vào giỏ"
                                                 class="btn btn-sm text-dark p-0 addToCartShow" name="addtocart"><i
                                                 class="fas fa-shopping-cart text-primary mr-1"></i>
                                         </form>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-center mb-1">
                                         @php
-                                            $averageRating = round($item->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có
-                                            $reviewCount = $item->review_count ?? 0; // mặc định 0 nếu không có
+                                            $averageRating = round($variant->productem->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có
+                                            $reviewCount = $variant->product->review_count ?? 0; // mặc định 0 nếu không có
                                         @endphp
 
                                         @for ($i = 1; $i <= 5; $i++)
@@ -317,7 +317,9 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                        @empty
+                        <p class="text-center">No products found for the selected price range.</p>
+                    @endforelse
                     <div class="col-12 pb-1">
                         <nav aria-label="Page navigation">
                             <!-- Kiểm tra nếu đang ở trang đầu tiên -->
