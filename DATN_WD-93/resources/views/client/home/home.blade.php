@@ -274,7 +274,7 @@
                     <div class="carousel-inner">
                         <div class="carousel-item position-relative active" style="height: 430px">
                             <img class="position-absolute w-100 h-100"
-                                src="{{ asset('img/20240909015811-0-Slide banner - 1590x604px (1).webp') }}"
+                                src="{{ asset('img/b18.png') }}"
                                 style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
@@ -299,7 +299,7 @@
                         </div>
                         <div class="carousel-item position-relative" style="height: 430px">
                             <img class="position-absolute w-100 h-100"
-                                src="{{ asset('img/20240905071756-0-389x143_2 3.png') }}" style="object-fit: cover" />
+                                src="{{ asset('img/slidepc4.jpg') }}" style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
               >
@@ -323,7 +323,7 @@
                         </div>
                         <div class="carousel-item position-relative" style="height: 430px">
                             <img class="position-absolute w-100 h-100"
-                                src="{{ asset('img/20240510022448-0-THUCUDOIMOI BANNERWEB_590x604.webp') }}"
+                                src="{{ asset('img/1610x492_banner_PC_6cce2d4c65.webp') }}"
                                 style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
@@ -351,7 +351,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="product-offer mb-30" style="height: 200px">
-                    <img class="img-fluid" src="{{ asset('img/20241104090355-0-Sieuqua-1590x604px.avif') }}"
+                    <img class="img-fluid" src="{{ asset('img/3DrMNgGFb8o9ofWTS27HK7UXD7TA7FW2Wa692CMN.webp') }}"
                         alt="" />
                     {{-- <div class="offer-text">
             <h6 class="text-white text-uppercase">Save 20%</h6>
@@ -360,7 +360,7 @@
           </div> --}}
                 </div>
                 <div class="product-offer mb-30" style="height: 200px">
-                    <img class="img-fluid" src="{{ asset('img/20240731045253-0-Slide banner 1.webp') }}" alt="" />
+                    <img class="img-fluid" src="{{ asset('img/slidepc1.jpg') }}" alt="" />
                     {{-- <div class="offer-text">
             <h6 class="text-white text-uppercase">Save 20%</h6>
             <h3 class="text-white mb-3">Special Offer</h3>
@@ -808,22 +808,22 @@
             <div class="col-md-6">
                 <div class="product-offer mb-30" style="height: 300px">
                     <img class="img-fluid"
-                        src="{{ asset('img/20240910063535-0-Slide bannerpayday924-1590x604px.webp') }}" alt="" />
+                        src="{{ asset('img/Frame 3467713.webp') }}" alt="" />
                     <div class="offer-text">
                         <h6 class="text-white text-uppercase">Save 20%</h6>
                         <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="" class="btn btn-primary">Shop Now</a>
+                        <a href="{{ route('products') }}" class="btn btn-primary">Shop Now</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="product-offer mb-30" style="height: 300px">
-                    <img class="img-fluid" src="{{ asset('img/20240918020343-0-Web Listerine287x232.webp') }}"
+                    <img class="img-fluid" src="{{ asset('img/Frame 3467714-3.webp') }}"
                         alt="" />
                     <div class="offer-text">
                         <h6 class="text-white text-uppercase">Save 20%</h6>
                         <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="" class="btn btn-primary">Shop Now</a>
+                        <a href="{{ route('products') }}" class="btn btn-primary">Shop Now</a>
                     </div>
                 </div>
             </div>
