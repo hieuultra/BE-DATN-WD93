@@ -38,7 +38,8 @@ class AdminCouponController extends Controller
             'min_order_value' => 'required|numeric|min:0',  // Giá trị đơn hàng tối thiểu không âm
             'expiry_date' => 'required|date|after:today',  // Ngày hết hạn phải sau ngày hôm nay
             'usage_limit' => 'required|numeric|min:1',   // Số lần sử dụng phải lớn hơn hoặc bằng 1
-            'is_active' => 'required|boolean',           // Trạng thái hoạt động (0 hoặc 1)
+            'is_active' => 'required|boolean',
+            'type' => 'required'    // Trạng thái hoạt động (0 hoặc 1)
         ]);
 
         // Lưu mã giảm giá vào cơ sở dữ liệu
@@ -49,6 +50,7 @@ class AdminCouponController extends Controller
             'expiry_date' => $request->expiry_date,
             'usage_limit' => $request->usage_limit,
             'is_active' => $request->is_active,
+            'type' => $request->type,
         ]);
 
         // Trả về thông báo thành công và chuyển hướng

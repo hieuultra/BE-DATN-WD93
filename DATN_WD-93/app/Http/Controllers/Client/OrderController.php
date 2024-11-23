@@ -13,6 +13,7 @@ use App\Models\VariantProduct;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Coupon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -99,9 +100,11 @@ class OrderController extends Controller
         }
         $carts = Cart::where('user_id', Auth::id())->with("items.product", "items.variant")->first();
         if ($carts && $carts->items->count() > 0) {
+            // dd($carts);
             $total = 0;
             $subTotal = 0;
             $shipping = 40000;
+            $coupon = 0;
             foreach ($carts->items as  $item) {
                 $price = is_numeric($item['price']) ? $item['price'] : 0;
                 $quantity = is_numeric($item['quantity']) ? $item['quantity'] : 0;
@@ -109,8 +112,24 @@ class OrderController extends Controller
                 // Tính toán tổng phụ
                 $subTotal += $price * $quantity;
             }
-            $total = $subTotal + $shipping;
-            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal'));
+            // Sử lý mã giảm giá theo 2 luồng
+            if (!empty($carts->coupon_code)) {
+                $couponTable = Coupon::where('code', $carts->coupon_code)->first();
+                if ($couponTable) {
+                    $couponType = $couponTable->type;
+                    $couponValue = $couponTable->value;
+
+                    if ($couponType == 'fixed') {
+                        // Mã giảm giá cố định
+                        $coupon = $couponValue;
+                    } elseif ($couponType == 'percentage') {
+                        // Mã giảm giá theo phần trăm
+                        $coupon = ($subTotal + $shipping) * ($couponValue / 100);
+                    }
+                }
+            }
+            $total = $subTotal + $shipping - $coupon;
+            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal', 'coupon'));
         }
         return redirect()->route('cart.listCart');
     }
@@ -132,6 +151,15 @@ class OrderController extends Controller
                 // $carts = session()->get('cart', []);
                 // Lấy cart của người dùng từ database
                 $carts = Cart::where('user_id', Auth::id())->with('items')->first();
+                // Giảm mã giảm giá sau khi sử dụng
+                if ($carts->coupon_code !== null) {
+                    $couponTable = Coupon::where('code', $carts->coupon_code)->first();
+                    if ($couponTable->usage_limit !== null) {
+                        $couponTable->decrement('usage_limit');
+                    }
+                    $carts->coupon_code = null;
+                    $carts->save();
+                }
                 if (!$carts || $carts->items->isEmpty()) {
                     return redirect()->route('cart.listCart')->with('error', 'Giỏ hàng của bạn trống');
                 }
@@ -169,7 +197,7 @@ class OrderController extends Controller
                 return redirect()->route('orders.index')->with('success', 'Tạo đơn hàng thành công');
             } catch (\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('cart.listCart')->with('error', 'Tạo đơn hàng thất bại');
+                return redirect()->route('cart.listCart')->with('error', 'Tạo đơn hàng thất bại: ' . $e->getMessage());
             }
         }
     }

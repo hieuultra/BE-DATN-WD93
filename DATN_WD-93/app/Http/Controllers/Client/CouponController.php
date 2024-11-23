@@ -22,7 +22,6 @@ class CouponController extends Controller
 
         // Lấy giỏ hàng và các item trong giỏ
         $cart = Cart::where('user_id', Auth::id())->with('items')->first();
-
         if (!$cart || $cart->items->isEmpty()) {
             return back()->with('error', 'Giỏ hàng của bạn đang trống!');
         }
@@ -38,7 +37,7 @@ class CouponController extends Controller
         }
 
         // Tính giá trị giảm giá (dựa trên % hoặc giá trị cụ thể)
-        $discount = $subTotal * ($coupon->value / 100);
+        // $discount = $subTotal * ($coupon->value / 100);
 
         // Áp dụng giảm giá lên từng CartItem
         foreach ($cart->items as $item) {
@@ -58,5 +57,4 @@ class CouponController extends Controller
 
         return back()->with('success', 'Áp dụng mã giảm giá thành công!');
     }
-
 }
