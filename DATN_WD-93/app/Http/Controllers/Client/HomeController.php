@@ -229,13 +229,18 @@ class HomeController extends Controller
 
         $id = $request->input('id');
         //Lấy price và quantity variant_products
-        $variantProduct = VariantProduct::where('id', $id)->select('price', 'quantity', 'id')->first();
+        $variantProduct = VariantProduct::where('id', $id)->select('price', 'quantity', 'id', 'id_product')->first();
+        $product = $variantProduct->id_product;
+        $proDis = Product::where('id', $product)->select('discount')->first();
+        $total = $variantProduct->price - (($variantProduct->price  * $proDis->discount) / 100);
         if ($variantProduct) {
             $formattedPrice = number_format($variantProduct->price, 0, ',', '.') . 'VNĐ';
             return response()->json([
                 'price' => $formattedPrice,
                 'quantity' => $variantProduct->quantity,
                 'id' => $variantProduct->id,
+                'total' =>  number_format($total, 0, ',', '.'),
+                'dis' => $proDis->discount,
             ]);
         }
         //not found
@@ -260,6 +265,10 @@ class HomeController extends Controller
             $cartItem->quantity += $request->quantity;
             $cartItem->total = $totalPrice;
             $cartItem->save();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
+            ]);
         } else {
             $updateStatus = CartItem::create([
                 'cart_id' => $cart->id,
@@ -276,10 +285,11 @@ class HomeController extends Controller
                     ->get();
                 return response()->json([
                     'count' => count($listCartItem),
+                    'status' => 'success',
+                    'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
                 ]);
             }
         }
-        return redirect()->back();
         // }
     }
     public function filter(Request $request)
