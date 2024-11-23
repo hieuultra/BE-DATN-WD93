@@ -4,6 +4,7 @@
 
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
     .pro-quantity {
         text-align: center; /* Center horizontally */
@@ -32,16 +33,26 @@
       <div class="col-lg-12 table-responsive mb-5">
         {{-- Hiển thị thông báo --}}
         @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'OK'
+            });
+        </script>
+        @endif
 
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+        @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Thất bại!',
+                text: '{{ session('error') }}',
+                confirmButtonText: 'Thử lại'
+            });
+        </script>
+        @endif
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -104,10 +115,10 @@
                             @method('PUT')
                             @if ($item->status_bill == $type_cho_xac_nhan)
                             <input type="hidden" name="da_huy" value="1">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure unset bill right?')">Hủy dơn</button>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">Hủy dơn</button>
                             @elseif ($item->status_bill == $type_dang_van_chuyen)
                             <input type="hidden" name="da_giao_hang" value="1">
-                            <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you received the goods?')">Đã nhận hàng</button>
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Bạn có chắc đã nhận được hàng?')">Đã nhận hàng</button>
                             @endif
                         </form>
                         @if ($item->status_bill == $type_da_giao_hang || $item->status_bill == $type_da_huy || $item->status_bill == $type_khach_hang_tu_choi)
