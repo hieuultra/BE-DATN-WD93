@@ -30,6 +30,18 @@
         <img id="imgCate" src="" alt="Image Product" style="width:150px; display: none">
     </div>
 
+    <div class="mb-3">
+        <label class="form-label">classification (Phân loại)</label>
+        <select name="classification">
+          <option value="chuyen_khoa">Chuyên khoa</option>
+          <option value="kham_tu_xa">Kham qua video (Khám từ xa)</option>
+          <option value="tong_quat">Khám tổng quát (chỉ dành cho bệnh viện)</option>
+        </select>
+        @error('classification')
+        <p class="text-danger">{{ $message }}</p>
+        @enderror
+    </div>
+
       <input type="submit" class="btn btn-primary" name="them" value="ADD">
       <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
       <input type="button" class="btn btn-primary" value="List Specialty">

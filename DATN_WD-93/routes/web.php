@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Models\Category;
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -37,11 +38,13 @@ Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
 Route::get('/products', [HomeController::class, 'products'])->name('products');
 Route::get('/search', [HomeController::class, 'search'])->name('products.search');
 Route::get('/products/detail/{product_id}', [HomeController::class, 'detail'])->name('productDetail');
-Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId'); 
-Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo'); 
-Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant'); 
+Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
+Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo');
+Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
-Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant'); 
+Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
+
+
 
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
@@ -64,10 +67,84 @@ Route::prefix('appoinment')
     ->as('appoinment.')
     ->group(function () {
         Route::get('/', [AppoinmentController::class, 'appoinment'])->name('index');
+
+        Route::get('/booKingCare/{id}', [AppoinmentController::class, 'booKingCare'])->name('booKingCare');
+        Route::get('/booKingCarePackage/{id}', [AppoinmentController::class, 'booKingCarePackage'])->name('booKingCarePackage');
+
+        Route::get('/search-autocomplete', [AppoinmentController::class, 'autocompleteSearch'])->name('autocompleteSearch');
+        Route::get('/appointmentHistory/{id}', [AppoinmentController::class, 'appointmentHistory'])->name('appointmentHistory');
+
+        Route::get('/physicianManagement/{id}', [AppoinmentController::class, 'physicianManagement'])->name('physicianManagement');
+        Route::get('/physicianManagementdoctor/{id1}/{id2}', [AppoinmentController::class, 'physicianManagementdoctor'])->name('physicianManagementdoctor');
+        Route::post('/appointments/cancel/{id}', [AppoinmentController::class, 'cancelAppointment']);
+
+        Route::get('/doctorDetails/{id}', [AppoinmentController::class, 'doctorDetails'])->name('doctorDetails');
+        Route::get('/doctorDetailsall', [AppoinmentController::class, 'doctorDetailsall'])->name('doctorDetailsall');
+
+        Route::get('/formbookingdt/{id}', [AppoinmentController::class, 'formbookingdt'])->name('formbookingdt');
+        Route::get('/formbookingPackage/{id}', [AppoinmentController::class, 'formbookingPackage'])->name('formbookingPackage');
+
+        Route::post('/bookAnAppointment', [AppoinmentController::class, 'bookAnAppointment'])->name('bookAnAppointment');
+        Route::post('/bookAnAppointmentPackage', [AppoinmentController::class, 'bookAnAppointmentPackage'])->name('bookAnAppointmentPackage');
+        Route::get('/appointment-history/{appointmentId}', [AppoinmentController::class, 'fetchHistory']);
+
+        Route::get('/appointmentHistory/{id}', [AppoinmentController::class, 'appointmentHistory'])->name('appointmentHistory');
+        Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
+
+        Route::get('/statistics/{id}', [AppoinmentController::class, 'statistics'])->name('statistics');
+        Route::get('/appointments/pending', [AppoinmentController::class, 'getPendingAppointments'])->name('appointments.pending');
+
+        Route::post('/appointments/{id}/confirm', [AppoinmentController::class, 'confirmAppointment'])->name('appointments.confirm');
+        Route::post('/appointments/{id}/confirmhuy', [AppoinmentController::class, 'confirmAppointmenthuy'])->name('appointments.confirmhuy');
+        Route::post('/confirmAppointmentkoden', [AppoinmentController::class, 'confirmAppointmentkoden'])->name('confirmAppointmentkoden');
+        Route::get('/appointment-history/{appointment_id}', [AppoinmentController::class, 'getAppointmentHistory'])->name('appointment.history');
+
+        Route::post('/confirmAppointmentHistories', [AppoinmentController::class, 'confirmAppointmentHistories'])->name('confirmAppointmentHistories');
+        Route::get('/appointments/get-details', [AppoinmentController::class, 'getDetails']);
+        Route::get('/appointments/get_patient_info', [AppoinmentController::class, 'getPatientInfo']);
+
+        //siuuu
+        Route::post('/appointments/get-review-data', [AppoinmentController::class, 'getReviewData'])->name('appointments.getReviewData');
+        Route::get('/reviews/{id}/edit', [AppoinmentController::class, 'edit']);
+        Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
+        Route::put('/reviews/{id}', [AppoinmentController::class, 'updateReview']);
+        Route::post('/appointments/{id}/cancel', [AppoinmentController::class, 'cancel'])->name('appointments.cancel');
+
+
         Route::get('specialistExamination', [AppoinmentController::class, 'specialistExamination'])->name('specialistExamination');
         Route::get('/doctors/{specialty_id}', [AppoinmentController::class, 'doctors'])->name('doctorsBySpecialtyId');
         Route::post('/schedule', [AppoinmentController::class, 'schedule'])->name('schedule');
+
+        Route::get('/appointment_histories/{appointment}',  [AppoinmentController::class, 'getPrescriptions']);
     });
+
+Route::get('/viewSikibidi', function () {
+    $orderCount = 1;
+    if (Auth::check()) {
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+    }
+    $categories = Category::orderBy('name', 'asc')->get();
+    return view('client.ai.viewSikibidi', compact('orderCount', 'categories'));
+});
+Route::get('/chat-ai', function () {
+    $orderCount = 1;
+    if (Auth::check()) {
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+    }
+    $categories = Category::orderBy('name', 'asc')->get();
+    return view('client.ai.chatAI', compact('orderCount', 'categories'));
+});
+Route::get('/chat-zalo', function () {
+    $orderCount = 1;
+    if (Auth::check()) {
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+    }
+    $categories = Category::orderBy('name', 'asc')->get();
+    return view('client.ai.chatZalo', compact('orderCount', 'categories'));
+});
 
 Auth::routes();
 //user management
@@ -207,6 +284,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
             ->as('doctors.')
             ->group(function () {
                 Route::get('/viewDoctorAdd', [DoctorController::class, 'viewDoctorAdd'])->name('viewDoctorAdd');
+                Route::get('/filter-specialty', [DoctorController::class, 'filterSpecialty'])->name('filterSpecialty');
                 Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
                 Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
                 Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');
@@ -222,6 +300,44 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
                 Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
                 Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
+
+                Route::get('/schedule/{doctorId}', [DoctorController::class, 'showSchedule'])->name('doctor.schedule');
+                Route::post('/scheduleAdd', [DoctorController::class, 'scheduleAdd'])->name('scheduleAdd');
+                Route::get('/scheduleEdit/{id}', [DoctorController::class, 'scheduleEdit']);
+                Route::put('/scheduleUpdate/{id}', [DoctorController::class, 'scheduleUpdate'])->name('scheduleUpdate');
+                Route::delete('/scheduleDestroy/{id}', [DoctorController::class, 'scheduleDestroy']);
+
+
+                Route::get('/showPackages/{packageId}', [DoctorController::class, 'showPackages'])->name('showPackages');
+                Route::post('/schedulePackageAdd', [DoctorController::class, 'schedulePackageAdd'])->name('schedulePackageAdd');
+            });
+
+        Route::prefix('achievements')
+            ->as('achievements.')
+            ->group(function () {
+                Route::get('/achievements/{doctorId}', [DoctorController::class, 'showAchievements'])->name('doctor.achievements');
+                Route::post('/achievementsAdd', [DoctorController::class, 'achievementsAdd'])->name('achievementsAdd');
+                Route::delete('/achievementsds/{id}', [DoctorController::class, 'destroy']);
+                Route::post('/achievementsUpdate', [DoctorController::class, 'achievementsUpdate'])->name('achievementsUpdate');
+            });
+
+        Route::prefix('packages')
+            ->as('packages.')
+            ->group(function () {
+                Route::get('/viewPackagesAdd', [DoctorController::class, 'viewPackagesAdd'])->name('viewPackagesAdd');
+                Route::post('/PackageAdd', [DoctorController::class, 'PackageAdd'])->name('PackageAdd');
+                Route::get('/packageUpdateForm/{id}', [DoctorController::class, 'packageUpdateForm'])->name('packageUpdateForm');
+                Route::post('/packageUpdate/{id}', [DoctorController::class, 'packageUpdate'])->name('packageUpdate');
+                Route::delete('/packageDestroy/{id}', [DoctorController::class, 'packageDestroy'])->name('packageDestroy');
+            });
+
+        Route::prefix('medicalPackages')
+            ->as('medicalPackages.')
+            ->group(function () {
+                Route::get('/medicalPackages/{doctorId}', [DoctorController::class, 'medicalPackages'])->name('medicalPackages');
+                Route::post('/viewmedicalPackagesAdd', [DoctorController::class, 'viewmedicalPackagesAdd'])->name('viewmedicalPackagesAdd');
+                Route::post('/medicalPackagesUpdate', [DoctorController::class, 'medicalPackagesUpdate'])->name('medicalPackagesUpdate');
+                Route::delete('/medicalPackagesDestroy/{id}', [DoctorController::class, 'medicalPackagesDestroy'])->name('medicalPackagesDestroy');
             });
         Route::prefix('reviews')
             ->as('reviews.')
@@ -235,23 +351,23 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::prefix('topics')
             ->as('topics.')
             ->group(function () {
-                Route::get('/index',           [AdminTopicController::class, 'index'])  ->name('index');
-                Route::get('/create',          [AdminTopicController::class, 'create']) ->name('create');
-                Route::post('/store',          [AdminTopicController::class, 'store'])  ->name('store');
-                Route::get('/show/{id}',       [AdminTopicController::class, 'show'])   ->name('show');
-                Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])   ->name('edit');
-                Route::put('/{id}/update',     [AdminTopicController::class, 'update']) ->name('update');
+                Route::get('/index',           [AdminTopicController::class, 'index'])->name('index');
+                Route::get('/create',          [AdminTopicController::class, 'create'])->name('create');
+                Route::post('/store',          [AdminTopicController::class, 'store'])->name('store');
+                Route::get('/show/{id}',       [AdminTopicController::class, 'show'])->name('show');
+                Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])->name('edit');
+                Route::put('/{id}/update',     [AdminTopicController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminTopicController::class, 'destroy'])->name('destroy');
             });
-            Route::prefix('blogs')
+        Route::prefix('blogs')
             ->as('blogs.')
             ->group(function () {
-                Route::get('/index',           [AdminBlogController::class, 'index'])  ->name('index');
-                Route::get('/create',          [AdminBlogController::class, 'create']) ->name('create');
-                Route::post('/store',          [AdminBlogController::class, 'store'])  ->name('store');
-                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])   ->name('show');
-                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])   ->name('edit');
-                Route::put('/{id}/update',     [AdminBlogController::class, 'update']) ->name('update');
+                Route::get('/index',           [AdminBlogController::class, 'index'])->name('index');
+                Route::get('/create',          [AdminBlogController::class, 'create'])->name('create');
+                Route::post('/store',          [AdminBlogController::class, 'store'])->name('store');
+                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])->name('show');
+                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])->name('edit');
+                Route::put('/{id}/update',     [AdminBlogController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminBlogController::class, 'destroy'])->name('destroy');
             });
     });
