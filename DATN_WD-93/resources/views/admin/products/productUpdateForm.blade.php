@@ -41,6 +41,20 @@
         </select>
       </div>
 
+      <div class="mb-3">
+        <label class="form-label">Brands</label>
+        <select class="form-select" name="brand_id">
+            <option value="0">Choose brands</option>
+            @foreach ($brands as $item)
+            @if ($item->id == $product->brand_id)
+                <option value="{{ $item->id }}" selected>{{ $item->name }}</option>
+            @else
+                <option value="{{ $item->id }}">{{ $item->name }}</option>
+            @endif
+            @endforeach
+        </select>
+      </div>
+
       {{-- <div class="mb-3">
         <label class="form-label">Image</label>
         <input type="file" class="form-control" name="img">

@@ -8,6 +8,7 @@
         display: flex;
         justify-content: center;
     }
+
     .pagination a {
         margin: 0 5px;
         padding: 5px 10px;
@@ -16,15 +17,18 @@
         color: #fff;
         border-radius: 3px;
     }
+
     .pagination li {
         list-style-type: none;
     }
+
     table th,
     table td {
         word-wrap: break-word !important;
         white-space: normal !important;
         max-width: 100px !important;
     }
+
     td.product-name {
         max-width: 100px !important;
     }
@@ -32,7 +36,7 @@
 
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">List Reviews</h1>
+        <h1 class="mt-4"> Danh sách thương hiệu</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Dashboard</li>
         </ol>
@@ -44,44 +48,40 @@
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
-                List Reviews
+                Danh sách thương hiệu
             </div>
             <div class="card-body">
+            <a href="{{ route('admin.brands.create') }}" class="btn btn-success mb-4">Thêm Thương Hiệu</a>
                 <table class="table table-striped table-bordered table-hover datatablesSimple">
                     <thead>
                         <tr>
                             <th class="text-center">ID</th>
-                            <th class="text-center">User Name</th>
-                            <th class="text-center">Email</th>
-                            <th class="text-center">Product Name</th>
-                            <th class="text-center">Rating</th>
-                            <th class="text-center">Comment</th>
-                            <th class="text-center">Created At</th>
-                            <th class="text-center">Actions</th>
+                            <th class="text-center">Tên thương hiệu</th>
+                            <th class="text-center">Ảnh thương hiệu</th>
+                            <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($reviews as $review)
+                        @foreach($brands as $brand)
                         <tr>
-                            <td class="text-center">{{ $review->id }}</td>
-                            <td class="text-center">{{ $review->user->name }}</td>
-                            <td class="text-center">{{ $review->user->email }}</td>
-                            <td class="text-center">{{ $review->product ? $review->product->name : 'N/A' }}</td>
-                            <td class="text-center">{{ $review->rating }} / 5</td>
-                            <td class="text-center">{{ $review->comment }}</td>
-                            <td class="text-center">{{ $review->created_at->format('d/m/Y') }}</td>
+                            <td class="text-center">{{ $brand->id }}</td>
+                            <td class="text-center">{{ $brand->name }}</td>
+                            
                             <td class="text-center">
-                                <form action="{{ route('admin.reviews.destroyReviews', $review->id) }}" method="POST" style="display:inline;">
+                            <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" style="width: 100px; height: 100px; object-fit: cover;">
+                            </td>
+                            <td class="text-center">
+                                <form action="{{ route('admin.brands.destroyBrand', $brand->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn chắc chắn muốn xóa?')">Delete</button>
                                 </form>
+                                <a href="{{route('admin.brands.edit',$brand->id)}}" class="btn btn-primary">Sửa</a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <a href="{{ route('admin.reviews.listDeletedReviews') }}" class="btn btn-secondary">Danh sách reviews đã xóa</a>
             </div>
         </div>
 

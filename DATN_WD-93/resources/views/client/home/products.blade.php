@@ -566,9 +566,6 @@
                         // console.log(id_variantProduct);
                         // console.log(productId);
                         $('#count').text(response.count);
-
-
-
                     }
                 });
             });
