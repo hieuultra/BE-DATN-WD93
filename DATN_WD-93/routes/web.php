@@ -49,7 +49,8 @@ Route::get('/products/{category_id}', [HomeController::class, 'products'])->name
 Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo');
 Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
-Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant'); 
+Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
+Route::post('/products/filter', [HomeController::class, 'filter'])->name('products.filter');
 
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
@@ -161,11 +162,12 @@ Route::get('/viewEditAcc', [AuthController::class, 'viewEditAcc'])->name('viewEd
 Route::post('/editAcc', [AuthController::class, 'editAcc'])->name('editAcc');
 
 Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
-Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');               //
+Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
 Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
 Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
 Route::post('/cart/apply-coupon', [CouponController::class, 'applyCoupon'])->name('cart.applyCoupon');
+
 
 // Route Blog
 Route::get('/blog',       [ClientBlogController::class, 'index'])->name('blog.index');
@@ -363,23 +365,11 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/show/{id}',       [AdminTopicController::class, 'show'])->name('show');
                 Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])->name('edit');
                 Route::put('/{id}/update',     [AdminTopicController::class, 'update'])->name('update');
-                Route::get('/index',           [AdminTopicController::class, 'index'])->name('index');
-                Route::get('/create',          [AdminTopicController::class, 'create'])->name('create');
-                Route::post('/store',          [AdminTopicController::class, 'store'])->name('store');
-                Route::get('/show/{id}',       [AdminTopicController::class, 'show'])->name('show');
-                Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])->name('edit');
-                Route::put('/{id}/update',     [AdminTopicController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminTopicController::class, 'destroy'])->name('destroy');
             });
         Route::prefix('blogs')
             ->as('blogs.')
             ->group(function () {
-                Route::get('/index',           [AdminBlogController::class, 'index'])->name('index');
-                Route::get('/create',          [AdminBlogController::class, 'create'])->name('create');
-                Route::post('/store',          [AdminBlogController::class, 'store'])->name('store');
-                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])->name('show');
-                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])->name('edit');
-                Route::put('/{id}/update',     [AdminBlogController::class, 'update'])->name('update');
                 Route::get('/index',           [AdminBlogController::class, 'index'])->name('index');
                 Route::get('/create',          [AdminBlogController::class, 'create'])->name('create');
                 Route::post('/store',          [AdminBlogController::class, 'store'])->name('store');
