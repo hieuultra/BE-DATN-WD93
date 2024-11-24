@@ -5,7 +5,7 @@
 
 <main>
     <div class="container-fluid px-4">
-      <h1 class="mt-4">List Bills</h1>
+      <h1 class="mt-4">DANH SÁCH ĐƠN HÀNG</h1>
       <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item active">Dashboard</li>
       </ol>
@@ -17,7 +17,7 @@
 
         <div class="card-header">
           <i class="fas fa-table me-1"></i>
-          List Bills
+          DANH SÁCH ĐƠN HÀNG
         </div>
         <div class="card-body">
                 {{-- Hiển thị thông báo --}}
@@ -70,7 +70,7 @@
                         {{ $item->phoneUser }}
                     </td>
                     <td class="text-center">
-                         {{ number_format($item->totalPrice,0,',','.') }}$
+                         {{ number_format($item->totalPrice,0,',','.') }}VND
                     </td>
                     <td class="text-center" style="color: dodgerblue">
                        <form action="{{ route('admin.bills.update', $item->id) }}" method="POST">
@@ -89,7 +89,7 @@
                        </form>
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('admin.bills.show', $item->id) }}" class="btn btn-primary">View</a>
+                        <a href="{{ route('admin.bills.show', $item->id) }}" class="btn btn-primary">Xem thêm</a>
                         {{-- @if ($item->status_bill === $type_da_huy)
                         <form action="{{ route('admin.bills.destroy', $item->id) }}" method="POST" class="d-inline">
                             @csrf

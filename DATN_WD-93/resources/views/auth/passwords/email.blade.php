@@ -47,7 +47,7 @@
 @endsection --}}
 <?php
 use Illuminate\Support\Facades\File;
-?> 
+?>
 @extends('layout')
 @section('titlepage','Instinct - Instinct Pharmacy System')
 @section('title','Welcome')
@@ -110,7 +110,7 @@ use Illuminate\Support\Facades\File;
                   <div class="text-center">
                     <!-- <img src="" alt="logo" class="img-fluid rounded-circle" width="132" height="132" /> -->
                     <h1 class="m-0 display-5 font-weight-semi-bold">
-                      <span class="text-primary font-weight-bold border px-3 mr-1">Instinct</span>Shop
+                      <span class="text-primary font-weight-bold border px-3 mr-1">Instinct</span>Pharmacy
                     </h1>
                   </div>
                   @if (session('status'))
@@ -123,7 +123,7 @@ use Illuminate\Support\Facades\File;
                     <div class="form-group">
                       <label>Email</label>
                       <input class="form-control form-control-lg @error('email') is-invalid @enderror" type="email" name="email" id="email"
-                       placeholder="Enter your Email" value="{{ old('email') }}" autocomplete="email" />
+                       placeholder="Nhập Email" value="{{ old('email') }}" autocomplete="email" />
                      @error('email')
                      <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -131,10 +131,10 @@ use Illuminate\Support\Facades\File;
                      @enderror
                     </div>
                     <div class="form-group">
-                      
+
                       <div class="d-flex mt-2 justify-content-between">
                         <small>
-                          <a href="{{ route('viewRegister') }}">Create account?</a>
+                          <a href="{{ route('viewRegister') }}">Tạo tài khoản?</a>
                         </small>
                       </div>
                     </div>

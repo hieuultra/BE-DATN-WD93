@@ -137,7 +137,7 @@ use Illuminate\Support\Facades\File;
                                             <!-- <img src="" alt="logo" class="img-fluid rounded-circle" width="132" height="132" /> -->
                                             <h1 class="m-0 display-5 font-weight-semi-bold">
                                                 <span
-                                                    class="text-primary font-weight-bold border px-3 mr-1">Instinct</span>Shop
+                                                    class="text-primary font-weight-bold border px-3 mr-1">Instinct</span>Pharmacy
                                             </h1>
                                         </div>
                                         @if (session('status'))
@@ -154,7 +154,7 @@ use Illuminate\Support\Facades\File;
                                                 <input
                                                     class="form-control form-control-lg @error('email') is-invalid @enderror"
                                                     type="email" name="email" id="email"
-                                                    placeholder="Enter your Email" value="{{ old('email') }}"
+                                                    placeholder="Nhập email" value="{{ old('email') }}"
                                                     autocomplete="email" />
                                                 @error('email')
                                                     <span class="invalid-feedback" role="alert">
@@ -163,11 +163,11 @@ use Illuminate\Support\Facades\File;
                                                 @enderror
                                             </div>
                                             <div class="form-group">
-                                                <label>Password</label>
+                                                <label>Mật khẩu</label>
                                                 <input
                                                     class="form-control form-control-lg @error('password') is-invalid @enderror"
                                                     type="password" name="password" id="password"
-                                                    placeholder="Enter your password" value="{{ old('password') }}"
+                                                    placeholder="Nhập mật khẩu" value="{{ old('password') }}"
                                                     autocomplete="password" />
                                                 @error('password')
                                                     <span class="invalid-feedback" role="alert">
@@ -176,10 +176,10 @@ use Illuminate\Support\Facades\File;
                                                 @enderror
                                             </div>
                                             <div class="form-group">
-                                                <label>Password Confirm</label>
+                                                <label>Nhập lại mật khẩu</label>
                                                 <input class="form-control form-control-lg" type="password"
                                                     name="password_confirmation" id="password-confirm"
-                                                    placeholder="Enter your password" value="{{ old('password') }}"
+                                                    placeholder="Nhập lại mật khẩu" value="{{ old('password') }}"
                                                     autocomplete="new-password" required>
                                             </div>
                                             <div class="text-center mt-3">

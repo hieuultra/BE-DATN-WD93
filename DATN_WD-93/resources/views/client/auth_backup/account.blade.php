@@ -54,7 +54,7 @@
                                             <li> <a href="../admin">Quản trị viên </a></li>
                                             <form action="{{ route('logout') }}" method="POST">
                                                 @csrf
-                                                <li><input type="submit" class="btn btn-danger btn-custom" value="Logout"></li>
+                                                <li><input type="submit" class="btn btn-danger btn-custom" value="Đăng xuất"></li>
                                                 {{-- <li><a href="{{ route('logout') }}">Log out </a></li> --}}
                                             </form>
                                     </div>

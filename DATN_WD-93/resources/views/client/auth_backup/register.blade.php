@@ -23,10 +23,9 @@
         <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
           <div class="d-table-cell align-middle">
             <div class="text-center mt-4">
-              <h1 class="h2">Get started</h1>
+              <h1 class="h2">Bắt đầu</h1>
               <p class="lead">
-                Start creating the best possible user experience for you
-                customers.
+                Bắt đầu tạo tài khoản để được dùng những dịch vụ tốt nhất.
               </p>
             </div>
             <div class="card">
@@ -35,70 +34,60 @@
                   <form method="post" action="{{ route('register') }}" enctype="multipart/form-data" id="demoForm">
                     @csrf
                     <div class="form-group">
-                        <label>FullName</label>
-                        <input class="form-control form-control-lg" type="text" name="name" placeholder="Enter your FullName" value="{{ old('name') }}" />
+                        <label>Tên</label>
+                        <input class="form-control form-control-lg" type="text" name="name" placeholder="Nhập tên của bạn" value="{{ old('name') }}" />
                         @error('name')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                       </div>
                     <div class="form-group">
-                      <label>Password</label>
+                      <label>Mật khẩu</label>
                       <input class="form-control form-control-lg @error('password') is-invalid @enderror" type="password"
-                       name="password" placeholder="Enter password" value="{{ old('password') }}" autocomplete="new-password" />
+                       name="password" placeholder="Nhập mật khẩu" value="{{ old('password') }}" autocomplete="new-password" />
                       @error('password')
                       <p class="text-danger">{{ $message }}</p>
                       @enderror
                     </div>
                     <div class="form-group">
-                        <label>Confirm Password</label>
+                        <label>Nhập lại mật khẩu</label>
                         <input class="form-control form-control-lg @error('password_confirmation') is-invalid @enderror" type="password"
-                        name="password_confirmation" placeholder="Confirm password" value="{{ old('password_confirmation') }}" autocomplete="new-password" />
+                        name="password_confirmation" placeholder="Nhập lại mật khẩu" value="{{ old('password_confirmation') }}" autocomplete="new-password" />
                         @error('password_confirmation')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
                       </div>
                     <div class="form-group">
                       <label>Email</label>
-                      <input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" />
+                      <input class="form-control form-control-lg" type="email" name="email" placeholder="Nhập email" value="{{ old('email') }}" />
                       @error('email')
                       <p class="text-danger">{{ $message }}</p>
                   @enderror
                     </div>
                     <div class="form-group">
-                      <label>Address</label>
-                      <input class="form-control form-control-lg" type="text" name="address" placeholder="Enter your address" value="{{ old('address') }}" />
+                      <label>Địa chỉ</label>
+                      <input class="form-control form-control-lg" type="text" name="address" placeholder="Nhập địa chỉ" value="{{ old('address') }}" />
                       @error('address')
                       <p class="text-danger">{{ $message }}</p>
                   @enderror
                     </div>
                     <div class="form-group">
-                      <label>Phone</label>
-                      <input class="form-control form-control-lg" type="text" name="phone" placeholder="Enter your phone" value="{{ old('phone') }}" />
+                      <label>Số điện thoại</label>
+                      <input class="form-control form-control-lg" type="text" name="phone" placeholder="Nhập số điện thoại" value="{{ old('phone') }}" />
                       @error('phone')
                       <p class="text-danger">{{ $message }}</p>
                   @enderror
                     </div>
                     <div class="form-group">
-                      <label>Image</label>
-                      <input class="form-control form-control-lg" type="file" name="image" placeholder="Enter your image" value="{{ old('image') }}" />
-                      @error('image')
-                      <p class="text-danger">{{ $message }}</p>
-                  @enderror
+                      <label>Ảnh (nếu có)</label>
+                      <input class="form-control form-control-lg" type="file" name="image" placeholder="Enter your image" />
                     </div>
                     <div class="text-center mt-3">
-                      <input type="submit" href="#" class="btn btn-lg btn-primary" name="signUp" value="Sign up">
+                      <input type="submit" href="#" class="btn btn-lg btn-primary" name="signUp" value="Tạo">
                     </div>
                   </form>
                 </div>
               </div>
             </div>
-            <h2 class="tbao">
-              {{-- <?php
-              if (isset($tbao) && ($tbao) != "") {
-                echo $tbao;
-              }
-              ?> --}}
-            </h2>
           </div>
         </div>
       </div>

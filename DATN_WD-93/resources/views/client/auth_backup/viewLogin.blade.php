@@ -54,8 +54,8 @@ use Illuminate\Support\Facades\File;
         <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
           <div class="d-table-cell align-middle">
             <div class="text-center mt-4">
-              <h1 class="h2">Welcome back</h1>
-              <p class="lead">Sign in to your account to continue</p>
+              <h1 class="h2">Chào mừng</h1>
+              <p class="lead">Đăng nhập để tiếp tục dùng các dịch vụ</p>
             </div>
             <div class="card">
               <div class="card-body">
@@ -63,7 +63,7 @@ use Illuminate\Support\Facades\File;
                   <div class="text-center">
                     <!-- <img src="" alt="logo" class="img-fluid rounded-circle" width="132" height="132" /> -->
                     <h1 class="m-0 display-5 font-weight-semi-bold">
-                      <span class="text-primary font-weight-bold border px-3 mr-1">Instinct</span>Shop
+                      <span class="text-primary font-weight-bold border px-3 mr-1">Instinct</span>Pharmacy
                     </h1>
                   </div>
                   <form action="{{ route('login') }}" method="post" id="demoForm">
@@ -71,7 +71,7 @@ use Illuminate\Support\Facades\File;
                     <div class="form-group">
                       <label>Email</label>
                       <input class="form-control form-control-lg @error('email') is-invalid @enderror" type="email" name="email"
-                       placeholder="Enter your Email" value="{{ old('email') }}" autocomplete="email" />
+                       placeholder="Nhập Email của bạn" value="{{ old('email') }}" autocomplete="email" />
                      @error('email')
                      <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -79,8 +79,8 @@ use Illuminate\Support\Facades\File;
                      @enderror
                     </div>
                     <div class="form-group">
-                      <label>Password</label>
-                      <input class="form-control form-control-lg @error('password') is-invalid @enderror" type="password" name="password" placeholder="Enter your password" />
+                      <label>Mật khẩu</label>
+                      <input class="form-control form-control-lg @error('password') is-invalid @enderror" type="password" name="password" placeholder="Nhập mật khẩu của bạn" />
                       @error('password')
                       <span class="invalid-feedback" role="alert">
                           <strong>{{ $message }}</strong>
@@ -90,13 +90,13 @@ use Illuminate\Support\Facades\File;
                         <small>
                             @if (Route::has('password.request'))
                             <a href="{{ route('password.request') }}">
-                                {{ __('Forgot Your Password?') }}
+                                {{ __('Quên mật khẩu?') }}
                             </a>
                         @endif
                         </small>
                         <br />
                         <small>
-                          <a href="{{ route('viewRegister') }}">Create account?</a>
+                          <a href="{{ route('viewRegister') }}">Tạo tài khoản?</a>
                         </small>
                       </div>
                     </div>
