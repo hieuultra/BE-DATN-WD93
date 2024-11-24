@@ -9,9 +9,11 @@ use App\Models\CartItem;
 use App\Models\Category;
 use App\Mail\OrderConfirm;
 use Illuminate\Http\Request;
+use App\Models\VariantProduct;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Coupon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -98,9 +100,11 @@ class OrderController extends Controller
         }
         $carts = Cart::where('user_id', Auth::id())->with("items.product", "items.variant")->first();
         if ($carts && $carts->items->count() > 0) {
+            // dd($carts);
             $total = 0;
             $subTotal = 0;
             $shipping = 40000;
+            $coupon = 0;
             foreach ($carts->items as  $item) {
                 $price = is_numeric($item['price']) ? $item['price'] : 0;
                 $quantity = is_numeric($item['quantity']) ? $item['quantity'] : 0;
@@ -108,8 +112,24 @@ class OrderController extends Controller
                 // Tính toán tổng phụ
                 $subTotal += $price * $quantity;
             }
-            $total = $subTotal + $shipping;
-            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal'));
+            // Sử lý mã giảm giá theo 2 luồng
+            if (!empty($carts->coupon_code)) {
+                $couponTable = Coupon::where('code', $carts->coupon_code)->first();
+                if ($couponTable) {
+                    $couponType = $couponTable->type;
+                    $couponValue = $couponTable->value;
+
+                    if ($couponType == 'fixed') {
+                        // Mã giảm giá cố định
+                        $coupon = $couponValue;
+                    } elseif ($couponType == 'percentage') {
+                        // Mã giảm giá theo phần trăm
+                        $coupon = ($subTotal + $shipping) * ($couponValue / 100);
+                    }
+                }
+            }
+            $total = $subTotal + $shipping - $coupon;
+            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal', 'coupon'));
         }
         return redirect()->route('cart.listCart');
     }
@@ -131,29 +151,39 @@ class OrderController extends Controller
                 // $carts = session()->get('cart', []);
                 // Lấy cart của người dùng từ database
                 $carts = Cart::where('user_id', Auth::id())->with('items')->first();
+                // Giảm mã giảm giá sau khi sử dụng
+                if ($carts->coupon_code !== null) {
+                    $couponTable = Coupon::where('code', $carts->coupon_code)->first();
+                    if ($couponTable->usage_limit !== null) {
+                        $couponTable->decrement('usage_limit');
+                    }
+                    $carts->coupon_code = null;
+                    $carts->save();
+                }
                 if (!$carts || $carts->items->isEmpty()) {
                     return redirect()->route('cart.listCart')->with('error', 'Giỏ hàng của bạn trống');
                 }
 
                 foreach ($carts->items as $item) {
-                    // Kiểm tra số lượng tồn kho trước khi tạo đơn hàng
-                    $product = Product::findOrFail($item->product_id);
-                    if ($product->quantity < $item['quantity']) {
+                    // Kiểm tra số lượng tồn kho của sản phẩm biến thể
+                    $productVariant = VariantProduct::findOrFail($item->variant_id);
+                    if ($productVariant->quantity < $item['quantity']) {
                         DB::rollBack();
-                        return redirect()->route('cart.listCart')->with('error', 'Không đủ số lượng tồn kho cho ' . $product->name);
+                        return redirect()->route('cart.listCart')->with('error', 'Không đủ số lượng tồn kho cho ' .  $productVariant->product->name);
                     }
                     // Tạo chi tiết đơn hàng
                     $tt = $item['price'] * $item['quantity'];
                     $bill->order_detail()->create([
                         'bill_id' => $billId,
-                        'product_id' => $item->product_id,
+                        'product_id' => $productVariant->id_product, // Liên kết tới sản phẩm chính
+                        'variant_id' => $productVariant->id,         // Liên kết tới sản phẩm biến thể
                         'unitPrice' => $item['price'],
                         'quantity' => $item['quantity'],
                         'totalMoney' => $tt
                     ]);
-                    // Giảm số lượng sản phẩm trong kho
-                    $product->quantity -= $item['quantity'];
-                    $product->save();
+                    // Giảm số lượng sản phẩm biến thể trong kho
+                    $productVariant->quantity -= $item['quantity'];
+                    $productVariant->save();
                 }
                 DB::commit();
 
@@ -167,7 +197,7 @@ class OrderController extends Controller
                 return redirect()->route('orders.index')->with('success', 'Tạo đơn hàng thành công');
             } catch (\Exception $e) {
                 DB::rollBack();
-                return redirect()->route('cart.listCart')->with('error', 'Tạo đơn hàng thất bại');
+                return redirect()->route('cart.listCart')->with('error', 'Tạo đơn hàng thất bại: ' . $e->getMessage());
             }
         }
     }
@@ -184,6 +214,7 @@ class OrderController extends Controller
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
         $bill = Bill::query()->findOrFail($id);
+        // dd($bill);
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;
         $type_da_giao_hang = Bill::DA_GIAO_HANG;
@@ -203,9 +234,9 @@ class OrderController extends Controller
                 $bill->update(['status_bill' => Bill::DA_HUY]);
                 // Hoàn lại số lượng sản phẩm về kho
                 foreach ($bill->order_detail as $orderDetail) {
-                    $product = Product::findOrFail($orderDetail->product_id);
-                    $product->quantity += $orderDetail->quantity;
-                    $product->save();
+                    $productVariant = VariantProduct::findOrFail($orderDetail->variant_id); // Truy vấn sản phẩm biến thể
+                    $productVariant->quantity += $orderDetail->quantity; // Hoàn lại số lượng
+                    $productVariant->save();
                 }
             } elseif ($request->has('da_giao_hang')) {
                 $bill->update(['status_bill' => Bill::DA_GIAO_HANG]);

@@ -75,7 +75,7 @@ class AuthController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'password' => 'nullable|string|min:8',
+            'password' => 'nullable|string|min:5',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
             'email' => 'required|string|email|max:255',
@@ -97,7 +97,7 @@ class AuthController extends Controller
             $validatedData['image'] = $imageName;
             // kiểm tra hình củ và xóa
             $oldImagePath = public_path('upload/' . $user->image);
-            if (file_exists($oldImagePath)) {
+            if (!empty($user->image) && file_exists($oldImagePath)) {
                 unlink($oldImagePath);
             }
         }
@@ -133,14 +133,16 @@ class AuthController extends Controller
             'phone' => 'required|string|max:15',
             'address' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:8',
-            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'password' => 'required|string|min:5',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         // Xử lý việc upload ảnh
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('upload'), $imageName);
             $data['image'] = $imageName;
+        }else {
+            $data['image'] = null;
         }
 
         // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu

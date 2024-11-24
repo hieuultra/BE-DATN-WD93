@@ -42,17 +42,18 @@ table th, table td {
       <div class="card mb-4">
         <div class="card-header">
           <i class="fas fa-table me-1"></i>
-          List categories
+          List products
         </div>
-        {{-- <form action="index.php?act=list_pro" method="post">
+        <form action="{{ route('filterByCategory') }}" method="post">
+            @csrf
             <select class="form-select" name="category_id" id="">
-                <option value="0">Chon danh muc</option>
-                @foreach($categories as $c)
-                    <option value="{{ $c->id }}">{{ $c->name }}</option>
+                <option value="0">Chọn danh muc</option>
+                @foreach ($categories as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach
             </select>
           <input class="btn btn-primary" type="submit" name="listok" value="GO">
-        </form> --}}
+        </form>
         <div class="card-body">
                         {{-- Hiển thị thông báo --}}
         @if (session('success'))
@@ -71,6 +72,7 @@ table th, table td {
               <tr>
                 <th>ID</th>
                 <th>Category name</th>
+                <th>Brand name</th>
                 <th>Product name</th>
                 <th>Image</th>
                 <th>Price</th>
@@ -85,6 +87,7 @@ table th, table td {
                  <tr>
                     <td>{{ $item->idProduct }}</td>
                     <td>{{ $item->category->name }}</td>
+                    <td>{{ $item->brand->name ?? 'Khong co' }}</td>
                     <td class="product-name">{{ $item->name }}</td>
                     <td><img src="{{ asset('upload/'.$item->img)  }}" width="200" height="150" alt=""></td>
                     <td>{{ number_format($item->price,0,'.',',')}} $</td>

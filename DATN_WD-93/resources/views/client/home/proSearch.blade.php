@@ -9,6 +9,68 @@
         height: 300px;
         width: 100%;
     }
+    #popup {
+            display: none;
+            /* Initially hidden */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            z-index: 1000;
+            width: 700px;
+            height: auto;
+        }
+
+        /* Background overlay */
+        #overlay {
+            display: none;
+            /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .increase {
+            width: 50px;
+            height: 40px;
+            border: 2px solid gray;
+            border-radius: 5px;
+        }
+
+        .reduce {
+            width: 50px;
+            height: 40px;
+            border: 2px solid gray;
+            border-radius: 5px;
+        }
+
+        .quantityAdd {
+            width: 40px;
+            height: 40px;
+            text-align: center
+        }
+
+        .addToCart {
+            border: 1px solid aqua;
+            background-color: aqua;
+            border-radius: 5px;
+            width: 100%;
+            height: 40px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .option:focus {
+            border: 2px solid gray;
+        }
 </style>
 <!-- Products Start -->
 <div class="container-fluid pt-5">
@@ -54,7 +116,8 @@
     <div class="row px-xl-5 pb-3">
         <!-- Product -->
         @foreach ($products as $item)
-        @php $tt = $item['price'] - (($item['price']  * $item['discount']) / 100); @endphp
+        @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100); @endphp
         <!-- Product 5 -->
       <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
         <div class="product-item bg-light mb-4">
@@ -87,7 +150,28 @@
               class="d-flex align-items-center justify-content-center mt-2"
             >
               <h5 class="text-danger">{{ number_format($tt, 0, ",", ".") }} $</h5>
-              <h6 class="text-muted ml-2"><del>{{ number_format($item->price, 0, ',', '.') }} $</del></h6>
+              <h6 class="text-muted ml-2">@if ($item->variantProduct->isNotEmpty())
+                @php
+                    $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
+                @endphp
+                <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
+            @else
+                <del>Giá: Không có thông tin</del>
+            @endif
+        </h6>
+            </div>
+            <div class="card-footer d-flex justify-content-between bg-light">
+                <a href="{{ route('productDetail', $item->id) }}"
+                    class="btn btn-sm text-dark p-0"><i
+                        class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                <form action="" method="post">
+                    {{-- @csrf --}}
+                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="productId" value="{{ $item->id }}">
+                    <input type="button" data-id="{{ $item->id }}" value="Thêm vào giỏ"
+                        class="btn btn-sm text-dark p-0 addToCartShow" name="addtocart"><i
+                        class="fas fa-shopping-cart text-primary mr-1"></i>
+                </form>
             </div>
             <div
               class="d-flex align-items-center justify-content-center mb-1"
@@ -108,7 +192,202 @@
       </div>
       @endforeach
     </div>
+     {{-- popup addtocart --}}
+
+     <div id="overlay"></div>
+
+     <div id="popup">
+         {{-- NameProduct --}}
+         <div style="display: flex; justify-content: space-between">
+             <span id="productName" style="color: black; font-weight: bold; font-size: 18px"></span>
+             <button id="closePopup" style="border: none; background-color: white">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-x-lg" viewBox="0 0 16 16">
+                     <path
+                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                 </svg>
+             </button>
+         </div>
+         {{-- EndName --}}
+         {{-- Image & Quantity & Price & Variant & AddtoCart --}}
+         <div class="row mt-3 mb-3">
+             <div class="col">
+                 <div class="d-flex">
+                     <div style="border: 2px solid gray; border-radius:5px; width: 150px; height: auto; ">
+                         <img id="productImage" src="" style="width: 100%; height: 100%;" alt="">
+                     </div>
+                     {{-- price & quantity --}}
+                     <div class="mx-2">
+                         <div class="d-flex">
+                             <span style="font-size: 14px;">Giá thành:</span>
+                             <p id="price" style="font-size: 14px; color: black; font-weight: bold;"></p>
+                         </div>
+                         <div class="d-flex">
+                             <span style="font-size: 14px;">Số lượng trong kho:</span>
+                             <p id="quantity" style=" font-size: 14px; color: black; font-weight: bold;"></p>
+                         </div>
+                         {{-- Tăng giảm số lượng  --}}
+                         <div class="mt-4">
+                             <button class="reduce" id="reduce">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                     fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                                     <path fill-rule="evenodd"
+                                         d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8" />
+                                 </svg>
+                             </button>
+                             <input class="quantityAdd" id="quantityAdd" type="text" disabled value="1">
+                             <button class="increase" id="increase">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                     fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                     <path
+                                         d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                                 </svg>
+                             </button>
+                         </div>
+                         {{-- End Tăng giảm số lượng --}}
+                     </div>
+                 </div>
+             </div>
+             <div class="col">
+                 <div>
+                     <span>Kiểu Loại:</span>
+                     <div id="variantList">
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <button type="button" class="addToCart" id="addToCart">Thêm Vào Giỏ Hàng</button>
+
+         {{-- End Image & Quantity & Price & Variant & AddtoCart --}}
+     </div>
+     {{-- End popupAddtocart --}}
 </div>
 <!-- Products End -->
+<script>
+    let currentIndex = 0;
+    const slides = document.querySelectorAll('.slideshow-image');
+    const slideshowWrapper = document.querySelector('.slideshow-wrapper');
+    const totalSlides = slides.length;
 
+    function autoSlide() {
+        currentIndex = (currentIndex + 1) % totalSlides; // Loop back to the first image when reaching the end
+        slideshowWrapper.style.transform = `translateX(-${currentIndex * 50}%)`; // Move the slideshow
+    }
+
+    setInterval(autoSlide, 3000); // Change image every 3 seconds
+    // addToCartShow
+    var productId = '';
+    var variants = '';
+    $(document).ready(function() {
+        // Hiển thị popup
+        $(".addToCartShow").click(function() {
+            productId = $(this).data('id');
+            $.ajax({
+                type: "GET",
+                url: "/get-product-info",
+                data: {
+                    id: productId
+                },
+                success: function(response) {
+                    let productName = response.name;
+                    let productImg = response.img;
+                    let packages = response.packages;
+                    variants = response.variants;
+                    $("#productName").text(productName);
+                    $("#productImage").attr('src', '{{ asset('upload/') }}' + '/' +
+                        productImg);
+                    $("#variantList").empty();
+                    packages.forEach(function(package) {
+                        $("#variantList").append(
+                            '<button class="option" style="border: 2px solid; background-color: aqua; border-radius: 5px; margin-bottom: 10px; margin-left:5px; height: 30px;" data-id=" ' +
+                            package.id + ' "> ' + package.name + '</button>'
+                        );
+                    });
+                    $("#overlay").fadeIn(); // Hiển thị nền mờ
+                    $("#popup").fadeIn(); // Hiển thị popup
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra khi tải thông tin sản phẩm!');
+                }
+            });
+
+        });
+
+        // Đóng popup
+        $("#closePopup, #overlay").click(function() {
+            $("#overlay").fadeOut(); // Ẩn nền mờ
+            $("#popup").fadeOut(); // Ẩn popup
+        });
+    });
+    // Tăng giảm số lượng
+    $(document).ready(function() {
+
+        $("#increase").click(function() {
+            let currentValue = parseInt($("#quantityAdd").val());
+            $("#quantityAdd").val(currentValue + 1);
+        });
+        $("#reduce").click(function() {
+            let currentValue = parseInt($("#quantityAdd").val());
+            if (currentValue > 1) { // Không giảm dưới 1
+                $("#quantityAdd").val(currentValue - 1);
+            }
+        });
+        var packageId = '';
+        var id_variantProduct = '';
+        $(document).on('click', '.option', function() {
+            packageId = $(this).data('id'); // Lấy giá trị của data-id
+
+            variants.forEach(function(variant) {
+                if (variant.id_variant == packageId) {
+                    id_variantProduct = variant.id;
+                }
+            });
+            $.ajax({
+                type: "GET",
+                url: "/get-price-quantity-variant",
+                data: {
+                    id: id_variantProduct,
+                },
+                success: function(response) {
+                    let price = response.price;
+                    let quantity = response.quantity;
+                    $("#price").text(price);
+                    $("#quantity").text(quantity);
+                }
+            });
+        });
+        //active button
+        $("#addToCart").click(function(e) {
+            e.preventDefault();
+            let quantity = $("#quantityAdd").val();
+            let price = $("#price").html();
+            let name = $("#productName").html();
+            let img = $("#productImage").attr("src");
+            let replaceImg = img.replace('/upload/', '');
+            let replacePrice = price.replace('VNĐ', '');
+            let newPrice = replacePrice.replace('.', '');
+            console.log(id_variantProduct);
+            $.ajax({
+                type: "POST",
+                url: "/add-to-cart-home",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id_product: productId,
+                    id_variantProduct: id_variantProduct,
+                    quantity: quantity,
+                    price: newPrice,
+                    name: name,
+                    img: replaceImg,
+                },
+                success: function(response) {
+                    alert('Thêm thành công');
+                    console.log("Thêm Sản Phẩm Vào Thành Công!!!");
+                    // console.log(id_variantProduct);
+                    // console.log(productId);
+                    $('#count').text(response.count);
+                }
+            });
+        });
+    });
+</script>
 @endsection

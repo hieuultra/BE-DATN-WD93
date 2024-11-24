@@ -24,7 +24,21 @@
     padding: 4px 4px;
     font-weight: bold;
 }
+.dropdown-submenu {
+  position: relative;
+}
 
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-left: 0.1rem;
+  margin-top: -0.5rem;
+  display: none;
+}
+
+.dropdown-submenu:hover .dropdown-menu {
+  display: block;
+}
 </style>
 <!-- Navbar Start -->
 <div class="container-fluid bg-dark mb-30">
@@ -79,27 +93,48 @@
           >
             <div class="navbar-nav mr-auto py-0">
               <a href="{{ route('home') }}" class="nav-item nav-link active">Trang Chủ</a>
-              <a href="{{ route('products') }}" class="nav-item nav-link">Tất Cả Sản Phẩm</a>
+              <div class="nav-item dropdown">
+                <a href="{{ route('products') }}" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                  Tất Cả Sản Phẩm
+                </a>
+                <div class="dropdown-menu bg-light rounded-0 border-0 m-0">
+                  @foreach ($categories as $category)
+                    <div class="dropdown-submenu">
+                      <a href="{{ route('productsByCategoryId', $category->id) }}" class="dropdown-item">
+                        {{ $category->name }}
+                      </a>
+                      <div class="dropdown-menu">
+                        @foreach ($category->products as $product)
+                          <a href="{{ route('productDetail', $product->id) }}" class="dropdown-item">
+                            {{ $product->name }}
+                          </a>
+                        @endforeach
+                      </div>
+                    </div>
+                  @endforeach
+                </div>
+              </div>
               <a href="{{ route('appoinment.index') }}" class="nav-item nav-link">Đặt Lịch Khám</a>
               <div class="nav-item dropdown">
                 <a
                   href="#"
                   class="nav-link dropdown-toggle"
                   data-toggle="dropdown"
-                  >Tiện Ích<i class="fa fa-angle-down mt-1"></i
+                  >Về chúng tôi<i class="fa fa-angle-down mt-1"></i
                 ></a>
                 <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                  <a href="{{ route('contact') }}" class="dropdown-item">Liên Hệ</a>
-                  <a href="{{ route('about') }}" class="dropdown-item">Giới Thiệu</a>
+                    <a href="{{ route('about') }}" class="dropdown-item">Giới Thiệu</a>
+                   <a href="" class="dropdown-item">Đội ngũ bác sỹ</a>
                 </div>
               </div>
               <a href="{{route('blog.index')}}" class="nav-item nav-link">Tin tức</a>
+              <a href="{{ route('contact') }}" class="nav-item nav-link">Liên hệ</a>
             </div>
             <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                 <a href="{{ route('cart.listCart') }}" class="btn icon-container px-0 ml-3">
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge-label">
-                        <span class="badge-count">{{ \App\Models\Cart::where('user_id', Auth::id())->withCount('items')->first()->items_count ?? 0 }}</span>
+                        <span class="badge-count" id="count">{{ \App\Models\Cart::where('user_id', Auth::id())->withCount('items')->first()->items_count ?? 0 }}</span>
                         Giỏ hàng
                     </span>
                 </a>

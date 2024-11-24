@@ -85,8 +85,8 @@
 
                 <div class="collapse" id="collapseProduct" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="{{ route('admin.products.productList') }}">List product</a>
-                        <a class="nav-link" href="{{ route('admin.products.viewProAdd') }}">Add product</a>
+                        <a class="nav-link" href="{{ route('admin.products.productList') }}">Danh sách sản phẩm</a>
+                        <a class="nav-link" href="{{ route('admin.products.viewProAdd') }}">Thêm sản phẩm</a>
                     </nav>
                 </div>
 
@@ -95,7 +95,7 @@
                     <div class="sb-nav-link-icon">
                         <i class="fas fa-columns"></i>
                     </div>
-                    Variant Product
+                    Biến thể sản phẩm
                     <div class="sb-sidenav-collapse-arrow">
                         <i class="fas fa-angle-down"></i>
                     </div>
@@ -103,8 +103,8 @@
 
                   <div class="collapse" id="collapseVariantProduct" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                       <nav class="sb-sidenav-menu-nested nav">
-                          <a class="nav-link" href="{{ route('admin.variantPros.variantProList') }}">List Variant</a>
-                          <a class="nav-link" href="{{ route('admin.variantPros.variantProList') }}">list Product Variant</a>
+                          <a class="nav-link" href="{{ route('admin.variantPros.variantProList') }}">Danh sách biến thể</a>
+                          <a class="nav-link" href="{{ route('admin.variantPros.variantProList') }}">Danh sách sản phẩm biến thể</a>
                       </nav>
                   </div>
 
@@ -132,7 +132,7 @@
                     <div class="sb-nav-link-icon">
                         <i class="fas fa-columns"></i>
                     </div>
-                    Back Website
+                    Quay lại website
                     <div class="sb-sidenav-collapse-arrow">
                         <i class="fas fa-angle-down"></i>
                     </div>
@@ -143,7 +143,7 @@
         <div class="sb-nav-link-icon">
           <i class="fas fa-columns"></i>
         </div>
-        Bill
+        Đơn hàng
         <div class="sb-sidenav-collapse-arrow">
           <i class="fas fa-angle-down"></i>
         </div>
@@ -151,7 +151,7 @@
 
       <div class="collapse" id="collapsebill" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="{{ route('admin.bills.index') }}">List Bill</a>
+          <a class="nav-link" href="{{ route('admin.bills.index') }}">Danh sách đơn hàng</a>
         </nav>
       </div>
 
@@ -160,7 +160,7 @@
         <div class="sb-nav-link-icon">
           <i class="fas fa-columns"></i>
         </div>
-        Account
+        Tài khoản
         <div class="sb-sidenav-collapse-arrow">
           <i class="fas fa-angle-down"></i>
         </div>
@@ -168,8 +168,8 @@
 
       <div class="collapse" id="collapseAccount" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="{{ route('admin.users.userList') }}">List account</a>
-          <a class="nav-link" href="{{ route('admin.users.viewUserAdd') }}">Add account</a>
+          <a class="nav-link" href="{{ route('admin.users.userList') }}">Danh sách tài khoản</a>
+          <a class="nav-link" href="{{ route('admin.users.viewUserAdd') }}">Thêm tài khoản</a>
         </nav>
       </div>
 
@@ -197,7 +197,7 @@
         <div class="sb-nav-link-icon">
           <i class="fas fa-columns"></i>
         </div>
-        Brand
+        Thương hiệu
         <div class="sb-sidenav-collapse-arrow">
           <i class="fas fa-angle-down"></i>
         </div>
@@ -205,8 +205,8 @@
 
       <div class="collapse" id="collapseBrand" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-          <a class="nav-link" href="?act=list_brand">List Brand</a>
-          <a class="nav-link" href="?act=add_brand">Add Brand</a>
+          <a class="nav-link" href="{{route('admin.brands.index')}}">Danh sách thương hiệu</a>
+          <a class="nav-link" href="{{route('admin.brands.create')}}">Thêm thương hiệu</a>
         </nav>
       </div>
 
@@ -233,7 +233,7 @@
         <div class="sb-nav-link-icon">
           <i class="fas fa-columns"></i>
         </div>
-        Feedback
+        Danh sách đánh giá
         <div class="sb-sidenav-collapse-arrow">
           <i class="fas fa-angle-down"></i>
         </div>
@@ -241,7 +241,7 @@
 
       <div class="collapse" id="collapsefb" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-            <a class="nav-link" href="{{route('admin.reviews.listReviews')}}">List Feedback</a>
+            <a class="nav-link" href="{{route('admin.reviews.listReviews')}}">Danh sách đánh giá</a>
         </nav>
       </div>
             </div>

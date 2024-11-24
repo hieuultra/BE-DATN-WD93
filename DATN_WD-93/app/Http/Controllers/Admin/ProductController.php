@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Brand;
 use App\Models\ImageProduct;
 use Illuminate\Http\Request;
 use App\Models\VariantPackage;
@@ -16,14 +17,16 @@ class ProductController extends Controller
     public function productList()
     {
         $categories = Category::orderBy('name', 'ASC')->get();
+        $brands = Brand::orderBy('name', 'ASC')->get();
         // $products = Product::orderBy('id', 'desc')->paginate(10);
         $products = Product::orderBy('updated_at', 'desc')->paginate(10);
-        return view('admin.products.productList', compact('categories', 'products'));
+        return view('admin.products.productList', compact('categories', 'products', 'brands'));
     }
     public function viewProAdd()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('admin.products.viewProAdd', compact('categories'));
+        $brands = Brand::orderBy('name', 'asc')->get();
+        return view('admin.products.viewProAdd', compact('categories', 'brands'));
     }
     public function productAdd(Request $request)
     {
@@ -37,6 +40,7 @@ class ProductController extends Controller
             'quantity' => 'required|numeric',
             'discount' => 'nullable|numeric',
             'category_id' => 'required|integer|exists:categories,id',
+            'brand_id' => 'required|integer|exists:brands,id',
             'is_type' => 'required|boolean',
         ]);
         //chuyen doi gia tri checkbox thanh boolean
@@ -80,9 +84,10 @@ class ProductController extends Controller
     public function productUpdateForm($id)
     {
         $categories = Category::orderBy('name', 'ASC')->get();
+        $brands = Brand::orderBy('name', 'ASC')->get();
         $products = Product::orderBy('id', 'DESC')->paginate(10);
         $product = Product::find($id); //tim id
-        return view('admin.products.productUpdateForm', compact('categories', 'products', 'product'));
+        return view('admin.products.productUpdateForm', compact('categories', 'products', 'product', 'brands'));
     }
     //update data
     public function productUpdate(Request $request)
@@ -97,6 +102,7 @@ class ProductController extends Controller
             'quantity' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
             'category_id' => 'required|integer|exists:categories,id',
+            'brand_id' => 'required|integer|exists:brands,id',
             'is_type' => 'required|boolean',
         ]);
 
@@ -250,5 +256,23 @@ class ProductController extends Controller
                 'message' => '0.',
             ]);
         }
+    }
+    public function filterByCategory(Request $request)
+    {
+        $categoryId = $request->input('category_id');
+
+        // Lấy danh sách danh mục (nếu cần hiển thị lại trong view)
+        $categories = Category::all();
+
+        if ($categoryId == 0) {
+            // Nếu không chọn danh mục, trả về tất cả sản phẩm
+            $products = Product::all();
+        } else {
+            // Lọc sản phẩm theo danh mục được chọn
+            $products = Product::where('category_id', $categoryId)->paginate(10);
+        }
+
+        // Trả về view với danh sách sản phẩm và danh mục
+        return view('admin.products.productList', compact('products', 'categories', 'categoryId'));
     }
 }

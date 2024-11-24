@@ -4,6 +4,7 @@
 
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .product-name {
             font-size: 24px;
@@ -172,25 +173,36 @@
         </div>
     </div>
     <!-- Breadcrumb End -->
+    <script>
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công',
+                text: '{{ session('success') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: '{{ session('error') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
+    </script>
     <!-- Shop Detail Start -->
     <div class="container-fluid pb-5">
         <div class="row px-xl-5">
             <div class="col-lg-5 mb-30">
                 <div id="product-carousel" class="carousel slide" data-ride="carousel">
                     @php
-                        $tt = $sp['price'] - ($sp['price'] * $sp['discount']) / 100;
+                        $variant = $sp->variantProduct->first();
+                        $tt = $variant->price - (($variant->price  * $sp['discount']) / 100);
+                        $spQuantity = $sp->variantProduct->first();
                     @endphp
                     <div class="carousel-inner bg-light">
                         <div class="carousel-item active">
@@ -238,14 +250,15 @@
                             <div class="variant-container">
                                 {{-- @dd($sp->variantProduct) --}}
                                 <div class="radio-buttons">
+                                    {{-- @dd($sp->variantProduct) --}}
                                     @foreach ($sp->variantProduct as $index => $item)
                                         {{-- <div class="variant-box" data-id="{{ $item->id }}" >{{ $item->variantPackage->name }}
                             </div>
                             <input class="variant-box" type="radio" name="variant_id" id=""> --}}
                                         <input type="radio" id="option-{{ $loop->index }}" name="variantId"
-                                            value="{{ $item->id }}" data-price="{{ $item->price }}"
+                                            value="{{ $item->id_variant }}" data-price="{{ $item->price }}"
                                             data-quantity="{{ $item->quantity }}"
-                                            data-discount="{{ $item->discount ?? 0 }}">
+                                            data-discount="{{ $sp->discount ?? 0 }}">
                                         <label for="option-{{ $loop->index }}">{{ $item->variantPackage->name }}</label>
                                     @endforeach
                                 </div>
@@ -256,19 +269,19 @@
                             <h3 id="price" class="price font-weight-semi-bold mb-0 text-danger">
                                 {{ number_format($tt, 0, ',', '.') }} VND
                             </h3>
-                            {{-- <h4 class="original-price font-weight-semi-bold mb-0">
+                            <h4 class="original-price font-weight-semi-bold mb-0">
                                 <del>{{ number_format($sp->price, 0, ',', '.') }} VND</del>
-                            </h4> --}}
-                            <p class="discount text-danger mb-0">-{{ $sp->discount ?? 0 }}%</p>
+                            </h4>
+                            <p class="discount text-danger mb-0" id="discount">-{{ $sp->discount ?? 0 }}%</p>
                         </div>
                         <div class="d-flex">
                             <p class="inventory-status" id="quantity-display">Tồn kho: </p>
-                            <p class=" inventory-status mx-3 quantity" id="stock-quantity">{{ $sp->quantity }}</p>
+                            <p class=" inventory-status mx-3 quantity" id="stock-quantity">{{ $spQuantity->quantity }}</p>
                         </div>
                         {{-- <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p> --}}
                         {{-- <div class="d-flex mb-4">
                     <strong class="text-dark mr-3">Colors:</strong>
-                    
+
                 </div> --}}
                         <div class="d-flex align-items-center mb-4 pt-2">
 
@@ -288,7 +301,7 @@
                             </div>
                             {{-- <input type="hidden" name="variantId" id="id_variant" value="{{ $sp->id }}"> --}}
                         </div>
-                        <button type="submit" class="btn btn-primary m-4 addToCart">Thêm vào giỏ hàng</button>
+                        <button type="submit" class="btn btn-primary ms-4 addToCart">Thêm vào giỏ hàng</button>
                     </form>
 
                     <div class="d-flex pt-2">
@@ -623,22 +636,29 @@
             const priceDisplay = document.getElementById('price');
             const quantityDisplay = document.querySelector('.quantity');
             const quantityInput = document.getElementById('quantity-input'); // Lấy ô nhập số lượng
-    
+            const originalPriceElement = document.querySelector('.original-price del'); // Giá gốc
+            const discountElement = document.querySelector('#discount');
+
             // Hàm cập nhật thông tin khi thay đổi biến thể
             function updateVariantInfo(option) {
                 if (option.checked) {
                     // Lấy dữ liệu từ data attributes
-                    const price = option.dataset.price;
+                    const price = parseFloat(option.dataset.price || 0); // Giá gốc
+                    const discount = parseFloat(option.dataset.discount || 0);
+                    const discountedPrice = price - (price * discount / 100);
                     const quantity = option.dataset.quantity;
-    
+
                     // Cập nhật giá và số lượng tồn kho
-                    priceDisplay.textContent = new Intl.NumberFormat('vi-VN').format(price) + ' VND';
+                    priceDisplay.textContent = `${new Intl.NumberFormat('vi-VN').format(discountedPrice)} VND`;
+                    originalPriceElement.textContent = `${new Intl.NumberFormat('vi-VN').format(price)} VND`;
+                    discountElement.textContent = `-${discount}%`;
+                    // priceDisplay.textContent = new Intl.NumberFormat('vi-VN').format(price) + ' VND';
                     quantityDisplay.textContent = quantity;
-    
+
                     // Cập nhật lại giá trị data-max cho ô nhập số lượng
                     quantityInput.setAttribute('data-max', quantity);
                     quantityInput.value = 1;
-    
+
                     // Kiểm tra và cập nhật lại số lượng nếu giá trị hiện tại lớn hơn tồn kho của biến thể
                     const currentQuantity = parseInt(quantityInput.value, 10);
                     if (currentQuantity > parseInt(quantity, 10)) {
@@ -648,28 +668,28 @@
                     console.log('data-max đã thay đổi thành:', quantityInput.getAttribute('data-max'));
                 }
             }
-    
+
             // Lặp qua tất cả các tùy chọn biến thể và thiết lập sự kiện change
             variantOptions.forEach(option => {
                 option.addEventListener('change', () => {
                     updateVariantInfo(option);
                 });
             });
-    
+
             // Cập nhật dữ liệu lần đầu khi một biến thể được chọn mặc định
-            variantOptions.forEach(option => {
-                if (option.checked) {
-                    updateVariantInfo(option);
-                }
-            });
-    
+            if (variantOptions.length > 0) {
+                const firstOption = variantOptions[0]; // Lấy biến thể đầu tiên
+                firstOption.checked = true; // Đặt biến thể đầu tiên là được chọn
+                updateVariantInfo(firstOption); // Cập nhật thông tin theo biến thể đầu tiên
+            }
+
             // Xử lý các sự kiện cho ô nhập số lượng
             const input = $('#quantity-input');
             input.on('input', function() {
                 let value = $(this).val();
                 const maxStock = parseInt(quantityInput.getAttribute('data-max'), 10);;
                 console.log(maxStock);
-                
+
                 // Loại bỏ ký tự không hợp lệ và kiểm tra tồn kho
                 value = value.replace(/[^0-9]/g, '');
                 if (value === '' || parseInt(value, 10) < 1) {
@@ -678,10 +698,10 @@
                     value = maxStock;
                     alert('Không thể tăng vượt quá số lượng tồn kho!');
                 }
-    
+
                 $(this).val(value);
             });
-    
+
             // Tăng số lượng
             $('#btn-plus').on('click', function() {
                 let value = parseInt(input.val(), 10) || 1;
@@ -693,7 +713,7 @@
                     alert('Không thể tăng vượt quá số lượng tồn kho!');
                 }
             });
-    
+
             // Giảm số lượng
             $('#btn-minus').on('click', function() {
                 let value = parseInt(input.val(), 10) || 1;
@@ -703,6 +723,6 @@
             });
         });
     </script>
-    
-    
+
+
 @endsection

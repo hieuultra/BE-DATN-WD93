@@ -23,7 +23,7 @@
             <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
                 <div class="d-table-cell align-middle">
                     <div class="text-center mt-4">
-                        <h1 class="h2">Login Sucsess</h1>
+                        <h1 class="h2">Đăng nhập thành công</h1>
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -35,25 +35,25 @@
                                     </h1>
                                 </div>
                                     <div class="text-center mt-4 font-weight-bold border px-3 mr-1">
-                                        HELLO <br />
+                                        Chào <br />
                                         {{ Auth::user()->name }}
                                     </div>
                                     <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px">
                                         <img src="{{asset('upload/'.Auth::user()->image) }}" alt="" width="400" height="200">
                                     </div>
                                     <div class="form-group">
-                                            <li><a href="{{ route('orders.index') }}">My order </a></li>
+                                            <li><a href="{{ route('orders.index') }}">Đơn mua </a></li>
                                            <li>  @if (Route::has('password.request'))
                                             <a href="{{ route('password.request') }}">
-                                                {{ __('Forgot Password?') }}
+                                                {{ __('Quên mật khẩu?') }}
                                             </a>
                                                 @endif
                                             </li>
-                                            <li> <a href="{{ route('viewEditAcc') }}">Edit account </a> </li>
-                                            <li> <a href="../admin">Login admin </a></li>
+                                            <li> <a href="{{ route('viewEditAcc') }}">Cập nhập tài khoản </a> </li>
+                                            <li> <a href="../admin">Quản trị viên </a></li>
                                             <form action="{{ route('logout') }}" method="POST">
                                                 @csrf
-                                                <li><input type="submit" class="btn btn-danger btn-custom" value="Logout"></li>
+                                                <li><input type="submit" class="btn btn-danger btn-custom" value="Đăng xuất"></li>
                                                 {{-- <li><a href="{{ route('logout') }}">Log out </a></li> --}}
                                             </form>
                                     </div>
