@@ -18,6 +18,7 @@ class CartController extends Controller
 {
     public function listCart(Request $request)
     {
+
         $categories = Category::orderBy('name', 'asc')->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
@@ -25,7 +26,6 @@ class CartController extends Controller
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
         $cart = Cart::where('user_id', Auth::id())->with("items.product", "items.variant")->first();
-
         // $cart = session()->get('cart', default: []);
 
         // $tt = $cart['price'] - (($cart['price']  * $cart['discount']) / 100);
@@ -44,18 +44,33 @@ class CartController extends Controller
             }
         }
         // Xử lý mã giảm giá nếu có
+        $checkTypeDiscount = 0;
         if ($request->has('coupon_code')) {
-            $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
-            if ($coupon && $coupon->isValid()) {
-                $discount = $coupon->value;
+            if (request()->query('coupon_code') == 'loaibo') {
+                $cart->coupon_code = null;
+                $cart->save();
+                $discount = 0;
             } else {
-                return back()->with('error', 'Mã giảm giá không hợp lệ hoặc đã hết hạn!');
+                $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
+                // dd($coupon->type);
+                if ($coupon && $coupon->isValid()) {
+                    $discount = $coupon->value;
+                    $cart->coupon_code = $coupon->code;
+                    $cart->save();
+                    if ($coupon->type == 'percentage') {
+                        $checkTypeDiscount = 'percentage';
+                    } else {
+                        $checkTypeDiscount = 'fixed';
+                    }
+                } else {
+                    return back()->with('error', 'Mã giảm giá không hợp lệ hoặc đã hết hạn!');
+                }
             }
         }
 
         $total = $subTotal + $shipping - $discount;
 
-        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total', 'discount'));
+        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total', 'discount', 'checkTypeDiscount'));
     }
     public function addCart(Request $request)
     {
