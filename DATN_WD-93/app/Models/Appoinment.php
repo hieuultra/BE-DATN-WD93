@@ -11,7 +11,7 @@ class Appoinment extends Model
     protected $fillable = [
         'user_id',
         'doctor_id',
-        'timeslot_id',
+        'available_timeslot_id',
         'appointment_date',
         'notes',
         'status_appoinment',
@@ -48,12 +48,20 @@ class Appoinment extends Model
     {
         return $this->belongsTo(Doctor::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
     }
-    public function availabelTimeslot()
+    public function package()
     {
-        return $this->belongsTo(AvailableTimeslot::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
+        return $this->belongsTo(Package::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
+    }
+    public function timeSlot()
+    {
+        return $this->belongsTo(AvailableTimeslot::class, 'available_timeslot_id');
     }
     public function appoinmentHistory()
     {
         return $this->hasMany(AppoinmentHistory::class);
+    }
+    public function review()
+    {
+        return $this->hasMany(Review::class);
     }
 }
