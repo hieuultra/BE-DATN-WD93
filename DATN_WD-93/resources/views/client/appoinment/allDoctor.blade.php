@@ -78,13 +78,13 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <h3>Đội ngũ Bác sĩ Bệnh viện Đa Khoa Phương Đông</h3>
+                <h3>Đội ngũ Bác sĩ Bệnh viện Đa Khoa TG</h3>
 
 
                 <input type="text" id="doctorSearch" class="form-control" placeholder="Tìm bác sĩ" onkeyup="filterDoctors()" />
 
                 <p>
-                    Bệnh viện Đa khoa Phương Đông quy tụ đội ngũ chuyên gia, giáo sư, bác sĩ đầu ngành, có nhiều năm kinh nghiệm công tác tại các bệnh viện tuyến đầu trong cả nước và tu nghiệp tại các trung tâm chăm sóc sức khỏe, bệnh viện lớn ở nước ngoài.
+                    Bệnh viện Đa khoa TG quy tụ đội ngũ chuyên gia, giáo sư, bác sĩ đầu ngành, có nhiều năm kinh nghiệm công tác tại các bệnh viện tuyến đầu trong cả nước và tu nghiệp tại các trung tâm chăm sóc sức khỏe, bệnh viện lớn ở nước ngoài.
                 </p>
 
 

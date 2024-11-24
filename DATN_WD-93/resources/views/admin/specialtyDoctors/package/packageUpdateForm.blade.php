@@ -37,12 +37,25 @@
             <div class="col">
                 <div class="mb-3">
                     <label class="form-label">Mô tả dịch vụ khám</label>
-                    <textarea class="form-control @error('description') is-invalid @enderror" name="description">{{$package->description}}</textarea>
+                    <textarea class="form-control @error('description') is-invalid @enderror"
+                        id="packaceDescription"
+                        style="height: 100px"
+                        name="description">{{ $package->description ?? '' }}</textarea>
+
+                    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+                    <script>
+                        CKEDITOR.replace('packaceDescription');
+                    </script>
                     @error('description')
                     <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
+
+
+        </div>
+        {{-- Hàng thứ 2 --}}
+        <div class="row">
 
             <div class="col">
                 <div class="mb-3">
@@ -51,9 +64,6 @@
                     <img id="imgCate" src="{{ asset('upload/'.$package->image)  }}" alt="Image Product" style="width:150px;">
                 </div>
             </div>
-        </div>
-        {{-- Hàng thứ 2 --}}
-        <div class="row">
 
             <div class="col">
                 <div class="mb-3">

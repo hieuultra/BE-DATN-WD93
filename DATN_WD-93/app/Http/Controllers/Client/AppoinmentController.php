@@ -138,6 +138,36 @@ class AppoinmentController extends Controller
         return view('client.appoinment.doctorDetails', compact('doctor', 'specialty', 'doctorrv', 'orderCount', 'categories', 'clinics', 'achievements'));
     }
 
+    public function packaceDetails($id)
+    {
+        $package = Package::with(['specialty', 'timeSlot' => function ($query) {
+            $query->whereDoesntHave('appoinment');
+        }])
+            ->where('id', $id)
+            ->first();
+
+        $now = Carbon::now('Asia/Ho_Chi_Minh');
+        $expiredSchedules = AvailableTimeslot::where('date', '<', $now->toDateString())
+            ->orWhere(function ($query) use ($now) {
+                $query->where('date', '=', $now->toDateString())
+                    ->where('endTime', '<', $now->toTimeString());
+            })
+            ->get();
+        foreach ($expiredSchedules as $schedule) {
+            $schedule->isAvailable = 0;
+            $schedule->save();
+        }
+        $orderCount = 0;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count();
+        }
+        $categories = Category::orderBy('name', 'asc')->get();
+        $packagerv = Package::with('review')->findOrFail($package->id);
+        $specialty = Specialty::where('id', $package->specialty_id)->first();
+        return view('client.appoinment.packaceDetails', compact('package', 'packagerv', 'specialty', 'orderCount', 'categories'));
+    }
+
     public function formbookingdt($id)
     {
         if (!auth()->check()) {

@@ -30,4 +30,8 @@ class Package extends Model
     {
         return $this->hasMany(Appoinment::class);
     }
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

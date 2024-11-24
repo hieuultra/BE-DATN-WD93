@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="container-fluid mt-4 px-4">
-    <h1 class="mt-4">Add Package</h1>
+    <h1 class="mt-4">Thêm mới dịch vụ khám</h1>
     <form action="{{ route('admin.packages.PackageAdd') }}" method="post" id="demoForm" enctype="multipart/form-data">
         @csrf
         <div class="row">
@@ -34,12 +34,25 @@
             <div class="col">
                 <div class="mb-3">
                     <label class="form-label">Mô tả dịch vụ khám</label>
-                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" placeholder="Mô tả dịch vụ khám"></textarea>
+                    <textarea class="form-control @error('description') is-invalid @enderror"
+                        id="packaceDescription"
+                        style="height: 100px"
+                        name="description"></textarea>
+
+                    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+                    <script>
+                        CKEDITOR.replace('packaceDescription');
+                    </script>
                     @error('description')
                     <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
+
+
+        </div>
+        {{-- Hàng thứ 2 --}}
+        <div class="row">
 
             <div class="col">
                 <div class="mb-3">
@@ -48,9 +61,6 @@
                     <img id="imgCate" src="" alt="Image Product" style="width:150px; display: none">
                 </div>
             </div>
-        </div>
-        {{-- Hàng thứ 2 --}}
-        <div class="row">
 
             <div class="col">
                 <div class="mb-3">
@@ -82,16 +92,15 @@
 </div>
 
 <script>
-//hien thi image khi add
-function showImage(event){
+    function showImage(event) {
         const imgCate = document.getElementById('imgCate');
-        const file =  event.target.files[0];
+        const file = event.target.files[0];
         const reader = new FileReader();
-        reader.onload = function(){
+        reader.onload = function() {
             imgCate.src = reader.result;
             imgCate.style.display = "block";
         }
-        if(file){
+        if (file) {
             reader.readAsDataURL(file);
         }
     }

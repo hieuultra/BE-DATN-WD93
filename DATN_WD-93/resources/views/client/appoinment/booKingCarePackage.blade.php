@@ -258,7 +258,7 @@
                     <i class="fas fa-map-marker-alt"></i>
                     <span>{{ $package->address }}</span>
                 </div>
-                <a class="text-primary" href="{{ route('appoinment.doctorDetails', $package->id) }}">Xem thêm</a>
+                <a class="text-primary" href="{{ route('appoinment.packaceDetails', $package->id) }}">Xem thêm</a>
             </div>
 
 

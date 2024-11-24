@@ -79,6 +79,7 @@ Route::prefix('appoinment')
         Route::post('/appointments/cancel/{id}', [AppoinmentController::class, 'cancelAppointment']);
 
         Route::get('/doctorDetails/{id}', [AppoinmentController::class, 'doctorDetails'])->name('doctorDetails');
+        Route::get('/packaceDetails/{id}', [AppoinmentController::class, 'packaceDetails'])->name('packaceDetails');
         Route::get('/doctorDetailsall', [AppoinmentController::class, 'doctorDetailsall'])->name('doctorDetailsall');
 
         Route::get('/formbookingdt/{id}', [AppoinmentController::class, 'formbookingdt'])->name('formbookingdt');
