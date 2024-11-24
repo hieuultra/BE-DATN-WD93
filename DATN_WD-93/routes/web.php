@@ -372,7 +372,6 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::delete('/{id}/destroy', [AdminTopicController::class, 'destroy'])->name('destroy');
             });
         Route::prefix('blogs')
-        Route::prefix('blogs')
             ->as('blogs.')
             ->group(function () {
                 Route::get('/index',           [AdminBlogController::class, 'index'])->name('index');
