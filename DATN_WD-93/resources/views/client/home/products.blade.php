@@ -399,7 +399,11 @@
                             <div class="mx-2">
                                 <div class="d-flex">
                                     <span style="font-size: 14px;">Giá thành:</span>
-                                    <p id="price" style="font-size: 14px; color: black; font-weight: bold;"></p>
+                                    <del id="price" style="font-size: 14px; color: black; font-weight: bold;"></del>
+                                </div>
+                                <div class="d-flex">
+                                    <span style="font-size: 14px;">Khuyến mãi:</span>
+                                    <p id="total" style="font-size: 14px; color: red; font-weight: bold;"></p>
                                 </div>
                                 <div class="d-flex">
                                     <span style="font-size: 14px;">Số lượng trong kho:</span>
@@ -532,8 +536,10 @@
                     success: function(response) {
                         let price = response.price;
                         let quantity = response.quantity;
+                        let total = response.total;
                         $("#price").text(price);
                         $("#quantity").text(quantity);
+                        $("#total").text(total + 'VND');
                     }
                 });
             });

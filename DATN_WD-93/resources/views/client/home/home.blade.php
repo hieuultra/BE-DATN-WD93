@@ -3,6 +3,7 @@
 @section('title', 'Welcome')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .slideshow-container11 {
             width: 100%;
@@ -254,8 +255,12 @@
         .option:focus {
             border: 2px solid gray;
         }
-    </style>
 
+
+    </style>
+<script>
+
+</script>
     <!-- Carousel Start -->
     <div class="container-fluid mb-3">
         <div class="row px-xl-5">
@@ -269,7 +274,7 @@
                     <div class="carousel-inner">
                         <div class="carousel-item position-relative active" style="height: 430px">
                             <img class="position-absolute w-100 h-100"
-                                src="{{ asset('img/20240909015811-0-Slide banner - 1590x604px (1).webp') }}"
+                                src="{{ asset('img/b18.png') }}"
                                 style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
@@ -294,7 +299,7 @@
                         </div>
                         <div class="carousel-item position-relative" style="height: 430px">
                             <img class="position-absolute w-100 h-100"
-                                src="{{ asset('img/20240905071756-0-389x143_2 3.png') }}" style="object-fit: cover" />
+                                src="{{ asset('img/slidepc4.jpg') }}" style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
               >
@@ -318,7 +323,7 @@
                         </div>
                         <div class="carousel-item position-relative" style="height: 430px">
                             <img class="position-absolute w-100 h-100"
-                                src="{{ asset('img/20240510022448-0-THUCUDOIMOI BANNERWEB_590x604.webp') }}"
+                                src="{{ asset('img/1610x492_banner_PC_6cce2d4c65.webp') }}"
                                 style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
@@ -346,7 +351,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="product-offer mb-30" style="height: 200px">
-                    <img class="img-fluid" src="{{ asset('img/20241104090355-0-Sieuqua-1590x604px.avif') }}"
+                    <img class="img-fluid" src="{{ asset('img/3DrMNgGFb8o9ofWTS27HK7UXD7TA7FW2Wa692CMN.webp') }}"
                         alt="" />
                     {{-- <div class="offer-text">
             <h6 class="text-white text-uppercase">Save 20%</h6>
@@ -355,7 +360,7 @@
           </div> --}}
                 </div>
                 <div class="product-offer mb-30" style="height: 200px">
-                    <img class="img-fluid" src="{{ asset('img/20240731045253-0-Slide banner 1.webp') }}" alt="" />
+                    <img class="img-fluid" src="{{ asset('img/slidepc1.jpg') }}" alt="" />
                     {{-- <div class="offer-text">
             <h6 class="text-white text-uppercase">Save 20%</h6>
             <h3 class="text-white mb-3">Special Offer</h3>
@@ -803,22 +808,22 @@
             <div class="col-md-6">
                 <div class="product-offer mb-30" style="height: 300px">
                     <img class="img-fluid"
-                        src="{{ asset('img/20240910063535-0-Slide bannerpayday924-1590x604px.webp') }}" alt="" />
+                        src="{{ asset('img/Frame 3467713.webp') }}" alt="" />
                     <div class="offer-text">
                         <h6 class="text-white text-uppercase">Save 20%</h6>
                         <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="" class="btn btn-primary">Shop Now</a>
+                        <a href="{{ route('products') }}" class="btn btn-primary">Shop Now</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="product-offer mb-30" style="height: 300px">
-                    <img class="img-fluid" src="{{ asset('img/20240918020343-0-Web Listerine287x232.webp') }}"
+                    <img class="img-fluid" src="{{ asset('img/Frame 3467714-3.webp') }}"
                         alt="" />
                     <div class="offer-text">
                         <h6 class="text-white text-uppercase">Save 20%</h6>
                         <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="" class="btn btn-primary">Shop Now</a>
+                        <a href="{{ route('products') }}" class="btn btn-primary">Shop Now</a>
                     </div>
                 </div>
             </div>
@@ -991,6 +996,7 @@
         {{-- NameProduct --}}
         <div style="display: flex; justify-content: space-between">
             <span id="productName" style="color: black; font-weight: bold; font-size: 18px"></span>
+            <p id="mess2" style="color: red; text-align: left; font-size:14px; margin-top:3px; margin-bottom:0px; margin-left:20px;"></p>
             <button id="closePopup" style="border: none; background-color: white">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-x-lg" viewBox="0 0 16 16">
@@ -1002,7 +1008,7 @@
         {{-- EndName --}}
         {{-- Image & Quantity & Price & Variant & AddtoCart --}}
         <div class="row mt-3 mb-3">
-            <div class="col">
+            <div class="col-7">
                 <div class="d-flex">
                     <div style="border: 2px solid gray; border-radius:5px; width: 150px; height: auto; ">
                         <img id="productImage" src="" style="width: 100%; height: 100%;" alt="">
@@ -1011,11 +1017,15 @@
                     <div class="mx-2">
                         <div class="d-flex">
                             <span style="font-size: 14px;">Giá thành:</span>
-                            <p id="price" style="font-size: 14px; color: black; font-weight: bold;"></p>
+                            <del id="price" style="font-size: 14px; color: black; font-weight: bold;"></del>
+                        </div>
+                        <div class="d-flex">
+                            <span style="font-size: 14px;">Khuyến mãi:</span>
+                            <p id="total" style="font-size: 14px; color: red; font-weight: bold;"></p>
                         </div>
                         <div class="d-flex">
                             <span style="font-size: 14px;">Số lượng trong kho:</span>
-                            <p id="quantity" style=" font-size: 14px; color: black; font-weight: bold;"></p>
+                            <p id="quantity" style=" font-size: 14px; color: red; font-weight: bold;"></p>
                         </div>
                         {{-- Tăng giảm số lượng  --}}
                         <div class="mt-4">
@@ -1039,7 +1049,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-5">
                 <div>
                     <span>Kiểu Loại:</span>
                     <div id="variantList">
@@ -1068,6 +1078,7 @@
         // addToCartShow
         var productId = '';
         var variants = '';
+        var discount = null;
         $(document).ready(function() {
             // Hiển thị popup
             $(".addToCartShow").click(function() {
@@ -1102,13 +1113,30 @@
                 });
 
             });
-
             // Đóng popup
             $("#closePopup, #overlay").click(function() {
+                $("#total").empty();
+                    $("#price").empty();
+                    $("#quantity").empty();
                 $("#overlay").fadeOut(); // Ẩn nền mờ
                 $("#popup").fadeOut(); // Ẩn popup
+                packageId = '';
             });
         });
+        $(document).ready(function() {
+    // Lắng nghe sự kiện focus và blur trên các button có class 'option'
+    $('#variantList').on('focus', '.option', function() {
+        $(this).css({
+            'background-color': 'yellow',
+            'border-color': 'red'
+        });
+    }).on('blur', '.option', function() {
+        $(this).css({
+            'background-color': 'aqua',
+            'border-color': 'initial'
+        });
+    });
+});
         // Tăng giảm số lượng
         $(document).ready(function() {
 
@@ -1124,6 +1152,8 @@
             });
             var packageId = '';
             var id_variantProduct = '';
+            var total = '';
+
             $(document).on('click', '.option', function() {
                 packageId = $(this).data('id'); // Lấy giá trị của data-id
 
@@ -1141,14 +1171,27 @@
                     success: function(response) {
                         let price = response.price;
                         let quantity = response.quantity;
+                        total = response.total;
+                        discount = response.dis;
+                        // console.log(total);
+                        // alert(discount);
+
                         $("#price").text(price);
                         $("#quantity").text(quantity);
+                        $("#total").text(total + 'VND');
                     }
                 });
+                $('#overlay').click(function() {
+                    $("#total").empty();
+                    $("#price").empty();
+                    $("#quantity").empty();
+                    packageId = '';
+          });
             });
             //active button
             $("#addToCart").click(function(e) {
                 e.preventDefault();
+               if (packageId) {
                 let quantity = $("#quantityAdd").val();
                 let price = $("#price").html();
                 let name = $("#productName").html();
@@ -1156,8 +1199,45 @@
                 let replaceImg = img.replace('/upload/', '');
                 let replacePrice = price.replace('VNĐ', '');
                 let newPrice = replacePrice.replace('.', '');
+                let priceDis = $("#total").html();
+                let replacePriceDis = priceDis.replace('VND', '');
+                let newPriceDis = replacePriceDis.replace('.', '');
+                console.log(total);
+                console.log(packageId);
                 console.log(id_variantProduct);
-                $.ajax({
+                if (discount !== null) {
+                    // console.log(newPriceDis);
+                    $.ajax({
+                    type: "POST",
+                    url: "/add-to-cart-home",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id_product: productId,
+                        id_variantProduct: id_variantProduct,
+                        quantity: quantity,
+                        price: newPriceDis,
+                        name: name,
+                        img: replaceImg,
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: response.message,
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
+                                    console.log("Thêm Sản Phẩm Vào Thành Công!!!");
+                                    console.log(response.count);
+                                    $('#count').text(response.count); // Cập nhật số lượng sản phẩm trong giỏ hàng
+                                }
+                                packageId = '';
+                    }
+                });
+                } else if(discount == null) {
+                    // console.log(newPrice);
+                    $.ajax({
                     type: "POST",
                     url: "/add-to-cart-home",
                     data: {
@@ -1170,19 +1250,30 @@
                         img: replaceImg,
                     },
                     success: function(response) {
-                        alert('Thêm thành công');
-                        console.log("Thêm Sản Phẩm Vào Thành Công!!!");
-                        console.log(
-                          response.count
-                        );
-                        $('#count').text(response.count);
-                        // console.log(id_variantProduct);
-                        // console.log(productId);
-
-
-
+                        if (response.status === 'success') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: response.message,
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
+                                    console.log("Thêm Sản Phẩm Vào Thành Công!!!");
+                                    console.log(response.count);
+                                    $('#count').text(response.count); // Cập nhật số lượng sản phẩm trong giỏ hàng
+                                }
+                                packageId = '';
                     }
                 });
+                }
+               } else {
+                $("#mess2").text('Vui lòng chọn loại!!!');
+                setTimeout(function() {
+                $("#mess2").text('');
+                            }, 2000);
+               }
+                // console.log(id_variantProduct);
+
             });
         });
     </script>
