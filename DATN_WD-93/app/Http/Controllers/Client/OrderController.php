@@ -214,6 +214,7 @@ class OrderController extends Controller
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
         $bill = Bill::query()->findOrFail($id);
+        // dd($bill);
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;
         $type_da_giao_hang = Bill::DA_GIAO_HANG;
