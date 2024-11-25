@@ -36,7 +36,7 @@
                 <div class="mb-3">
                     <label class="form-label">Chuyên khoa</label>
                     <select class="form-select" name="specialty_id" id="specialty_id">
-                        <option value="0">Đóng chuyên khoa</option>
+                        <option value="0">Chọn chuyên khoa</option>
                         @foreach($specialty as $vp)
                         <option value="{{ $vp->id }}">{{ $vp->name }}</option>
                         @endforeach

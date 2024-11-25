@@ -165,6 +165,7 @@
                 @php
                 $doc = $d->user;
                 $docs = $d->specialty;
+                $do = $d->clinic->first();
                 @endphp
                 <tr>
                   <th scope="row">{{ $d->id }}</th>
@@ -178,9 +179,11 @@
                   <td>
                     {{$doc->phone}}
                   </td>
-                  <td>
-                    {{$doc->address}}
-                  </td>
+                   @if ($do)
+                    <td> {{ $do->city }} </td>
+                    @else
+                       <td>Chưa có địa chỉ</td>
+                    @endif
                   <td>{{$docs->name}}</td>
                   <td class="text-center">
                     <div class="time-icon">
