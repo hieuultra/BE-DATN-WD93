@@ -429,7 +429,7 @@
                             <img class="img-fluid" src="{{ asset('img/20240825092057-0-6.png') }}" alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Drug consultation</h6>
+                            <h6>Tư vấn thuốc</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -442,7 +442,7 @@
                             <img class="img-fluid" src="{{ asset('img/Booking.webp') }}" alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Make an appointment</h6>
+                            <h6>Đặt lịch khám</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -456,7 +456,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Prescription medication</h6>
+                            <h6>Thuốc theo toa</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -470,7 +470,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Contact pharmacist</h6>
+                            <h6>Liên hệ dược sĩ</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -483,7 +483,7 @@
                             <img class="img-fluid" src="{{ asset('img/20240825092125-0-2.webp') }}" alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Health spending</h6>
+                            <h6>Chi tiêu cho sức khỏe</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -497,7 +497,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Hot deal October</h6>
+                            <h6>Khuyến mại hấp dẫn tháng 12</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -511,7 +511,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Gold P-Xu History</h6>
+                            <h6>Lịch sử P-Xu Vàng</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -525,7 +525,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Measles</h6>
+                            <h6>Các bệnh phổ biến</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -539,7 +539,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Health profile</h6>
+                            <h6>Hồ sơ sức khỏe</h6>
                             <!-- <small class="text-body">100 Products</small> -->
                         </div>
                     </div>
@@ -553,7 +553,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Health Check</h6>
+                            <h6>Kiểm tra sức khỏe</h6>
                         </div>
                     </div>
                 </a>
@@ -566,7 +566,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Exclusive discount code</h6>
+                            <h6>Lấy mã giảm giá</h6>
                         </div>
                     </div>
                 </a>
@@ -579,7 +579,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Business</h6>
+                            <h6>Doanh nghiệp</h6>
                         </div>
                     </div>
                 </a>

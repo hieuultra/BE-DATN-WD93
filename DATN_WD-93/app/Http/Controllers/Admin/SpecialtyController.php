@@ -19,7 +19,7 @@ class SpecialtyController extends Controller
         if ($classification) {
             $specialtyQuery->where('classification', $classification);
         }
-        $specialty = $specialtyQuery->paginate(3);
+        $specialty = $specialtyQuery->orderBy('updated_at', 'desc')->paginate(3);
 
         $doctorQuery = Doctor::query();
         if ($classification) {
@@ -27,15 +27,15 @@ class SpecialtyController extends Controller
                 $query->where('classification', $classification);
             });
         }
-        $doctor = $doctorQuery->paginate(3);   
-        
+        $doctor = $doctorQuery->orderBy('updated_at', 'desc')->paginate(3);
+
         $packageQuery = Package::query();
         if ($classification) {
             $packageQuery->whereHas('specialty', function ($query) use ($classification) {
                 $query->where('classification', $classification);
             });
         }
-        $package = $packageQuery->paginate(3);   
+        $package = $packageQuery->orderBy('updated_at', 'desc')->paginate(3);
         return view('admin.specialtyDoctors.specialtyDoctorList', compact('specialty', 'doctor', 'package'));
     }
     public function viewSpecialtyAdd()

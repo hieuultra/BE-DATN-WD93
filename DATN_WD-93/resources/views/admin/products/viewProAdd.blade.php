@@ -11,7 +11,7 @@
 
 
 <div class="container-fluid mt-4 px-4">
-    <h1 class="mt-4">Add product</h1>
+    <h1 class="mt-4">Thêm sản phẩm</h1>
     <form action="{{ route('admin.products.productAdd') }}" method="post" enctype="multipart/form-data" id="demoForm">
         @csrf
         <div class="row">
@@ -19,7 +19,7 @@
             <div class="col-lg-4">
                 <div class="row">
                     <div class="mb-3">
-                        <label class="form-label">ID</label>
+                        <label class="form-label">Mã</label>
                         <input type="text" class="form-control @error('idProduct') is-invalid @enderror" value="{{ old('idProduct') }}" name="idProduct" placeholder="idProduct">
                         @error('idProduct')
                         <p class="text-danger">{{ $message }}</p>
@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">Tên</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" name="name" placeholder="Name">
                         @error('name')
                         <p class="text-danger">{{ $message }}</p>
@@ -35,9 +35,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Category</label>
+                        <label class="form-label">Danh mục</label>
                         <select class="form-select @error('category_id') is-invalid @enderror" name="category_id">
-                            <option value="0">Choose categories</option>
+                            <option value="0">Chọn danh mục</option>
                             @foreach($categories as $c)
                             <option value="{{ $c->id }}">{{ $c->name }}</option>
                             @endforeach
@@ -48,9 +48,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Brand</label>
+                        <label class="form-label">Thương hiệu</label>
                         <select class="form-select @error('brand_id') is-invalid @enderror" name="brand_id">
-                            <option value="0">Choose brand</option>
+                            <option value="0">Chọn thương hiệu</option>
                             @foreach($brands as $brand)
                             <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                             @endforeach
@@ -61,32 +61,32 @@
                     </div>
 
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label class="form-label">Price</label>
                         <input type="number" class="form-control @error('price') is-invalid @enderror" value="{{ old('price') }}" name="price" placeholder="Price">
                         @error('price')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <div class="mb-3">
-                        <label class="form-label">Discount</label>
+                        <label class="form-label">Giảm giá (%)</label>
                         <input type="number" class="form-control @error('discount') is-invalid @enderror" value="{{ old('discount') }}" name="discount" placeholder="Discount">
                         @error('discount')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label class="form-label">Quantity</label>
                         <input type="number" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" name="quantity" placeholder="Quantity">
                         @error('quantity')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <div class="mb-3">
-                        <label class="form-label">Description Short</label>
+                        <label class="form-label">Mô tả ngắn</label>
                         <textarea class="form-control @error('content') is-invalid @enderror"
                             placeholder="Leave a description product here" style="height: 100px" name="content">{{ old('content') }}</textarea>
                         @error('content')
@@ -94,40 +94,40 @@
                         @enderror
                     </div>
 
-                    <label for="is_type" class="form-label">Status:</label>
+                    <label for="is_type" class="form-label">Trạng thái:</label>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="is_type" id="flexRadioDefault1" value="1" checked>
                         <label class="form-check-label" for="flexRadioDefault1">
-                            Display
+                            Hiện
                         </label>
                     </div>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="radio" name="is_type" id="flexRadioDefault2" value="0">
                         <label class="form-check-label" for="flexRadioDefault2">
-                            Hidden
+                            Ẩn
                         </label>
                     </div>
 
-                    <label for="" class="form-label">Other Customized:</label>
+                    <label for="" class="form-label">Tùy chọn khác:</label>
                     <div class="form-switch mb-3 ps-3 d-flex justify-content-between">
                         <div class="form-check">
                             <input class="form-check-input bg-danger" type="checkbox" name="is_new" checked>
-                            <label for="is_new" class="form-check-label">NEW</label>
+                            <label for="is_new" class="form-check-label">Sản phẩm mới</label>
                         </div>
 
                         <div class="form-check">
                             <input class="form-check-input bg-secondary" type="checkbox" name="is_hot" checked>
-                            <label for="is_hot" class="form-check-label">HOT</label>
+                            <label for="is_hot" class="form-check-label">Sản phẩm nóng</label>
                         </div>
 
                         <div class="form-check">
                             <input class="form-check-input bg-warning" type="checkbox" name="is_hot_deal" checked>
-                            <label for="is_hot_deal" class="form-check-label">HOT DEAL</label>
+                            <label for="is_hot_deal" class="form-check-label">Giảm giá mạnh</label>
                         </div>
 
                         <div class="form-check">
                             <input class="form-check-input bg-success" type="checkbox" name="is_show_home" checked>
-                            <label for="is_show_home" class="form-check-label">SHOW HOME</label>
+                            <label for="is_show_home" class="form-check-label">Hiện trang chủ</label>
                         </div>
                     </div>
                 </div>
@@ -137,21 +137,21 @@
             <div class="col-lg-8">
                 <div class="row">
                     <div class="mb-3">
-                        <label for="Description" class="form-check-label">Description Long</label>
+                        <label for="Description" class="form-check-label">Mô tả dài</label>
                         <div id="quill-editor" style="height: 400px;">
 
                         </div>
-                        <textarea name="description" id="nd_content" class="d-none">Enter Description Long</textarea>
+                        <textarea name="description" id="nd_content" class="d-none">Nhập mô tả dài</textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Image</label>
+                        <label class="form-label">Ảnh</label>
                         <input type="file" class="form-control" name="img" onchange="showImage(event)">
                         <img id="imgPro" src="" alt="Image Product" style="width:150px; display: none">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Album Image</label>
+                        <label class="form-label">Thư viện ảnh</label>
                         <i id="add-row" class="mdi mdi-plus text-muted fs-18 rounded-2 border ms-3 p-1" style="cursor: pointer"></i>
                         <table class="table align-middle table-nowrap mb-0">
                             <tbody id="image-table-body">
@@ -196,9 +196,9 @@
             </div>
         </div>
 
-        <input type="submit" class="btn btn-primary" value="Add" name="them">
+        <input type="submit" class="btn btn-primary" value="Thêm" name="them">
         <a href="{{ route('admin.products.productList') }}">
-            <input type="button" class="btn btn-primary" value="LIST_PRO">
+            <input type="button" class="btn btn-primary" value="Quay lại">
         </a>
     </form>
 </div>

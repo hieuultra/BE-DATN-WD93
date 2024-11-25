@@ -165,9 +165,9 @@
         <div class="row px-xl-5">
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
-                    <a class="breadcrumb-item text-dark" href="#">Home</a>
-                    <a class="breadcrumb-item text-dark" href="#">Shop</a>
-                    <span class="breadcrumb-item active">Shop Detail</span>
+                    <a class="breadcrumb-item text-dark" href="#">Trang chủ</a>
+                    <a class="breadcrumb-item text-dark" href="#">Thực phẩm chức năng</a>
+                    <span class="breadcrumb-item active">Chi tiết</span>
                 </nav>
             </div>
         </div>
@@ -227,7 +227,8 @@
                 <div class="h-100 bg-light p-30">
                     <h3 class="product-name">{{ $sp->name }}</h3>
                     <div class="product-info d-flex align-items-center mb-3">
-                        <small class="product-code px-2 pt-1">Mã:{{ $sp->idProduct }}</small>
+                        <small class="product-code px-2 pt-1">{{ $sp->idProduct }}</small>
+                        <small class="product-code px-2 pt-1">Thương hiệu: {{ $sp->brand->name }}</small>
                         <div class="mr-2">
                             @php
                                 $averageRating = round($sp->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có

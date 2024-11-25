@@ -66,7 +66,7 @@
                         <tr>
                             <td class="text-center">{{ $brand->id }}</td>
                             <td class="text-center">{{ $brand->name }}</td>
-                            
+
                             <td class="text-center">
                             <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" style="width: 100px; height: 100px; object-fit: cover;">
                             </td>
@@ -74,7 +74,7 @@
                                 <form action="{{ route('admin.brands.destroyBrand', $brand->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn chắc chắn muốn xóa?')">Delete</button>
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn chắc chắn muốn xóa?')">Xóa</button>
                                 </form>
                                 <a href="{{route('admin.brands.edit',$brand->id)}}" class="btn btn-primary">Sửa</a>
                             </td>

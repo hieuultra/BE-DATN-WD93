@@ -45,9 +45,6 @@ Route::get('/products/{category_id}', [HomeController::class, 'products'])->name
 Route::post('/adminProducts/category', [ProductController::class, 'filterByCategory'])->name('filterByCategory');
 Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo');
 Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
-Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
-Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo');
-Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
 Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/products/filter', [HomeController::class, 'filter'])->name('products.filter');

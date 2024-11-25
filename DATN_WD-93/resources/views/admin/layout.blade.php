@@ -113,7 +113,7 @@
                     <div class="sb-nav-link-icon">
                         <i class="fas fa-columns"></i>
                     </div>
-                   Danh sách chuyên ngành
+                    Danh sách chuyên khoa - Bác sỹ
                     <div class="sb-sidenav-collapse-arrow">
                         <i class="fas fa-angle-down"></i>
                     </div>
@@ -121,7 +121,7 @@
 
                   <div class="collapse" id="collapsespecialties" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                       <nav class="sb-sidenav-menu-nested nav">
-                          <a class="nav-link" href="{{ route('admin.specialties.specialtyDoctorList') }}">Danh sách chuyên ngành</a>
+                          <a class="nav-link" href="{{ route('admin.specialties.specialtyDoctorList') }}">Danh sách chuyên khoa - Bác sỹ</a>
                       </nav>
                   </div>
 

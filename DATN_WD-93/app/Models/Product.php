@@ -14,10 +14,8 @@ class Product extends Model
         'name',
         'img',
         'description',
-        'price',
         'discount',
         'content',
-        'quantity',
         'category_id',
         'brand_id',
         'is_type',
@@ -90,15 +88,27 @@ class Product extends Model
 
     public function scopeBestsellerProducts($query, $limit)
     {
-        return $query->where('quantity', '>', 0)->orderBy('quantity', 'desc')->limit($limit)->with(['category']);
+        return $query
+            ->whereHas('variantProduct', function ($subQuery) {
+                $subQuery->where('quantity', '>', 0); // Chỉ lấy các sản phẩm có số lượng > 0
+            })
+            ->withSum('variantProduct as total_quantity', 'quantity') // Tính tổng quantity từ bảng variant_products
+            ->orderBy('total_quantity', 'desc') // Sắp xếp theo tổng quantity giảm dần
+            ->limit($limit)
+            ->with(['category']); // Eager load category
     }
 
     public function scopeInStockProducts($query, $limit)
     {
-        return $query->where('quantity', '>', 0)->orderBy('quantity', 'desc')->limit($limit)->with(['category']);
+        return $query
+            ->whereHas('variantProduct', function ($subQuery) {
+                $subQuery->where('quantity', '>', 0); // Chỉ lấy các sản phẩm có số lượng > 0
+            })
+            ->withSum('variantProduct as total_quantity', 'quantity') // Tính tổng quantity từ bảng variant_products
+            ->orderBy('total_quantity', 'desc') // Sắp xếp theo tổng quantity giảm dần
+            ->limit($limit)
+            ->with(['category']); // Eager load category
     }
-
-
     public static function createProduct($data)
     {
         return self::create($data); // Gọi phương thức tĩnh create của lớp hiện tại (self đại diện cho lớp hiện tại).
