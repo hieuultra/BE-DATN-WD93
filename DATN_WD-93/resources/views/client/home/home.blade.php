@@ -962,6 +962,29 @@
     </div>
     <!-- Products End -->
 
+         <!-- Vendor Start -->
+  <div class="container-fluid py-5">
+    <!-- Title -->
+    <div class="text-center mb-1">
+      <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
+        <span class="px-2">Thương hiệu</span>
+      </h2>
+    </div>
+  <div class="row px-xl-5">
+    <div class="col">
+      <div class="owl-carousel vendor-carousel">
+        @foreach($brands as $brand)
+        <div class="bg-light p-4">
+          <a href="{{ route('productsByBrandId', ['brand_id' => $brand->id]) }}"><img src="{{ Storage::url($brand->image) }} " alt="" /></a>
+          <span class="d-block text-center mt-2 fw-bold">{{ $brand->products_count }} sản phẩm</span>
+        </div>
+       @endforeach
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Vendor End -->
+
     <!-- Vendor Start -->
     <div class="container-fluid py-5">
         <!-- Title -->
@@ -1040,28 +1063,7 @@
         </div>
     </div>
 
-     <!-- Vendor Start -->
-  <div class="container-fluid py-5">
-    <!-- Title -->
-    <div class="text-center mb-1">
-      <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-        <span class="px-2">Thương hiệu</span>
-      </h2>
-    </div>
-  <div class="row px-xl-5">
-    <div class="col">
-      <div class="owl-carousel vendor-carousel">
-        @foreach($brands as $brand)
-        <div class="bg-light p-4">
-          <a href="{{ route('productsByBrandId', ['brand_id' => $brand->id]) }}"><img src="{{ Storage::url($brand->image) }} " alt="" /></a>
-          <span class="d-block text-center mt-2 fw-bold">{{ $brand->products_count }} sản phẩm</span>
-        </div>
-       @endforeach
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Vendor End -->
+
 
 <!-- Blog Section Start -->
 <div class="container-fluid py-5">
