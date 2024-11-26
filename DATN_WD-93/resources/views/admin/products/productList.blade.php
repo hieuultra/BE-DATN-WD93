@@ -33,26 +33,26 @@ table th, table td {
 </style>
 <main>
     <div class="container-fluid px-4">
-      <h1 class="mt-4">List products</h1>
+      <h1 class="mt-4">Danh sách sản phẩm</h1>
       <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Dashboard</li>
+        <li class="breadcrumb-item active">Bảng điều khiển</li>
       </ol>
 
       <!-- Data -->
       <div class="card mb-4">
         <div class="card-header">
           <i class="fas fa-table me-1"></i>
-          List products
+          Danh sách sản phẩm
         </div>
         <form action="{{ route('filterByCategory') }}" method="post">
             @csrf
             <select class="form-select" name="category_id" id="">
-                <option value="0">Chọn danh muc</option>
+                <option value="0">Lọc theo danh mục</option>
                 @foreach ($categories as $cat)
                     <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach
             </select>
-          <input class="btn btn-primary" type="submit" name="listok" value="GO">
+          <input class="btn btn-primary" type="submit" name="listok" value="Tìm">
         </form>
         <div class="card-body">
                         {{-- Hiển thị thông báo --}}
@@ -108,7 +108,7 @@ table th, table td {
                     @else
                        <td>Chưa có số lượng</td>
                     @endif
-                    
+
                     <td class="{{ $item->is_type == true ? 'text-success' : 'text-danger' }}">
                         {{ $item->is_type == true ? 'Display' : 'Hidden' }}
                       </td>
