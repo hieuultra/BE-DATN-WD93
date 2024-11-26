@@ -11,7 +11,7 @@ class ReviewController extends Controller
     // Hiển thị danh sách đánh giá
     public function list()
     {
-        $reviews = Review::with(['user', 'product'])->whereNull('deleted_at')->get();
+        $reviews = Review::with(['user', 'product'])->whereNull('deleted_at')->orderBy('updated_at', 'desc')->get();
         return view('admin.reviews.list', compact('reviews'));
     }
 
@@ -20,13 +20,13 @@ class ReviewController extends Controller
     {
         $review = Review::find($id);
         $review->delete(); // Xóa mềm
-        return redirect()->route('admin.reviews.listReviews')->with('success', 'Review soft deleted successfully');
+        return redirect()->route('admin.reviews.listReviews')->with('success', 'Xóa thành công');
     }
 
     // Hiển thị đánh giá đã xóa
     public function listDeleted()
     {
-        $listDeleted = Review::onlyTrashed()->with(['user', 'product'])->get();
+        $listDeleted = Review::onlyTrashed()->with(['user', 'product'])->get();//Lọc ra chỉ các bản ghi đã bị xóa mềm
         return view('admin.reviews.listDeleted', compact('listDeleted'));
     }
     // Khôi phục đánh giá đã xóa mềm
@@ -34,6 +34,6 @@ class ReviewController extends Controller
     {
         $review = Review::onlyTrashed()->findOrFail($id);
         $review->restore();
-        return redirect()->route('admin.reviews.listReviews')->with('success', 'Review restored successfully');
+        return redirect()->route('admin.reviews.listReviews')->with('success', 'Khôi phục thành công');
     }
 }

@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="container-fluid mt-4 px-4">
-    <h1 class="mt-4">Edit Packages</h1>
+    <h1 class="mt-4">Sửa biến thể</h1>
     <form action="{{ route('admin.variantPros.packageUpdate') }}" method="post"  id="demoForm">
         @csrf
       <div class="mb-3">
@@ -15,9 +15,9 @@
         @enderror
       </div>
       <input type="hidden" name="id" value="{{ $package->id }}">
-      <input type="submit" class="btn btn-primary" name="them" value="SAVE">
+      <input type="submit" class="btn btn-primary" name="them" value="Lưu">
       <a href="{{ route('admin.variantPros.variantProList') }}">
-      <input type="button" class="btn btn-primary" value="LIST_VARIANT">
+      <input type="button" class="btn btn-primary" value="Quay lại">
         </a>
     </form>
   </div>
