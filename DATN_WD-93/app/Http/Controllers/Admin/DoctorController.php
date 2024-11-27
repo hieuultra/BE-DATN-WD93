@@ -127,7 +127,7 @@ class DoctorController extends Controller
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
                 'workplace' => 'required|string|max:255',
-                'min_age' => 'required|numeric',
+                'min_age' => 'nullable|numeric',
                 'examination_fee' => 'required|numeric',
                 'bio' => 'nullable|string',
             ]);
@@ -148,7 +148,7 @@ class DoctorController extends Controller
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
                 'workplace' => 'required|string|max:255',
-                'min_age' => 'required|numeric',
+                'min_age' => 'nullable|numeric',
                 'examination_fee' => 'required|numeric',
                 'bio' => 'nullable|string',
             ]);
@@ -171,7 +171,7 @@ class DoctorController extends Controller
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
                 'workplace' => 'required|string|max:255',
-                'min_age' => 'required|numeric',
+                'min_age' => 'nullable|numeric',
                 'examination_fee' => 'required|numeric',
                 'bio' => 'nullable|string',
             ]);
@@ -187,7 +187,7 @@ class DoctorController extends Controller
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
                 'workplace' => 'required|string|max:255',
-                'min_age' => 'required|numeric',
+                'min_age' => 'nullable|numeric',
                 'examination_fee' => 'required|numeric',
                 'bio' => 'nullable|string',
             ]);
@@ -395,7 +395,7 @@ class DoctorController extends Controller
         return response()->json(['success' => true]);
     }
 
-    //Thành tựu bác sĩ 
+    //Thành tựu bác sĩ
     public function showAchievements($id)
     {
         $doctor = Doctor::with('user')->where('id', $id)->first();

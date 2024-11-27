@@ -145,13 +145,31 @@
                         Kiểm tra đơn hàng
                     </span>
                 </a>
-                <a href="" class="btn icon-container px-0 ml-3">
+                {{-- <a href="" class="btn icon-container px-0 ml-3">
                     <i class="fas fa-bell" style="color: #ffd43b"></i>
                     <span class="badge-label">
                         <span class="badge-count">0</span>
                         Thông báo
                     </span>
+                </a> --}}
+                @if(Auth::check())
+                <a class="btn icon-container px-0 ml-3" href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">
+                    <span class="badge-label">
+                  {{-- <span class="badge-count"> </span> --}}
+                  Lịch sử đặt khám
+                    </span>
                 </a>
+                @endif
+
+                    @if(Auth::check() && (Auth::user()->role == 'Doctor'))
+                    <a class="btn icon-container px-0 ml-3" href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }}">
+                        <span class="badge-label">
+                      {{-- <span class="badge-count"> </span> --}}
+                      Quản lý lịch khám
+                        </span>
+                    </a>
+                    @endif
+
                 @if(auth()->check())
                     <a href="{{ route('account') }}" class="btn icon-container px-0 ml-3">
                         <i class="fas fa-user" style="color: #ffd43b"></i>

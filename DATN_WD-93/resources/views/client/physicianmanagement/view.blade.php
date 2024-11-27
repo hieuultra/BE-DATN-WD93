@@ -134,15 +134,15 @@
         }
         .appointment-history-link {
             border: 2px solid #1E90FF;
-            background-color: #1E90FF; 
+            background-color: #1E90FF;
             color: #ffffff;
-            padding: 5px 10px; 
-            border-radius: 5px; 
-            text-decoration: none; 
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
         }
 
         .appointment-history-link:hover {
-            background-color: #187bcd; 
+            background-color: #187bcd;
             color: #f0f0f0;
         }
 
@@ -162,7 +162,7 @@
 
         .action-link.confirm {
             color: #28a745;
-            border: 2px solid #28a745; 
+            border: 2px solid #28a745;
         }
 
         .action-link.pending {
@@ -242,7 +242,7 @@
 
         @media (max-width: 768px) {
             .appointments-grid2 {
-                grid-template-columns: 1fr; 
+                grid-template-columns: 1fr;
             }
         }
 
@@ -307,7 +307,7 @@
 
         <div class="appointments mt-3">
             <div id="appointments-grid" class="appointments-grid">
-                    
+
             </div>
         </div>
 
@@ -325,7 +325,7 @@
                                 <p>Số điện thoại: {{$appoinment->user->phone}}</p>
                                 <p>Lý do khám: {{$appoinment->notes}}</p>
                                 <p>Ngày: {{ $formattedDateTime }}</p>
-                                <p>Thời gian: {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} - 
+                                <p>Thời gian: {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
                                     {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
                                 </p>
                                 @if($appoinment->status_appoinment === 'huy_lich_hen')
@@ -342,10 +342,10 @@
                                     <p style="color: blue;">Đã khám thành công</p>
                                     <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
                                 @elseif($appoinment->status_appoinment === 'can_tai_kham')
-                                    <p style="color: blueviolet;">Cần tái khám</p> 
+                                    <p style="color: blueviolet;">Cần tái khám</p>
                                     <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
                                 @elseif($appoinment->status_appoinment === 'benh_nhan_khong_den')
-                                    <p style="color: green;">Bệnh nhân vắng mặt</p>    
+                                    <p style="color: green;">Bệnh nhân vắng mặt</p>
                                 @endif
                             </div>
                         @endif
@@ -354,7 +354,7 @@
             </div>
         </div>
 
-        
+
         <div id="appointmentHistoryModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -375,7 +375,7 @@
         </div>
 
 
-       
+
         <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -385,7 +385,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="{{ route('appoinment.confirmAppointmentHistories') }}" method="POST">
-                        @csrf    
+                        @csrf
                             <input type="hidden" id="userId" name="user_id">
                             <input type="hidden" id="appointmentId" name="appoinment_id">
                             <input type="hidden" id="doctorId" name="doctor_id">
@@ -426,14 +426,14 @@
                                     $formattedDateValue = \Carbon\Carbon::parse($timeSlot->date)->format('Y-m-d');
                                     @endphp
                                     @if($timeSlot->isAvailable == 1)
-                                        <button type="button" 
-                                                class="btn btn-outline-primary time-slot-item" 
-                                                data-date="{{ $formattedDateValue }}" 
-                                                data-id="{{ $timeSlot->id }}" 
-                                                data-start-time="{{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }}" 
+                                        <button type="button"
+                                                class="btn btn-outline-primary time-slot-item"
+                                                data-date="{{ $formattedDateValue }}"
+                                                data-id="{{ $timeSlot->id }}"
+                                                data-start-time="{{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }}"
                                                 data-end-time="{{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}"
                                                 style="display: none;">
-                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} - 
+                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
                                             {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
                                         </button>
                                     @endif
@@ -514,7 +514,7 @@
                         </div>
 
                         <form action="{{ route('appoinment.confirmAppointmentkoden') }}" method="POST">
-                        @csrf   
+                        @csrf
                             <input type="hidden" id="notArrivedAppointmentId" name="appointment_id">
                             <div class="mb-3">
                                 <label for="notArrivedReason" class="form-label">Lý do</label>
@@ -560,8 +560,8 @@
                 @endforeach
             </div>
         </div>
-  
-                
+
+
     <div class="appointments mt-3">
     <h5>Tra cứu hồ sơ khám bệnh</h5>
 
@@ -597,11 +597,11 @@
 </div>
             <div style="margin-top: 10px;">
                 <h5>ĐỊA CHỈ KHÁM</h5>
-                @if(empty($clinic) != 'Null')
+                @if(!empty($clinic))
                 <p>{{$clinic->address}}, {{$clinic->city}}</p>
                 <p>{{$clinic->clinic_name}}</p>
                 @else
-                <p>Khám qua vieo call</p>
+                <p>Khám qua video call</p>
                 @endif
                 <h5>GIÁ KHÁM: {{ number_format($doctor->examination_fee, 0, ',', '.') }} VND</h5>
             </div>
@@ -635,7 +635,7 @@
                 @endif
         </div>
     </div>
-   
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -673,15 +673,15 @@
         });
 
         document.getElementById('searchInput').addEventListener('input', function () {
-            const filter = this.value.toLowerCase(); 
-            const patientCards = document.querySelectorAll('.patient-card'); 
+            const filter = this.value.toLowerCase();
+            const patientCards = document.querySelectorAll('.patient-card');
 
             patientCards.forEach(function (card) {
                 const name = card.getAttribute('data-name').toLowerCase();
                 if (name.includes(filter)) {
-                    card.style.display = 'block'; 
+                    card.style.display = 'block';
                 } else {
-                    card.style.display = 'none'; 
+                    card.style.display = 'none';
                 }
             });
         });
@@ -689,7 +689,7 @@
         $(document).on('click', '.appointment-history-link', function(event) {
             event.preventDefault();
             const appointmentId = $(this).data('appointment-id');
-            
+
             $.ajax({
                 url: `/appoinment/appointment_histories/${appointmentId}`, // Sửa lỗi chính tả
                 type: 'GET',
@@ -698,14 +698,14 @@
                         alert(data.error);
                         return;
                     }
-                    
+
                     let content = `<p>ID lịch hẹn: ${data.appoinment_id}</p>`;
                     content += `<p>Chẩn đoán: ${data.diagnosis || 'Không có thông tin'}</p>`;
                     content += `<p>Đơn thuốc: ${data.prescription || 'Không có thông tin'}</p>`;
                     content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có thông tin'}</p>`;
                     content += `<p>Ghi chú: ${data.notes || 'Không có thông tin'}</p>`;
                     $('#appointmentHistoryContent').html(content);
-                    
+
                     $('#appointmentHistoryModal').modal('show');
                 },
                 error: function(xhr) {
@@ -716,7 +716,7 @@
         });
 
         $(document).on('click', '.action-link.pending', function(event) {
-            event.preventDefault();  
+            event.preventDefault();
             const appointmentId = $(this).data('appointment-id');
             const doctorId = $(this).data('doctor-id');
             const userId = $(this).data('user-id');

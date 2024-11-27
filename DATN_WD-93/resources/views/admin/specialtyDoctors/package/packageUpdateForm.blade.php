@@ -4,16 +4,16 @@
 @section('content')
 
 <div class="container-fluid mt-4 px-4">
-    <h1 class="mt-4">Add Package</h1>
+    <h1 class="mt-4">Cập nhập dịch vụ khám</h1>
     <form action="{{ route('admin.packages.packageUpdate', $package->id) }}" method="post" id="demoForm" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <!-- Phần bên phải -->
             <div class="col">
                 <div class="mb-3">
-                    <label class="form-label">Chuyên ngành</label>
+                    <label class="form-label">Chuyên khoa</label>
                     <select class="form-select" name="specialty_id" id="specialty_id">
-                        <option value="0">Choose Specialty</option>
+                        <option value="0">Chọn chuyên khoa</option>
                         @foreach($specialty as $vp)
                         <option value="{{ $vp->id }}" {{ $vp->id == $package->specialty_id ? 'selected' : '' }}>
                             {{ $vp->name }}
@@ -87,9 +87,9 @@
         </div>
 </div>
 
-<input type="submit" class="btn btn-primary" value="Add">
+<input type="submit" class="btn btn-primary" value="Lưu">
 <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
-    <input type="button" class="btn btn-primary" value="LIST_SPECIALTY_DOCTOR">
+    <input type="button" class="btn btn-primary" value="Quay lại">
 </a>
 </form>
 </div>

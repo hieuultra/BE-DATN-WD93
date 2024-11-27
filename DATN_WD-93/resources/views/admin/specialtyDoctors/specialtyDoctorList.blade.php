@@ -242,7 +242,7 @@
               Danh sách dịch vụ khám
             </div>
             <a href="{{ route('admin.packages.viewPackagesAdd') }}">
-              <input type="submit" class="btn btn-primary" name="them" value="ADD">
+              <input type="submit" class="btn btn-primary" name="them" value="Thêm">
             </a>
           </div>
           <div class="card-body">
@@ -292,7 +292,7 @@
                     {{$pacs->name}}
                   </td>
                   <td>
-                    {{$d->price}}
+                    {{ number_format($d->price,0,',','.') }}VND
                   </td>
                   <td class="text-center">
                     <div class="time-icon">
