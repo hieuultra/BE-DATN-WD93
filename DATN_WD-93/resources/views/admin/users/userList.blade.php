@@ -5,16 +5,16 @@
 
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">List accounts</h1>
+        <h1 class="mt-4">Danh sách tài khoản</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Dashboard</li>
+            <li class="breadcrumb-item active">Bảng điều khiển</li>
         </ol>
 
         <!-- Data -->
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
-                List account
+                Danh sách tài khoản
             </div>
             <div class="card-body">
                   {{-- Hiển thị thông báo --}}
@@ -32,22 +32,20 @@
                 <table id="datatablesSimple">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Phone</th>
+                            <th>Mã</th>
+                            <th>Tên</th>
+                            <th>Địa chỉ</th>
+                            <th>Số điện thoại</th>
                             <th>Email</th>
-                            <th>Image</th>
-                            <th>Role</th>
-                            <th>Action</th>
+                            <th>Ảnh</th>
+                            <th>Vai trò</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                            <tbody>
                             @foreach($users as $item)
                             <tr>
                                <td>{{ $item->id }}</td>
-                               <td>{{ $item->username }}</td>
                                 {{-- <td class="password-column">{{ $item->password }}</td> --}}
                                <td>{{ $item->name }}</td>
                                 <td>{{ $item->address }}</td>
@@ -83,7 +81,7 @@
                     </tbody>
                 </table>
                 <a href="{{ route('admin.users.viewUserAdd') }}">
-                    <input type="submit" class="btn btn-primary" name="them" value="ADD">
+                    <input type="submit" class="btn btn-primary" name="them" value="Thêm">
                 </a>
 
             </div>

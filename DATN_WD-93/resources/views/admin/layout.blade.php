@@ -113,7 +113,7 @@
                     <div class="sb-nav-link-icon">
                         <i class="fas fa-columns"></i>
                     </div>
-                    Danh sách chuyên khoa - Bác sỹ
+                    Chuyên khoa - Bác sỹ
                     <div class="sb-sidenav-collapse-arrow">
                         <i class="fas fa-angle-down"></i>
                     </div>
@@ -231,7 +231,7 @@
         <div class="sb-nav-link-icon">
           <i class="fas fa-columns"></i>
         </div>
-        Danh sách đánh giá
+      Đánh giá
         <div class="sb-sidenav-collapse-arrow">
           <i class="fas fa-angle-down"></i>
         </div>

@@ -428,8 +428,10 @@ class AppoinmentController extends Controller
             })
             ->get();
 
+        $doctor = Doctor::where('user_id', $id)->first();
+
         $latestAppointments = DB::table('appoinments')
-            ->where('doctor_id', $id)
+            ->where('doctor_id', $doctor->id)
             ->select('user_id', DB::raw('MAX(created_at) as latest_appointment'))
             ->groupBy('user_id');
 
@@ -448,7 +450,7 @@ class AppoinmentController extends Controller
             $schedule->isAvailable = 0;
             $schedule->save();
         }
-        if ($user->role == 'Doctor' || $user->role == 'Admin') {
+        if ($user->role == 'Doctor') {
             $doctor = $user->doctor()->with(['timeSlot', 'appoinment'])->first();
 
             $doctorhtr = $user->doctor()
@@ -476,10 +478,10 @@ class AppoinmentController extends Controller
                 $orderCount = $user->bill()->count();
             }
             $categories = Category::orderBy('name', 'asc')->get();
-            $clinic = Clinic::where('doctor_id', $id)->first();
+            $clinic = Clinic::where('doctor_id', $doctors->id)->first();
             return view('client.physicianmanagement.view', compact('doctor', 'users', 'doctorhtr', 'doctors', 'doctorrv', 'orderCount', 'categories', 'clinic'));
         } else {
-            return redirect()->route('viewBookingDoctor')->with('error', 'Bạn không được cấp quyền truy cập.');
+            return redirect()->route('appoinment.index')->with('error', 'Bạn không được cấp quyền truy cập.');
         }
     }
 
@@ -493,7 +495,7 @@ class AppoinmentController extends Controller
         $categories = Category::orderBy('name', 'asc')->get();
 
         $user = User::where('id', $id1)->first();
-        
+
         $appoinments = Appoinment::where('user_id', $id1)->where('doctor_id', $id2)
             ->with(['doctor', 'timeSlot'])
             ->get();

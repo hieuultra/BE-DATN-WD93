@@ -230,12 +230,12 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         @if(Auth::check())
-                        <a class="nav-link" href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">Lịch sửa đặt khám</a>
+                        <a class="nav-link" href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">Lịch sử đặt khám</a>
                         @endif
                     </li>
                     <li class="nav-item">
-                        @if(Auth::check())
-                        <a class="nav-link" href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }}">Bác sỹ quản lý</a>
+                        @if(Auth::check() && (Auth::user()->role == 'Doctor'))
+                        <a class="nav-link" href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }}">Quản lý lịch khám</a>
                         @endif
                     </li>
                     <li class="nav-item">

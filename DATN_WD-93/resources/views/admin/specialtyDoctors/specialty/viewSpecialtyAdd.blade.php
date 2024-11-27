@@ -4,11 +4,11 @@
 @section('content')
 
 <div class="container-fluid mt-4 px-4">
-    <h1 class="mt-4">Add Specialty</h1>
+    <h1 class="mt-4">Thêm chuyên khoa</h1>
     <form action="{{ route('admin.specialties.specialtyAdd') }}" method="post"  id="demoForm" enctype="multipart/form-data">
         @csrf
       <div class="mb-3">
-        <label class="form-label">Name</label>
+        <label class="form-label">Tên</label>
         <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" name="name" placeholder="Name">
         @error('name')
         <p class="text-danger">{{ $message }}</p>
@@ -16,7 +16,7 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Description</label>
+        <label class="form-label">Mô tả</label>
         <textarea class="form-control @error('description') is-invalid @enderror"
          placeholder="Leave a description product here" style="height: 100px" name="description" >{{ old('description') }}</textarea>
          @error('description')
@@ -25,16 +25,16 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Image</label>
+        <label class="form-label">Ảnh</label>
         <input type="file" class="form-control" name="image" onchange="showImage(event)">
         <img id="imgCate" src="" alt="Image Product" style="width:150px; display: none">
     </div>
 
     <div class="mb-3">
-        <label class="form-label">classification (Phân loại)</label>
+        <label class="form-label">Phân loại</label>
         <select name="classification">
           <option value="chuyen_khoa">Chuyên khoa</option>
-          <option value="kham_tu_xa">Kham qua video (Khám từ xa)</option>
+          <option value="kham_tu_xa">Khám qua video (Khám từ xa)</option>
           <option value="tong_quat">Khám tổng quát (chỉ dành cho bệnh viện)</option>
         </select>
         @error('classification')
@@ -42,9 +42,9 @@
         @enderror
     </div>
 
-      <input type="submit" class="btn btn-primary" name="them" value="ADD">
+      <input type="submit" class="btn btn-primary" name="them" value="Thêm">
       <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
-      <input type="button" class="btn btn-primary" value="List Specialty">
+      <input type="button" class="btn btn-primary" value="Quay lại">
         </a>
     </form>
   </div>

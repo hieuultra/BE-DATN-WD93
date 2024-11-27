@@ -63,7 +63,7 @@ body {
   color: #6C757D;
   text-align: left;
   background-color: #F5F5F5;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
@@ -596,7 +596,10 @@ pre code {
   max-height: 340px;
   overflow-y: scroll;
 }
-
+html, body {
+    width: 100%;
+    overflow-x: hidden; /* Ẩn cuộn ngang */
+  }
 .container,
 .container-fluid,
 .container-sm,
@@ -611,28 +614,28 @@ pre code {
 }
 
 @media (min-width: 576px) {
-  .container, .container-sm {
-    max-width: 540px;
+    .container, .container-sm {
+      max-width: 540px;
+    }
   }
-}
 
-@media (min-width: 768px) {
-  .container, .container-sm, .container-md {
-    max-width: 720px;
+  @media (min-width: 768px) {
+    .container, .container-sm, .container-md {
+      max-width: 720px;
+    }
   }
-}
 
-@media (min-width: 992px) {
-  .container, .container-sm, .container-md, .container-lg {
-    max-width: 960px;
+  @media (min-width: 992px) {
+    .container, .container-sm, .container-md, .container-lg {
+      max-width: 960px;
+    }
   }
-}
 
-@media (min-width: 1200px) {
-  .container, .container-sm, .container-md, .container-lg, .container-xl {
-    max-width: 1140px;
+  @media (min-width: 1200px) {
+    .container, .container-sm, .container-md, .container-lg, .container-xl {
+      max-width: 1140px;
+    }
   }
-}
 
 .row {
   display: flex;

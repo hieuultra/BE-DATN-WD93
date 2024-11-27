@@ -256,7 +256,48 @@
             border: 2px solid gray;
         }
 
+/* Card Style */
+.blog-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.blog-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.blog-card img {
+  border-bottom: 1px solid #ddd;
+  transition: opacity 0.3s ease;
+}
+
+.blog-card img:hover {
+  opacity: 0.85;
+}
+
+.blog-card h5 {
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.blog-card p {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.blog-card .d-flex {
+  font-size: 0.8rem;
+}
+
+.blog-card .fa {
+  color: #888;
+}
+
+/* Optional: Add a background hover effect */
+.blog-card:hover {
+  background-color: #f8f9fa;
+}
     </style>
 <script>
 
@@ -638,7 +679,13 @@
                         @foreach ($newProducts as $item)
                             @php
                              $variant = $item->variantProduct->first();
-                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100);
+                             if ($variant) {
+                                    // Nếu biến thể tồn tại, tính toán giá trị
+                                    $tt = $variant->price - (($variant->price * $item['discount']) / 100);
+                                } else {
+                                    // Nếu không có biến thể, đặt giá trị mặc định
+                                    $tt = null;
+                                }
                             @endphp
                             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                                 <div class="product-item bg-light mb-4">
@@ -663,7 +710,11 @@
                                             href="{{ route('productDetail', $item->id) }}"
                                             style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $item->name }}</a>
                                         <div class="d-flex align-items-center justify-content-center mt-2">
+                                            @if ($tt !== null)
                                             <h5 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h5>
+                                            @else
+                                                <h5 class="text-danger">Giá: Chưa thêm giá</h5>
+                                            @endif
                                             <h6 class="text-muted ml-2">
                                                 @if ($item->variantProduct->isNotEmpty())
                                                             @php
@@ -808,11 +859,11 @@
             <div class="col-md-6">
                 <div class="product-offer mb-30" style="height: 300px">
                     <img class="img-fluid"
-                        src="{{ asset('img/Frame 3467713.webp') }}" alt="" />
+                        src="{{ asset('img/k1.jpg') }}" alt="" />
                     <div class="offer-text">
-                        <h6 class="text-white text-uppercase">Save 20%</h6>
-                        <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="{{ route('products') }}" class="btn btn-primary">Shop Now</a>
+                        <h6 class="text-white text-uppercase">Bạn cần khám sức khỏe</h6>
+                        <h3 class="text-white mb-3">Nhanh và chính xác</h3>
+                        <a href="{{ route('appoinment.index') }}" class="btn btn-primary">Đặt ngay</a>
                     </div>
                 </div>
             </div>
@@ -821,9 +872,9 @@
                     <img class="img-fluid" src="{{ asset('img/Frame 3467714-3.webp') }}"
                         alt="" />
                     <div class="offer-text">
-                        <h6 class="text-white text-uppercase">Save 20%</h6>
-                        <h3 class="text-white mb-3">Special Offer</h3>
-                        <a href="{{ route('products') }}" class="btn btn-primary">Shop Now</a>
+                        <h6 class="text-white text-uppercase">Khuyến mãi lên đến 30%</h6>
+                        <h3 class="text-white mb-3">Khuyến mại đặc biệt</h3>
+                        <a href="{{ route('products') }}" class="btn btn-primary">Mua ngay</a>
                     </div>
                 </div>
             </div>
@@ -911,6 +962,29 @@
     </div>
     <!-- Products End -->
 
+         <!-- Vendor Start -->
+  <div class="container-fluid py-5">
+    <!-- Title -->
+    <div class="text-center mb-1">
+      <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
+        <span class="px-2">Thương hiệu</span>
+      </h2>
+    </div>
+  <div class="row px-xl-5">
+    <div class="col">
+      <div class="owl-carousel vendor-carousel">
+        @foreach($brands as $brand)
+        <div class="bg-light p-4">
+          <a href="{{ route('productsByBrandId', ['brand_id' => $brand->id]) }}"><img src="{{ Storage::url($brand->image) }} " alt="" /></a>
+          <span class="d-block text-center mt-2 fw-bold">{{ $brand->products_count }} sản phẩm</span>
+        </div>
+       @endforeach
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Vendor End -->
+
     <!-- Vendor Start -->
     <div class="container-fluid py-5">
         <!-- Title -->
@@ -988,6 +1062,52 @@
             @endforeach
         </div>
     </div>
+
+
+
+<!-- Blog Section Start -->
+<div class="container-fluid py-5">
+    <!-- Section Title -->
+    <div class="text-center mb-5">
+      <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
+        <span class="px-2">Tin mới nhất</span>
+      </h2>
+    </div>
+    <!-- Blog Carousel -->
+    <div class="row px-xl-5">
+      <div class="col">
+        <div class="owl-carousel vendor-carousel">
+          <!-- Loop qua danh sách blogs -->
+          @foreach($blogs as $blog)
+          <div class="blog-card bg-white shadow-lg rounded overflow-hidden">
+            <a href="{{ route('blog.show', ['id' => $blog->id]) }}">
+              <!-- Ảnh bài viết -->
+              <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="img-fluid" />
+            </a>
+            <!-- Nội dung bài viết -->
+            <div class="p-4">
+              <!-- Tiêu đề bài viết -->
+              <h5 class="fw-bold text-dark">{{ $blog->title }}</h5>
+              <!-- Nội dung tóm tắt -->
+              <p class="text-muted">
+                {{ \Illuminate\Support\Str::limit($blog->short_content, 100) }}
+              </p>
+              <!-- Thêm thông tin thêm (Ngày đăng, tác giả) -->
+              <div class="d-flex justify-content-between mt-3">
+                <span class="text-muted"><i class="fa fa-clock"></i> {{ $blog->created_at->format('d/m/Y') }}</span>
+                <span class="text-muted"><i class="fa fa-user"></i> {{ $blog->author ?? 'Admin' }}</span>
+              </div>
+            </div>
+          </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Blog Section End -->
+
+
+
     {{-- popup addtocart --}}
 
     <div id="overlay"></div>
@@ -1062,7 +1182,6 @@
         {{-- End Image & Quantity & Price & Variant & AddtoCart --}}
     </div>
     {{-- End popupAddtocart --}}
-    <!-- Vendor End -->
     <script>
         let currentIndex = 0;
         const slides = document.querySelectorAll('.slideshow-image');
@@ -1191,7 +1310,10 @@
             //active button
             $("#addToCart").click(function(e) {
                 e.preventDefault();
-               if (packageId) {
+                let quantity = $("#quantity").html();
+                // console.log(quantity);
+
+               if (packageId && quantity > 0) {
                 let quantity = $("#quantityAdd").val();
                 let price = $("#price").html();
                 let name = $("#productName").html();
@@ -1267,7 +1389,7 @@
                 });
                 }
                } else {
-                $("#mess2").text('Vui lòng chọn loại!!!');
+                $("#mess2").text('Vui lòng chọn loại và kiểm tra số lượng!!!');
                 setTimeout(function() {
                 $("#mess2").text('');
                             }, 2000);

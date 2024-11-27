@@ -124,7 +124,7 @@
                 ></a>
                 <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
                     <a href="{{ route('about') }}" class="dropdown-item">Giới Thiệu</a>
-                   <a href="" class="dropdown-item">Đội ngũ bác sỹ</a>
+                   <a href="{{ route('appoinment.doctorDetailsall') }}" class="dropdown-item">Đội ngũ bác sỹ</a>
                 </div>
               </div>
               <a href="{{route('blog.index')}}" class="nav-item nav-link">Tin tức</a>
@@ -145,13 +145,42 @@
                         Kiểm tra đơn hàng
                     </span>
                 </a>
-                <a href="" class="btn icon-container px-0 ml-3">
+                {{-- <a href="" class="btn icon-container px-0 ml-3">
                     <i class="fas fa-bell" style="color: #ffd43b"></i>
                     <span class="badge-label">
                         <span class="badge-count">0</span>
                         Thông báo
                     </span>
+                </a> --}}
+                @if(Auth::check())
+                @php
+                // Lấy số lần đặt khám của người dùng đã đăng nhập
+                $appointmentCount = Auth::user()->appoinment()->count();
+                @endphp
+                <a class="btn icon-container px-0 ml-3" href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">
+                    <span class="badge-label">
+                  <span class="badge-count"> {{ $appointmentCount }}</span>
+                  Lịch sử đặt khám
+                    </span>
                 </a>
+                @endif
+
+                    @if(Auth::check() && (Auth::user()->role == 'Doctor'))
+                    @php
+                    // Lấy bác sĩ của người dùng
+                    $doctor = Auth::user()->doctor;
+
+                    // Lấy số lịch khám, kiểm tra nếu $doctor không null
+                    $appointmentCount1 = $doctor ? $doctor->appoinment()->count() : 0;
+                   @endphp
+                    <a class="btn icon-container px-0 ml-3" href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }}">
+                        <span class="badge-label">
+                      <span class="badge-count">{{ $appointmentCount1 }} </span>
+                      Quản lý lịch khám
+                        </span>
+                    </a>
+                    @endif
+
                 @if(auth()->check())
                     <a href="{{ route('account') }}" class="btn icon-container px-0 ml-3">
                         <i class="fas fa-user" style="color: #ffd43b"></i>

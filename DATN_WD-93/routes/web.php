@@ -42,6 +42,7 @@ Route::get('/products', [HomeController::class, 'products'])->name('products');
 Route::get('/search', [HomeController::class, 'search'])->name('products.search');
 Route::get('/products/detail/{product_id}', [HomeController::class, 'detail'])->name('productDetail');
 Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
+Route::get('/products-by-brand', [HomeController::class, 'productsByBrandId'])->name('productsByBrandId');
 Route::post('/adminProducts/category', [ProductController::class, 'filterByCategory'])->name('filterByCategory');
 Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo');
 Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');

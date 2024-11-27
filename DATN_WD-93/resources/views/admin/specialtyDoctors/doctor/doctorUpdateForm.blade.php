@@ -30,7 +30,7 @@
                 <div class="mb-3">
                     <label class="form-label">Chuyên khoa bác sỹ</label>
                     <select class="form-select" name="specialty_id" id="specialty_id" onchange="checkClassification(this.value)">
-                        <option value="0">Choose Specialty</option>
+                        <option value="0">Chọn chuyên khoa</option>
                         @foreach($specialty as $vp)
                         <option value="{{ $vp->id }}" data-classification="{{ $vp->classification }}"
                             @if ($vp->id == $doctor->specialty_id) selected @endif>
@@ -194,9 +194,9 @@
             </div>
         </div>
         @endif
-        <input type="submit" class="btn btn-primary" value="Edit">
+        <input type="submit" class="btn btn-primary" value="Lưu">
         <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
-            <input type="button" class="btn btn-primary" value="LIST_SPECIALTY_DOCTOR">
+            <input type="button" class="btn btn-primary" value="Quay lại">
         </a>
     </form>
 </div>
@@ -214,7 +214,7 @@
             clinicAddressDiv.style.display = 'none';
         }
     }
-    
+
     document.addEventListener('DOMContentLoaded', function() {
         var specialtyId = document.getElementById('specialty_id').value;
         checkClassification(specialtyId);

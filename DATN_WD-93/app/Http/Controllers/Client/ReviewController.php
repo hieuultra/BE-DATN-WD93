@@ -13,11 +13,11 @@ class ReviewController extends Controller
     {
         // Kiểm tra nếu người dùng có thể đánh giá sản phẩm này (dựa trên các điều kiện trong phương thức canReviewProduct)
         if (!$this->canReviewProduct($productId, $billId)) {
-            return redirect()->back()->with('error', 'You can only review products you have purchased.');
+            return redirect()->back()->with('error', 'Bạn chỉ có thể đánh giá các sản phẩm bạn đã mua.');
         }
         // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
         if (Review::where('user_id', auth()->id())->where('product_id', $productId)->exists()) {
-            return redirect()->back()->with('error', 'You have already reviewed this product.');
+            return redirect()->back()->with('error', 'Bạn đã đánh giá sản phẩm này.');
         }
 
         // Validate input dữ liệu
@@ -35,7 +35,7 @@ class ReviewController extends Controller
         ]);
 
         // Trả về trang với thông báo thành công
-        return redirect()->back()->with('success', 'Your review has been submitted.');
+        return redirect()->back()->with('success', 'Bạn đã đánh giá sản phẩm thành công.');
     }
 
     private function canReviewProduct($productId, $billId)
