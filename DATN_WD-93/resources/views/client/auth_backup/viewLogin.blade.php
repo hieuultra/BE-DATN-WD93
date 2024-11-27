@@ -107,7 +107,7 @@ use Illuminate\Support\Facades\File;
                       </div> --}}
                     </div>
                     <div class="text-center mt-3">
-                      <input type="submit" href="#" class="btn btn-lg btn-primary" value="Login" name="dangnhap">
+                      <input type="submit" href="#" class="btn btn-lg btn-primary" value="Đăng nhập" name="dangnhap">
                     </div>
                   </form>
                 </div>

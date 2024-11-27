@@ -163,9 +163,9 @@
 
 </div>
 
-<input type="submit" class="btn btn-primary" value="Add">
+<input type="submit" class="btn btn-primary" value="Thêm">
 <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
-    <input type="button" class="btn btn-primary" value="LIST_SPECIALTY_DOCTOR">
+    <input type="button" class="btn btn-primary" value="Quay lại">
 </a>
 </form>
 </div>
@@ -184,7 +184,7 @@
                 },
                 success: function(response) {
                     $('#specialty_id').empty();
-                    $('#specialty_id').append('<option value="0">Đóng chuyên khoa</option>');
+                    $('#specialty_id').append('<option value="0">Chọn chuyên khoa</option>');
                     response.forEach(function(item) {
                         $('#specialty_id').append('<option value="' + item.id + '">' + item.name + '</option>');
                     });

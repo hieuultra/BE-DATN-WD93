@@ -329,8 +329,8 @@
 
     <div class="hero-section">
         <div class="hero-content">
-            <h1 style="color: #fff;">T1 KHI NHÀ VUA TRỞ LẠI</h1>
-            <h2 style="color: #fff;">NHÀ VÔ DỊCH CKTG 2 NĂM LIÊN TIẾP 2 LẦN</h2>
+            <h1 style="color: #fff;">NỀN TẢNG Y TẾ</h1>
+            <h2 style="color: #fff;">CHĂM SÓC SỨC KHỎE TOÀN DIỆN</h2>
             <form>
                 <div class="search-bar">
                     <input type="text" id="search-input" placeholder="Tìm phòng khám" autocomplete="off">
@@ -349,7 +349,7 @@
                 <div class="service-item">
                     <button onclick="toggleContent2()" style="background: none; border: none;">
                         <img src="https://is4-ssl.mzstatic.com/image/thumb/Purple122/v4/3f/50/e5/3f50e5bd-c30c-c586-2216-3976e5ee1542/AppIcons-1x_U007emarketing-0-7-0-85-220.png/1200x630wa.png" alt="Remote Examination">
-                        <p style="color: #fff;">Khám qua video</p>
+                        <p style="color: #fff;">Khám từ xa</p>
                     </button>
                 </div>
                 <div class="service-item">
@@ -650,7 +650,7 @@
                                         resultsDiv.append(`
                                 <a href="/appoinment/booKingCare/${clinics.id}" class="clinic-link">
                                     <div>
-                                        ${clinics.name} 
+                                        ${clinics.name}
                                         <img style="width: 100px; height: 100px;" src="/upload/${clinics.image}">
                                     </div>
                                 </a>
@@ -673,8 +673,8 @@
                 });
 
                 $('#search-results').on('click', '.clinic-link', function(event) {
-                    event.preventDefault(); 
-                    window.location.href = $(this).attr('href'); 
+                    event.preventDefault();
+                    window.location.href = $(this).attr('href');
                 });
             });
 

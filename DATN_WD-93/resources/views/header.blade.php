@@ -124,7 +124,7 @@
                 ></a>
                 <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
                     <a href="{{ route('about') }}" class="dropdown-item">Giới Thiệu</a>
-                   <a href="" class="dropdown-item">Đội ngũ bác sỹ</a>
+                   <a href="{{ route('appoinment.doctorDetailsall') }}" class="dropdown-item">Đội ngũ bác sỹ</a>
                 </div>
               </div>
               <a href="{{route('blog.index')}}" class="nav-item nav-link">Tin tức</a>
