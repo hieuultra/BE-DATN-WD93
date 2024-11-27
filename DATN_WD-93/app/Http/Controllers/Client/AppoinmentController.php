@@ -32,7 +32,7 @@ class AppoinmentController extends Controller
 
         $specialtiestq = Specialty::where('classification', 'tong_quat')->orderBy('name', 'asc')->get();
         $doctors = Doctor::with('user', 'specialty') // Tải kèm thông tin user
-            ->withCount('appoinment') // Đếm số lượng lịch hẹn
+            ->withCount('appoinment') // Đếm số lượng lịch hẹn physicianManagement
             ->orderBy('appoinment_count', 'desc') // Sắp xếp theo số lượng lịch hẹn
             ->orderBy('updated_at', 'desc') // Sắp xếp theo thời gian cập nhật
             ->take(10) // Giới hạn 10 bác sĩ
@@ -448,7 +448,7 @@ class AppoinmentController extends Controller
             $schedule->isAvailable = 0;
             $schedule->save();
         }
-        if ($user->role == 'Doctor' || $user->role == 'Admin') {
+        if ($user->role == 'Doctor') {
             $doctor = $user->doctor()->with(['timeSlot', 'appoinment'])->first();
 
             $doctorhtr = $user->doctor()
@@ -476,10 +476,10 @@ class AppoinmentController extends Controller
                 $orderCount = $user->bill()->count();
             }
             $categories = Category::orderBy('name', 'asc')->get();
-            $clinic = Clinic::where('doctor_id', $id)->first();
+            $clinic = Clinic::where('doctor_id', $doctors->id)->first();
             return view('client.physicianmanagement.view', compact('doctor', 'users', 'doctorhtr', 'doctors', 'doctorrv', 'orderCount', 'categories', 'clinic'));
         } else {
-            return redirect()->route('viewBookingDoctor')->with('error', 'Bạn không được cấp quyền truy cập.');
+            return redirect()->route('appoinment.index')->with('error', 'Bạn không được cấp quyền truy cập.');
         }
     }
 

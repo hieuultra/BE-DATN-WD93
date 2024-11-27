@@ -325,6 +325,9 @@
             </button>
         </div>
         @endif
+
+       
+
     </div>
 
     <div class="hero-section">
@@ -624,6 +627,12 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        @if (session('error'))
+        <script>
+            alert('{{ session('error') }}');
+        </script>
+        @endif
+
         <script>
             $(document).ready(function() {
                 $('#search-input').on('focus', function() {
@@ -729,6 +738,7 @@
                     specialtyContent4.style.display = "block";
                 }
             }
+            
         </script>
         @endsection
 </body>
