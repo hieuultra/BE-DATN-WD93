@@ -26,5 +26,5 @@
         @endif
     </div>
 </div>
-<a href="/appoinment/">Quay trở về</a>
+<a href="/appoinment/"><input type="button" class="btn btn-primary" value="Quay trở về"></a>
 @endsection

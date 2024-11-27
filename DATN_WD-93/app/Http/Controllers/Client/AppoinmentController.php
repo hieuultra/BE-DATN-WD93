@@ -428,8 +428,10 @@ class AppoinmentController extends Controller
             })
             ->get();
 
+        $doctor = Doctor::where('user_id', $id)->first();
+
         $latestAppointments = DB::table('appoinments')
-            ->where('doctor_id', $id)
+            ->where('doctor_id', $doctor->id)
             ->select('user_id', DB::raw('MAX(created_at) as latest_appointment'))
             ->groupBy('user_id');
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile with QR Code</title>
+    <title>Tư vấn hỗ trợ QR Code</title>
     <style>
         .body {
             font-family: Arial, sans-serif;
@@ -67,15 +67,15 @@
     <div class="body">
         <div class="container">
             <div class="qr-code">
-                <img src="https://thegame-onemega.com/wp-content/uploads/2024/11/The-Game-November-2024-Article-Banner-WIDE_T1.jpg" alt="QR Code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(url('/')) }}" alt="QR Code">
             </div>
 
             <div class="user-info">
-                <h2>VUI LÒNG QUÉT QR ĐỂ ĐƯỢC BÁC SỸ ĂN BA TỬ KHANG TƯ VẤN TRỰC TIẾP</h2>
-                <h1>Ta là Ăn Bá Tử Khang</h1>
-                <p><span class="label">Phone:</span> +123 456 7890</p>
+                <h2>VUI LÒNG QUÉT QR ĐỂ ĐƯỢC NHÂN VIÊN CỦA CHÚNG TÔI TƯ VẤN TRỰC TIẾP</h2>
+                <h4>RẤT VUI ĐƯỢC HỖ TRỢ BẠN</h4>
+                <p><span class="label">Số điện thoại:</span> +123 456 7890</p>
                 <p><span class="label">Email:</span> anbatukom@example.com</p>
-                <p><span class="label">Address:</span> 123 Main St, Anytown, USA</p>
+                <p><span class="label">Địa chỉ:</span> 123 Main St, Thanh Xuân, Hà Nội</p>
             </div>
         </div>
     </div>
