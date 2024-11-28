@@ -1,28 +1,48 @@
 <style>
-    .icon-container {
-    align-items: center;
-    text-decoration: none;
-    font-size: 15px;
+.icon-container {
+    position: relative;
+    display: inline-flex; /* Chuyển đổi từ inline-block sang inline-flex để hỗ trợ căn giữa */
+    align-items: center; /* Căn giữa icon và label theo trục dọc */
+    justify-content: center;
     color: #ffffff;
+    font-size: 15px;
+    text-decoration: none;
 }
 
 .icon-container i {
-    font-size: 1rem;
-    margin-right: 5px; /* Khoảng cách giữa icon và badge */
+    margin-right: 8px; /* Khoảng cách giữa icon và text */
 }
 
 .badge-label {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    font-size: 14px; /* Tăng/giảm kích thước để cân đối */
+    font-weight: 400;
     color: #ffffff;
-    font-weight: 300;
 }
 
 .badge-count {
-    background-color: #ddd;
+    position: absolute;
+    top: -11px;
+    right: -7px;
+    background-color: #ffd43b; /* Tô màu nổi bật */
     color: #333;
-    border-radius: 50%;
-    padding: 4px 4px;
+    font-size: 11px;
     font-weight: bold;
+    border-radius: 50%;
+    padding: 3px 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-nav .nav-item {
+    margin-left: -3px; /* Khoảng cách giữa các mục trong navbar */
+}
+
+.nav-item a {
+    font-size: 16px; /* Đồng nhất kích thước text */
 }
 .dropdown-submenu {
   position: relative;
@@ -43,7 +63,7 @@
 <!-- Navbar Start -->
 <div class="container-fluid bg-dark mb-30">
     <div class="row px-xl-5">
-      <div class="col-lg-3 d-none d-lg-block">
+      <div class="col-lg-2 d-none d-lg-block">
         <a
           class="btn d-flex align-items-center justify-content-between bg-primary w-100"
           data-toggle="collapse"
@@ -67,16 +87,16 @@
           </div>
         </nav>
       </div>
-      <div class="col-lg-9">
+      <div class="col-lg-10">
         <nav
           class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0"
         >
           <a href="{{ route('home') }}" class="text-decoration-none d-block d-lg-none">
-            <span class="h1 text-uppercase text-dark bg-light px-2"
-              >Multi</span
+            <span class="h4 text-uppercase text-dark bg-light px-2"
+              >Instinct</span
             >
             <span class="h1 text-uppercase text-light bg-primary px-2 ml-n1"
-              >Shop</span
+              >Pharmacy</span
             >
           </a>
           <button
@@ -138,11 +158,11 @@
                         Giỏ hàng
                     </span>
                 </a>
-                <a href="{{ route('orders.index') }}" class="btn icon-container px-0 ml-3">
-                    <i class="fas fa-file-invoice-dollar text-primary"></i>
+                <a href="{{ route('orders.index') }}" class="btn icon-container px-0 ">
+                    {{-- <i class="fas fa-file-invoice-dollar text-primary"></i> --}}
                     <span class="badge-label">
                         <span class="badge-count">{{ $orderCount }}</span>
-                        Kiểm tra đơn hàng
+                        Kiểm tra đơn mua
                     </span>
                 </a>
                 {{-- <a href="" class="btn icon-container px-0 ml-3">
@@ -157,7 +177,7 @@
                 // Lấy số lần đặt khám của người dùng đã đăng nhập
                 $appointmentCount = Auth::user()->appoinment()->count();
                 @endphp
-                <a class="btn icon-container px-0 ml-3" href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">
+                <a class="btn icon-container px-0" href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">
                     <span class="badge-label">
                   <span class="badge-count"> {{ $appointmentCount }}</span>
                   Lịch sử đặt khám
@@ -173,7 +193,7 @@
                     // Lấy số lịch khám, kiểm tra nếu $doctor không null
                     $appointmentCount1 = $doctor ? $doctor->appoinment()->count() : 0;
                    @endphp
-                    <a class="btn icon-container px-0 ml-3" href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }}">
+                    <a class="btn icon-container px-0" href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }}">
                         <span class="badge-label">
                       <span class="badge-count">{{ $appointmentCount1 }} </span>
                       Quản lý lịch khám
@@ -182,12 +202,12 @@
                     @endif
 
                 @if(auth()->check())
-                    <a href="{{ route('account') }}" class="btn icon-container px-0 ml-3">
+                    <a href="{{ route('account') }}" class="btn icon-container px-0 ">
                         <i class="fas fa-user" style="color: #ffd43b"></i>
                         <span class="badge-label">Tài khoản</span>
                     </a>
                 @else
-                    <a href="{{ route('viewLogin') }}" class="btn icon-container px-0 ml-3">
+                    <a href="{{ route('viewLogin') }}" class="btn icon-container px-0 ">
                         <i class="fas fa-user" style="color: #ffd43b"></i>
                         <span class="badge-label">Đăng nhập</span>
                     </a>

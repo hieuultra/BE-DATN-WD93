@@ -53,7 +53,7 @@ class CartController extends Controller
             } else {
                 $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
                 // dd($coupon->type);
-                // Sử lý lưu lại giảm giá trong giỏ hàng
+                // xử lý lưu lại giảm giá trong giỏ hàng
                 if ($cart->coupon_code !== null) {
                     $discount = $cart->coupon_code;
                 }
