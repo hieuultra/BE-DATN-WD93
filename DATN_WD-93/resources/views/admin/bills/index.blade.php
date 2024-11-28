@@ -2,6 +2,7 @@
 @section('titlepage','')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <main>
     <div class="container-fluid px-4">
@@ -20,18 +21,30 @@
           DANH SÁCH ĐƠN HÀNG
         </div>
         <div class="card-body">
-                {{-- Hiển thị thông báo --}}
-        @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+            {{-- Hiển thị thông báo --}}
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    @if (session('success'))
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: "{{ session('success') }}",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    @endif
 
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+                    @if (session('error'))
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: "{{ session('error') }}",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    @endif
+                });
+            </script>
           <table id="datatablesSimple">
             <thead>
               <tr>
@@ -113,16 +126,28 @@
 
 <script>
     function confirmSubmit(selectElement) {
-        var form = selectElement.form;
-        var selectedOption = selectElement.options[selectElement.selectedIndex].text;
-        var defaultValue = selectElement.getAttribute('data-default-value');
-        if (confirm('Are you sure to change the order status to "' + selectedOption + '" right ? '  )) {
-       form.submit();
-        }else{
+    const form = selectElement.form;
+    const selectedOption = selectElement.options[selectElement.selectedIndex].text;
+    const defaultValue = selectElement.getAttribute('data-default-value');
+
+    Swal.fire({
+        title: 'Xác nhận',
+        text: 'Bạn có chắc chắn muốn đổi trạng thái thành "' + selectedOption + '"?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Có, tôi đồng ý',
+        cancelButtonText: 'Hủy bỏ'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        } else {
             selectElement.value = defaultValue;
-            return false;
         }
-    }
+    });
+}
+
 </script>
 
 

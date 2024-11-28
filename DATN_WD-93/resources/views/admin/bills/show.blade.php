@@ -2,7 +2,7 @@
 @section('titlepage','')
 
 @section('content')
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <main>
     <div class="container-fluid px-4">
         <h1 class="mt-4">Chi tiết đơn hàng</h1>
@@ -18,10 +18,35 @@
                 Chi tiết đơn hàng
             </div>
             <div class="card-body">
+                    {{-- Hiển thị thông báo --}}
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    @if (session('success'))
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: "{{ session('success') }}",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    @endif
+
+                    @if (session('error'))
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: "{{ session('error') }}",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    @endif
+                });
+            </script>
                 <table class="table table-bordered">
                     <thead>
                         <th>Thông tin người đặt hàng</th>
                         <th>Thông tin người nhận</th>
+                        <th>Cập nhập trạng thái</th>
                     </thead>
                       <tbody>
                         <tr>
@@ -47,6 +72,22 @@
                                     <li>Giảm giá: <b>{{ number_format($bill->moneyShip,0,',','.') }}VND</b></li>
                                     <li>Tổng tiền: <b class="fs-5 text-danger">{{ number_format($bill->totalPrice,0,',','.') }}VND</b></li>
                                 </ul>
+                            </td>
+                            <td>
+                                <form action="{{ route('admin.bills.updateShow', $bill->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <select name="status_bill" class="form-select w-75" onchange="confirmSubmit(this)" data-default-value="{{ $bill->status_bill }}">
+                                           @foreach ($statusBill as $key => $value)
+                                                 <option value="{{ $key }}"
+                                                 {{ $key == $bill->status_bill ? 'selected' : '' }}
+                                                 {{ $key == $type_da_huy ? 'disabled' : '' }}
+                                                 >
+                                                 {{ $value }}</option>
+                                           @endforeach
+                                    </select>
+                                    <input type="hidden" name="da_giao_hang" value="1">
+                                   </form>
                             </td>
                         </tr>
                       </tbody>
@@ -95,6 +136,30 @@
         </div>
     </div>
 </main>
+<script>
+    function confirmSubmit(selectElement) {
+    const form = selectElement.form;
+    const selectedOption = selectElement.options[selectElement.selectedIndex].text;
+    const defaultValue = selectElement.getAttribute('data-default-value');
 
+    Swal.fire({
+        title: 'Xác nhận',
+        text: 'Bạn có chắc chắn muốn đổi trạng thái thành "' + selectedOption + '"?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Có, tôi đồng ý',
+        cancelButtonText: 'Hủy bỏ'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        } else {
+            selectElement.value = defaultValue;
+        }
+    });
+}
+
+</script>
 
 @endsection

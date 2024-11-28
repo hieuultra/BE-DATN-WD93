@@ -38,7 +38,7 @@
 }
 
 .navbar-nav .nav-item {
-    margin-left: -3px; /* Khoảng cách giữa các mục trong navbar */
+    margin-left: -5px; /* Khoảng cách giữa các mục trong navbar */
 }
 
 .nav-item a {

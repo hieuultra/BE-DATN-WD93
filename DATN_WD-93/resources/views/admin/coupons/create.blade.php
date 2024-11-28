@@ -20,7 +20,7 @@
                 <label for="type">Loại</label>
                 <select name="type" class="form-control" id="type" required>
                     <option value="fixed" selected>Giảm theo giá trị mặc định</option>
-                    <option value="percentag">Giảm theo %</option>
+                    <option value="percentage">Giảm theo %</option>
                 </select>
                 @error('is_active')
                     <div class="text-danger">{{ $message }}</div>
@@ -71,22 +71,22 @@
         </form>
     </div>
     <script>
-        document.getElementById('is_active').addEventListener('change', function() {
+        document.getElementById('type').addEventListener('change', function() {
             const valueInput = document.getElementById('value');
-            if (this.value === 'percentag') {
-                valueInput.setAttribute('max', 100); // Giới hạn giá trị tối đa là 100
+            if (this.value === 'percentage') {
+                valueInput.setAttribute('max', 99);
             } else {
                 valueInput.removeAttribute('max'); // Loại bỏ giới hạn nếu là "Giảm theo giá trị mặc định"
             }
         });
 
         document.querySelector('form').addEventListener('submit', function(event) {
-            const isActive = document.getElementById('is_active').value;
+            const type = document.getElementById('type').value;
             const value = document.getElementById('value').value;
 
             // Kiểm tra nếu chọn "Giảm theo %" và giá trị nhập vào lớn hơn 100
-            if (isActive === 'percentag' && parseInt(value) > 100) {
-                alert('Giá trị giảm theo % không được lớn hơn 100');
+            if (type === 'percentage' && parseInt(value) > 99) {
+                alert('Giá trị giảm theo % không được lớn hơn 99');
                 event.preventDefault(); // Ngừng việc gửi form
             }
         });
