@@ -44,7 +44,14 @@ class CartController extends Controller
             }
         }
         // Xử lý mã giảm giá nếu có
+        // Sửa phần giỏ hàng k hiện mã
         $checkTypeDiscount = 0;
+        if ($cart->coupon_code !== null) {
+            $discountCheck = $cart->coupon_code;
+            $couponCheck = Coupon::where('code', $discountCheck)->first();
+            $checkTypeDiscount = $couponCheck->type;
+            $discount = $couponCheck->value;
+        }
         if ($request->has('coupon_code')) {
             if (request()->query('coupon_code') == 'loaibo') {
                 $cart->coupon_code = null;
@@ -54,9 +61,6 @@ class CartController extends Controller
                 $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
                 // dd($coupon->type);
                 // Sử lý lưu lại giảm giá trong giỏ hàng
-                if ($cart->coupon_code !== null) {
-                    $discount = $cart->coupon_code;
-                }
                 if ($coupon && $coupon->isValid()) {
                     $discount = $coupon->value;
                     $cart->coupon_code = $coupon->code;

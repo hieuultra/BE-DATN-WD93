@@ -32,6 +32,7 @@ class AdminCouponController extends Controller
     public function store(Request $request)
     {
         // Validate dữ liệu nhập vào
+        // dd($request);
         $request->validate([
             'code' => 'required|unique:coupons,code',  // Kiểm tra tính duy nhất của mã giảm giá
             'value' => 'required|numeric|min:0',      // Giá trị giảm giá không âm
@@ -39,9 +40,10 @@ class AdminCouponController extends Controller
             'expiry_date' => 'required|date|after:today',  // Ngày hết hạn phải sau ngày hôm nay
             'usage_limit' => 'required|numeric|min:1',   // Số lần sử dụng phải lớn hơn hoặc bằng 1
             'is_active' => 'required|boolean',
-            'type' => 'required'    // Trạng thái hoạt động (0 hoặc 1)
+            'type' => 'required'
         ]);
 
+        // dd($request);
         // Lưu mã giảm giá vào cơ sở dữ liệu
         Coupon::create([
             'code' => $request->code,
@@ -77,7 +79,9 @@ class AdminCouponController extends Controller
             'min_order_value' => 'required|numeric|min:0',  // Giá trị đơn hàng tối thiểu không âm
             'expiry_date' => 'required|date|after:today',  // Ngày hết hạn phải sau ngày hôm nay
             'usage_limit' => 'required|numeric|min:1',   // Số lần sử dụng phải lớn hơn hoặc bằng 1
-            'is_active' => 'required|boolean',           // Trạng thái hoạt động (0 hoặc 1)
+            'is_active' => 'required|boolean',
+            'type' => 'required'
+            // Trạng thái hoạt động (0 hoặc 1)
         ]);
 
         // Cập nhật mã giảm giá vào cơ sở dữ liệu
@@ -89,6 +93,7 @@ class AdminCouponController extends Controller
             'expiry_date' => $request->expiry_date,
             'usage_limit' => $request->usage_limit,
             'is_active' => $request->is_active,
+            'type' => $request->type,
         ]);
 
         // Trả về thông báo thành công và chuyển hướng

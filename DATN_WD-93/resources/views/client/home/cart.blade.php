@@ -162,6 +162,7 @@
                         <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Giảm giá</h6>
                             <h6 class="font-weight-medium discount">
+                                {{-- @dd($checkTypeDiscount) --}}
                                 @if ($checkTypeDiscount == 'fixed')
                                     - {{ number_format($discount ?? 0, 0, ',', '.') }} VND
                                 @else
