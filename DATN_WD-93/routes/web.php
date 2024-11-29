@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Client\PaymentController;
 
 
 use App\Models\Category;
@@ -185,6 +186,12 @@ Route::middleware('auth')->prefix('orders')
 //review
 Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 
+Route::middleware('auth')->prefix('payments')
+    ->as('payments.')
+    ->group(function () {
+        Route::post('/vnpay', [PaymentController::class, 'processVNPay'])->name('vnpay');
+        Route::get('/return', [PaymentController::class, 'paymentReturn'])->name('return');
+    });
 //admin
 Route::middleware(['auth', 'auth.admin'])->prefix('admin')
     ->as('admin.')
