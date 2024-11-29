@@ -163,7 +163,7 @@
                     @else
                     <a href="#" class="btn btn-custom-yellow review-btn" data-id="{{ $appointment->id }}" style="background-color: yellow; color: black; border: 1px solid yellow;">Đánh giá bác sĩ</a>
                     @endif
-                    <a class="btn" onclick="fetchAppointmentHistory({{ $appointment->id }})">Xem đơn thuốc</a>
+                    <a class="btn btn-dark" onclick="fetchAppointmentHistory({{ $appointment->id }})">Xem đơn thuốc</a>
                     <p style="color: green;">{{ $appointment->status_appoinment == 'kham_hoan_thanh' ? 'Khám hoàn tất' : 'Cần tái khám' }}</p>
 
                     @elseif($appointment->status_appoinment == 'benh_nhan_khong_den')
@@ -333,7 +333,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="appointmentHistoryContent">
-                        
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -392,7 +392,7 @@
                     <p style="color: yellowgreen;">Đang chờ xác nhận</p>
 
                     @elseif($appointment->status_appoinment == 'da_xac_nhan')
-                    
+
                     <p style="color: blue;">Lịch hẹn đã được xác nhận</p>
 
                     @elseif($appointment->status_appoinment == 'yeu_cau_huy')
@@ -622,8 +622,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        let historyContent = "<h4>Appointment History</h4>";
-                        
+                        let historyContent = "<h4>Đơn khám</h4>";
+
                         data.histories.forEach(history => {
                             historyContent += `<p>Chẩn đoán: ${history.diagnosis}</p>`;
                             historyContent += `<p>Đơn thuốc: ${history.prescription}</p>`;

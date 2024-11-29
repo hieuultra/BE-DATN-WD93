@@ -262,6 +262,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/',               [BillController::class, 'index'])->name('index');
                 Route::get('/show/{id}',     [BillController::class, 'show'])->name('show');
                 Route::put('{id}/update',    [BillController::class, 'update'])->name('update');
+                Route::put('{id}/updateShow',    [BillController::class, 'updateShow'])->name('updateShow');
                 Route::delete('{id}/destroy', [BillController::class, 'destroy'])->name('destroy');
             });
         //account
