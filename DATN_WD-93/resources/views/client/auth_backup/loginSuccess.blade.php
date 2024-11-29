@@ -43,6 +43,10 @@
                                     </div>
                                     <div class="form-group">
                                             <li><a href="{{ route('orders.index') }}">Đơn mua </a></li>
+                                            <li><a href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">Lịch sử đặt khám</li></a>
+                                            @if(Auth::user()->role == 'Doctor')
+                                            <li><a href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }} ">Quản lý lịch khám</li></a>
+                                            @endif
                                            <li>  @if (Route::has('password.request'))
                                             <a href="{{ route('password.request') }}">
                                                 {{ __('Quên mật khẩu?') }}
