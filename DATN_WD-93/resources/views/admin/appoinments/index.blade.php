@@ -47,7 +47,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Thời gian khám</th>
-                                <th class="text-center" style="width:10%">Bác sĩ</th>
+                                <th class="text-center" style="width:10%">Loại khám</th>
                                 <th class="text-center">Thông tin ng đặt</th>
                                 <th class="text-center">Trạng thái lịch khám</th>
                                 <th class="text-center">Trạng thái thanh toán</th>
@@ -66,7 +66,28 @@
                                         Ngày: {{ $item->appointment_date }}
                                     </td>
                                     <td class="text-center">
-                                        {{ $item->doctor->title }} <br> {{ $item->doctor->user->name }}
+                                        @if (isset($item->doctor_id))
+                                        @php
+                                            if ($item->doctor->specialty->classification == 'tong_quat') {
+                                                echo('Khám tổng quát');
+                                            } elseif ($item->doctor->specialty->classification == 'kham_tu_xa') {
+                                                echo('Khám từ xa');
+                                            } elseif ($item->doctor->specialty->classification == 'chuyen_khoa') {
+                                                echo("Khám chuyên khoa");
+                                            }
+                                        @endphp
+                                        {{-- {{ $item->doctor->specialty->classification }} --}}
+                                        @else
+                                        @php
+                                            if ($item->package->specialty->classification == 'tong_quat') {
+                                                echo('Khám tổng quát');
+                                            } elseif ($item->package->specialty->classification == 'kham_tu_xa') {
+                                                echo('Khám từ xa');
+                                            } elseif ($item->package->specialty->classification == 'chuyen_khoa') {
+                                                echo("Khám chuyên khoa");
+                                            }
+                                        @endphp
+                                        @endif
                                     </td>
                                     <td class="">
                                         Tên: {{ $item->user->name }}

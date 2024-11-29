@@ -74,40 +74,92 @@
                         <div class="col-md-4">
                             <div class="column border border-primary">
                                 <div class="info-item mt-2">
-                                    <h4 class="text-center">Thông tin nơi khám</h4>
+                                    <h4 class="text-center">Thông tin cuộc hẹn</h4>
                                 </div>
                                 <hr>
-                                <div class="info-item">
-                                    <label for="hospital-name">Tên Bệnh Viện:</label>
-                                    <p id="hospital-name">
-                                        {{ $appoinmentDetail->doctor->clinic->first()->clinic_name ?? '' }}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label for="hospital-address">Địa Chỉ:</label>
-                                    <p id="hospital-address">{{ $appoinmentDetail->doctor->clinic->first()->address ?? '' }}
-                                    </p>
-                                </div>
+                                @if (isset($appoinmentDetail->doctor_id))
+                                @php
+                                if (empty($appoinmentDetail->meet_link)) {
+                                    echo('<div class="info-item">
+                                        <label for="hospital-name">Tên Bệnh Viện:</label>
+                                        <p id="hospital-name">
+                                            ' . ($appoinmentDetail->doctor->clinic->first()->clinic_name ?? "") . '
+                                        </p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label for="hospital-address">Địa Chỉ:</label>
+                                        <p id="hospital-address">' . ($appoinmentDetail->doctor->clinic->first()->address ?? "") . '</p>
+                                    </div>');
+                                } else {
+                                    echo('<div class="info-item">
+                                        <label for="hospital-address">Link cuộc gọi khám online:</label>
+                                        <p id="hospital-address">' . ($appoinmentDetail->meet_link ?? "") . '</p>
+                                    </div>');
+                                }
+                            @endphp
+                            
                                 <div class="info-item">
                                     <label for="hospital-address">Khoa:</label>
                                     <p id="hospital-address">{{ $appoinmentDetail->doctor->specialty->first()->name ?? '' }}
                                     </p>
                                 </div>
                                 <div class="info-item">
-                                    <label for="patient-name">Người Đặt Khám:</label>
-                                    <p id="patient-name">{{ $appoinmentDetail->user->name ?? '' }}
-                                        ({{ $appoinmentDetail->classify == 'ban_than' ? 'Cho bản thân' : 'Cho người thân' }})
-                                    </p>
-                                </div>
-                                <div class="info-item">
-                                    <label for="appointment-package">Gói Khám:</label>
-                                    <p id="appointment-package">
-                                        {{ $appoinmentDetail->package->name ?? 'Không chọn gói khám' }}</p>
-                                </div>
-                                <div class="info-item">
                                     <label for="appointment-price">Giá Tiền:</label>
                                     <p id="appointment-price">
                                         {{ number_format($appoinmentDetail->doctor->examination_fee, 0, ',', '.') ?? '0' }}
                                         VND</p>
+                                </div>
+                                @else
+                                <div class="info-item">
+                                    <label for="appointment-package">Gói Khám:</label>
+                                    <p id="appointment-package">
+                                        {{ $appoinmentDetail->package->hospital_name }}</p>
+                                </div>
+                                <div class="info-item">
+                                    <label for="hospital-address">Địa Chỉ:</label>
+                                    <p id="hospital-address">{{ $appoinmentDetail->package->address ?? '' }}
+                                    </p>
+                                </div>
+                                <div class="info-item">
+                                    <label for="appointment-price">Giá Tiền:</label>
+                                    <p id="appointment-price">
+                                        {{ number_format($appoinmentDetail->package->price, 0, ',', '.') ?? '0' }}
+                                        VND</p>
+                                </div>
+                                @endif
+                                <div class="info-item">
+                                    <label for="appointment-package">Loại khám:</label>
+                                    <p id="appointment-package">
+                                    @if (isset($appoinmentDetail->doctor_id))
+                                        @php
+                                            if ($appoinmentDetail->doctor->specialty->classification == 'tong_quat') {
+                                                echo('Khám tổng quát');
+                                            } elseif ($appoinmentDetail->doctor->specialty->classification == 'kham_tu_xa') {
+                                                echo('Khám từ xa');
+                                            } elseif ($appoinmentDetail->doctor->specialty->classification == 'chuyen_khoa') {
+                                                echo("Khám chuyên khoa");
+                                            }
+                                        @endphp
+                                        {{-- {{ $appoinmentDetail->doctor->specialty->classification }} --}}
+                                        @else
+                                        @php
+                                            if ($appoinmentDetail->package->specialty->classification == 'tong_quat') {
+                                                echo('Khám tổng quát');
+                                            } elseif ($appoinmentDetail->package->specialty->classification == 'kham_tu_xa') {
+                                                echo('Khám từ xa');
+                                            } elseif ($appoinmentDetail->package->specialty->classification == 'chuyen_khoa') {
+                                                echo("Khám chuyên khoa");
+                                            }
+                                        @endphp
+                                        @endif
+                                    </p>
+                                </div>
+
+                                <div class="info-item">
+                                    <label for="patient-name">Người Đặt Khám:</label>
+                                    <p id="patient-name">{{ $appoinmentDetail->user->name ?? '' }}
+                                        ({{ $appoinmentDetail->classify == 'ban_than' ? 'Cho bản thân' : 'Cho người thân' }})
+                                    </p>
                                 </div>
                                 <div class="info-item">
                                     <label for="appointment-time">Thời Gian Hẹn:</label>
@@ -118,6 +170,7 @@
                                 </div>
                             </div>
                         </div>
+                        @if (isset($appoinmentDetail->doctor_id))
                         <div class="col-md-4">
                             <div class="column border border-primary">
                                 <div class="info-item mt-2">
@@ -142,6 +195,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                         <div class="col-md-4">
                             <div class="column border border-primary">
                                 <div class="info-item mt-2">
