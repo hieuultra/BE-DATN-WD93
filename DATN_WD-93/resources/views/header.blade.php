@@ -59,6 +59,12 @@
 .dropdown-submenu:hover .dropdown-menu {
   display: block;
 }
+#user{
+    margin-bottom: 8px
+}
+#dn{
+    margin-bottom: 3px
+}
 </style>
 <!-- Navbar Start -->
 <div class="container-fluid bg-dark mb-30">
@@ -208,8 +214,8 @@
                     </a>
                 @else
                     <a href="{{ route('viewLogin') }}" class="btn icon-container px-0 ">
-                        <i class="fas fa-user" style="color: #ffd43b"></i>
-                        <span class="badge-label">Đăng nhập</span>
+                        <i class="fas fa-user" id="user" style="color: #ffd43b"></i>
+                        <span class="badge-label" id="dn">Đăng nhập</span>
                     </a>
                 @endif
             </div>
