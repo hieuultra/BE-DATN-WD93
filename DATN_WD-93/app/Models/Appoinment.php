@@ -25,7 +25,7 @@ class Appoinment extends Model
         'can_tai_kham' => 'Cần tái khám',
         'benh_nhan_khong_den' => 'Bệnh nhân không đến',
         'yeu_cau_huy' => "Yêu cầu hủy lịch",
-        'da_huy' => 'Cuộc hẹn đã hủy',
+        'huy_lich_hen' => 'Cuộc hẹn đã hủy',
     ];
 
     const status_payment_method = [
@@ -39,7 +39,7 @@ class Appoinment extends Model
     const KHAM_HOAN_THANH = 'kham_hoan_thanh';
     const CAN_TAI_KHAM = 'can_tai_kham';
     const BENH_NHAN_KHONG_DEN = 'benh_nhan_khong_den';
-    const DA_HUY = 'da_huy';
+    const HUY_LICH_HEN = 'huy_lich_hen';
     const YEU_CAU_HUY = 'yeu_cau_huy';
     const CHUA_THANH_TOAN = 'chua_thanh_toan';
     const THANH_TOAN_TAI_BENH_VIEN = 'thanh_toan_tai_benh_vien';
@@ -62,7 +62,7 @@ class Appoinment extends Model
     }
     public function appoinmentHistory()
     {
-        return $this->hasMany(AppoinmentHistory::class);
+        return $this->hasMany(AppoinmentHistory::class, 'appoinment_id');
     }
     public function review()
     {

@@ -76,7 +76,7 @@
                                         Email: {{ $item->user->email }}
                                     </td>
                                     <td class="text-center" style="color: dodgerblue; width: 150px">
-                                        @if ($item->status_appoinment == 'kham_hoan_thanh' || $item->status_appoinment == 'da_huy')
+                                        @if ($item->status_appoinment == 'kham_hoan_thanh' || $item->status_appoinment == 'huy_lich_hen')
                                             {{ $statusAppoinment[$item->status_appoinment] }}
                                         @else
                                             <form action="{{ route('admin.appoinments.update', $item->id) }}"

@@ -2,6 +2,8 @@
 @section('titlepage', '')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .appointment-card {
             border: 1px solid #ddd;
@@ -38,6 +40,27 @@
         }
     </style>
     <main>
+        <script>
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: '{{ session('success') }}',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: '{{ session('error') }}',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            @endif
+        </script>
         <div class="container-lg px-4">
             <a href="{{ route('admin.appoinments.index') }}">
                 <input type="button" class="btn btn-primary mt-3" value="Quay lại">
@@ -160,7 +183,7 @@
                                         {{ $statusPayment[$appoinmentDetail->status_payment_method] }}</p>
                                 </div>
                                 <div class="info-item">
-                                    <label for="appointment-package">Ghi chú cho cho bác sĩ:</label>
+                                    <label for="appointment-package">Ghi chú cho bác sĩ:</label>
                                     <p id="appointment-package">{{ $appoinmentDetail->notes }}</p>
                                 </div>
                             </div>
@@ -168,8 +191,84 @@
                     </div>
                 </div>
             </div>
+            <div class="appointment-card mt-3">
+                <div class="card-header text-center">
+                    <h3 class="p-2">Thông Tin Khám Chữa Bệnh</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <div class="column border border-primary">
+                                <div class="info-item">
+                                    <label for="appointment-package">Chẩn đoán của bác sĩ:</label>
+                                    <p id="appointment-package">
+                                        {{ $appoinmentDetail->appoinmentHistory->first()->diagnosis ?? 'Hiện chưa có thông tin' }}
+                                    </p>
+                                </div>
+                                <div class="info-item">
+                                    <label for="appointment-package">Toa thuốc được kê:</label>
+                                    <p id="appointment-package">
+                                        {{ $appoinmentDetail->appoinmentHistory->first()->prescription ?? 'Hiện chưa có thông tin' }}
+                                    </p>
+                                </div>
+                                <div class="info-item">
+                                    <label for="appointment-package">Ngày theo dõi:</label>
+                                    <p id="appointment-package">
+                                        {{ $appoinmentDetail->appoinmentHistory->first()->follow_up_date ?? 'Hiện chưa có ngày theo dõi' }}
+                                    </p>
+                                </div>
+                                <div class="info-item">
+                                    <label for="appointment-package">Ghi chú của bác sĩ:</label>
+                                    <p id="appointment-package">
+                                        {{ $appoinmentDetail->appoinmentHistory->first()->notes ?? 'Không có ghi chú' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="column border border-primary">
+                                <div class="info-item mt-2">
+                                    <h4 class="text-center">Thay đổi trạng thái cuộc hẹn</h4>
+                                </div>
+                                <hr>
+                                @if ($appoinmentDetail->status_appoinment == 'kham_hoan_thanh' || $appoinmentDetail->status_appoinment == 'huy_lich_hen')
+                                {{ $statusAppoinment[$appoinmentDetail->status_appoinment] }}
+                            @else
+                                <form action="{{ route('admin.appoinments.update1', $appoinmentDetail->id) }}"
+                                    method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <select name="status_appoinment" class="form-select"
+                                        onchange="confirmSubmit(this)"
+                                        data-default-value="{{ $appoinmentDetail->status_appoinment }}">
+                                        @foreach ($statusAppoinment as $key => $value)
+                                            <option value="{{ $key }}"
+                                                {{ $key == $appoinmentDetail->status_appoinment ? 'selected' : '' }}>
+                                                {{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
+    <script>
+        function confirmSubmit(selectElement) {
+            var form = selectElement.form;
+            var selectedOption = selectElement.options[selectElement.selectedIndex].text;
+            var defaultValue = selectElement.getAttribute('data-default-value');
+            if (confirm('Thay đổi trạng thái thành "' + selectedOption + '" đúng không ? ')) {
+                form.submit();
+            } else {
+                selectElement.value = defaultValue;
+                return false;
+            }
+        }
+    </script>
 
 
 @endsection

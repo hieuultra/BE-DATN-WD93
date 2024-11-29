@@ -396,5 +396,6 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/',               [AdminAppoinmentController::class, 'index'])->name('index');
                 Route::get('/show/{id}',      [AdminAppoinmentController::class, 'show'])->name('show');
                 Route::put('{id}/update',     [AdminAppoinmentController::class, 'update'])->name('update');
+                Route::put('{id}/update1',     [AdminAppoinmentController::class, 'update1'])->name('update1');
             });
     });
