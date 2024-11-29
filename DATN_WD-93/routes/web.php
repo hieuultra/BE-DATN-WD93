@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAppoinmentController;
 use Illuminate\Support\Facades\Auth;
 //
 use Illuminate\Support\Facades\Route;
@@ -169,9 +170,9 @@ Route::post('/cart/apply-coupon', [CouponController::class, 'applyCoupon'])->nam
 
 
 // Route Blog
-Route::get('/blog',       [ClientBlogController::class, 'index'])->name('blog.index');
+Route::get('/blog',                       [ClientBlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/list/{topic_id}',       [ClientBlogController::class, 'list'])->name('blog.list');
-Route::get('/blog/show/{id}',  [ClientBlogController::class, 'show'])->name('blog.show');
+Route::get('/blog/show/{id}',             [ClientBlogController::class, 'show'])->name('blog.show');
 // order
 Route::middleware('auth')->prefix('orders')
     ->as('orders.')
@@ -393,6 +394,15 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/store',          [BrandController::class, 'store'])->name('store');
                 Route::get('/edit/{id}',       [BrandController::class, 'edit'])->name('edit');
                 Route::put('/update/{id}',     [BrandController::class, 'update'])->name('update');
-                Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('destroyBrand');
+                Route::delete('/brands/{id}',  [BrandController::class, 'destroy'])->name('destroyBrand');
+            });
+        //Lịch sử đặt lịch khám
+        Route::prefix('appoinments')
+            ->as('appoinments.')
+            ->group(function () {
+                Route::get('/',               [AdminAppoinmentController::class, 'index'])->name('index');
+                Route::get('/show/{id}',      [AdminAppoinmentController::class, 'show'])->name('show');
+                Route::put('{id}/update',     [AdminAppoinmentController::class, 'update'])->name('update');
+                Route::put('{id}/update1',     [AdminAppoinmentController::class, 'update1'])->name('update1');
             });
     });

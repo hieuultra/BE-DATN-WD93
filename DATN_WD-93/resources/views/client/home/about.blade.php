@@ -90,7 +90,7 @@
         }
 
         .info-image img {
-            max-width: 500px;
+            max-width: 220px;
             transform: scale(1.4);
             margin-top: 70px;
             border-radius: 10px;

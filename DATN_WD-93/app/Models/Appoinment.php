@@ -24,11 +24,13 @@ class Appoinment extends Model
         'kham_hoan_thanh' => 'Khám hoàn thành',
         'can_tai_kham' => 'Cần tái khám',
         'benh_nhan_khong_den' => 'Bệnh nhân không đến',
-        'da_huy' => 'Cuộc hẹn đã hủy',
+        'yeu_cau_huy' => "Yêu cầu hủy lịch",
+        'huy_lich_hen' => 'Cuộc hẹn đã hủy',
     ];
 
     const status_payment_method = [
         'chua_thanh_toan' => 'Chưa thanh toán',
+        'thanh_toan_tai_benh_vien' => 'Thanh toán tại bệnh viên',
         'da_thanh_toan' => 'Đã thanh toán',
     ];
     const CHO_XAC_NHAN = 'cho_xac_nhan';
@@ -37,20 +39,22 @@ class Appoinment extends Model
     const KHAM_HOAN_THANH = 'kham_hoan_thanh';
     const CAN_TAI_KHAM = 'can_tai_kham';
     const BENH_NHAN_KHONG_DEN = 'benh_nhan_khong_den';
-    const DA_HUY = 'da_huy';
+    const HUY_LICH_HEN = 'huy_lich_hen';
+    const YEU_CAU_HUY = 'yeu_cau_huy';
     const CHUA_THANH_TOAN = 'chua_thanh_toan';
+    const THANH_TOAN_TAI_BENH_VIEN = 'thanh_toan_tai_benh_vien';
     const DA_THANH_TOAN = 'da_thanh_toan';
     public function user()
     {
-        return $this->belongsTo(User::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
+        return $this->belongsTo(User::class, 'user_id'); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
     }
     public function doctor()
     {
-        return $this->belongsTo(Doctor::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
+        return $this->belongsTo(Doctor::class, 'doctor_id'); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
     }
     public function package()
     {
-        return $this->belongsTo(Package::class); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
+        return $this->belongsTo(Package::class, 'package_id'); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
     }
     public function timeSlot()
     {
@@ -58,7 +62,7 @@ class Appoinment extends Model
     }
     public function appoinmentHistory()
     {
-        return $this->hasMany(AppoinmentHistory::class);
+        return $this->hasMany(AppoinmentHistory::class, 'appoinment_id');
     }
     public function review()
     {

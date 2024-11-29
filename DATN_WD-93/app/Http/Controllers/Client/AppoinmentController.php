@@ -548,7 +548,7 @@ class AppoinmentController extends Controller
                 $appoinments->appointment_date = $request->selected_date;
                 $appoinments->notes = 'Cần tái khám';
                 $appoinments->status_appoinment = 'da_xac_nhan';
-                $appoinments->status_payment_method = 'tại cơ sở y tế';
+                $appoinments->status_payment_method = 'thanh_toan_tai_benh_vien';
                 $appoinments->classify = 'ban_than';
                 $appoinments->save();
 
@@ -563,7 +563,7 @@ class AppoinmentController extends Controller
                 $appoinments->appointment_date = $request->selected_date;
                 $appoinments->notes = 'Cần tái khám';
                 $appoinments->status_appoinment = 'da_xac_nhan';
-                $appoinments->status_payment_method = 'tại cơ sở y tế';
+                $appoinments->status_payment_method = 'thanh_toan_tai_benh_vien';
                 $appoinments->classify = 'cho_gia_dinh';
 
                 $appoinments->name = $appointment->name;
