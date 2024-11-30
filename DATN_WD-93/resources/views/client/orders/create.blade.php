@@ -68,7 +68,7 @@
                         <h4 class="font-weight-semi-bold m-0 text-dark">Phương thức thanh toán</h4>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="payment" id="paypal"
                                     value="1" checked>
@@ -77,7 +77,7 @@
                                 </label>
                             </div>
                         </div>
-                        <!-- <div class="form-group">
+                        <div class="form-group">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="payment" id="directcheck"
                                         value="2">
@@ -85,13 +85,14 @@
                                         Thanh toán qua VNPAY
                                     </label>
                                 </div>
-                            </div> -->
+                            </div>
                         <div class="form-group">
                             <button type="submit" formaction="{{ route('payments.vnpay') }}" class="btn btn-success">
                                 Thanh toán qua VNPay
                             </button>
-                            <input type="hidden" name="totalPrice" value="{{ $total }}">
-                            
+                            <input type="hidden" name="redirect" value="{{ $total }}">
+
+
                         </div>
                         <div class="form-group">
                             <div class="form-check">
@@ -101,6 +102,18 @@
                                     Thanh toán qua thẻ tín dụng
                                 </label>
                             </div>
+                        </div> -->
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked>
+                            <label class="form-check-label" for="cod">
+                                Thanh toán khi nhận hàng
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="vnpay" value="vnpay">
+                            <label class="form-check-label" for="vnpay">
+                                Thanh toán VNPAY
+                            </label>
                         </div>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
@@ -162,6 +175,11 @@
             </div>
         </div>
     </form>
+    <!-- <form action="{{ route('payments.vnpay') }}" method="post">
+        @csrf
+        <button type="submit" class="btn btn-success" name="redirect">Thanh toán qua VNPay</button>
+        <input type="hidden" name="totalPrice" value="{{ $total }}">
+    </form> -->
 </div>
 
 <style>
@@ -183,5 +201,19 @@
         flex: 1;
     }
 </style>
+<script>
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+        if (paymentMethod === 'vnpay') {
+            this.action = '{{ route("payments.vnpay") }}';
+        } else {
+            this.action = '{{ route("orders.store") }}';
+        }
+
+        this.submit();
+    });
+</script>
 
 @endsection

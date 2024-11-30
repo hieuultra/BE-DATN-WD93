@@ -139,6 +139,9 @@ class OrderController extends Controller
      */
     public function store(OrderRequest $request)
     {
+        if ($request->payment_method === 'vnpay') {
+            return app(PaymentController::class)->processPayment($request);
+        }
         if ($request->isMethod('POST')) {
             DB::beginTransaction(); //bat dau thao tac vs csdl
             try {

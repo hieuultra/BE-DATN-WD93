@@ -190,8 +190,8 @@ Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 
 Route::middleware('auth')->prefix('payments')
     ->as('payments.')
     ->group(function () {
-        Route::post('/vnpay', [PaymentController::class, 'processVNPay'])->name('vnpay');
-        Route::get('/return', [PaymentController::class, 'paymentReturn'])->name('return');
+        Route::post('/vnpay', [PaymentController::class, 'processPayment'])->name('vnpay');
+        Route::get('/payment-return', [PaymentController::class, 'handlePaymentReturn'])->name('return');
     });
 //admin
 Route::middleware(['auth', 'auth.admin'])->prefix('admin')
