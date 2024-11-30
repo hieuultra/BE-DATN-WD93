@@ -3,6 +3,7 @@
 @section('title', 'Welcome')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         #img {
             height: 300px;
@@ -138,7 +139,7 @@
                 <!-- Price End -->
 
                 <!-- Color Start -->
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Lọc theo phân loại</span></h5>
+                {{-- <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Lọc theo phân loại</span></h5>
                 <div class="bg-light p-4 mb-30">
                     <form action="" method="">
                         <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
@@ -172,7 +173,7 @@
                             <span class="badge border font-weight-normal">168</span>
                         </div>
                     </form>
-                </div>
+                </div> --}}
                 <!-- Color End -->
 
                 <!-- Size Start -->
@@ -375,71 +376,72 @@
 
             <div id="overlay"></div>
 
-            <div id="popup">
-                {{-- NameProduct --}}
-                <div style="display: flex; justify-content: space-between">
-                    <span id="productName" style="color: black; font-weight: bold; font-size: 18px"></span>
-                    <button id="closePopup" style="border: none; background-color: white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-x-lg" viewBox="0 0 16 16">
-                            <path
-                                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                        </svg>
-                    </button>
-                </div>
-                {{-- EndName --}}
-                {{-- Image & Quantity & Price & Variant & AddtoCart --}}
-                <div class="row mt-3 mb-3">
-                    <div class="col">
+    <div id="popup">
+        {{-- NameProduct --}}
+        <div style="display: flex; justify-content: space-between">
+            <span id="productName" style="color: black; font-weight: bold; font-size: 18px"></span>
+            <p id="mess2" style="color: red; text-align: left; font-size:14px; margin-top:3px; margin-bottom:0px; margin-left:20px;"></p>
+            <button id="closePopup" style="border: none; background-color: white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                </svg>
+            </button>
+        </div>
+        {{-- EndName --}}
+        {{-- Image & Quantity & Price & Variant & AddtoCart --}}
+        <div class="row mt-3 mb-3">
+            <div class="col-7">
+                <div class="d-flex">
+                    <div style="border: 2px solid gray; border-radius:5px; width: 150px; height: auto; ">
+                        <img id="productImage" src="" style="width: 100%; height: 100%;" alt="">
+                    </div>
+                    {{-- price & quantity --}}
+                    <div class="mx-2">
                         <div class="d-flex">
-                            <div style="border: 2px solid gray; border-radius:5px; width: 150px; height: auto; ">
-                                <img id="productImage" src="" style="width: 100%; height: 100%;" alt="">
-                            </div>
-                            {{-- price & quantity --}}
-                            <div class="mx-2">
-                                <div class="d-flex">
-                                    <span style="font-size: 14px;">Giá thành:</span>
-                                    <del id="price" style="font-size: 14px; color: black; font-weight: bold;"></del>
-                                </div>
-                                <div class="d-flex">
-                                    <span style="font-size: 14px;">Khuyến mãi:</span>
-                                    <p id="total" style="font-size: 14px; color: red; font-weight: bold;"></p>
-                                </div>
-                                <div class="d-flex">
-                                    <span style="font-size: 14px;">Số lượng trong kho:</span>
-                                    <p id="quantity" style=" font-size: 14px; color: black; font-weight: bold;"></p>
-                                </div>
-                                {{-- Tăng giảm số lượng  --}}
-                                <div class="mt-4">
-                                    <button class="reduce" id="reduce">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd"
-                                                d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8" />
-                                        </svg>
-                                    </button>
-                                    <input class="quantityAdd" id="quantityAdd" type="text" disabled value="1">
-                                    <button class="increase" id="increase">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                {{-- End Tăng giảm số lượng --}}
-                            </div>
+                            <span style="font-size: 14px;">Giá thành:</span>
+                            <del id="price" style="font-size: 14px; color: black; font-weight: bold;"></del>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div>
-                            <span>Kiểu Loại:</span>
-                            <div id="variantList">
-                            </div>
+                        <div class="d-flex">
+                            <span style="font-size: 14px;">Khuyến mãi:</span>
+                            <p id="total" style="font-size: 14px; color: red; font-weight: bold;"></p>
                         </div>
+                        <div class="d-flex">
+                            <span style="font-size: 14px;">Số lượng trong kho:</span>
+                            <p id="quantity" style=" font-size: 14px; color: red; font-weight: bold;"></p>
+                        </div>
+                        {{-- Tăng giảm số lượng  --}}
+                        <div class="mt-4">
+                            <button class="reduce" id="reduce">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8" />
+                                </svg>
+                            </button>
+                            <input class="quantityAdd" id="quantityAdd" type="text" disabled value="1">
+                            <button class="increase" id="increase">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                    fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                                </svg>
+                            </button>
+                        </div>
+                        {{-- End Tăng giảm số lượng --}}
                     </div>
                 </div>
-                <button type="button" class="addToCart" id="addToCart">Thêm Vào Giỏ Hàng</button>
+            </div>
+            <div class="col-5">
+                <div>
+                    <span>Kiểu Loại:</span>
+                    <div id="variantList">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="addToCart" id="addToCart">Thêm Vào Giỏ Hàng</button>
 
                 {{-- End Image & Quantity & Price & Variant & AddtoCart --}}
             </div>
@@ -463,6 +465,7 @@
         // addToCartShow
         var productId = '';
         var variants = '';
+        var discount = null;
         $(document).ready(function() {
             // Hiển thị popup
             $(".addToCartShow").click(function() {
@@ -497,13 +500,30 @@
                 });
 
             });
-
             // Đóng popup
             $("#closePopup, #overlay").click(function() {
+                $("#total").empty();
+                    $("#price").empty();
+                    $("#quantity").empty();
                 $("#overlay").fadeOut(); // Ẩn nền mờ
                 $("#popup").fadeOut(); // Ẩn popup
+                packageId = '';
             });
         });
+        $(document).ready(function() {
+    // Lắng nghe sự kiện focus và blur trên các button có class 'option'
+    $('#variantList').on('focus', '.option', function() {
+        $(this).css({
+            'background-color': 'yellow',
+            'border-color': 'red'
+        });
+    }).on('blur', '.option', function() {
+        $(this).css({
+            'background-color': 'aqua',
+            'border-color': 'initial'
+        });
+    });
+});
         // Tăng giảm số lượng
         $(document).ready(function() {
 
@@ -519,6 +539,8 @@
             });
             var packageId = '';
             var id_variantProduct = '';
+            var total = '';
+
             $(document).on('click', '.option', function() {
                 packageId = $(this).data('id'); // Lấy giá trị của data-id
 
@@ -536,16 +558,30 @@
                     success: function(response) {
                         let price = response.price;
                         let quantity = response.quantity;
-                        let total = response.total;
+                        total = response.total;
+                        discount = response.dis;
+                        // console.log(total);
+                        // alert(discount);
+
                         $("#price").text(price);
                         $("#quantity").text(quantity);
                         $("#total").text(total + 'VND');
                     }
                 });
+                $('#overlay').click(function() {
+                    $("#total").empty();
+                    $("#price").empty();
+                    $("#quantity").empty();
+                    packageId = '';
+          });
             });
             //active button
             $("#addToCart").click(function(e) {
                 e.preventDefault();
+                let quantity = $("#quantity").html();
+                // console.log(quantity);
+
+               if (packageId && quantity > 0) {
                 let quantity = $("#quantityAdd").val();
                 let price = $("#price").html();
                 let name = $("#productName").html();
@@ -553,8 +589,45 @@
                 let replaceImg = img.replace('/upload/', '');
                 let replacePrice = price.replace('VNĐ', '');
                 let newPrice = replacePrice.replace('.', '');
+                let priceDis = $("#total").html();
+                let replacePriceDis = priceDis.replace('VND', '');
+                let newPriceDis = replacePriceDis.replace('.', '');
+                console.log(total);
+                console.log(packageId);
                 console.log(id_variantProduct);
-                $.ajax({
+                if (discount !== null) {
+                    // console.log(newPriceDis);
+                    $.ajax({
+                    type: "POST",
+                    url: "/add-to-cart-home",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id_product: productId,
+                        id_variantProduct: id_variantProduct,
+                        quantity: quantity,
+                        price: newPriceDis,
+                        name: name,
+                        img: replaceImg,
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: response.message,
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
+                                    console.log("Thêm Sản Phẩm Vào Thành Công!!!");
+                                    console.log(response.count);
+                                    $('#count').text(response.count); // Cập nhật số lượng sản phẩm trong giỏ hàng
+                                }
+                                packageId = '';
+                    }
+                });
+                } else if(discount == null) {
+                    // console.log(newPrice);
+                    $.ajax({
                     type: "POST",
                     url: "/add-to-cart-home",
                     data: {
@@ -567,13 +640,30 @@
                         img: replaceImg,
                     },
                     success: function(response) {
-                        alert('Thêm thành công');
-                        console.log("Thêm Sản Phẩm Vào Thành Công!!!");
-                        // console.log(id_variantProduct);
-                        // console.log(productId);
-                        $('#count').text(response.count);
+                        if (response.status === 'success') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: response.message,
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
+                                    console.log("Thêm Sản Phẩm Vào Thành Công!!!");
+                                    console.log(response.count);
+                                    $('#count').text(response.count); // Cập nhật số lượng sản phẩm trong giỏ hàng
+                                }
+                                packageId = '';
                     }
                 });
+                }
+               } else {
+                $("#mess2").text('Vui lòng chọn loại và kiểm tra số lượng!!!');
+                setTimeout(function() {
+                $("#mess2").text('');
+                            }, 2000);
+               }
+                // console.log(id_variantProduct);
+
             });
         });
     </script>

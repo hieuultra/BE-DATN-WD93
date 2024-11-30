@@ -137,8 +137,11 @@
                     </div>
                 </form>
                 <div class="d-flex justify-content-end">
-                    <a href="{{ route('cart.listCart') }}?coupon_code=loaibo" class="btn btn-primary my-3">
+                    <a href="{{ route('cart.listCart') }}?coupon_code=loaibo" class="btn btn-primary my-3 ml-3">
                         Loại bỏ mã
+                    </a>
+                    <a href="{{ route('listCoupons') }}" class="btn btn-success my-3 ml-3">
+                        Lấy mã
                     </a>
                 </div>
                 @if (session('error'))

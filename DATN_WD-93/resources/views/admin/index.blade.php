@@ -10,9 +10,9 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
         <main>
             <div class="container-fluid px-4">
-                <h1 class="mt-4">Dashboard</h1>
+                <h1 class="mt-4">Thống kê, tổng hợp</h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Dashboard</li>
+                    <li class="breadcrumb-item active">Thống kê, tổng hợp</li>
                 </ol>
                 <div class="row">
                     <div class="col-xl-3 col-md-6">
@@ -25,7 +25,7 @@
                                     ?> --> --}}
                             <i class="fa-solid fa-box-open fa-2xl"></i>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="?act=list_pro">View Details</a>
+                                <a class="small text-white stretched-link" href="?act=list_pro">Xem thêm</a>
                                 <div class="small text-white">
                                     <i class="fas fa-angle-right"></i>
                                 </div>
@@ -43,7 +43,7 @@
 
                             <i class="fa-solid fa-money-bills fa-2xl"></i>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="?act=total_revenue">View Details</a>
+                                <a class="small text-white stretched-link" href="?act=total_revenue">Xem thêm</a>
                                 <div class="small text-white">
                                     <i class="fas fa-angle-right"></i>
                                 </div>
@@ -60,7 +60,7 @@
                                     ?> --> --}}
                             <i class="fa-solid fa-user fa-2xl"></i>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="?act=order_sold">View Details</a>
+                                <a class="small text-white stretched-link" href="?act=order_sold">Xem thêm</a>
                                 <div class="small text-white">
                                     <i class="fas fa-angle-right"></i>
                                 </div>
@@ -77,7 +77,7 @@
                                     ?> --> --}}
                             <i class="fa-solid fa-cart-shopping fa-2xl"></i>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="?act=sold">View Details</a>
+                                <a class="small text-white stretched-link" href="?act=sold">Xem thêm</a>
                                 <div class="small text-white">
                                     <i class="fas fa-angle-right"></i>
                                 </div>

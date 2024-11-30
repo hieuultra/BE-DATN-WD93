@@ -35,7 +35,7 @@
         </label>
       </div>
 
-      <input type="submit" class="btn btn-primary" name="them" value="ADD">
+      <input type="submit" class="btn btn-primary" name="them" value="Thêm">
       <a href="{{ route('admin.topics.index') }}">
       <input type="button" class="btn btn-primary" value="Danh sách chuyên đề">
         </a>

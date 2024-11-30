@@ -238,16 +238,18 @@ class OrderController extends Controller
                     $productVariant->quantity += $orderDetail->quantity; // Hoàn lại số lượng
                     $productVariant->save();
                 }
+                $message = 'Hủy đơn hàng thành công';
             } elseif ($request->has('da_giao_hang')) {
                 $bill->update(['status_bill' => Bill::DA_GIAO_HANG]);
 
                 // Cập nhật trạng thái thanh toán thành ĐÃ THANH TOÁN nếu đã giao hàng
                 $bill->update(['status_payment_method' => Bill::DA_THANH_TOAN]);
+                $message = 'Cập nhật trạng thái đơn hàng thành công';
             }
             //Sử dụng DB::commit() để xác nhận thay đổi nếu mọi thứ thành công.
             //Nếu có lỗi, sử dụng DB::rollBack() để hoàn tác tất cả các thay đổi.
             DB::commit();
-            return redirect()->route('orders.index')->with('success', 'Hủy đơn hàng thành công');
+            return redirect()->route('orders.index')->with('success', $message);
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('orders.index')->with('error', 'Cập nhập đơn hàng thất bại');

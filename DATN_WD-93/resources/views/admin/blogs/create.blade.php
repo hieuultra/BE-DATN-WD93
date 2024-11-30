@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
     <div class="container-fluid mt-4 px-4">
         {{-- <h1 class="mt-4">{{ $title }}</h1> --}}
-        <a href="{{ route('admin.topics.index') }}">
+        <a href="{{ route('admin.blogs.index') }}">
             <input type="button" class="btn btn-primary" value="Quay lại quản lí bài viết">
         </a>
         <div class="row mt-3">
@@ -65,7 +65,7 @@
                                           <p class="text-danger">{{ $message }}</p>
                                       @enderror
                                   </div>
-                                  
+
                                   <div class="mb-3">
                                     <label for="image" class="form-label">Ảnh minh họa</label>
                                     <input type="file" id="image" name="image" class="form-control"

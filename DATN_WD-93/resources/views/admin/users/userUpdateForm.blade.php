@@ -4,12 +4,12 @@
 @section('content')
 
 <div class="container-fluid mt-4 px-4">
-    <h1 class="mt-4">Update account</h1>
+    <h1 class="mt-4">Cập nhập tài khoản</h1>
     <form action="{{ route('admin.users.userUpdate') }}" method="post" enctype="multipart/form-data" id="demoForm">
         @csrf
         <input type="hidden" name="id" value="{{ $acc->id }}">
         <div class="mb-3">
-            <label class="form-label">Username</label>
+            <label class="form-label">Tên</label>
             <input type="text" class="form-control" value="{{ $acc->username  }}" name="username">
         </div>
 

@@ -191,7 +191,7 @@
                 </label>
                 <div class="form-check">
                     <input checked="" name="status_payment_method" class="form-check-input" id="payLater" name="paymentMethod" type="radio"
-                        value="tại cơ sở y tế" />
+                        value="thanh_toan_tai_benh_vien" />
                     <label class="form-check-label" for="payLater">
                         Thanh toán sau tại cơ sở y tế
                     </label>
@@ -289,7 +289,7 @@
                 </label>
                 <div class="form-check">
                     <input checked="" class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
-                        value="tại cơ sở y tế" />
+                        value="thanh_toan_tai_benh_vien" >
                     <label class="form-check-label" for="selfPayLater">
                         Thanh toán sau tại cơ sở y tế
                     </label>

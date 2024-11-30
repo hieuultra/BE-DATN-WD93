@@ -1,13 +1,15 @@
 <?php
 
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 //
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BillController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Admin\BrandController;
 //
+use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Admin\DoctorController;
@@ -25,14 +27,14 @@ use App\Http\Controllers\Admin\AdminTopicController;
 use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Client\AppoinmentController;
 use App\Http\Controllers\Client\ClientBlogController;
+use App\Http\Controllers\Client\SubscriptionController;
 use App\Http\Controllers\Admin\VariantPackageController;
+use App\Http\Controllers\Admin\AdminAppoinmentController;
 use App\Http\Controllers\Admin\VariantProductsController;
+
+
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Http\Controllers\Admin\BrandController;
-
-
-use App\Models\Category;
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -42,14 +44,13 @@ Route::get('/products', [HomeController::class, 'products'])->name('products');
 Route::get('/search', [HomeController::class, 'search'])->name('products.search');
 Route::get('/products/detail/{product_id}', [HomeController::class, 'detail'])->name('productDetail');
 Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
+Route::get('/products-by-brand', [HomeController::class, 'productsByBrandId'])->name('productsByBrandId');
 Route::post('/adminProducts/category', [ProductController::class, 'filterByCategory'])->name('filterByCategory');
 Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo');
 Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
-Route::get('/products/{category_id}', [HomeController::class, 'products'])->name('productsByCategoryId');
-Route::get('/get-product-info', [HomeController::class, 'getProductInfo'])->name('getProductInfo');
-Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
-Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant'); 
+Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
+Route::post('/products/filter', [HomeController::class, 'filter'])->name('products.filter');
 
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
@@ -59,6 +60,9 @@ Route::get('/account', [AuthController::class, 'account'])->name('account');
 Route::get('/viewRegister', [AuthController::class, 'viewRegister'])->name('viewRegister');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
+
 
 //login success + admin
 Route::middleware('auth')->group(function () {
@@ -161,16 +165,19 @@ Route::get('/viewEditAcc', [AuthController::class, 'viewEditAcc'])->name('viewEd
 Route::post('/editAcc', [AuthController::class, 'editAcc'])->name('editAcc');
 
 Route::get('/listCart', [CartController::class, 'listCart'])->name('cart.listCart');
-Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');               //
+Route::post('/addCart', [CartController::class, 'addCart'])->name('cart.addCart');
 Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.updateCart');
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
 Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
 Route::post('/cart/apply-coupon', [CouponController::class, 'applyCoupon'])->name('cart.applyCoupon');
+Route::get('/listCoupons', [CouponController::class, 'listCoupons'])->name('listCoupons');;
+
+
 
 // Route Blog
-Route::get('/blog',       [ClientBlogController::class, 'index'])->name('blog.index');
+Route::get('/blog',                       [ClientBlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/list/{topic_id}',       [ClientBlogController::class, 'list'])->name('blog.list');
-Route::get('/blog/show/{id}',  [ClientBlogController::class, 'show'])->name('blog.show');
+Route::get('/blog/show/{id}',             [ClientBlogController::class, 'show'])->name('blog.show');
 // order
 Route::middleware('auth')->prefix('orders')
     ->as('orders.')
@@ -261,6 +268,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/',               [BillController::class, 'index'])->name('index');
                 Route::get('/show/{id}',     [BillController::class, 'show'])->name('show');
                 Route::put('{id}/update',    [BillController::class, 'update'])->name('update');
+                Route::put('{id}/updateShow',    [BillController::class, 'updateShow'])->name('updateShow');
                 Route::delete('{id}/destroy', [BillController::class, 'destroy'])->name('destroy');
             });
         //account
@@ -363,23 +371,11 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/show/{id}',       [AdminTopicController::class, 'show'])->name('show');
                 Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])->name('edit');
                 Route::put('/{id}/update',     [AdminTopicController::class, 'update'])->name('update');
-                Route::get('/index',           [AdminTopicController::class, 'index'])->name('index');
-                Route::get('/create',          [AdminTopicController::class, 'create'])->name('create');
-                Route::post('/store',          [AdminTopicController::class, 'store'])->name('store');
-                Route::get('/show/{id}',       [AdminTopicController::class, 'show'])->name('show');
-                Route::get('/{id}/edit',       [AdminTopicController::class, 'edit'])->name('edit');
-                Route::put('/{id}/update',     [AdminTopicController::class, 'update'])->name('update');
                 Route::delete('/{id}/destroy', [AdminTopicController::class, 'destroy'])->name('destroy');
             });
         Route::prefix('blogs')
             ->as('blogs.')
             ->group(function () {
-                Route::get('/index',           [AdminBlogController::class, 'index'])->name('index');
-                Route::get('/create',          [AdminBlogController::class, 'create'])->name('create');
-                Route::post('/store',          [AdminBlogController::class, 'store'])->name('store');
-                Route::get('/show/{id}',       [AdminBlogController::class, 'show'])->name('show');
-                Route::get('/{id}/edit',       [AdminBlogController::class, 'edit'])->name('edit');
-                Route::put('/{id}/update',     [AdminBlogController::class, 'update'])->name('update');
                 Route::get('/index',           [AdminBlogController::class, 'index'])->name('index');
                 Route::get('/create',          [AdminBlogController::class, 'create'])->name('create');
                 Route::post('/store',          [AdminBlogController::class, 'store'])->name('store');
@@ -397,6 +393,15 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/store',          [BrandController::class, 'store'])->name('store');
                 Route::get('/edit/{id}',       [BrandController::class, 'edit'])->name('edit');
                 Route::put('/update/{id}',     [BrandController::class, 'update'])->name('update');
-                Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('destroyBrand');
+                Route::delete('/brands/{id}',  [BrandController::class, 'destroy'])->name('destroyBrand');
+            });
+        //Lịch sử đặt lịch khám
+        Route::prefix('appoinments')
+            ->as('appoinments.')
+            ->group(function () {
+                Route::get('/',               [AdminAppoinmentController::class, 'index'])->name('index');
+                Route::get('/show/{id}',      [AdminAppoinmentController::class, 'show'])->name('show');
+                Route::put('{id}/update',     [AdminAppoinmentController::class, 'update'])->name('update');
+                Route::put('{id}/update1',     [AdminAppoinmentController::class, 'update1'])->name('update1');
             });
     });

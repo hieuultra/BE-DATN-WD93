@@ -13,9 +13,9 @@
 </style>
 <main>
   <div class="container-fluid px-4">
-    <h1 class="mt-4">List Specialties</h1>
+    <h1 class="mt-4">Chuyên khoa + Bác sỹ</h1>
     <ol class="breadcrumb mb-4">
-      <li class="breadcrumb-item active">Dashboard</li>
+      <li class="breadcrumb-item active">Bảng điều khiển</li>
     </ol>
 
     <!-- Data -->
@@ -29,10 +29,10 @@
           <div class="card-header d-flex justify-content-between">
             <div>
               <i class="fas fa-table me-1"></i>
-              List Specialties
+             Danh sách chuyên khoa
             </div>
             <a href="{{ route('admin.specialties.viewSpecialtyAdd') }}">
-              <input type="submit" class="btn btn-primary" name="them" value="ADD">
+              <input type="submit" class="btn btn-primary" name="them" value="Thêm">
             </a>
           </div>
           <div class="card-body">
@@ -64,9 +64,9 @@
               <thead>
                 <tr>
                   <th scope="col">STT</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Image</th>
-                  <th class="text-center" scope="col">Action</th>
+                  <th scope="col">Tên</th>
+                  <th scope="col">Ảnh</th>
+                  <th class="text-center" scope="col">Hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -128,10 +128,10 @@
           <div class="card-header d-flex justify-content-between">
             <div>
               <i class="fas fa-table me-1"></i>
-              List Doctors
+              Danh sách bác sỹ
             </div>
             <a href="{{ route('admin.doctors.viewDoctorAdd') }}">
-              <input type="submit" class="btn btn-primary" name="them" value="ADD">
+              <input type="submit" class="btn btn-primary" name="them" value="Thêm">
             </a>
           </div>
           <div class="card-body">
@@ -151,12 +151,12 @@
               <thead>
                 <tr>
                   <th scope="col">STT</th>
-                  <th scope="col" style="width: 280px;">Name</th>
-                  <th scope="col" style="width: 220px;">Image</th>
-                  <th scope="col" style="width: 200px;">Phone</th>
-                  <th scope="col">Address</th>
-                  <th scope="col">Specialty</th>
-                  <th class="text-center" style="width: 190px;" scope="col">Action</th>
+                  <th scope="col" style="width: 280px;">Tên</th>
+                  <th scope="col" style="width: 220px;">Ảnh</th>
+                  <th scope="col" style="width: 200px;">Số điện thoại</th>
+                  <th scope="col">Địa chỉ</th>
+                  <th scope="col">Chuyên khoa</th>
+                  <th class="text-center" style="width: 190px;" scope="col">Hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -165,6 +165,7 @@
                 @php
                 $doc = $d->user;
                 $docs = $d->specialty;
+                $do = $d->clinic->first();
                 @endphp
                 <tr>
                   <th scope="row">{{ $d->id }}</th>
@@ -178,9 +179,11 @@
                   <td>
                     {{$doc->phone}}
                   </td>
-                  <td>
-                    {{$doc->address}}
-                  </td>
+                   @if ($do)
+                    <td> {{ $do->city }} </td>
+                    @else
+                       <td>Chưa có địa chỉ</td>
+                    @endif
                   <td>{{$docs->name}}</td>
                   <td class="text-center">
                     <div class="time-icon">
@@ -236,10 +239,10 @@
           <div class="card-header d-flex justify-content-between">
             <div>
               <i class="fas fa-table me-1"></i>
-              List Packages
+              Danh sách dịch vụ khám
             </div>
             <a href="{{ route('admin.packages.viewPackagesAdd') }}">
-              <input type="submit" class="btn btn-primary" name="them" value="ADD">
+              <input type="submit" class="btn btn-primary" name="them" value="Thêm">
             </a>
           </div>
           <div class="card-body">
@@ -259,12 +262,12 @@
               <thead>
                 <tr>
                   <th scope="col">STT</th>
-                  <th scope="col" style="width: 280px;">Name</th>
-                  <th scope="col" style="width: 220px;">Image</th>
-                  <th scope="col">Address</th>
-                  <th scope="col">Specialty</th>
-                  <th scope="col">Price</th>
-                  <th class="text-center" style="width: 190px;" scope="col">Action</th>
+                  <th scope="col" style="width: 280px;">Tên</th>
+                  <th scope="col" style="width: 220px;">Ảnh</th>
+                  <th scope="col">Địa chỉ</th>
+                  <th scope="col">Chuyên khoa</th>
+                  <th scope="col">Giá</th>
+                  <th class="text-center" style="width: 190px;" scope="col">Hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -289,7 +292,7 @@
                     {{$pacs->name}}
                   </td>
                   <td>
-                    {{$d->price}}
+                    {{ number_format($d->price,0,',','.') }}VND
                   </td>
                   <td class="text-center">
                     <div class="time-icon">

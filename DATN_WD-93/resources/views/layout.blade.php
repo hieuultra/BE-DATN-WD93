@@ -6,7 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="Free HTML Templates" name="keywords" />
     <meta content="Free HTML Templates" name="description" />
-    
+
     <!-- fontawesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Favicon -->
@@ -54,7 +54,7 @@
       .popup-modal {
         display: flex;
         position: fixed;
-        z-index: 1000;
+        z-index: 1050;
         left: 0;
         top: 0;
         width: 100%;
@@ -122,9 +122,9 @@
         </marquee>
         <div class="col-lg-6 d-none d-lg-block">
           <div class="d-inline-flex align-items-center h-100">
-            <a class="text-body mr-3" href="">About</a>
-            <a class="text-body mr-3" href="">Contact</a>
-            <a class="text-body mr-3" href="">Help</a>
+            <a class="text-body mr-3" href="">Về chúng tôi</a>
+            <a class="text-body mr-3" href="">Liên hệ</a>
+            <a class="text-body mr-3" href="">Giúp đỡ</a>
             <a class="text-body mr-3" href="">FAQs</a>
           </div>
         </div>
@@ -136,11 +136,11 @@
                 class="btn btn-sm btn-light dropdown-toggle"
                 data-toggle="dropdown"
               >
-                My Account
+                Tài khoản
               </button>
               <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button">Sign in</button>
-                <button class="dropdown-item" type="button">Sign up</button>
+                <button class="dropdown-item" type="button">Đăng ký</button>
+                <button class="dropdown-item" type="button">Đăng nhập</button>
               </div>
             </div>
             <div class="btn-group mx-2">
@@ -196,10 +196,10 @@
       >
         <div class="col-lg-4">
           <a href="{{ route('home') }}" class="text-decoration-none">
-            <span class="h1 text-uppercase text-primary bg-dark px-2"
+            <span class="h1 text-uppercase text-primary bg-dark"
               >Instinct</span
             >
-            <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1"
+            <span class="h1 text-uppercase text-dark bg-primary ml-n1"
               >Pharmacy</span
             >
           </a>

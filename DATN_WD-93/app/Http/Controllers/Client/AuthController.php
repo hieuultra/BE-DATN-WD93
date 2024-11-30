@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Models\User;
 use App\Models\Category;
+use App\Models\DiscountCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -36,9 +37,10 @@ class AuthController extends Controller
         if (Auth::attempt($users)) { //kiem tra in user_table co trung ko
             return redirect()->route('loginSuccess');
         }
-        return redirect()->back()->withErrors([
-            'email' => 'Infor account not found'
-        ]);
+        // return redirect()->back()->withErrors([
+        //     'email' => 'Thông tin tài khoản chưa chính xác'
+        // ]);
+        return back()->with('error', 'Thông tin tài khoản chưa chính xác!');
     }
     public function loginSuccess()
     {
@@ -126,8 +128,6 @@ class AuthController extends Controller
     }
     public function register(Request $request)
     {
-        //     $data= $request->all();
-        //     dd($data);
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
@@ -141,7 +141,7 @@ class AuthController extends Controller
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('upload'), $imageName);
             $data['image'] = $imageName;
-        }else {
+        } else {
             $data['image'] = null;
         }
 
@@ -151,10 +151,22 @@ class AuthController extends Controller
         // Tạo người dùng mới
         $user = User::query()->create($data);
 
+
+        // Tạo mã giảm giá cho người dùng mới
+        // $discountCode = DiscountCode::create([
+        //     'code' => strtoupper(uniqid('DISCOUNT_')), // Tạo mã unique
+        //     'discount_amount' => 100000, // Số tiền giảm giá (ví dụ: 100,000 VND)
+        //     'expires_at' => now()->addDays(30), // Hết hạn sau 30 ngày
+        //     'user_id' => $user->id,
+        // ]);
+        // if (!$discountCode) {
+        //     return redirect()->back()->with('error', 'Lỗi khi tạo mã giảm giá.');
+        // }
+
         // Đăng nhập người dùng sau khi đăng ký
         Auth::login($user);
 
-        return redirect()->route('viewRegister');
+        return redirect()->route('viewRegister'); //->with('success', 'Đăng ký thành công! Mã giảm giá của bạn là: ' . $discountCode->code);
     }
     public function logout(Request $request)
     {

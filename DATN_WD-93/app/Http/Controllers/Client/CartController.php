@@ -45,6 +45,12 @@ class CartController extends Controller
         }
         // Xử lý mã giảm giá nếu có
         $checkTypeDiscount = 0;
+        if ($cart->coupon_code !== null) {
+            $discountCheck = $cart->coupon_code;
+            $couponCheck = Coupon::where('code', $discountCheck)->first();
+            $checkTypeDiscount = $couponCheck->type;
+            $discount = $couponCheck->value;
+        }
         if ($request->has('coupon_code')) {
             if (request()->query('coupon_code') == 'loaibo') {
                 $cart->coupon_code = null;
@@ -52,7 +58,6 @@ class CartController extends Controller
                 $discount = 0;
             } else {
                 $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
-                // dd($coupon->type);
                 if ($coupon && $coupon->isValid()) {
                     $discount = $coupon->value;
                     $cart->coupon_code = $coupon->code;
@@ -86,16 +91,25 @@ class CartController extends Controller
                     ->where('id_variant', $variantID)
                     ->firstOrFail();
                 // dd($variantProduct);
+                // Kiểm tra số lượng sản phẩm biến thể
+                if ($variantProduct->quantity <= 0) {
+                    return redirect()->back()->with('error', "Sản phẩm đã hết hàng, không thể thêm vào giỏ hàng.");
+                }
                 if (!$variantProduct) {
                     return redirect()->back()->with('error', "Sản phẩm không tồn tại");
                 }
                 // Tính toán giá sản phẩm sau khi áp dụng giảm giácod
                 $totalPrice = $variantProduct->price - (($variantProduct->price * $variantProduct->product->discount) / 100);
+                // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng chưa
                 $cartItem = CartItem::where('cart_id', $cart->id)
                     ->where('variant_id', $variantProduct->id)
                     ->first();
                 if ($cartItem) {
                     $cartItem->quantity += $request->quantity;
+                    // Kiểm tra nếu số lượng vượt quá kho
+                    if ($cartItem->quantity > $variantProduct->quantity) {
+                        return redirect()->back()->with('error', "Số lượng sản phẩm vượt quá số lượng hiện có trong kho.");
+                    }
                     $cartItem->total = $totalPrice * $cartItem->quantity;
                     $cartItem->save(); //
                 } else {
@@ -112,6 +126,10 @@ class CartController extends Controller
                 }
             } elseif ($request->input('productId')) {
                 $product = Product::query()->findOrFail($productId);
+                // Kiểm tra số lượng sản phẩm
+                if ($product->quantity <= 0) {
+                    return redirect()->back()->with('error', "Sản phẩm đã hết hàng, không thể thêm vào giỏ hàng.");
+                }
 
                 if (!$product) {
                     return redirect()->with('error', "Sản phẩm không tồn tại");
@@ -127,6 +145,11 @@ class CartController extends Controller
                 if ($cartItem) {
                     // If the product already exists in the cart, update the quantity and total
                     $cartItem->quantity += $request->quantity; // Update quantity
+                    // Kiểm tra nếu số lượng vượt quá kho
+                    if ($cartItem->quantity > $product->quantity) {
+                        return redirect()->back()->with('error', "Số lượng sản phẩm vượt quá số lượng hiện có trong kho.");
+                    }
+
                     $cartItem->total = $totalPrice * $cartItem->quantity; // Update total price
                     $cartItem->save(); // Save the updated item
                 } else {

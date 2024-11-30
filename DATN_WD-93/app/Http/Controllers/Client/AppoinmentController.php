@@ -428,8 +428,10 @@ class AppoinmentController extends Controller
             })
             ->get();
 
+        $doctor = Doctor::where('user_id', $id)->first();
+
         $latestAppointments = DB::table('appoinments')
-            ->where('doctor_id', $id)
+            ->where('doctor_id', $doctor->id)
             ->select('user_id', DB::raw('MAX(created_at) as latest_appointment'))
             ->groupBy('user_id');
 
@@ -493,7 +495,7 @@ class AppoinmentController extends Controller
         $categories = Category::orderBy('name', 'asc')->get();
 
         $user = User::where('id', $id1)->first();
-        
+
         $appoinments = Appoinment::where('user_id', $id1)->where('doctor_id', $id2)
             ->with(['doctor', 'timeSlot'])
             ->get();
@@ -546,7 +548,7 @@ class AppoinmentController extends Controller
                 $appoinments->appointment_date = $request->selected_date;
                 $appoinments->notes = 'Cần tái khám';
                 $appoinments->status_appoinment = 'da_xac_nhan';
-                $appoinments->status_payment_method = 'tại cơ sở y tế';
+                $appoinments->status_payment_method = 'thanh_toan_tai_benh_vien';
                 $appoinments->classify = 'ban_than';
                 $appoinments->save();
 
@@ -561,7 +563,7 @@ class AppoinmentController extends Controller
                 $appoinments->appointment_date = $request->selected_date;
                 $appoinments->notes = 'Cần tái khám';
                 $appoinments->status_appoinment = 'da_xac_nhan';
-                $appoinments->status_payment_method = 'tại cơ sở y tế';
+                $appoinments->status_payment_method = 'thanh_toan_tai_benh_vien';
                 $appoinments->classify = 'cho_gia_dinh';
 
                 $appoinments->name = $appointment->name;

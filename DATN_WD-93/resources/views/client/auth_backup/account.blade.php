@@ -20,6 +20,17 @@
 <main class="main d-flex w-100 mt-5">
     <div class="container d-flex flex-column mt-5">
         <div class="row h-100">
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
             <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
                 <div class="d-table-cell align-middle">
                     <div class="text-center mt-4">
@@ -44,6 +55,11 @@
 
                                     <div class="form-group">
                                             <li><a href="{{ route('orders.index') }}">Đơn mua </a></li>
+
+                                               <li><a href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">Lịch sử đặt khám</li></a>
+                                               @if(Auth::user()->role == 'Doctor')
+                                               <li><a href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }} ">Quản lý lịch khám</li></a>
+                                               @endif
                                            <li>  @if (Route::has('password.request'))
                                             <a href="{{ route('password.request') }}">
                                                 {{ __('Quên mật khẩu?') }}

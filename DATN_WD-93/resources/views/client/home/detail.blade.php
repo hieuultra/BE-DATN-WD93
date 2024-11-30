@@ -165,9 +165,9 @@
         <div class="row px-xl-5">
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
-                    <a class="breadcrumb-item text-dark" href="#">Home</a>
-                    <a class="breadcrumb-item text-dark" href="#">Shop</a>
-                    <span class="breadcrumb-item active">Shop Detail</span>
+                    <a class="breadcrumb-item text-dark" href="#">Trang chủ</a>
+                    <a class="breadcrumb-item text-dark" href="#">Thực phẩm chức năng</a>
+                    <span class="breadcrumb-item active">Chi tiết</span>
                 </nav>
             </div>
         </div>
@@ -227,7 +227,8 @@
                 <div class="h-100 bg-light p-30">
                     <h3 class="product-name">{{ $sp->name }}</h3>
                     <div class="product-info d-flex align-items-center mb-3">
-                        <small class="product-code px-2 pt-1">Mã:{{ $sp->idProduct }}</small>
+                        <small class="product-code px-2 pt-1">{{ $sp->idProduct }}</small>
+                        <small class="product-code px-2 pt-1">Thương hiệu: {{ $sp->brand->name }}</small>
                         <div class="mr-2">
                             @php
                                 $averageRating = round($sp->review_avg_rating ?? 0); // làm tròn số sao, mặc định 0 nếu không có
@@ -412,8 +413,8 @@
                                             </ul>
                                         </div>
                                     @endif
-                                    <h4 class="mb-4">Leave a review</h4>
-                                    <small>Your email address will not be published. Required fields are marked *</small>
+                                    <h4 class="mb-4">Để lại đánh giá</h4>
+                                    <small>Địa chỉ email của bạn sẽ không được công bố. Các trường bắt buộc được đánh dấu *</small>
                                     @if ($canReview)
                                         {{-- <div class="d-flex my-3">
                                         <p class="mb-0 mr-2">Your Rating * :</p>
@@ -430,28 +431,28 @@
                                             method="POST">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="rating">Your Rating *</label>
+                                                <label for="rating">Đánh giá của bạn *</label>
                                                 <select name="rating" class="form-control" required>
-                                                    <option value="">Choose rating</option>
-                                                    <option value="5">5 Stars</option>
-                                                    <option value="4">4 Stars</option>
-                                                    <option value="3">3 Stars</option>
-                                                    <option value="2">2 Stars</option>
-                                                    <option value="1">1 Star</option>
+                                                    <option value="">Chọn xếp hạng</option>
+                                                    <option value="5">5 sao</option>
+                                                    <option value="4">4 sao</option>
+                                                    <option value="3">3 sao</option>
+                                                    <option value="2">2 sao</option>
+                                                    <option value="1">1 sao</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="message">Your Review *</label>
+                                                <label for="message">Đánh giá của bạn *</label>
                                                 <textarea id="message" name="comment" cols="30" rows="5" class="form-control" required></textarea>
                                             </div>
                                             @if (auth()->check())
                                                 <div class="form-group">
-                                                    <label for="name">Your Name *</label>
+                                                    <label for="name">Tên bạn *</label>
                                                     <input type="text" class="form-control" id="name"
                                                         value="{{ Auth::user()->name }}" readonly>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="email">Your Email *</label>
+                                                    <label for="email">Email bạn *</label>
                                                     <input type="email" class="form-control" id="email"
                                                         value="{{ Auth::user()->email }}" readonly>
                                                 </div>
@@ -462,7 +463,7 @@
                                             </div>
                                         </form>
                                     @else
-                                        <p class="text-warning">You need to purchase this product to leave a review.</p>
+                                        <p class="text-warning">Bạn cần mua sản phẩm này thì mới có thể để lại đánh giá.</p>
                                     @endif
                                 </div>
                             </div>
@@ -663,7 +664,7 @@
                     const currentQuantity = parseInt(quantityInput.value, 10);
                     if (currentQuantity > parseInt(quantity, 10)) {
                         quantityInput.value = quantity; // Đặt lại số lượng hiện tại
-                        alert('Số lượng bạn chọn đã được cập nhật theo tồn kho mới!');
+                        // alert('Số lượng bạn chọn đã được cập nhật theo tồn kho mới!');
                     }
                     console.log('data-max đã thay đổi thành:', quantityInput.getAttribute('data-max'));
                 }

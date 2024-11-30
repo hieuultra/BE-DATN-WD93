@@ -88,7 +88,7 @@
                         {{ $listTopic->links('pagination::default') }}
                      </div>
                     <a href="{{ route('admin.topics.create') }}">
-                        <input type="submit" class="btn btn-primary" name="them" value="ADD">
+                        <input type="submit" class="btn btn-primary" name="them" value="Thêm">
                     </a>
                 </div>
             </div>

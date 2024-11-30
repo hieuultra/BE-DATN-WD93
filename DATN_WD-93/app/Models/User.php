@@ -60,7 +60,7 @@ class User extends Authenticatable
     }
     public function doctor()
     {
-        return $this->hasMany(Doctor::class);
+        return $this->hasOne(Doctor::class);
     }
     public function bill()
     {
@@ -77,5 +77,9 @@ class User extends Authenticatable
     public function cart()
     {
         return $this->hasMany(Cart::class);
+    }
+    public function discountCode()
+    {
+        return $this->hasMany(DiscountCode::class);
     }
 }

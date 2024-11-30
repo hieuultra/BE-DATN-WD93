@@ -24,6 +24,17 @@
                 <div class="d-table-cell align-middle">
                     <div class="text-center mt-4">
                         <h1 class="h2">Đăng nhập thành công</h1>
+                        @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -43,6 +54,10 @@
                                     </div>
                                     <div class="form-group">
                                             <li><a href="{{ route('orders.index') }}">Đơn mua </a></li>
+                                            <li><a href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">Lịch sử đặt khám</li></a>
+                                            @if(Auth::user()->role == 'Doctor')
+                                            <li><a href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }} ">Quản lý lịch khám</li></a>
+                                            @endif
                                            <li>  @if (Route::has('password.request'))
                                             <a href="{{ route('password.request') }}">
                                                 {{ __('Quên mật khẩu?') }}

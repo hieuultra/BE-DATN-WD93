@@ -5,9 +5,9 @@
 
 <main>
     <div class="container-fluid px-4">
-      <h1 class="mt-4">List Variants</h1>
+      <h1 class="mt-4">Danh sách biến thể</h1>
       <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Dashboard</li>
+        <li class="breadcrumb-item active">Bảng điều khiển</li>
       </ol>
 
       <!-- Data -->
@@ -21,10 +21,10 @@
             <div class="card-header d-flex justify-content-between">
               <div>
                 <i class="fas fa-table me-1"></i>
-                List Package
+                Danh sách biến thể
               </div>
               <a href="{{ route('admin.variantPros.packageAdd') }}">
-                <input type="submit" class="btn btn-primary" name="them" value="ADD">
+                <input type="submit" class="btn btn-primary" name="them" value="Thêm">
               </a>
             </div>
             <div class="card-body">
@@ -44,8 +44,8 @@
               <thead>
                 <tr>
                   <th scope="col">STT</th>
-                  <th scope="col">Name</th>
-                  <th class="text-center" scope="col">Action</th>
+                  <th scope="col">Tên</th>
+                  <th class="text-center" scope="col">Hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -96,11 +96,11 @@
             <div class="card-header d-flex justify-content-between">
               <div>
                 <i class="fas fa-table me-1"></i>
-                List Product Variant
+                Danh sách sản phẩm biến thể
               </div>
-              <a href="{{ route('admin.productVariant.viewProductVariantAdd') }}">
+              {{-- <a href="{{ route('admin.productVariant.viewProductVariantAdd') }}">
                 <input type="submit" class="btn btn-primary" name="them" value="ADD">
-              </a>
+              </a> --}}
             </div>
             <div class="card-body">
                             {{-- Hiển thị thông báo --}}
@@ -119,12 +119,12 @@
               <thead>
                 <tr>
                   <th scope="col">STT</th>
-                  <th scope="col" style="width: 280px;">Name</th>
-                  <th scope="col"  style="width: 220px;" >Image</th>
-                  <th scope="col" style="width: 200px;" >Category</th>
-                  <th scope="col">Variant</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Quantity</th>
+                  <th scope="col" style="width: 280px;">Tên</th>
+                  <th scope="col"  style="width: 220px;" >Ảnh</th>
+                  <th scope="col" style="width: 200px;" >Danh mục</th>
+                  <th scope="col">Biến thể</th>
+                  <th scope="col">Giá</th>
+                  <th scope="col">Số lượng</th>
                   {{-- <th class="text-center" style="width: 190px;" scope="col">Action</th> --}}
                 </tr>
               </thead>

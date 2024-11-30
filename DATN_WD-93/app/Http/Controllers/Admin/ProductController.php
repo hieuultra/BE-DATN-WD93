@@ -36,8 +36,6 @@ class ProductController extends Controller
             'img' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
             'content' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'quantity' => 'required|numeric',
             'discount' => 'nullable|numeric',
             'category_id' => 'required|integer|exists:categories,id',
             'brand_id' => 'required|integer|exists:brands,id',
@@ -98,8 +96,6 @@ class ProductController extends Controller
             'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
             'content' => 'nullable|string',
-            'price' => 'required|numeric',
-            'quantity' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
             'category_id' => 'required|integer|exists:categories,id',
             'brand_id' => 'required|integer|exists:brands,id',
@@ -233,12 +229,13 @@ class ProductController extends Controller
     public function productVariant($id)
     {
         $categories = Category::orderBy('name', 'ASC')->get();
+        $brands = Brand::orderBy('name', 'ASC')->get();
         $products = Product::orderBy('id', 'DESC')->paginate(10);
         $product = Product::find($id); //tim id
         $variants = VariantPackage::orderBy('name',  'DESC')->get();
         $variantPros = VariantProduct::where('id_product', $id)->get();
         $variantPro = VariantProduct::orderBy("id")->get();
-        return view('admin.products.productVariant', compact('categories', 'products', 'product', 'variants', 'variantPros', 'variantPro'));
+        return view('admin.products.productVariant', compact('categories', 'products', 'product', 'variants', 'variantPros', 'variantPro', 'brands'));
     }
     public function getQuantity(Request $request)
     {

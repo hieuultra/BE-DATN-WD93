@@ -46,30 +46,30 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">User Name</th>
+                        <th class="text-center">Mã</th>
+                        <th class="text-center">Tên khách hàng</th>
                         <th class="text-center">Email</th>
-                        <th class="text-center">Product Name</th>
-                        <th class="text-center">Rating</th>
-                        <th class="text-center">Comment</th>
-                        <th class="text-center">Deleted At</th>
-                        <th class="text-center">Actions</th>
+                            <th class="text-center">Tên sản phẩm</th>
+                            <th class="text-center">Sao</th>
+                            <th class="text-center">Bình luận</th>
+                            <th class="text-center">Ngày xóa</th>
+                            <th class="text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($listDeleted as $review)
                         <tr>
                             <td class="text-center">{{ $review->id }}</td>
-                            <td class="text-center">{{ $review->user->name }}</td>
-                            <td class="text-center">{{ $review->user->email }}</td>
-                            <td class="text-center">{{ $review->product->name }}</td>
+                            <td class="text-center">{{ $review->user->name ?? 'Không xác định' }}</td>
+                            <td class="text-center">{{ $review->user->email ?? 'Không xác định'}}</td>
+                            <td class="text-center">{{ $review->product->name ?? 'Không xác định'}}</td>
                             <td class="text-center">{{ $review->rating }} / 5</td>
                             <td class="text-center">{{ $review->comment }}</td>
                             <td class="text-center">{{ $review->deleted_at->format('d/m/Y') }}</td>
                             <td class="text-center">
                                 <form action="{{ route('admin.reviews.restore', $review->id) }}" method="POST" style="display:inline;">
                                     @csrf
-                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Are you sure you want to restore this review?')">Restore</button>
+                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Bạn có chắc muốn khôi phục không ?')">Khôi phục</button>
                                 </form>
                             </td>
                         </tr>
@@ -79,6 +79,6 @@
         </div>
     </div>
 
-    <a href="{{ route('admin.reviews.listReviews') }}" class="btn btn-primary btn-sm">Back to Active Reviews</a>
+    <a href="{{ route('admin.reviews.listReviews') }}" class="btn btn-primary btn-sm">Quay lại</a>
 </div>
 @endsection

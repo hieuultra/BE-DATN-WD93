@@ -29,7 +29,10 @@
     <h3>Chuyên khoa: {{ $package->specialty->name }}</h3>
 
     <!-- Nút Thêm Lịch -->
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addEditScheduleModal" onclick="showAddForm()">Thêm Lịch</button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEditScheduleModal" onclick="showAddForm()">Thêm Lịch</button>
+    <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
+        <input type="button" class="btn btn-primary" value="Quay lại">
+    </a>
     @if($schedules->isEmpty())
     <p>Không có lịch làm việc nào được ghi nhận.</p>
     @else
@@ -132,7 +135,7 @@
                                     $dateForMonth = $currentDate->copy()->addMonths($monthOffset);
                                     $daysInMonth = $dateForMonth->daysInMonth;
                                     @endphp
- 
+
                                     <h5>{{ $dateForMonth->locale('vi')->isoFormat('MMMM, YYYY') }}</h5>
 
                                     @for ($day = 1; $day <= $daysInMonth; $day++)
@@ -143,13 +146,13 @@
                                         $isToday = $date->isToday();
                                         @endphp
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input day-checkbox" type="checkbox" 
-                                                id="day{{ $date->format('Ymd') }}" 
-                                                name="days[]" 
-                                                value="{{ $dayOfWeek }} {{ $date->format('d/m/Y') }}" 
-                                                @if($isPast) disabled @endif 
+                                            <input class="form-check-input day-checkbox" type="checkbox"
+                                                id="day{{ $date->format('Ymd') }}"
+                                                name="days[]"
+                                                value="{{ $dayOfWeek }} {{ $date->format('d/m/Y') }}"
+                                                @if($isPast) disabled @endif
                                                 data-date="{{ $date->format('Y-m-d') }}">
-                                            
+
                                             <label class="form-check-label" for="day{{ $date->format('Ymd') }}"
                                                 @if($isPast) style="color:red;"
                                                 @elseif($isToday) style="color:blue;"
@@ -166,7 +169,7 @@
                             <label class="form-label">Chọn Ca Làm Việc</label>
                             <div id="shiftsContainer"></div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="isAvailable" class="form-label">Có sẵn</label>
                             <select class="form-select" id="isAvailable" name="isAvailable">

@@ -33,26 +33,26 @@ table th, table td {
 </style>
 <main>
     <div class="container-fluid px-4">
-      <h1 class="mt-4">List products</h1>
+      <h1 class="mt-4">Danh sách sản phẩm</h1>
       <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Dashboard</li>
+        <li class="breadcrumb-item active">Bảng điều khiển</li>
       </ol>
 
       <!-- Data -->
       <div class="card mb-4">
         <div class="card-header">
           <i class="fas fa-table me-1"></i>
-          List products
+          Danh sách sản phẩm
         </div>
         <form action="{{ route('filterByCategory') }}" method="post">
             @csrf
             <select class="form-select" name="category_id" id="">
-                <option value="0">Chọn danh muc</option>
+                <option value="0">Lọc theo danh mục</option>
                 @foreach ($categories as $cat)
                     <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach
             </select>
-          <input class="btn btn-primary" type="submit" name="listok" value="GO">
+          <input class="btn btn-primary" type="submit" name="listok" value="Tìm">
         </form>
         <div class="card-body">
                         {{-- Hiển thị thông báo --}}
@@ -70,29 +70,45 @@ table th, table td {
           <table id="datatablesSimple">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Category name</th>
-                <th>Brand name</th>
-                <th>Product name</th>
-                <th>Image</th>
-                <th>Price</th>
-                <th>Discount</th>
-                <th>Quantity</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th>Mã</th>
+                <th>Danh mục</th>
+                <th>Thương hiệu</th>
+                <th>Tên</th>
+                <th>Ảnh</th>
+                <th>Giá</th>
+                <th>Giảm giá</th>
+                <th>Số lượng</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
                 @foreach($products as $item)
+                @php
+                $variant = $item->variantProduct->first();
+                $tt = $variant ? $variant->price - (($variant->price * $item['discount']) / 100) : 0;
+               @endphp
                  <tr>
                     <td>{{ $item->idProduct }}</td>
                     <td>{{ $item->category->name }}</td>
                     <td>{{ $item->brand->name ?? 'Khong co' }}</td>
                     <td class="product-name">{{ $item->name }}</td>
-                    <td><img src="{{ asset('upload/'.$item->img)  }}" width="200" height="150" alt=""></td>
-                    <td>{{ number_format($item->price,0,'.',',')}} $</td>
+                    <td><img src="{{ asset('upload/'.$item->img)  }}" width="150" height="auto" alt=""></td>
+
+                    @if ($variant)
+                    <td> {{ number_format($variant->price, 0, ',', '.') }} VND</td>
+                    @else
+                         <td>Chưa có giá</td>
+                    @endif
+
                     <td>{{ number_format($item->discount,0,'.',',') }} %</td>
-                    <td>{{ $item->quantity }}</td>
+
+                    @if ($variant)
+                    <td> {{ $variant->quantity }} </td>
+                    @else
+                       <td>Chưa có số lượng</td>
+                    @endif
+
                     <td class="{{ $item->is_type == true ? 'text-success' : 'text-danger' }}">
                         {{ $item->is_type == true ? 'Display' : 'Hidden' }}
                       </td>
@@ -104,7 +120,7 @@ table th, table td {
                             <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
                               <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
                             </svg>
-                            Update
+                            Cập nhập
                          </button>
                      </form>
                     </a>
@@ -130,7 +146,7 @@ table th, table td {
                                 <svg style="color: orange" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
                                     <path d="M12.643 1H3.357L3 2v10h10V2l-.357-1zM8 3.5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5zm-3 1A.5.5 0 0 1 5.5 5v3a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5zm6 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5z"/>
                                 </svg>
-                                SoftDelete
+                                Xóa mềm
                             </button>
                         </form>
                      </a>
@@ -156,7 +172,7 @@ table th, table td {
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
-                          Add Variant
+                          Thêm biến thể
                          </button>
                      </form>
                     </a>
@@ -169,7 +185,7 @@ table th, table td {
             {{ $products->links('pagination::default') }}
          </div>
           <a href="{{ route('admin.products.viewProAdd') }}">
-            <input type="submit" class="btn btn-primary" name="them" value="ADD">
+            <input type="submit" class="btn btn-primary" name="them" value="Thêm">
           </a>
         </div>
       </div>

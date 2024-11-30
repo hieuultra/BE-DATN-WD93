@@ -10,7 +10,7 @@
  <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div class="container-fluid mt-4 px-4">
-    <h1 class="mt-4">Update product</h1>
+    <h1 class="mt-4">Thêm biến thể</h1>
             @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -28,21 +28,35 @@
                 <div class="row">
         <input type="hidden" name="id" value="{{ $product->id }}">
         <div class="mb-3">
-            <label  class="form-label">ID</label>
+            <label  class="form-label">Mã</label>
             <input  disabled type="text" class="form-control" value="{{ $product->idProduct }}" name="idProduct">
         </div>
 
       <div class="mb-3">
-        <label class="form-label">Name</label>
+        <label class="form-label">Tên</label>
         <input disabled type="text" class="form-control" name="name" value="{{ $product->name}}">
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Category</label>
+        <label class="form-label">Danh mục</label>
         <select disabled class="form-select" name="category_id">
-            <option value="0">Choose categories</option>
+            <option value="0">Chọn danh mục</option>
             @foreach ($categories as $item)
             @if ($item->id == $product->category_id)
+                <option value="{{ $item->id }}" selected>{{ $item->name }}</option>
+            @else
+                <option value="{{ $item->id }}">{{ $item->name }}</option>
+            @endif
+            @endforeach
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Thương hiệu</label>
+        <select disabled class="form-select" name="brand_id">
+            <option value="0">Chọn thương hiệu</option>
+            @foreach ($brands as $item)
+            @if ($item->id == $product->brand_id)
                 <option value="{{ $item->id }}" selected>{{ $item->name }}</option>
             @else
                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -58,48 +72,48 @@
       </div> --}}
 
       <div class="mb-3">
-        <label class="form-label">Discount</label>
+        <label class="form-label">Giảm giá (%)</label>
         <input type="number" class="form-control" name="discount" value="{{ $product->discount}}">
       </div>
       <div class="mb-3">
-        <label class="form-label">Description Short</label>
+        <label class="form-label">Mô tả ngắn</label>
         <textarea disabled class="form-control" placeholder="Leave a description product here" style="height: 100px" name="content" >{{ $product->content}}</textarea>
       </div>
 
-      <label for="is_type" class="form-label">Status:</label>
+      <label for="is_type" class="form-label">Trạng thái:</label>
       <div class="form-check">
           <input disabled class="form-check-input" type="radio" name="is_type" id="flexRadioDefault1" value="1" {{ $product->is_type == 1 ? 'checked' : '' }}>
           <label class="form-check-label" for="flexRadioDefault1">
-            Display
+            Hiện
           </label>
       </div>
       <div class="form-check mb-3">
           <input class="form-check-input" type="radio" name="is_type" id="flexRadioDefault2" value="0" {{ $product->is_type == 0 ? 'checked' : '' }}>
           <label class="form-check-label" for="flexRadioDefault2">
-            Hidden
+            Ẩn
           </label>
       </div>
 
-                  <label for="" class="form-label">Other Customized:</label>
+                  <label for="" class="form-label">Tùy chọn khác:</label>
                     <div class="form-switch mb-3 ps-3 d-flex justify-content-between">
                         <div class="form-check">
                             <input disabled class="form-check-input bg-danger" type="checkbox" name="is_new" {{ $product->is_new == 1 ? 'checked' : '' }}>
-                            <label for="is_new" class="form-check-label">NEW</label>
+                            <label for="is_new" class="form-check-label">Sản phẩm mới</label>
                         </div>
 
                         <div class="form-check">
                             <input disabled class="form-check-input bg-secondary" type="checkbox" name="is_hot" {{ $product->is_hot == 1 ? 'checked' : '' }}>
-                            <label for="is_hot" class="form-check-label">HOT</label>
+                            <label for="is_hot" class="form-check-label">Sản phẩm nóng</label>
                         </div>
 
                         <div class="form-check">
                             <input disabled class="form-check-input bg-warning" type="checkbox" name="is_hot_deal" {{ $product->is_hot_deal == 1 ? 'checked' : '' }}>
-                            <label for="is_hot_deal" class="form-check-label">HOT DEAL</label>
+                            <label for="is_hot_deal" class="form-check-label">Giảm giá mạnh</label>
                         </div>
 
                         <div class="form-check">
                             <input disabled class="form-check-input bg-success" type="checkbox" name="is_show_home" {{ $product->is_show_home == 1 ? 'checked' : '' }}>
-                            <label for="is_show_home" class="form-check-label">SHOW HOME</label>
+                            <label for="is_show_home" class="form-check-label">Hiện trang chủ</label>
                         </div>
                     </div>
                 </div>
@@ -109,21 +123,21 @@
             <div class="col-lg-8">
                 <div class="row">
                     <div class="mb-3">
-                        <label for="Description" class="form-check-label">Description Long</label>
+                        <label for="Description" class="form-check-label">Mô tả dài</label>
                         <div id="quill-editor" style="height: 400px;">
 
                         </div>
-                        <textarea disabled name="description" id="nd_content" class="d-none">Enter Description Long</textarea>
+                        <textarea disabled name="description" id="nd_content" class="d-none">Mô tả dài</textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Image</label>
+                        <label class="form-label">Ảnh</label>
                         <input type="file" class="form-control" name="img" onchange="showImage(event)">
                         <img id="imgPro" src="{{ asset('upload/'.$product->img)}}" alt="Image Product" style="width:150px;">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Album Image</label>
+                        <label class="form-label">Thư viện ảnh</label>
                         <i id="add-row" class="mdi mdi-plus text-muted fs-18 rounded-2 border ms-3 p-1" style="cursor: pointer"></i>
                         <table class="table align-middle table-nowrap mb-0">
                                <tbody id="image-table-body">
@@ -155,7 +169,7 @@
                 <div class="col-lg-4">
                     <form action="{{ route('admin.productVariant.variantProductUpdate') }}" method="post">
                         <div class="mt-3 mb-3">
-                            <label class="form-label">Variant:</label>
+                            <label class="form-label">Biến thể đã thêm:</label>
                             @foreach ($variantPros as $vp)
                                 @if ($product->id == $vp->id_product)
                                     @foreach ($variants as $v)
@@ -170,26 +184,26 @@
                             @endforeach
                         </div>
                         <div class="mb-3 d-flex">
-                            <label class="form-label">Quantity:</label>
+                            <label class="form-label">Số lượng:</label>
                             <div class="ms-3 mx-3" >
                                 <input type="text" class="form-control" id="quantity-display">
                             </div>
                         </div>
                         <div class="mb-3 d-flex">
-                            <label class="form-label">Price:</label>
+                            <label class="form-label">Giá:</label>
                             <div class="ms-3 mx-3" >
                                 <input type="text" class="form-control" id="price-display">
                             </div>
                         </div>
                         <input type="hidden" name="" id="idProduct" value="{{ $product->id }}">
-                        <button class="btn btn-primary" id="editProductVariant">Save</button>
+                        <button class="btn btn-primary" id="editProductVariant">Lưu</button>
                         {{-- <form action="{{ route('admin.products.variantProductDestroy') }}" method="POST">
                             <input type="hidden" name="" id="idProduct" value="{{ $product->id }}">
                             <button id="destroy" class="btn btn-danger">DEL</button>
                         </form> --}}
                     </form>
                     <form action="{{ route('admin.productVariant.VariantProductDestroy') }}">
-                        <button class=" btn btn-danger mt-3" style="width: 60px;" id="deleteProductVariant">DEL</button>
+                        <button class=" btn btn-danger mt-3" style="width: 60px;" id="deleteProductVariant">Xóa</button>
                     </form>
                 </div>
                 {{-- box-right --}}
@@ -199,9 +213,9 @@
                            {{-- Hàng thứ nhất --}}
                             <div class="col">
                                <div class="mb-3">
-                                    <label class="form-label">Variant Products</label>
+                                    <label class="form-label">Chọn biến thể</label>
                                     <select class="form-select" name="id_variant">
-                                        <option value="0">Choose Variant Products</option>
+                                        <option value="0">Chọn biến thể cho sản phẩm</option>
                                         @foreach($variants as $vp)
                                         <option value="{{ $vp->id }}">{{ $vp->name }}</option>
                                         @endforeach
@@ -213,21 +227,21 @@
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label">Price</label>
+                                    <label class="form-label">Giá</label>
                                     <input type="number" class="form-control" value="{{ old('price') }}" name="price" placeholder="Price">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label">Quantity</label>
+                                    <label class="form-label">Số lượng</label>
                                     <input type="number" class="form-control" value="{{ old('quantity') }}" name="quantity" placeholder="Quantity">
                                 </div>
                             </div>
                         </div>
                         <input type="hidden" name="id_product" value="{{$product->id}}">
-                        <input type="submit" class="btn btn-primary" value="Add">
+                        <input type="submit" class="btn btn-primary" value="Thêm">
                         <a href="{{ route('admin.products.productList') }}">
-                            <input type="button" class="btn btn-primary" value="LIST_PRO">
+                            <input type="button" class="btn btn-primary" value="Quay lại">
                         </a>
                     </form>
                 </div>

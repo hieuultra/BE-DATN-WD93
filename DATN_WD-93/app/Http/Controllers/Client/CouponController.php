@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\CartItem;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -56,5 +57,18 @@ class CouponController extends Controller
         }
 
         return back()->with('success', 'Áp dụng mã giảm giá thành công!');
+    }
+    public function listCoupons()
+    {
+        $categories = Category::orderBy('name', 'asc')->get();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+        }
+        $coupons = Coupon::orderBy('updated_at', 'asc')
+            ->get();
+
+        return view('client.coupons.list', compact('coupons', 'orderCount', 'categories'));
     }
 }

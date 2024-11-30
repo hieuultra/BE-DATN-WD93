@@ -32,8 +32,8 @@
                         <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Title</th>
-                                <th>Image</th>
+                                <th>Tiêu đề</th>
+                                <th>Ảnh</th>
                                 <th>Chuyên đề</th>
                                 <th>Cập nhật</th>
                                 <th>Xóa</th>
@@ -88,7 +88,7 @@
                         {{ $listBlog->links('pagination::default') }}
                      </div>
                     <a href="{{ route('admin.blogs.create') }}">
-                        <input type="submit" class="btn btn-primary" name="them" value="ADD">
+                        <input type="submit" class="btn btn-primary" name="them" value="Thêm">
                     </a>
                 </div>
             </div>

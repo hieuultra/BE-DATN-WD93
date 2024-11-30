@@ -5,9 +5,9 @@
 
 <main>
     <div class="container-fluid px-4">
-      <h1 class="mt-4">List categories</h1>
+      <h1 class="mt-4">Danh sách danh mục</h1>
       <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Dashboard</li>
+        <li class="breadcrumb-item active">Bảng điều khiển</li>
       </ol>
 
       <!-- Data -->
@@ -17,7 +17,7 @@
 
         <div class="card-header">
           <i class="fas fa-table me-1"></i>
-          List categories
+          Danh sách danh mục
         </div>
         <div class="card-body">
                         {{-- Hiển thị thông báo --}}
@@ -35,11 +35,11 @@
           <table id="datatablesSimple">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Category name</th>
-                <th>Image</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th>Mã</th>
+                <th>Tên</th>
+                <th>Ảnh</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -81,7 +81,7 @@
             </tbody>
           </table>
           <a href="{{ route('admin.categories.viewCateAdd') }}">
-            <input type="submit" class="btn btn-primary" name="them" value="ADD">
+            <input type="submit" class="btn btn-primary" name="them" value="Thêm">
           </a>
         </div>
       </div>

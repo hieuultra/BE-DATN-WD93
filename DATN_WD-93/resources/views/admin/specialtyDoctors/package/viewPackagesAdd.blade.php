@@ -11,9 +11,9 @@
             <!-- Phần bên phải -->
             <div class="col">
                 <div class="mb-3">
-                    <label class="form-label">Chuyên ngành</label>
+                    <label class="form-label">Chuyên khoa</label>
                     <select class="form-select" name="specialty_id" id="specialty_id">
-                        <option value="0">Choose Specialty</option>
+                        <option value="0">Chọn chuyên khoa</option>
                         @foreach($specialty as $vp)
                         <option value="{{ $vp->id }}">{{ $vp->name }}</option>
                         @endforeach
@@ -84,9 +84,9 @@
         </div>
 </div>
 
-<input type="submit" class="btn btn-primary" value="Add">
+<input type="submit" class="btn btn-primary" value="Thêm">
 <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
-    <input type="button" class="btn btn-primary" value="LIST_SPECIALTY_DOCTOR">
+    <input type="button" class="btn btn-primary" value="Quay lại">
 </a>
 </form>
 </div>

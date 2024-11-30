@@ -275,7 +275,7 @@
     @section('content')
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{{ route('appoinment.physicianManagement', Auth::user()->id) }}">
                 <i class="fas fa-stethoscope">
                 </i>
                 Quay lại
