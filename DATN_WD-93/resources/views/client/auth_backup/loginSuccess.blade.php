@@ -24,6 +24,17 @@
                 <div class="d-table-cell align-middle">
                     <div class="text-center mt-4">
                         <h1 class="h2">Đăng nhập thành công</h1>
+                        @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     </div>
                     <div class="card">
                         <div class="card-body">

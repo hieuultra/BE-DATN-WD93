@@ -20,6 +20,17 @@
 <main class="main d-flex w-100 mt-5">
     <div class="container d-flex flex-column mt-5">
         <div class="row h-100">
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
             <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
                 <div class="d-table-cell align-middle">
                     <div class="text-center mt-4">

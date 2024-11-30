@@ -71,7 +71,7 @@
 <div class="container-fluid pt-5">
   <div class="text-center mb-4">
     <h2 class="section-title px-5">
-      <span class="px-2">Liên hệ để được giải đáp mọi thắc mắc</span>
+      <span class="px-2">Liên hệ chúng tôi</span>
     </h2>
   </div>
   <h2 class="tbao">
@@ -85,16 +85,20 @@
     <div class="col-lg-7 mb-5">
       <div class="contact-form">
         <div id="success"></div>
-        <form name="sentMessage" action="?act=addfb" method="post" id="demoForm">
-          <div class="control-group">
+        <form name="sentMessage" action="{{ route('subscribe') }}" method="POST" id="demoForm">
+            @csrf
+          {{-- <div class="control-group">
             <input type="text" class="form-control" name="name" placeholder="Nhập tên" required="required" data-validation-required-message="Please enter your name" />
             <p class="help-block text-danger"></p>
-          </div>
+          </div> --}}
+          <p style="font-weight: bold">Mỗi tháng chúng tôi đều có những đợt giảm giá dịch vụ và sản phẩm nhằm tri ân khách hàng. Để có thể cập nhập kịp thời những đợt giảm giá này,
+             vui lòng nhập địa chỉ email của bạn vào ô dưới đây!</p>
           <div class="control-group">
-            <input type="email" class="form-control" name="email" placeholder="Nhập email" required="required" data-validation-required-message="Please enter your email" />
+            <label for="email">Nhập email để đăng ký nhận ưu đãi:</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Nhập email" required="required" data-validation-required-message="Please enter your email" />
             <p class="help-block text-danger"></p>
           </div>
-          <div class="control-group">
+          {{-- <div class="control-group">
             <input type="text" class="form-control" name="phone" placeholder="Nhập số điện thoại" required="required" data-validation-required-message="Please enter your phone" />
             <p class="help-block text-danger"></p>
           </div>
@@ -105,11 +109,18 @@
           <div class="control-group">
             <textarea class="form-control" rows="6" name="message" placeholder="Nhập nội dung" required="required" data-validation-required-message="Please enter your message"></textarea>
             <p class="help-block text-danger"></p>
-          </div>
+          </div> --}}
           <div>
-            <input class="btn btn-primary py-2 px-4" type="submit" name="send" value="Gửi">
+            <input class="btn btn-primary py-2 px-4" type="submit" name="send" value="Đăng ký">
           </div>
         </form>
+        @if(session('success'))
+        <p>{{ session('success') }}</p>
+        @endif
+
+        @error('email')
+            <p style="color: red;">{{ $message }}</p>
+        @enderror
       </div>
     </div>
     <div class="col-lg-5 mb-5">

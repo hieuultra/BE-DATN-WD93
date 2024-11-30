@@ -66,7 +66,7 @@
           </div>
           <div class="col-md-4 mb-5">
             <h5 class="text-secondary text-uppercase mb-4">Đăng ký nhận tin</h5>
-            <p>Mỗi tháng chúng tôi đều có những đợt giảm giá dịch vụ và sản phẩm nhằm tri ân khách hàng. Để có thể câph nhập kịp thời những đợt giảm giá này, vui lòng nhập địa chỉ email của bạn vào ô dưới đây!</p>
+            <p>Mỗi tháng chúng tôi đều có những đợt giảm giá dịch vụ và sản phẩm nhằm tri ân khách hàng. Để có thể cập nhập kịp thời những đợt giảm giá này, vui lòng nhập địa chỉ email của bạn vào ô dưới đây!</p>
             <form action="">
               <div class="input-group">
                 <input
