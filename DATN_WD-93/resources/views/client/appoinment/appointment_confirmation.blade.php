@@ -6,8 +6,8 @@
 </head>
 
 <body>
-    <h1>Xin chào sikibidi: {{ $user }}</h1>
-    <p>Cả ơn bro chúc bro có trải nghiệm khám thật tuyệt vời</p>
+    <h1>Xin chào quý khách: {{ $user }}</h1>
+    <p>Cảm ơn quý khách, chúc quý khách có trải nghiệm khám thật tuyệt vời</p>
     <p><strong>Thông tin lịch hẹn:</strong></p>
     <ul>
         <li><strong>Mã hóa đơn</strong> {{ $appoinment->id }}</li>

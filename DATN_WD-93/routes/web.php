@@ -1,40 +1,42 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAppoinmentController;
-use Illuminate\Support\Facades\Auth;
-//
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\BillController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Client\AuthController;
-//
-use App\Http\Controllers\Client\CartController;
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Admin\DoctorController;
-use App\Http\Controllers\Client\AboutController;
-use App\Http\Controllers\Client\OrderController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Client\CouponController;
-use App\Http\Controllers\Client\ReviewController;
-use App\Http\Middleware\CheckRoleAdminMiddleware;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Admin\AdminBlogController;
-use App\Http\Controllers\Admin\SpecialtyController;
-use App\Http\Controllers\Admin\AdminTopicController;
+//
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminCouponController;
-use App\Http\Controllers\Client\AppoinmentController;
-use App\Http\Controllers\Client\ClientBlogController;
+use App\Http\Controllers\Admin\AdminTopicController;
+use App\Http\Controllers\Admin\BillController;
+use App\Http\Controllers\Admin\BrandController;
+//
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\SpecialtyController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
-use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Client\AboutController;
+use App\Http\Controllers\Client\AppoinmentController;
+use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\ClientBlogController;
+use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Client\CouponController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\PaymentController;
-
+use App\Http\Controllers\Client\ReviewController;
+use App\Http\Controllers\Client\SubscriptionController;
+use App\Http\Middleware\CheckRoleAdminMiddleware;
 
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
+
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -60,6 +62,9 @@ Route::get('/account', [AuthController::class, 'account'])->name('account');
 Route::get('/viewRegister', [AuthController::class, 'viewRegister'])->name('viewRegister');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
+
 
 //login success + admin
 Route::middleware('auth')->group(function () {
@@ -167,6 +172,8 @@ Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.up
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
 Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
 Route::post('/cart/apply-coupon', [CouponController::class, 'applyCoupon'])->name('cart.applyCoupon');
+Route::get('/listCoupons', [CouponController::class, 'listCoupons'])->name('listCoupons');;
+
 
 
 // Route Blog

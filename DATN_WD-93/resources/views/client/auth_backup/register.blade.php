@@ -33,6 +33,17 @@
         <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
           <div class="d-table-cell align-middle">
             <div class="text-center mt-4">
+                @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
               <h1 class="h2">Bắt đầu</h1>
               <p class="lead">
                 Bắt đầu tạo tài khoản để được dùng những dịch vụ tốt nhất.
