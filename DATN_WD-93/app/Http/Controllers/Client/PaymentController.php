@@ -35,7 +35,7 @@ class PaymentController extends Controller
                     return $item->price * $item->quantity;
                 }),
                 'status_bill' => Bill::CHO_XAC_NHAN,
-                'moneyShip' => 40000, 
+                'moneyShip' => 40000,
             ]);
 
             // Lưu chi tiết đơn hàng

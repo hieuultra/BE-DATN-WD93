@@ -1,42 +1,41 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminAppoinmentController;
-use App\Http\Controllers\Admin\AdminBlogController;
-//
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\AdminCouponController;
-use App\Http\Controllers\Admin\AdminTopicController;
-use App\Http\Controllers\Admin\BillController;
-use App\Http\Controllers\Admin\BrandController;
-//
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\DoctorController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Http\Controllers\Admin\SpecialtyController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\VariantPackageController;
-use App\Http\Controllers\Admin\VariantProductsController;
-use App\Http\Controllers\Admin\VariantProPackageController;
-use App\Http\Controllers\Client\AboutController;
-use App\Http\Controllers\Client\AppoinmentController;
-use App\Http\Controllers\Client\AuthController;
-use App\Http\Controllers\Client\CartController;
-use App\Http\Controllers\Client\ClientBlogController;
-use App\Http\Controllers\Client\ContactController;
-use App\Http\Controllers\Client\CouponController;
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\OrderController;
-use App\Http\Controllers\Client\PaymentController;
-use App\Http\Controllers\Client\ReviewController;
-use App\Http\Controllers\Client\SubscriptionController;
-use App\Http\Middleware\CheckRoleAdminMiddleware;
-
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+//
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\BillController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BrandController;
+//
+use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Client\AboutController;
+use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\CouponController;
+use App\Http\Controllers\Client\ReviewController;
+use App\Http\Middleware\CheckRoleAdminMiddleware;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Client\PaymentController;
+use App\Http\Controllers\Admin\AdminBlogController;
+use App\Http\Controllers\Admin\SpecialtyController;
+use App\Http\Controllers\Admin\AdminTopicController;
+use App\Http\Controllers\Admin\AdminCouponController;
+use App\Http\Controllers\Client\AppoinmentController;
+use App\Http\Controllers\Client\ClientBlogController;
+use App\Http\Controllers\Client\SubscriptionController;
+use App\Http\Controllers\Admin\VariantPackageController;
+use App\Http\Controllers\Admin\AdminAppoinmentController;
 
 
+use App\Http\Controllers\Admin\VariantProductsController;
+use App\Http\Controllers\Admin\VariantProPackageController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -193,7 +192,7 @@ Route::middleware('auth')->prefix('orders')
     });
 //review
 Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
-
+//tt online
 Route::middleware('auth')->prefix('payments')
     ->as('payments.')
     ->group(function () {
