@@ -37,9 +37,10 @@ class AuthController extends Controller
         if (Auth::attempt($users)) { //kiem tra in user_table co trung ko
             return redirect()->route('loginSuccess');
         }
-        return redirect()->back()->withErrors([
-            'email' => 'Infor account not found'
-        ]);
+        // return redirect()->back()->withErrors([
+        //     'email' => 'Thông tin tài khoản chưa chính xác'
+        // ]);
+        return back()->with('error', 'Thông tin tài khoản chưa chính xác!');
     }
     public function loginSuccess()
     {

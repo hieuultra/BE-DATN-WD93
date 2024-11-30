@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 @section('title','Welcome')
 
 @section('content')
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 <script>
@@ -45,6 +45,15 @@ use Illuminate\Support\Facades\File;
     font-weight: 500;
     font-size: medium;
   }
+  .input-group-append .input-group-text {
+  background-color: #f8f9fa;
+  border: none;
+  cursor: pointer;
+}
+
+.input-group-append .input-group-text:hover {
+  background-color: #e9ecef;
+}
 </style>
 
 <body>
@@ -59,6 +68,30 @@ use Illuminate\Support\Facades\File;
             </div>
             <div class="card">
               <div class="card-body">
+                  {{-- Hiển thị thông báo --}}
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    @if (session('success'))
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: "{{ session('success') }}",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    @endif
+
+                    @if (session('error'))
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: "{{ session('error') }}",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    @endif
+                });
+            </script>
                 <div class="m-sm-4">
                   <div class="text-center">
                     <!-- <img src="" alt="logo" class="img-fluid rounded-circle" width="132" height="132" /> -->
@@ -79,8 +112,14 @@ use Illuminate\Support\Facades\File;
                      @enderror
                     </div>
                     <div class="form-group">
-                      <label>Mật khẩu</label>
-                      <input class="form-control form-control-lg @error('password') is-invalid @enderror" type="password" name="password" placeholder="Nhập mật khẩu của bạn" />
+                        <div class="input-group">
+                      <input class="form-control form-control-lg @error('password') is-invalid @enderror" type="password" id="password" name="password" placeholder="Nhập mật khẩu của bạn" />
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="toggle-password" style="cursor: pointer;">
+                          <i class="fa fa-eye"></i>
+                        </span>
+                      </div>
+                    </div>
                       @error('password')
                       <span class="invalid-feedback" role="alert">
                           <strong>{{ $message }}</strong>
@@ -118,5 +157,35 @@ use Illuminate\Support\Facades\File;
       </div>
     </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('toggle-password').addEventListener('click', function () {
+      const passwordField = document.getElementById('password');
+      const icon = this.querySelector('i');
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        passwordField.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
 
+    document.getElementById('toggle-confirm-password').addEventListener('click', function () {
+      const confirmPasswordField = document.getElementById('confirm-password');
+      const icon = this.querySelector('i');
+      if (confirmPasswordField.type === 'password') {
+        confirmPasswordField.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        confirmPasswordField.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
+  </script>
 @endsection
