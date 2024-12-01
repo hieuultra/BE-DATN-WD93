@@ -21,12 +21,24 @@ class HomeController extends Controller
 {
     function index()
     {
-        $newProducts = Product::newProducts(4)
-            ->with(['variantProduct']) // Nạp quan hệ variantProduct
-            ->withCount('review')->withAvg('review', 'rating')->get();
-        $newProducts1 = Product::limit(4)
-            ->with(['variantProduct'])
-            ->withCount('review')->withAvg('review', 'rating')->get();
+        $newProducts = Product::with(['variantProduct', 'orderDetail']) // Nạp quan hệ cần thiết
+            ->withCount('review')
+            ->withAvg('review', 'rating')
+            ->get()
+            ->sortByDesc(function ($product) {
+                // Tính tổng số lượng đã bán
+                return $product->orderDetail()->sum('quantity');
+            })
+            ->take(4); // Lấy 4 sản phẩm có tổng số lượng bán cao nhất
+        $newProducts1 = Product::with(['variantProduct', 'orderDetail']) // Nạp quan hệ cần thiết
+            ->withCount('review')
+            ->withAvg('review', 'rating')
+            ->get()
+            ->sortByDesc(function ($product) {
+                return $product->orderDetail()->sum('quantity'); // Tính tổng số lượng đã bán
+            })
+            ->skip(4) // Bỏ qua 4 sản phẩm đầu tiên
+            ->take(4); // Lấy 4 sản phẩm tiếp theo
         $bestsellerProducts = Product::bestsellerProducts(6)
             ->with(['variantProduct'])
             ->withCount('review')->withAvg('review', 'rating')->get();
