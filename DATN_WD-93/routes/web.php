@@ -21,6 +21,7 @@ use App\Http\Controllers\Client\ReviewController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Client\PaymentController;
 use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\AdminTopicController;
@@ -192,7 +193,13 @@ Route::middleware('auth')->prefix('orders')
     });
 //review
 Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
-
+//tt online
+Route::middleware('auth')->prefix('payments')
+    ->as('payments.')
+    ->group(function () {
+        Route::post('/vnpay', [PaymentController::class, 'processPayment'])->name('vnpay');
+        Route::get('/payment-return', [PaymentController::class, 'handlePaymentReturn'])->name('return');
+    });
 //admin
 Route::middleware(['auth', 'auth.admin'])->prefix('admin')
     ->as('admin.')
