@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Client\AppoinmentController;
 use App\Http\Controllers\Client\ClientBlogController;
 use App\Http\Controllers\Client\SubscriptionController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\AdminAppoinmentController;
 
@@ -410,5 +411,11 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/show/{id}',      [AdminAppoinmentController::class, 'show'])->name('show');
                 Route::put('{id}/update',     [AdminAppoinmentController::class, 'update'])->name('update');
                 Route::put('{id}/update1',     [AdminAppoinmentController::class, 'update1'])->name('update1');
+            });
+
+        Route::prefix('dasboard')
+            ->as('dasboard.')
+            ->group(function () {
+                Route::get('/appoinment',      [AdminDashboardController::class, 'appointment'])->name('appointment');
             });
     });
