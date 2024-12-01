@@ -90,7 +90,7 @@
         }
 
         .info-image img {
-            max-width: 220px;
+            max-width: 320px;
             transform: scale(1.4);
             margin-top: 70px;
             border-radius: 10px;
@@ -513,7 +513,7 @@
             transform: scale(1.3);
             border-radius: 10px;
             margin-top: 70px;
-            margin-left: 50px;
+            margin-left: 200px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
     </style>
@@ -831,9 +831,8 @@
         </section>
     </div>
     <div class="container-fluid custom-container">
-        <div style="margin-left: 30px">
-            <h2 style="margin-top: 80px; margin-left: 400px">Ban lãnh đạo phòng khám</h2>
-            <div style="margin-bottom: 100px; margin-left: 630px" class="underline"></div>
+        <div class="text-center">
+            <h2 style="margin-top: 80px;margin-bottom: 100px;">Ban lãnh đạo phòng khám</h2>
             <div class="row justify-content-center">
                 <!-- Card 1 -->
                 <div class="col-md-4 mb-3">
@@ -844,7 +843,10 @@
                             <h5 class="card-title">Nguyễn Thanh Việt</h5>
                             <p class="text-muted">Chủ tịch Hội đồng thành viên</p>
                             <p class="text-success fw-bold">PHÒNG KHÁM ĐA KHOA</p>
-                            <div style="margin-bottom: -20px; margin-left: 30px; width: 300px;" class="underline"></div>
+                            <div class="text-center">
+                                <div style="margin-bottom: -20px; width: 300px;" class="underline">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -857,8 +859,10 @@
                             <h5 class="card-title">Nguyễn Trung Chính</h5>
                             <p class="text-muted">Giám đốc</p>
                             <p class="text-success fw-bold">PHÒNG KHÁM ĐA KHOA</p>
-                            <div style="margin-bottom: -20px; margin-left: 30px; width: 300px;" class="underline"></div>
-
+                            <div class="text-center">
+                                <div style="margin-bottom: -20px; width: 300px;" class="underline">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -871,14 +875,18 @@
                             <h5 class="card-title">Nguyễn Công Minh</h5>
                             <p class="text-muted">Phó giám đốc</p>
                             <p class="text-success fw-bold">PHÒNG KHÁM ĐA KHOA</p>
-                            <div style="margin-bottom: -20px; margin-left: 30px; width: 300px;" class="underline"></div>
+                            <div class="text-center">
+                                <div style="margin-bottom: -20px; width: 300px;" class="underline">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <h2 style="margin-top: 80px; margin-left: 400px">Chứng nhận & giải thưởng</h2>
-        <div style="margin-bottom: 100px; margin-left: 630px" class="underline"></div>
+        <div class="text-center">
+            <h2 style="margin-top: 80px;margin-bottom: 100px;">Chứng nhận & giải thưởng</h2>
+        </div>
         <div class="row justify-content-center" style="margin-bottom: 100px">
             <!-- Award 1 -->
             <div class="col-md-3 mb-3">
@@ -962,8 +970,8 @@
         }
 
         // Khởi động slider cho mỗi slider, với tỷ lệ slide khác nhau
-        initializeSlider('slider1', 33.33); // Slider 1 sử dụng 100% chiều rộng
-        initializeSlider('slider2', 60); // Slider 2 sử dụng 33.33% chiều rộng
+        initializeSlider('slider1', 38); // Slider 1 sử dụng 100% chiều rộng
+        initializeSlider('slider2', 70); // Slider 2 sử dụng 33.33% chiều rộng
     </script>
     <script>
         // Dữ liệu nội dung theo từng năm
