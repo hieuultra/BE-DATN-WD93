@@ -161,7 +161,7 @@ class AdminDashboardController extends Controller
 
         // Lấy bác sỹ
         $topDoctorsData = Appoinment::with('doctor.user') // Lấy thông tin bác sĩ
-            ->selectRaw('doctor_id, COUNT(*) as appointments_count, 
+            ->selectRaw('doctor_id, COUNT(*) as appointments_count,
                      SUM(CASE WHEN status_appoinment = "kham_hoan_thanh" THEN 1 ELSE 0 END) as completed_appointments_count')
             ->groupBy('doctor_id')
             ->orderByDesc('appointments_count') // Sắp xếp theo số lượt khám
@@ -171,8 +171,8 @@ class AdminDashboardController extends Controller
         for ($i = 0; $i < 5; $i++) {
             if (isset($topDoctorsData[$i])) {
                 $dataDoctors[] = [
-                    'doctor_name' => $topDoctorsData[$i]->doctor->title,
-                    'doctor_image' => $topDoctorsData[$i]->doctor->user->image,
+                    'doctor_name' => $topDoctorsData[$i]->doctor->title ?? 'chưa có',
+                    'doctor_image' => $topDoctorsData[$i]->doctor->user->image ?? 'chưa có',
                     'appointments_count' => $topDoctorsData[$i]->appointments_count ?? 0,
                     'completed_appointments_count' => $topDoctorsData[$i]->completed_appointments_count ?? 0,
                 ];
