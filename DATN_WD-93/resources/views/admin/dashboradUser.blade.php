@@ -16,20 +16,26 @@
     <main>
         <div class="container-fluid px-4">
             <h2 class="mt-4">Thống kê, tổng hợp về hoạt động người dùng</h2>
+            <button class="btn" style="background-color: rgb(53, 150, 214)" onclick="window.history.back()">
+                <h5 class="text-white">
+                    < Trở về </h5>
+            </button>
             <hr>
             <div class=" mt-4">
                 <form method="GET" action="{{ route('admin.dashborad.user.search') }}" class=" mb-3">
                     <div class="row">
                         <div class="col-md-5">
                             <label for="start_date" class="me-2 mb-0">Thời gian bắt đầu:</label>
-                            <input type="date" id="start_date" name="start_date" class="form-control form-control-sm" value="{{ request('start_date')}}">
+                            <input type="date" id="start_date" name="start_date" class="form-control form-control-sm"
+                                value="{{ request('start_date') }}">
                             @error('start_date')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col-md-5">
                             <label for="end_date" class="me-2 mb-0">Thời gian kết thúc:</label>
-                            <input type="date" id="end_date" name="end_date" class="form-control form-control-sm"" value="{{ request('end_date')}}">
+                            <input type="date" id="end_date" name="end_date" class="form-control form-control-sm""
+                                value="{{ request('end_date') }}">
                             @error('end_date')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -128,7 +134,7 @@
                                         <td>{{ $item->user->name }}</td>
                                         <td>{{ $item->user->email }}</td>
                                         <td>{{ $item->user->phone }}</td>
-                                        <td>{{ $item->total_orders }}</td>
+                                        <td class="text-center">{{ $item->total_orders }}</td>
                                     </tr>
                                 @endforeach
                             </table>
@@ -155,7 +161,7 @@
                                         <td>{{ $item->user->name }}</td>
                                         <td>{{ $item->user->email }}</td>
                                         <td>{{ $item->user->phone }}</td>
-                                        <td>{{ $item->total_canceled }}</td>
+                                        <td class="text-center">{{ $item->total_canceled }}</td>
                                     </tr>
                                 @endforeach
                             </table>
@@ -210,7 +216,7 @@
                                         <td>{{ $item->user->name }}</td>
                                         <td>{{ $item->user->email }}</td>
                                         <td>{{ $item->user->phone }}</td>
-                                        <td>{{ $item->total_appointments }}</td>
+                                        <td class="text-center">{{ $item->total_appointments }}</td>
                                     </tr>
                                 @endforeach
                             </table>
@@ -237,7 +243,7 @@
                                         <td>{{ $item->user->name }}</td>
                                         <td>{{ $item->user->email }}</td>
                                         <td>{{ $item->user->phone }}</td>
-                                        <td>{{ $item->total_canceled }}</td>
+                                        <td class="text-center">{{ $item->total_canceled }}</td>
                                     </tr>
                                 @endforeach
                             </table>

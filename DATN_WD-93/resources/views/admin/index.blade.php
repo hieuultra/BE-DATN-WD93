@@ -25,7 +25,7 @@
                         ?> --> --}}
                         <i class="fa-solid fa-box-open fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="?act=list_pro">Xem thêm</a>
+                            <a class="small text-white stretched-link" href="{{ route('admin.dashborad.user') }}">Thống kê khách hàng</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
