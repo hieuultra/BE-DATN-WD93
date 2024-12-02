@@ -5,7 +5,7 @@
     align-items: center; /* Căn giữa icon và label theo trục dọc */
     justify-content: center;
     color: #ffffff;
-    font-size: 15px;
+    font-size: 16px;
     text-decoration: none;
 }
 
@@ -17,7 +17,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 14px; /* Tăng/giảm kích thước để cân đối */
+    font-size: 16px; /* Tăng/giảm kích thước để cân đối */
     font-weight: 400;
     color: #ffffff;
 }
@@ -157,6 +157,7 @@
               <a href="{{ route('contact') }}" class="nav-item nav-link">Liên hệ</a>
             </div>
             <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+                @if(Auth::check() && (Auth::user()->role == 'User'))
                 <a href="{{ route('cart.listCart') }}" class="btn icon-container px-0 ml-3">
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge-label">
@@ -164,6 +165,8 @@
                         Giỏ hàng
                     </span>
                 </a>
+                @endif
+                @if(Auth::check() && (Auth::user()->role == 'User'))
                 <a href="{{ route('orders.index') }}" class="btn icon-container px-0 ">
                     {{-- <i class="fas fa-file-invoice-dollar text-primary"></i> --}}
                     <span class="badge-label">
@@ -171,6 +174,7 @@
                         Kiểm tra đơn mua
                     </span>
                 </a>
+                @endif
                 {{-- <a href="" class="btn icon-container px-0 ml-3">
                     <i class="fas fa-bell" style="color: #ffd43b"></i>
                     <span class="badge-label">
@@ -178,7 +182,7 @@
                         Thông báo
                     </span>
                 </a> --}}
-                @if(Auth::check())
+                @if(Auth::check() && (Auth::user()->role == 'User'))
                 @php
                 // Lấy số lần đặt khám của người dùng đã đăng nhập
                 $appointmentCount = Auth::user()->appoinment()->count();
@@ -215,7 +219,7 @@
                 @else
                     <a href="{{ route('viewLogin') }}" class="btn icon-container px-0 ">
                         <i class="fas fa-user" id="user" style="color: #ffd43b"></i>
-                        <span class="badge-label" id="dn">Đăng nhập</span>
+                        <span class="badge-label" id="dn">Đăng nhập/Đăng ký</span>
                     </a>
                 @endif
             </div>

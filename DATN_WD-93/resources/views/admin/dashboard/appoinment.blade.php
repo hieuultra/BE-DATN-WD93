@@ -43,7 +43,7 @@
 
                         <i class="fa-solid fa-money-bills fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="?act=total_revenue">Xem thêm</a>
+                            <a class="small text-white stretched-link" href="{{ route('admin.dasboard.appointment') }}">Thống kê đặt lịch khám</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
