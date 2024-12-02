@@ -282,7 +282,14 @@
                                 data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="{{ route('admin.reviews.listReviews') }}">Danh sách
-                                        đánh giá</a>
+                                        đánh giá sản phẩm</a>
+                                </nav>
+                            </div>
+                            <div class="collapse" id="collapsefb" aria-labelledby="headingOne"
+                                data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="{{ route('admin.reviews.listDoctorReviews') }}">Danh sách
+                                        đánh giá bác sĩ</a>
                                 </nav>
                             </div>
                     </div>

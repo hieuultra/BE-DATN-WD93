@@ -21,6 +21,7 @@ use App\Http\Controllers\Client\ReviewController;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Client\PaymentController;
 use App\Http\Controllers\Admin\AdminBlogController;
 use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\AdminTopicController;
@@ -28,11 +29,12 @@ use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Client\AppoinmentController;
 use App\Http\Controllers\Client\ClientBlogController;
 use App\Http\Controllers\Client\SubscriptionController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\AdminAppoinmentController;
+
+
 use App\Http\Controllers\Admin\VariantProductsController;
-
-
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Models\Product;
@@ -237,7 +239,13 @@ Route::middleware('auth')->prefix('orders')
     });
 //review
 Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
-
+//tt online
+Route::middleware('auth')->prefix('payments')
+    ->as('payments.')
+    ->group(function () {
+        Route::post('/vnpay', [PaymentController::class, 'processPayment'])->name('vnpay');
+        Route::get('/payment-return', [PaymentController::class, 'handlePaymentReturn'])->name('return');
+    });
 //admin
 Route::middleware(['auth', 'auth.admin'])->prefix('admin')
     ->as('admin.')
@@ -245,6 +253,8 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::get('/dashborad', function () {
             return view('admin.dashboard');
         })->name('dashboard');
+        Route::get('/dashborad-user', [AdminController::class, 'user'])->name('dashborad.user');
+        Route::get('/dashborad-user-search', [AdminController::class, 'loc'])->name('dashborad.user.search');
         //categories
         Route::prefix('categories')
             ->as('categories.')
@@ -405,7 +415,9 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/list', [AdminReviewController::class, 'list'])->name('listReviews');
                 Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('destroyReviews');
                 Route::get('/listDeleted', [AdminReviewController::class, 'listDeleted'])->name('listDeletedReviews');
-                Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
+                // Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
+                Route::get('/list-doctor', [AdminReviewController::class, 'listDoctorReviews'])->name('listDoctorReviews');
+                Route::delete('/reviews/{id}/destroyDoctor', [AdminReviewController::class, 'destroyDoctor'])->name('destroyDoctor');
             });
         Route::resource('coupons', AdminCouponController::class);
         Route::prefix('topics')
@@ -449,5 +461,11 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/show/{id}',      [AdminAppoinmentController::class, 'show'])->name('show');
                 Route::put('{id}/update',     [AdminAppoinmentController::class, 'update'])->name('update');
                 Route::put('{id}/update1',     [AdminAppoinmentController::class, 'update1'])->name('update1');
+            });
+
+        Route::prefix('dasboard')
+            ->as('dasboard.')
+            ->group(function () {
+                Route::get('/appoinment',      [AdminDashboardController::class, 'appointment'])->name('appointment');
             });
     });

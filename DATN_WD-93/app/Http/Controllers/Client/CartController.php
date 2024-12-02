@@ -218,10 +218,14 @@ class CartController extends Controller
 
         foreach ($order->order_detail as $orderDetail) {
             // Lấy sản phẩm biến thể từ chi tiết đơn hàng
-            $productVariant = VariantProduct::findOrFail($orderDetail->variant_id);
+            $productVariant = VariantProduct::with('product')->findOrFail($orderDetail->variant_id);
+
+            // Lấy discount từ bảng `products`
+            $product = $productVariant->product; // Truy cập quan hệ `product`
+            $discount = $product->discount ?? 0; // Nếu `discount` là null, đặt mặc định 0
 
             // Tính toán giá sản phẩm biến thể sau khi áp dụng giảm giá
-            $totalPrice = $productVariant->price - (($productVariant->price * $productVariant->discount) / 100);
+            $totalPrice = $productVariant->price - (($productVariant->price * $discount) / 100);
 
             // Kiểm tra nếu sản phẩm đã tồn tại trong giỏ hàng
             $cartItem = CartItem::where('cart_id', $cart->id)

@@ -53,8 +53,12 @@
                                         <img src="{{asset('upload/'.Auth::user()->image) }}" alt="" width="400" height="200">
                                     </div>
                                     <div class="form-group">
+                                        @if(Auth::user()->role == 'User')
                                             <li><a href="{{ route('orders.index') }}">Đơn mua </a></li>
+                                         @endif
+                                         @if(Auth::user()->role == 'User')
                                             <li><a href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">Lịch sử đặt khám</li></a>
+                                            @endif
                                             @if(Auth::user()->role == 'Doctor')
                                             <li><a href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }} ">Quản lý lịch khám</li></a>
                                             @endif
@@ -65,7 +69,9 @@
                                                 @endif
                                             </li>
                                             <li> <a href="{{ route('viewEditAcc') }}">Cập nhập tài khoản </a> </li>
+                                            @if(Auth::user()->role == 'Admin')
                                             <li> <a href="../admin">Quản trị viên </a></li>
+                                            @endif
                                             <form action="{{ route('logout') }}" method="POST">
                                                 @csrf
                                                 <li><input type="submit" class="btn btn-danger btn-custom" value="Đăng xuất"></li>

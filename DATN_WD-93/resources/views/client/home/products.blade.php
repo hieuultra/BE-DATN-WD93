@@ -229,16 +229,16 @@
                             <div class="ml-2">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-light dropdown-toggle"
-                                        data-toggle="dropdown">Sorting</button>
+                                        data-toggle="dropdown">Sắp xếp</button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#">Latest</a>
-                                        <a class="dropdown-item" href="#">Popularity</a>
-                                        <a class="dropdown-item" href="#">Best Rating</a>
+                                        <a class="dropdown-item" href="#">Mới nhất</a>
+                                        <a class="dropdown-item" href="#">Phổ biến</a>
+                                        <a class="dropdown-item" href="#">Đánh giá cao</a>
                                     </div>
                                 </div>
                                 <div class="btn-group ml-2">
                                     <button type="button" class="btn btn-sm btn-light dropdown-toggle"
-                                        data-toggle="dropdown">Showing</button>
+                                        data-toggle="dropdown">Xem</button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" href="#">10</a>
                                         <a class="dropdown-item" href="#">20</a>

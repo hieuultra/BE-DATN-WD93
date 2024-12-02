@@ -108,7 +108,7 @@
             <div class="col-lg-3 col-md-4">
                 <!-- Price Start -->
                 <h5 class="section-title position-relative text-uppercase mb-3">
-                    <span class="bg-secondary pr-3">Filter by price</span>
+                    <span class="bg-secondary pr-3">Lọc theo khoảng giá</span>
                 </h5>
                 <div class="bg-light p-4 mb-30">
                     <form method="post" action="{{ route('products.filter') }}">
@@ -133,13 +133,13 @@
                             <input type="checkbox" class="custom-control-input" name="price[]" value="400000-500000" id="price-5">
                             <label class="custom-control-label" for="price-5">400000 VND - 500000 VND</label>
                         </div>
-                        <button type="submit" class="btn btn-primary">Apply Filter</button>
+                        <button type="submit" class="btn btn-primary">Lọc</button>
                     </form>
                 </div>
                 <!-- Price End -->
 
                 <!-- Color Start -->
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by
+                {{-- <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by
                         Classification</span></h5>
                 <div class="bg-light p-4 mb-30">
                     <form>
@@ -174,7 +174,7 @@
                             <span class="badge border font-weight-normal">168</span>
                         </div>
                     </form>
-                </div>
+                </div> --}}
                 <!-- Color End -->
 
                 <!-- Size Start -->
@@ -230,11 +230,11 @@
                             <div class="ml-2">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-light dropdown-toggle"
-                                        data-toggle="dropdown">Sorting</button>
+                                    data-toggle="dropdown">Sắp xếp</button>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#">Latest</a>
-                                        <a class="dropdown-item" href="#">Popularity</a>
-                                        <a class="dropdown-item" href="#">Best Rating</a>
+                                        <a class="dropdown-item" href="#">Mới nhất</a>
+                                        <a class="dropdown-item" href="#">Phổ biến</a>
+                                        <a class="dropdown-item" href="#">Đánh giá cao</a>
                                     </div>
                                 </div>
                                 <div class="btn-group ml-2">
@@ -319,7 +319,7 @@
                             </div>
                         </div>
                         @empty
-                        <p class="text-center">No products found for the selected price range.</p>
+                        <p class="text-center">Không có sản phẩm nào trong khoảng giá này.</p>
                     @endforelse
                     <div class="col-12 pb-1">
                         <nav aria-label="Page navigation">

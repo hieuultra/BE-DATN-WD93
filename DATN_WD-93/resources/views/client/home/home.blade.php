@@ -967,7 +967,7 @@
     <!-- Title -->
     <div class="text-center mb-1">
       <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-        <span class="px-2">Thương hiệu</span>
+        <span class="px-2 stylish-text">Thương hiệu</span>
       </h2>
     </div>
   <div class="row px-xl-5">
@@ -1070,7 +1070,7 @@
     <!-- Section Title -->
     <div class="text-center mb-5">
       <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-        <span class="px-2">Tin mới nhất</span>
+        <span class="px-2 stylish-text">Tin mới nhất</span>
       </h2>
     </div>
     <!-- Blog Carousel -->

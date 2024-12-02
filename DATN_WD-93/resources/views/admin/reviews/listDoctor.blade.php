@@ -8,6 +8,7 @@
         display: flex;
         justify-content: center;
     }
+
     .pagination a {
         margin: 0 5px;
         padding: 5px 10px;
@@ -16,15 +17,18 @@
         color: #fff;
         border-radius: 3px;
     }
+
     .pagination li {
         list-style-type: none;
     }
+
     table th,
     table td {
         word-wrap: break-word !important;
         white-space: normal !important;
         max-width: 100px !important;
     }
+
     td.product-name {
         max-width: 100px !important;
     }
@@ -32,7 +36,7 @@
 
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Danh sách đánh giá</h1>
+        <h1 class="mt-4">Danh sách đánh giá bác sĩ</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Bảng điều khiển</li>
         </ol>
@@ -44,7 +48,7 @@
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
-                Danh sách đánh giá
+                Danh sách đánh giá bác sĩ
             </div>
             <div class="card-body">
                 <table class="table table-striped table-bordered table-hover datatablesSimple">
@@ -53,7 +57,7 @@
                             <th class="text-center">Mã</th>
                             <th class="text-center">Tên khách hàng</th>
                             <th class="text-center">Email</th>
-                            <th class="text-center">Tên sản phẩm</th>
+                            <th class="text-center">Tên bác sĩ</th>
                             <th class="text-center">Sao</th>
                             <th class="text-center">Bình luận</th>
                             <th class="text-center">Ngày tạo</th>
@@ -61,29 +65,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($reviews as $pro)
-                        @foreach($pro->review as $review)
+
+                        @foreach($listDoctors as $doctor)
+                        @foreach($doctor->review as $review)
                         <tr>
                             <td class="text-center">{{ $review->id }}</td>
                             <td class="text-center">{{ $review->user->name }}</td>
                             <td class="text-center">{{ $review->user->email }}</td>
-                            <td class="text-center">{{ $review->product ? $review->product->name : 'N/A' }}</td>
+                            <td class="text-center">{{ $doctor->user->name }}</td> <!-- Lấy tên bác sĩ từ $doctor -->
                             <td class="text-center">{{ $review->rating }} / 5</td>
                             <td class="text-center">{{ $review->comment }}</td>
                             <td class="text-center">{{ $review->created_at }}</td>
                             <td class="text-center">
-                                <form action="{{ route('admin.reviews.destroyReviews', $review->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('admin.reviews.destroyDoctor', $review->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắc muốn xóa không?')">Xóa</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa đánh giá này không?')">Xóa</button>
                                 </form>
                             </td>
                         </tr>
                         @endforeach
                         @endforeach
+
                     </tbody>
                 </table>
-                {{-- <a href="{{ route('admin.reviews.listDeletedReviews') }}" class="btn btn-secondary">Danh sách đánh giá đã xóa</a> --}}
+
             </div>
         </div>
 

@@ -113,9 +113,9 @@
                         <form action="{{ route('orders.update', $item->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('PUT')
-                            @if ($item->status_bill == $type_cho_xac_nhan)
+                            @if ($item->status_bill == $type_cho_xac_nhan && $item->status_payment_method !='da_thanh_toan')
                             <input type="hidden" name="da_huy" value="1">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">Hủy dơn</button>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">Hủy đơn</button>
                             @elseif ($item->status_bill == $type_dang_van_chuyen)
                             <input type="hidden" name="da_giao_hang" value="1">
                             <button type="submit" class="btn btn-success" onclick="return confirm('Bạn có chắc đã nhận được hàng?')">Đã nhận hàng</button>
