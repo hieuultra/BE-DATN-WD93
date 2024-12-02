@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Review;
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
@@ -26,7 +28,7 @@ class ReviewController extends Controller
     // Hiển thị đánh giá đã xóa
     public function listDeleted()
     {
-        $listDeleted = Review::onlyTrashed()->with(['user', 'product'])->get();//Lọc ra chỉ các bản ghi đã bị xóa mềm
+        $listDeleted = Review::onlyTrashed()->with(['user', 'product'])->get(); //Lọc ra chỉ các bản ghi đã bị xóa mềm
         return view('admin.reviews.listDeleted', compact('listDeleted'));
     }
     // Khôi phục đánh giá đã xóa mềm
@@ -36,4 +38,21 @@ class ReviewController extends Controller
         $review->restore();
         return redirect()->route('admin.reviews.listReviews')->with('success', 'Khôi phục thành công');
     }
+
+    public function listDoctorReviews()
+    {
+        // Lấy tất cả bác sĩ kèm đánh giá và thông tin người đánh giá
+        $listDoctors = Doctor::with(['review.user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.reviews.listDoctor', compact('listDoctors'));
+    }
+    public function destroyDoctor($id)
+    {
+        $review = Review::find($id);
+        $review->delete(); // Xóa mềm
+        return redirect()->route('admin.reviews.listDoctorReviews')->with('success', 'Xóa thành công');
+    }
+
 }
