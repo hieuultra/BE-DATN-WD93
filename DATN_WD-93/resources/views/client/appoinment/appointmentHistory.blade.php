@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Lịch Sử Đặt Lịch Khám</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -163,7 +165,7 @@
                     @else
                     <a href="#" class="btn btn-custom-yellow review-btn" data-id="{{ $appointment->id }}" style="background-color: yellow; color: black; border: 1px solid yellow;">Đánh giá bác sĩ</a>
                     @endif
-                    <a class="btn btn-dark" onclick="fetchAppointmentHistory({{ $appointment->id }})">Xem đơn thuốc</a>
+                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appointment->id }}">Chi tiết hóa đơn</a>
                     <p style="color: green;">{{ $appointment->status_appoinment == 'kham_hoan_thanh' ? 'Khám hoàn tất' : 'Cần tái khám' }}</p>
 
                     @elseif($appointment->status_appoinment == 'benh_nhan_khong_den')
@@ -325,18 +327,20 @@
             </div>
         </div>
 
-        <div class="modal fade" id="appointmentHistoryModal" tabindex="-1" aria-labelledby="appointmentHistoryModalLabel" aria-hidden="true">
+        <div id="appointmentHistoryModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="appointmentHistoryModalLabel">Chi tiết đơn thuốc</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title">Chi tiết lịch hẹn</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body" id="appointmentHistoryContent">
-
+                        
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>
@@ -411,7 +415,7 @@
                     @else
                     <a href="#" class="btn btn-custom-yellow review-btn" data-id="{{ $appointment->id }}" style="background-color: yellow; color: black; border: 1px solid yellow;">Đánh giá bác sĩ</a>
                     @endif
-                    <a class="btn" onclick="fetchAppointmentHistory({{ $appointment->id }})">Xem đơn thuốc</a>
+                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appointment->id }}">Chi tiết hóa đơn</a>
                     <p style="color: green;">{{ $appointment->status_appoinment == 'kham_hoan_thanh' ? 'Khám hoàn tất' : 'Cần tái khám' }}</p>
 
                     @elseif($appointment->status_appoinment == 'benh_nhan_khong_den')
@@ -430,6 +434,10 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).on('click', '.edit-review-btn', function(e) {
             e.preventDefault();
@@ -617,33 +625,58 @@
             });
         });
 
-        function fetchAppointmentHistory(appointmentId) {
-            fetch(`/appoinment/appointment-history/${appointmentId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let historyContent = "<h4>Đơn khám</h4>";
+        $(document).on('click', '.appointment-history-link', function(event) {
+            event.preventDefault();
+            const appointmentId = $(this).data('appointment-id');
 
-                        data.histories.forEach(history => {
-                            historyContent += `<p>Chẩn đoán: ${history.diagnosis}</p>`;
-                            historyContent += `<p>Đơn thuốc: ${history.prescription}</p>`;
-                            historyContent += `<p>Ngày tái khám: ${history.follow_up_date ? history.follow_up_date : 'Không có lịch hẹn tái khám'}</p>`;
-                            historyContent += `<p>Nhắc nhở thêm: ${history.notes}</p>`;
-                            historyContent += "<hr>";
-                        });
-
-                        document.getElementById('appointmentHistoryContent').innerHTML = historyContent;
-
-                        let appointmentHistoryModal = new bootstrap.Modal(document.getElementById('appointmentHistoryModal'));
-                        appointmentHistoryModal.show();
-                    } else {
-                        alert(data.message || 'Could not fetch appointment history.');
+            $.ajax({
+                url: `/appoinment/appointment_histories/${appointmentId}`,
+                type: 'GET',
+                success: function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
                     }
-                })
-                .catch(error => {
-                    console.error('Error fetching appointment history:', error);
-                });
-        }
+
+                    let content = `<p>ID lịch hẹn: ${data.appoinment_id}</p>`;
+                    content += `<p>Chẩn đoán: ${data.diagnosis || 'Không có thông tin'}</p>`;
+                    content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có có ngày tái khám'}</p>`;
+                    content += `<p>Ghi chú: ${data.notes || 'Không có thông tin'}</p>`;
+
+                    // Kiểm tra và hiển thị danh sách `order_details`
+                    if (data.order_details && data.order_details.length > 0) {
+                        content += `<h5>Chi tiết đơn thuốc:</h5>`;
+                        content += `<table class="table table-bordered"><thead>
+                                        <tr>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
+                                        </tr>
+                                    </thead><tbody>`;
+                        data.order_details.forEach(order => {
+                            content += `<tr>
+                                            <td><a href="http://127.0.0.1:8000/products/detail/${order.product_id}" target="_blank">${order.product_name}</a></td>
+                                            <td>${order.quantity}</td>
+                                            <td>${order.unit_price}</td>
+                                            <td>${order.total_money}</td>
+                                        </tr>`;
+                        });
+                        content += `</tbody></table>`;
+                    } else {
+                        content += `<p>Không có chi tiết đơn thuốc.</p>`;
+                    }
+
+                    $('#appointmentHistoryContent').html(content);
+                    $('#appointmentHistoryModal').modal('show');
+                },
+                error: function(xhr) {
+                    const errorMessage = xhr.responseJSON?.error || 'Không thể tải chi tiết lịch hẹn.';
+                    alert(errorMessage);
+                }
+            });
+
+        });
 
     </script>
     @endsection
