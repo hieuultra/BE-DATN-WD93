@@ -368,6 +368,8 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])->name('destroyReviews');
                 Route::get('/listDeleted', [AdminReviewController::class, 'listDeleted'])->name('listDeletedReviews');
                 Route::post('/listDeleted/{id}/restore', [AdminReviewController::class, 'restore'])->name('restore');
+                Route::get('/list-doctor', [AdminReviewController::class, 'listDoctorReviews'])->name('listDoctorReviews');
+                Route::delete('/reviews/{id}/destroyDoctor', [AdminReviewController::class, 'destroyDoctor'])->name('destroyDoctor');
             });
         Route::resource('coupons', AdminCouponController::class);
         Route::prefix('topics')
