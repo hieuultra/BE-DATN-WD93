@@ -6,14 +6,17 @@ use App\Models\Review;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
-    // Hiển thị danh sách đánh giá
+    // Hiển thị danh sách đánh giá sp
     public function list()
     {
-        $reviews = Review::with(['user', 'product'])->whereNull('deleted_at')->orderBy('updated_at', 'desc')->get();
+        $reviews = Product::with(['review.product'])
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('admin.reviews.list', compact('reviews'));
     }
 
@@ -32,12 +35,12 @@ class ReviewController extends Controller
         return view('admin.reviews.listDeleted', compact('listDeleted'));
     }
     // Khôi phục đánh giá đã xóa mềm
-    public function restore($id)
-    {
-        $review = Review::onlyTrashed()->findOrFail($id);
-        $review->restore();
-        return redirect()->route('admin.reviews.listReviews')->with('success', 'Khôi phục thành công');
-    }
+    // public function restore($id)
+    // {
+    //     $review = Review::onlyTrashed()->findOrFail($id);
+    //     $review->restore();
+    //     return redirect()->route('admin.reviews.listReviews')->with('success', 'Khôi phục thành công');
+    // }
 
     public function listDoctorReviews()
     {

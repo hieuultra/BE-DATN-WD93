@@ -61,7 +61,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($reviews as $review)
+                        @foreach($reviews as $pro)
+                        @foreach($pro->review as $review)
                         <tr>
                             <td class="text-center">{{ $review->id }}</td>
                             <td class="text-center">{{ $review->user->name }}</td>
@@ -79,9 +80,10 @@
                             </td>
                         </tr>
                         @endforeach
+                        @endforeach
                     </tbody>
                 </table>
-                <a href="{{ route('admin.reviews.listDeletedReviews') }}" class="btn btn-secondary">Danh sách đánh giá đã xóa</a>
+                {{-- <a href="{{ route('admin.reviews.listDeletedReviews') }}" class="btn btn-secondary">Danh sách đánh giá đã xóa</a> --}}
             </div>
         </div>
 
