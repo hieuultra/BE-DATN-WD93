@@ -9,9 +9,11 @@ use App\Mail\AppointmentConfirmationMail;
 use App\Models\Appoinment;
 use App\Models\AppoinmentHistory;
 use App\Models\AvailableTimeslot;
+use App\Models\Bill;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\doctorAchievement;
+use App\Models\OrderDetail;
 use App\Models\Package;
 use App\Models\Review;
 use App\Models\Specialty;
@@ -31,21 +33,49 @@ class AppoinmentController extends Controller
         $specialtiestx = Specialty::where('classification', 'kham_tu_xa')->orderBy('name', 'asc')->get();
 
         $specialtiestq = Specialty::where('classification', 'tong_quat')->orderBy('name', 'asc')->get();
-        $doctors = Doctor::with('user', 'specialty') // Tải kèm thông tin user
-            ->withCount('appoinment') // Đếm số lượng lịch hẹn physicianManagement
-            ->orderBy('appoinment_count', 'desc') // Sắp xếp theo số lượng lịch hẹn
-            ->orderBy('updated_at', 'desc') // Sắp xếp theo thời gian cập nhật
-            ->take(10) // Giới hạn 10 bác sĩ
+        $doctors = Doctor::with('user', 'specialty')
+            ->withCount('appoinment')
+            ->orderBy('appoinment_count', 'desc')
+            ->orderBy('updated_at', 'desc')
+            ->take(10)
             ->get();
 
 
-        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        $orderCount = 0;
         if (Auth::check()) {
             $user = Auth::user();
-            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+            $orderCount = $user->bill()->count();
         }
         return view('client.appoinment.index', compact('orderCount', 'categories', 'specialties', 'doctors', 'specialtiestx', 'specialtiestq'));
     }
+
+    public function searchap(Request $request)
+    {
+        $query = $request->get('query');
+
+        $results = Doctor::with(['specialty', 'user'])
+            ->whereHas('user', function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%");
+            })
+            ->orWhereHas('specialty', function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%");
+            })
+            ->get();
+
+
+        $data = $results->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'doctor_name' => $item->user->name,
+                'specialty_name' => $item->specialty->name,
+                'specialty_id' => $item->specialty->id,
+            ];
+        });
+
+        return response()->json($data);
+    }
+
+
 
     public function booKingCare($id)
     {
@@ -59,7 +89,7 @@ class AppoinmentController extends Controller
         $expiredSchedules = AvailableTimeslot::where('date', '<', $now->toDateString())
             ->orWhere(function ($query) use ($now) {
                 $query->where('date', '=', $now->toDateString())
-                    ->where('endTime', '<', $now->toTimeString());
+                    ->where('startTime', '<', $now->toTimeString());
             })
             ->get();
         foreach ($expiredSchedules as $schedule) {
@@ -174,21 +204,44 @@ class AppoinmentController extends Controller
             return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để tiếp tục.');
         }
 
+        // Lấy thông tin khung giờ hiện tại
+        $timeSlot = AvailableTimeslot::where('id', $id)->first();
+
+        if (!$timeSlot) {
+            return redirect()->back()->with('error', 'Khung giờ không hợp lệ.');
+        }
+
+        $user = auth()->user();
+
+        // Kiểm tra lịch đã đặt dựa trên startTime
+        $existingAppointment = Appoinment::where('user_id', $user->id)
+            ->whereHas('timeSlot', function ($query) use ($timeSlot) {
+                $query->where('startTime', $timeSlot->startTime) // So thời gian bắt đầu
+                    ->where('date', $timeSlot->date); // So ngày (nếu có)
+            })
+            ->where('doctor_id', '!=', $timeSlot->doctor_id) // Không phải bác sĩ hiện tại
+            ->first();
+
+
         $doctor = Doctor::with('user', 'specialty', 'timeSlot')
             ->whereHas('timeSlot', function ($query) use ($id) {
                 $query->where('id', $id);
             })
             ->first();
 
-        $timeSlot = AvailableTimeslot::where('id', $id)->first();
         $orderCount = 0;
         if (Auth::check()) {
-            $user = Auth::user();
             $orderCount = $user->bill()->count();
         }
+
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.appoinment.formbookingdt', compact('doctor', 'timeSlot', 'orderCount', 'categories'));
+
+        return view('client.appoinment.formbookingdt', compact('doctor', 'timeSlot', 'orderCount', 'categories'))
+            ->with('existingAppointment', $existingAppointment)
+            ->with('error', 'Bạn đã đặt lịch khám với bác sĩ khác vào thời điểm này.');
     }
+
+
 
     public function formbookingPackage($id)
     {
@@ -376,7 +429,7 @@ class AppoinmentController extends Controller
         $clinics = Specialty::where('name', 'LIKE', '%' . $query . '%')->get();
         return response()->json($clinics);
     }
-
+//getPrescriptions
     public function appointmentHistory($id)
     {
         $orderCount = 1;
@@ -384,11 +437,13 @@ class AppoinmentController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count();
         }
+
         $categories = Category::orderBy('name', 'asc')->get();
         $appoinments = Appoinment::with('user', 'doctor')->where('user_id', $id)->orderBy('created_at', 'desc')->get();
         $available = AvailableTimeslot::all();
         $reviewDortor = Review::where('user_id', $id)->get();
         $clinics = Clinic::All();
+
         return view('client.appoinment.appointmentHistory', compact('appoinments', 'available', 'reviewDortor', 'orderCount', 'categories', 'clinics'));
     }
 
@@ -485,6 +540,22 @@ class AppoinmentController extends Controller
         }
     }
 
+
+    public function loadTodayAppointments(Request $request)
+    {
+        $today = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+        $doctors = Doctor::with(['timeSlot' => function ($query) use ($today) {
+            $query->whereDate('date', $today)
+                ->whereHas('appoinment', function ($subQuery) {
+                    $subQuery->whereNotNull('status_appoinment');
+                })
+                ->with(['appoinment.user']);
+        }])->findOrFail($request->doctor_id);
+
+        return view('client.physicianmanagement.today-appointments', compact('doctors'))->render();
+    }
+
+
     public function physicianManagementdoctor($id1, $id2)
     {
         $orderCount = 1;
@@ -500,9 +571,16 @@ class AppoinmentController extends Controller
             ->with(['doctor', 'timeSlot'])
             ->get();
 
+        $appoinmentsStats = Appoinment::selectRaw('status_appoinment, COUNT(*) as count')
+            ->where('user_id', $id1)
+            ->where('doctor_id', $id2)
+            ->groupBy('status_appoinment')
+            ->get();
+
+
         $timeSlot = DB::table('available_timeslots')->get();
 
-        return view('client.physicianmanagement.viewdoctor', compact('timeSlot', 'orderCount', 'categories', 'user', 'appoinments'));
+        return view('client.physicianmanagement.viewdoctor', compact('timeSlot', 'orderCount', 'categories', 'user', 'appoinments', 'appoinmentsStats'));
     }
 
     public function cancelAppointment($id)
@@ -522,18 +600,87 @@ class AppoinmentController extends Controller
         }
     }
 
+    function generateUniqueOrderCode()
+    {
+        do {
+            $orderCode = 'ORD-' . Auth::id() . '-' . now()->timestamp;
+        } while (Bill::where('billCode', $orderCode)->exists());
+        return $orderCode;
+    }
+
 
     public function confirmAppointmentHistories(Request $request)
     {
-        $appoinmentHistories = new AppoinmentHistory();
-        $appoinmentHistories->user_id = $request->user_id;
-        $appoinmentHistories->doctor_id = $request->doctor_id;
-        $appoinmentHistories->appoinment_id = $request->appoinment_id;
-        $appoinmentHistories->diagnosis = $request->diagnosis;
-        $appoinmentHistories->prescription = $request->prescription;
-        $appoinmentHistories->follow_up_date = $request->selected_date;
-        $appoinmentHistories->notes = $request->notes;
-        $appoinmentHistories->save();
+        if (!$request->has(['user_id', 'doctor_id', 'appoinment_id', 'total_price', 'order_details'])) {
+            return back()->withErrors('Thiếu dữ liệu yêu cầu.');
+        }
+
+        $user = User::find($request->user_id);
+        if (!$user) {
+            return back()->withErrors('Không tìm thấy người dùng.');
+        }
+
+        try {
+            $bill = new Bill();
+            $bill->billCode = $this->generateUniqueOrderCode();
+            $bill->user_id = $user->id;
+            $bill->addressUser = $user->address;
+            $bill->phoneUser = $user->phone;
+            $bill->nameUser = $user->name;
+            $bill->emailUser = $user->email;
+            $bill->totalPrice = $request->total_price;
+            $bill->status_bill = 'da_giao_hang';
+            $bill->status_payment_method = 'da_thanh_toan';
+            $bill->moneyProduct = $request->total_price;
+            $bill->moneyShip = '0';
+            $bill->save();
+        } catch (\Exception $e) {
+            return back()->withErrors('Lỗi khi tạo hóa đơn: ' . $e->getMessage());
+        }
+
+        $orderDetails = $request->input('order_details');
+        $formattedOrderDetails = [];
+
+        // Lặp qua danh sách và gom nhóm 5 phần tử thành 1 đơn hàng
+        $tempOrder = [];
+        foreach ($orderDetails as $item) {
+            $key = array_key_first($item); // Lấy key đầu tiên của mảng (vd: 'product_id')
+            $tempOrder[$key] = $item[$key]; // Thêm vào $tempOrder
+
+            // Khi đủ 5 cặp key-value, nhóm lại thành một đơn hàng
+            if (count($tempOrder) === 5) {
+                $formattedOrderDetails[] = $tempOrder;
+                $tempOrder = []; // Reset lại $tempOrder
+            }
+        }
+
+        foreach ($formattedOrderDetails as $detail) {
+            OrderDetail::create([
+                'bill_id' => $bill->id,
+                'product_id' => $detail['product_id'],
+                'unitPrice' => $detail['unit_price'],
+                'quantity' => $detail['quantity'],
+                'totalMoney' => $detail['total_money'],
+                'variant_id' => $detail['variant_id'],
+            ]);
+        }
+
+
+        try {
+            $appoinmentHistories = new AppoinmentHistory();
+            $appoinmentHistories->user_id = $request->user_id;
+            $appoinmentHistories->doctor_id = $request->doctor_id;
+            $appoinmentHistories->appoinment_id = $request->appoinment_id;
+            $appoinmentHistories->diagnosis = $request->diagnosis;
+            $appoinmentHistories->prescription = $bill->id;
+            $appoinmentHistories->follow_up_date = $request->selected_date;
+            $appoinmentHistories->notes = $request->notes;
+            $appoinmentHistories->save();
+        } catch (\Exception $e) {
+            return back()->withErrors('Lỗi khi lưu lịch sử cuộc hẹn: ' . $e->getMessage());
+        }
+
+
 
         if (!empty($request->selected_time_slot_id)) {
             $appointment = Appoinment::where('id', $request->appoinment_id)->first();
@@ -581,9 +728,10 @@ class AppoinmentController extends Controller
             $appointment->save();
         }
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Xác nhận thành công.');
     }
 
+    //getPrescriptions
     public function cancel(Request $request, $id)
     {
         $appointment = Appoinment::findOrFail($id);
@@ -616,6 +764,7 @@ class AppoinmentController extends Controller
 
         return response()->json([
             'user_id' => $user->id,
+            'user_name' => $user->name,
             'appointment_id' => $appointment->id,
             'doctor_id' => $doctor->id,
         ]);
@@ -653,6 +802,7 @@ class AppoinmentController extends Controller
         ]);
     }
 
+    //getAppointmentHistory
     public function getPendingAppointments(Request $request)
     {
         $doctorId = $request->doctor_id;
@@ -694,11 +844,45 @@ class AppoinmentController extends Controller
 
         return redirect()->back()->with('success', 'Lịch hẹn đã được xác nhận hủy.');
     }
-
+//physicianManagement
     public function getAppointmentHistory($appointment_id)
     {
-        $history = AppoinmentHistory::where('appoinment_id', $appointment_id)->first();
-        return response()->json($history);
+       $appointmentHistory = AppoinmentHistory::where('appoinment_id', $appointment_id)->first();
+
+        if (!$appointmentHistory) {
+            return response()->json(['error' => 'Không tìm thấy thông tin lịch hẹn.'], 404);
+        }
+
+        $bill = Bill::where('id', $appointmentHistory->prescription)->first();
+
+        if (!$bill) {
+            return response()->json(['error' => 'Không tìm thấy hóa đơn liên quan.'], 404);
+        }
+
+        $orderDetails = OrderDetail::with('product')
+            ->where('bill_id', $bill->id)
+            ->get();
+
+
+        $formattedOrderDetails = $orderDetails->map(function ($order) {
+            return [
+                'product_id' => $order->product_id,
+                'product_name' => $order->product->name,
+                'variant_id' => $order->variant_id,
+                'unit_price' => $order->unitPrice,
+                'quantity' => $order->quantity,
+                'total_money' => $order->totalMoney,
+            ];
+        });        
+
+        return response()->json([
+            'appoinment_id' => $appointmentHistory->appoinment_id,
+            'diagnosis' => $appointmentHistory->diagnosis,
+            'prescription' => $appointmentHistory->prescription,
+            'follow_up_date' => $appointmentHistory->follow_up_date,
+            'notes' => $appointmentHistory->notes,
+            'order_details' => $formattedOrderDetails,
+        ]);
     }
 
 
@@ -836,14 +1020,38 @@ class AppoinmentController extends Controller
             return response()->json(['error' => 'Không tìm thấy thông tin lịch hẹn.'], 404);
         }
 
+        $bill = Bill::where('id', $appointmentHistory->prescription)->first();
+
+        if (!$bill) {
+            return response()->json(['error' => 'Không tìm thấy hóa đơn liên quan.'], 404);
+        }
+
+        $orderDetails = OrderDetail::with('product')
+            ->where('bill_id', $bill->id)
+            ->get();
+
+
+        $formattedOrderDetails = $orderDetails->map(function ($order) {
+            return [
+                'product_id' => $order->product_id,
+                'product_name' => $order->product->name,
+                'variant_id' => $order->variant_id,
+                'unit_price' => $order->unitPrice,
+                'quantity' => $order->quantity,
+                'total_money' => $order->totalMoney,
+            ];
+        });        
+
         return response()->json([
             'appoinment_id' => $appointmentHistory->appoinment_id,
             'diagnosis' => $appointmentHistory->diagnosis,
             'prescription' => $appointmentHistory->prescription,
             'follow_up_date' => $appointmentHistory->follow_up_date,
             'notes' => $appointmentHistory->notes,
+            'order_details' => $formattedOrderDetails,
         ]);
     }
+
 
 
     public function specialistExamination()
@@ -863,7 +1071,7 @@ class AppoinmentController extends Controller
     function doctors(Request $request)
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập appointmentHistory
         if (Auth::check()) {
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng

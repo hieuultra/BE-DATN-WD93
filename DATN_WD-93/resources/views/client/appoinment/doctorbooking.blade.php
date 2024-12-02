@@ -147,6 +147,49 @@
             color: #666;
         }
 
+        .specialty-details {
+            background-color: #f8f9fa; /* Light background for the section */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .specialty-name {
+            font-size: 2em; /* Larger font size for the specialty name */
+            color: #007bff; /* A blue color for the title */
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .specialty-description {
+            font-size: 1.2em; /* Slightly larger font for the description */
+            color: #333; /* Darker color for the description text */
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* Add some styling to the "limit" description */
+        .specialty-description::after {
+            content: '...'; /* Add an ellipsis at the end of the limited description */
+        }
+
+        /* Optional: Responsive Design */
+        @media (max-width: 768px) {
+            .specialty-details {
+                padding: 15px;
+            }
+            .specialty-name {
+                font-size: 1.8em;
+            }
+            .specialty-description {
+                font-size: 1em;
+            }
+        }
+
         .doctor-info .location i {
             margin-right: 4px;
         }
@@ -223,8 +266,8 @@
     @section('content')
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#" id="navbarDropdown">
-                <i class="fas fa-bars"></i> BookingCare
+            <a class="navbar-brand" href="http://127.0.0.1:8000/appoinment" id="navbarDropdown">
+                Quay Lại
             </a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
@@ -239,9 +282,6 @@
                         @endif
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Bác sĩ</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#">Gói khám</a>
                     </li>
                 </ul>
@@ -250,6 +290,12 @@
     </nav>
 
     <div class="container mt-4">
+    <div class="specialty-details">
+        <h1 class="specialty-name">CHUYÊN KHOA: {{$specialty->name}}</h1>
+        <h3 class="specialty-description">Mô tả: {!! Str::limit($specialty->description, 300, '...') !!}</h3>
+    </div>
+
+
         <div class="row mb-4 align-items-center">
             <div class="col">
                 <input type="text" id="doctorSearch" class="form-control" placeholder="Tìm kiếm bác sĩ..." onkeyup="filterDoctors()">

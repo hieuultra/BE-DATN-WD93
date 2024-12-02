@@ -42,6 +42,18 @@
             color: #007bff;
         }
 
+        .alert {
+            padding: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+
         .doctor-info p {
             margin: 0;
             font-size: 14px;
@@ -93,6 +105,25 @@
     </div>
     @endif
 
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if(isset($existingAppointment))
+        <div id="appointment-notification" class="alert alert-warning" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: none;">
+            <p>Bạn đã đặt lịch vào thời điểm này:</p>
+            <ul>
+                <li>Bác sĩ: {{ $existingAppointment->doctor->user->name }}</li>
+                <li>Thời gian: {{ $existingAppointment->timeSlot->startTime }}</li>
+                <li>Ngày: {{ $existingAppointment->timeSlot->date }}</li>
+            </ul>
+        </div>
+    @endif
+
+
+
     <div class="container">
         <div class="doctor-info">
             <img alt="Doctor's profile picture" class="profile-img" height="60"
@@ -115,13 +146,18 @@
         </div>
 
         <div class="mb-3 d-flex">
+            @if(isset($existingAppointment))
+
+            @else
             <button type="button" id="selfButton" class="btn btn-primary flex-fill me-2">Đặt cho mình</button>
             <button type="button" id="otherButton" class="btn btn-secondary flex-fill">Đặt cho người thân</button>
+            @endif
         </div>
 
         <!-- Form đặt cho người thân -->
-        <form id="form1" action="{{route('appoinment.bookAnAppointment')}}" method="POST" style="display: none;">
+        <form id="form1" action="{{route('appoinment.bookAnAppointment')}}" method="POST"  @if(isset($existingAppointment))  @else style="display: none;" @endif>
             @csrf
+            <h1>Đặt cho người thân</h1>
             <input type="text" name="lua_chon" value="cho_nguoi_than" style="display: none;">
             <input type="text" name="user_id" value="{{ $user = Auth::user()->id;}}" style="display: none;">
             <input type="text" name="doctor_id" value="{{$doctor->id}}" style="display: none;">
@@ -224,6 +260,9 @@
             </div>
         </form>
 
+        @if(isset($existingAppointment))
+
+        @else
         <!-- Form đặt cho mình -->
         @if(Auth::check())
         <form id="form2" action="{{route('appoinment.bookAnAppointment')}}" method="POST">
@@ -322,9 +361,29 @@
             </div>
         </form>
         @endif
+        @endif
     </div>
 
     <script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const notification = document.getElementById('appointment-notification');
+
+        if (notification) {
+            // Hiển thị thông báo
+            notification.style.display = 'block';
+
+            // Tự động ẩn thông báo sau 3 giây
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 500); // Thời gian fade out
+            }, 3000); // Hiển thị trong 3 giây
+        }
+    });
+
+
         const selfButton = document.getElementById("selfButton");
         const otherButton = document.getElementById("otherButton");
         const form1 = document.getElementById("form1");

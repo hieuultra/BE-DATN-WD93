@@ -53,16 +53,6 @@
             display: none;
         }
 
-        .search-results div {
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        .search-results div:hover {
-            background-color: #f0f0f0;
-            color: black;
-        }
-
 
         .services.hidden {
             display: none;
@@ -232,6 +222,58 @@
             border-radius: 8px;
         }
 
+        /* Style the overall container */
+        .doctor-info {
+            background-color: #f9f9f9; /* Light background */
+            padding: 15px;
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            margin-bottom: 15px; /* Space below each entry */
+        }
+
+        /* Style the heading */
+        .doctor-info h1 {
+            font-size: 24px;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: #333; /* Dark text */
+            display: flex;
+            align-items: center; /* Align items horizontally */
+            justify-content: space-between; /* Space out doctor name and specialty */
+        }
+
+        /* Style for doctor name link */
+        .doctor-name {
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF; /* Blue color */
+            transition: color 0.3s ease;
+        }
+
+        .doctor-name:hover {
+            color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Style for specialty name link */
+        .specialty-name {
+            text-decoration: none;
+            font-weight: normal;
+            color: #28a745; /* Green color for specialty */
+            transition: color 0.3s ease;
+        }
+
+        .specialty-name:hover {
+            color: #218838; /* Darker green on hover */
+        }
+
+        /* Separator between doctor name and specialty */
+        .separator {
+            font-size: 18px;
+            margin: 0 10px;
+            color: #999; /* Light grey separator */
+        }
+
+
         .close-btn {
             position: absolute;
             top: 5px;
@@ -334,14 +376,7 @@
         <div class="hero-content">
             <h1 style="color: #fff;">NỀN TẢNG Y TẾ</h1>
             <h2 style="color: #fff;">CHĂM SÓC SỨC KHỎE TOÀN DIỆN</h2>
-            <form>
-                <div class="search-bar">
-                    <input type="text" id="search-input" placeholder="Tìm phòng khám" autocomplete="off">
-                    <div id="search-results" class="search-results">
-                        <button id="close-search" class="close-btn">X</button>
-                    </div>
-                </div>
-            </form>
+          
             <div class="services" id="services-section">
                 <div class="service-item">
                     <button onclick="toggleContent()" style="background: none; border: none;">
@@ -370,6 +405,21 @@
             </div>
 
         </div>
+    </div>
+
+    <form style="margin-top: 20px;">
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Tìm bác sĩ hoặc chuyên khoa" autocomplete="off" onkeyup="searchDoctors()">
+            <div id="search-results" class="search-results"></div> 
+        </div>
+    </form>
+
+    <div class="doctor-info" id="doctor-info" style="display: none;">
+        <h1>
+            <a href="" id="doctor-name" class="doctor-name">Tên bác sỹ</a>
+            <span class="separator">|</span>
+            <a href="" id="specialty-name" class="specialty-name">Tên chuyên khoa</a>
+        </h1>
     </div>
 
 
@@ -634,58 +684,57 @@
         @endif
 
         <script>
-            $(document).ready(function() {
-                $('#search-input').on('focus', function() {
-                    $('#services-section').addClass('hidden');
-                    $('#search-results').empty().show().append('<button id="close-search" class="close-btn">X</button>');
-                });
+            let debounceTimer;
 
-                $('#search-input').on('input', function() {
-                    let query = $(this).val();
+            function searchDoctors() {
+                const query = document.getElementById('search-input').value;
+                const resultsDiv = document.getElementById('search-results');
+                const doctorInfoDiv = document.getElementById('doctor-info');
+                const anDiv = document.getElementById('an');
+                clearTimeout(debounceTimer);
 
-                    if (query.length > 0) {
-                        $.ajax({
-                            url: "{{ route('appoinment.autocompleteSearch') }}",
-                            type: "GET",
-                            data: {
-                                query: query
-                            },
-                            success: function(data) {
-                                let resultsDiv = $('#search-results');
-                                resultsDiv.empty().append('<button id="close-search" class="close-btn">X</button>');
-
-                                if (data.length > 0) {
-                                    data.forEach(function(clinics) {
-                                        resultsDiv.append(`
-                                <a href="/appoinment/booKingCare/${clinics.id}" class="clinic-link">
-                                    <div>
-                                        ${clinics.name}
-                                        <img style="width: 100px; height: 100px;" src="/upload/${clinics.image}">
-                                    </div>
-                                </a>
-                            `);
-                                    });
-                                } else {
-                                    resultsDiv.append('<div>Không tìm thấy phòng khám</div>');
-                                }
-                            }
-                        });
-                    } else {
-                        $('#search-results').hide();
-                        $('#services-section').removeClass('hidden');
+                debounceTimer = setTimeout(() => {
+                    if (query.trim().length === 0) {
+                        resultsDiv.innerHTML = ''; 
+                        doctorInfoDiv.style.display = 'none'; 
+                        anDiv.style.display = 'block'; 
+                        return;
                     }
-                });
 
-                $(document).on('click', '#close-search', function() {
-                    $('#search-results').hide();
-                    $('#services-section').removeClass('hidden');
-                });
+                    fetch(`/appoinment/searchap?query=${encodeURIComponent(query)}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            resultsDiv.innerHTML = ''; 
+                            if (data.length === 0) {
+                                resultsDiv.innerHTML = '<p>No results found</p>';
+                                return;
+                            }
 
-                $('#search-results').on('click', '.clinic-link', function(event) {
-                    event.preventDefault();
-                    window.location.href = $(this).attr('href');
-                });
-            });
+                            anDiv.style.display = 'none';
+                            doctorInfoDiv.style.display = 'block';
+
+                            data.forEach(item => {
+                                const doctorName = item.doctor_name;
+                                const specialtyName = item.specialty_name;
+                                const doctorId = item.id;
+                                const specialtyId = item.specialty_id;
+
+                                document.getElementById('doctor-name').textContent = doctorName;
+                                document.getElementById('specialty-name').textContent = specialtyName;
+                                document.getElementById('doctor-name').href = `/appoinment/doctorDetails/${doctorId}`;
+                                document.getElementById('specialty-name').href = `/appoinment/booKingCare/${specialtyId}`;
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }, 300);
+            }
 
             function toggleContent() {
                 const carousel = document.getElementById("specialtyCarousel1");
