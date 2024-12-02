@@ -76,7 +76,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     });
 });
-//appoinment 
+//appoinment
 Route::prefix('appoinment')
     ->as('appoinment.')
     ->group(function () {
@@ -99,9 +99,9 @@ Route::prefix('appoinment')
             $products = Product::with(['variantProduct.variantPackage'])
                 ->where('category_id', $categoryId)
                 ->get();
-        
+
             return response()->json($products->map(function ($product) {
-                
+
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
@@ -116,14 +116,9 @@ Route::prefix('appoinment')
                             'price' => $variant->price * (1 - $product->discount / 100),
                         ];
                     }),
-                ];                
+                ];
             }));
         });
-        
-
-
-
-
 
         Route::get('/booKingCare/{id}', [AppoinmentController::class, 'booKingCare'])->name('booKingCare');
         Route::get('/booKingCarePackage/{id}', [AppoinmentController::class, 'booKingCarePackage'])->name('booKingCarePackage');
@@ -239,6 +234,8 @@ Route::middleware('auth')->prefix('orders')
     });
 //review
 Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+Route::post('/submit-rating', [ReviewController::class, 'storeRating'])->name('submitRating');
+
 //tt online
 Route::middleware('auth')->prefix('payments')
     ->as('payments.')

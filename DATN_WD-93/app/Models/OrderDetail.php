@@ -28,4 +28,9 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(VariantProduct::class, 'variant_id');
     }
+    public function ratings()
+    {
+        return $this->hasMany(Review::class, 'product_id', 'product_id')
+            ->where('user_id', auth()->id());
+    }
 }

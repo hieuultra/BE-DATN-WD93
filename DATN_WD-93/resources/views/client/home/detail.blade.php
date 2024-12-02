@@ -11,7 +11,6 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
-
         .product-code {
             font-weight: bold;
             color: #555;
@@ -240,7 +239,12 @@
                             @endfor
 
                             <small class="rating-count">({{ $reviewCount }}) đánh giá</small>
-                            <small class="sold-info ml-3">{{ $soldQuantity }} đã bán</small>
+
+                            {{-- @foreach ($soldQuantity as $variant) --}}
+                             {{-- <small class="sold-info ml-3">{{ $variant->total_quantity }} đã bán</small> --}}
+                             <small class="sold-info ml-3">{{ $soldQuantity }} đã bán</small>
+                            {{-- @endforeach --}}
+
 
                         </div>
                         <small class="views-count ml-auto">{{ $sp->view }} Lượt xem</small>
@@ -343,40 +347,6 @@
                             <p class="mb-3" style="font-weight: bold"> Instinct Pharmacy > {{ $sp->category->name }} >
                                 {{ $sp->name }}</p>
                             <p class="mb-4">{!! nl2br(e($sp->content)) !!}</p>
-                            {{-- <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item px-0">
-                                        Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                    </li>
-                                  </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item px-0">
-                                        Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                    </li>
-                                  </ul>
-                            </div>
-                        </div> --}}
                         </div>
                         <div class="tab-pane fade" id="tab-pane-3">
                             <div class="row">
@@ -413,55 +383,10 @@
                                             </ul>
                                         </div>
                                     @endif
+
                                     <h4 class="mb-4">Để lại đánh giá</h4>
-                                    <small>Địa chỉ email của bạn sẽ không được công bố. Các trường bắt buộc được đánh dấu *</small>
                                     @if ($canReview)
-                                        {{-- <div class="d-flex my-3">
-                                        <p class="mb-0 mr-2">Your Rating * :</p>
-                                        <div class="text-primary">
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                        </div>
-                                    </div> --}}
-                                        <form
-                                            action="{{ route('reviews.store', ['productId' => $sp->id, 'billId' => $billId]) }}"
-                                            method="POST">
-                                            @csrf
-                                            <div class="form-group">
-                                                <label for="rating">Đánh giá của bạn *</label>
-                                                <select name="rating" class="form-control" required>
-                                                    <option value="">Chọn xếp hạng</option>
-                                                    <option value="5">5 sao</option>
-                                                    <option value="4">4 sao</option>
-                                                    <option value="3">3 sao</option>
-                                                    <option value="2">2 sao</option>
-                                                    <option value="1">1 sao</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="message">Đánh giá của bạn *</label>
-                                                <textarea id="message" name="comment" cols="30" rows="5" class="form-control" required></textarea>
-                                            </div>
-                                            @if (auth()->check())
-                                                <div class="form-group">
-                                                    <label for="name">Tên bạn *</label>
-                                                    <input type="text" class="form-control" id="name"
-                                                        value="{{ Auth::user()->name }}" readonly>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="email">Email bạn *</label>
-                                                    <input type="email" class="form-control" id="email"
-                                                        value="{{ Auth::user()->email }}" readonly>
-                                                </div>
-                                            @endif
-                                            <div class="form-group mb-0">
-                                                <input type="submit" value="Để lại đánh giá"
-                                                    class="btn btn-primary px-3">
-                                            </div>
-                                        </form>
+                                    <p class="text-warning">Vui lòng vào đơn hàng để đánh giá sản phẩm nếu đã nhận hàng.</p>
                                     @else
                                         <p class="text-warning">Bạn cần mua sản phẩm này thì mới có thể để lại đánh giá.</p>
                                     @endif
@@ -543,94 +468,6 @@
     </div>
     <!-- Products End -->
 
-    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            const input = $('#quantity-input');
-            const maxStock = parseInt(input.data('max'), 10);
-
-            // Đảm bảo giá trị chỉ là số >= 1 khi nhập vào
-            input.on('input', function() {
-                let value = $(this).val();
-
-                // Loại bỏ ký tự không hợp lệ và kiểm tra tồn kho
-                value = value.replace(/[^0-9]/g, '');
-                if (value === '' || parseInt(value, 10) < 1) {
-                    value = 1;
-                } else if (parseInt(value, 10) > maxStock) {
-                    value = maxStock;
-                    alert('Không thể tăng vượt quá số lượng tồn kho!');
-                }
-
-                $(this).val(value);
-            });
-
-            Tăng số lượng
-            $('#btn-plus').on('click', function() {
-                let value = parseInt(input.val(), 10) || 1;
-                if (value < maxStock) {
-                    input.val(value + 1); // Tăng số lượng nếu chưa đạt tối đa
-                } else {
-                    alert('Không thể tăng vượt quá số lượng tồn kho!');
-                }
-            });
-
-            // Giảm số lượng
-            $('#btn-minus').on('click', function() {
-                let value = parseInt(input.val(), 10) || 1;
-                if (value > 1) {
-                    input.val(value - 1);
-                }
-            });
-        });
-        console.log($('#quantity-input').data('max'));
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const variantOptions = document.querySelectorAll('input[name="variantId"]');
-            const priceDisplay = document.getElementById('price');
-            const quantityDisplay = document.querySelector('.quantity');
-            const quantityInput = document.getElementById('quantity-input'); // Lấy ô nhập số lượng
-
-            variantOptions.forEach(option => {
-                option.addEventListener('change', () => {
-                    if (option.checked) {
-                        // Lấy dữ liệu từ data attributes
-                        const price = option.dataset.price;
-                        const quantity = option.dataset.quantity;
-                        priceDisplay.textContent = new Intl.NumberFormat('vi-VN').format(price) +
-                            ' VND';
-                        quantityDisplay.textContent = quantity;
-                        quantityInput.setAttribute('data-max', quantity);
-                        const currentQuantity = parseInt(quantityInput.value, 10);
-                        if (currentQuantity > parseInt(quantity, 10)) {
-                            quantityInput.value = quantity; // Đặt lại số lượng hiện tại
-                            alert('Số lượng bạn chọn đã được cập nhật theo tồn kho mới!');
-                        }
-                    }
-                });
-            });
-        });
-        // Tăng số lượng
-        document.getElementById('btn-plus').addEventListener('click', () => {
-            let value = parseInt(quantityInput.value, 10) || 1; // Lấy giá trị hiện tại
-            const maxStock = parseInt(quantityInput.getAttribute('data-max'),
-            10); // Lấy số lượng tối đa từ data-max
-            if (value < maxStock) {
-                quantityInput.value = value + 1; // Tăng giá trị lên 1 nếu chưa vượt quá tồn kho
-            } else {
-                alert('Không thể tăng vượt quá số lượng tồn kho!');
-            }
-        });
-
-        // Giảm số lượng
-        document.getElementById('btn-minus').addEventListener('click', () => {
-            let value = parseInt(quantityInput.value, 10) || 1; // Lấy giá trị hiện tại
-            if (value > 1) {
-                quantityInput.value = value - 1; // Giảm giá trị xuống 1 nếu lớn hơn 1
-            }
-        });
-    </script> --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const variantOptions = document.querySelectorAll('input[name="variantId"]');

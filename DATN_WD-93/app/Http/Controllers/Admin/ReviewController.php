@@ -15,7 +15,7 @@ class ReviewController extends Controller
     public function list()
     {
         $reviews = Product::with(['review.product'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
         return view('admin.reviews.list', compact('reviews'));
     }

@@ -13,6 +13,7 @@ class Review extends Model
         'user_id',
         'doctor_id',
         'product_id',
+        'bill_id',
         'rating',
         'comment',
     ];
@@ -31,5 +32,9 @@ class Review extends Model
     public function appoinment()
     {
         return $this->belongsTo(Appoinment::class);
+    }
+    public function bill()
+    {
+        return $this->belongsTo(Bill::class, 'bill_id'); // thiết lập mối quan hệ một-nhiều (one-to-many) giữa bảng categories và bảng products.
     }
 }
