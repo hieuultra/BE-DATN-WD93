@@ -218,6 +218,25 @@
             color: #e58e09;
         }
 
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+        }
+
+
         .rating:not(:checked)>label:hover,
         .rating:not(:checked)>label:hover~label {
             color: #ff9e0b;
@@ -287,10 +306,14 @@
         </div>
     </nav>
 
+    <div class="mt-5">
+        <h5>Thống kê số lượng đặt lịch khám</h5>
+        <canvas id="appointmentStatsChart" width="400" height="200"></canvas>
+    </div>
 
     <div class="container">
         <div class="row mt-4">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="profile-header d-flex flex-column flex-md-row align-items-center">
                     <img alt="Doctor's profile picture" height="100" src="{{ asset('upload/' . $user->image) }}" width="100" />
                     <div class="ml-md-3 mt-2 mt-md-0 text-center text-md-start">
@@ -319,42 +342,69 @@
                     <button id="filterButton" class="btn btn-primary mt-3">Lọc</button>
                 </div>
 
+                @php
+                $sortedAppointments = $appoinments->sortByDesc(function ($appointment) {
+                return $appointment->timeSlot->date;
+                });
+                @endphp
 
                 <div class="appointments mt-3" style="margin-top: 10px;">
-                    <h5>Lịch hẹn ngày hôm nay</h5>
-                    <div class="appointments-grid2">
-                        @foreach($appoinments as $appoinment)
-
-                        @if($appoinment->status_appoinment !== null)
-                        <div class="appointment-item2">
-                            <p>Mã hóa đơn: {{$appoinment->id}}</p>
-                            <p>Tên bệnh nhân: {{$appoinment->user->name}}</p>
-                            <p>Số điện thoại: {{$appoinment->user->phone}}</p>
-                            <p>Lý do khám: {{$appoinment->notes}}</p>
-                            <p>Ngày: {{$appoinment->timeSlot->date}}</p>
-                            <p>Thời gian: {{ \Carbon\Carbon::createFromFormat('H:i:s', $appoinment->timeSlot->startTime)->format('H:i') }} -
-                                {{ \Carbon\Carbon::createFromFormat('H:i:s', $appoinment->timeSlot->endTime)->format('H:i') }}
-                            </p>
-                            @if($appoinment->status_appoinment === 'huy_lich_hen')
-                            <p style="color: red;">Lịch hẹn đã bị hủy</p>
-                            @elseif($appoinment->status_appoinment === 'kham_hoan_thanh')
-                            <p style="color: blue;">Đã khám thành công</p>
-                            <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
-                            @elseif($appoinment->status_appoinment === 'can_tai_kham')
-                            <p style="color: blueviolet;">Cần tái khám</p>
-                            <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
-                            @elseif($appoinment->status_appoinment === 'benh_nhan_khong_den')
-                            <p style="color: green;">Bệnh nhân vắng mặt</p>
-                            @else
-                            <p style="color: yellowgreen;">Đã xác nhận đang chờ đến ngày khám</p>
-                            <a href="#" class="cancel-appointment-link" data-appointment-id="{{ $appoinment->id }}">Hủy lịch hẹn</a>
-                            @endif
-                        </div>
-                        @endif
-
-                        @endforeach
+                    <h5>Lịch sử khám đặt lịch của bệnh nhân</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Mã hóa đơn</th>
+                                    <th>Tên bệnh nhân</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Lý do khám</th>
+                                    <th>Ngày</th>
+                                    <th>Thời gian</th>
+                                    <th>Trạng thái</th>
+                                    <th class="col-2">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($sortedAppointments as $appointment)
+                                @if($appointment->status_appoinment !== null)
+                                <tr>
+                                    <td>{{$appointment->id}}</td>
+                                    <td>{{$appointment->user->name}}</td>
+                                    <td>{{$appointment->user->phone}}</td>
+                                    <td>{{$appointment->notes}}</td>
+                                    <td>{{$appointment->timeSlot->date}}</td>
+                                    <td>
+                                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $appointment->timeSlot->startTime)->format('H:i') }} -
+                                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $appointment->timeSlot->endTime)->format('H:i') }}
+                                    </td>
+                                    <td>
+                                        @if($appointment->status_appoinment === 'huy_lich_hen')
+                                        <span style="color: red;">Lịch hẹn đã bị hủy</span>
+                                        @elseif($appointment->status_appoinment === 'kham_hoan_thanh')
+                                        <span style="color: blue;">Đã khám thành công</span>
+                                        @elseif($appointment->status_appoinment === 'can_tai_kham')
+                                        <span style="color: blueviolet;">Cần tái khám</span>
+                                        @elseif($appointment->status_appoinment === 'benh_nhan_khong_den')
+                                        <span style="color: green;">Bệnh nhân vắng mặt</span>
+                                        @else
+                                        <span style="color: yellowgreen;">Đã xác nhận đang chờ đến ngày khám</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($appointment->status_appoinment === 'kham_hoan_thanh' || $appointment->status_appoinment === 'can_tai_kham')
+                                        <a href="#" class="appointment-history-link" data-appointment-id="{{ $appointment->id }}">Chi tiết</a>
+                                        @elseif($appointment->status_appoinment !== 'huy_lich_hen')
+                                        <a href="#" class="cancel-appointment-link" data-appointment-id="{{ $appointment->id }}">Hủy lịch hẹn</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endif
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+
 
                 <div id="appointmentHistoryModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog">
@@ -386,13 +436,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).on('click', '.appointment-history-link', function(event) {
             event.preventDefault();
             const appointmentId = $(this).data('appointment-id');
 
             $.ajax({
-                url: `/appoinment/appointment_histories/${appointmentId}`, // Sửa lỗi chính tả
+                url: `/appoinment/appointment_histories/${appointmentId}`,
                 type: 'GET',
                 success: function(data) {
                     if (data.error) {
@@ -402,11 +453,34 @@
 
                     let content = `<p>ID lịch hẹn: ${data.appoinment_id}</p>`;
                     content += `<p>Chẩn đoán: ${data.diagnosis || 'Không có thông tin'}</p>`;
-                    content += `<p>Đơn thuốc: ${data.prescription || 'Không có thông tin'}</p>`;
                     content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có có ngày tái khám'}</p>`;
                     content += `<p>Ghi chú: ${data.notes || 'Không có thông tin'}</p>`;
-                    $('#appointmentHistoryContent').html(content);
 
+                    // Kiểm tra và hiển thị danh sách `order_details`
+                    if (data.order_details && data.order_details.length > 0) {
+                        content += `<h5>Chi tiết đơn thuốc:</h5>`;
+                        content += `<table class="table table-bordered"><thead>
+                                        <tr>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
+                                        </tr>
+                                    </thead><tbody>`;
+                        data.order_details.forEach(order => {
+                            content += `<tr>
+                                            <td><a href="http://127.0.0.1:8000/products/detail/${order.product_id}" target="_blank">${order.product_name}</a></td>
+                                            <td>${order.quantity}</td>
+                                            <td>${order.unit_price}</td>
+                                            <td>${order.total_money}</td>
+                                        </tr>`;
+                        });
+                        content += `</tbody></table>`;
+                    } else {
+                        content += `<p>Không có chi tiết đơn thuốc.</p>`;
+                    }
+
+                    $('#appointmentHistoryContent').html(content);
                     $('#appointmentHistoryModal').modal('show');
                 },
                 error: function(xhr) {
@@ -414,8 +488,8 @@
                     alert(errorMessage);
                 }
             });
-        });
 
+        });
 
 
         document.getElementById('filterButton').addEventListener('click', function() {
@@ -423,25 +497,23 @@
             const startDate = document.getElementById('filterStartDate').value;
             const endDate = document.getElementById('filterEndDate').value;
 
-            // Lấy tất cả các mục lịch hẹn
+
             const appointments = document.querySelectorAll('.appointment-item2');
 
             appointments.forEach(appointment => {
                 const invoiceText = appointment.querySelector('p:nth-child(1)').textContent.toLowerCase();
                 const dateText = appointment.querySelector('p:nth-child(5)').textContent;
 
-                // Lấy ngày từ text
+
                 const appointmentDate = new Date(dateText.split(': ')[1]);
 
                 let matchesInvoice = true;
                 let matchesDate = true;
 
-                // Kiểm tra mã hóa đơn
                 if (invoiceId && !invoiceText.includes(invoiceId)) {
                     matchesInvoice = false;
                 }
 
-                // Kiểm tra khoảng ngày
                 if (startDate && endDate) {
                     const start = new Date(startDate);
                     const end = new Date(endDate);
@@ -450,7 +522,6 @@
                     }
                 }
 
-                // Hiển thị hoặc ẩn lịch hẹn
                 if (matchesInvoice && matchesDate) {
                     appointment.style.display = '';
                 } else {
@@ -461,40 +532,80 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
-        // Bắt sự kiện khi nhấn vào liên kết "Hủy lịch hẹn"
-        document.querySelectorAll('.cancel-appointment-link').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
+            document.querySelectorAll('.cancel-appointment-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
 
-                const appointmentId = this.getAttribute('data-appointment-id');
-                const confirmation = confirm('Bạn có chắc chắn muốn hủy lịch hẹn này không?');
+                    const appointmentId = this.getAttribute('data-appointment-id');
+                    const confirmation = confirm('Bạn có chắc chắn muốn hủy lịch hẹn này không?');
 
-                if (confirmation) {
-                    // Gửi yêu cầu AJAX để cập nhật status_appoinment
-                    fetch(`/appoinment/appointments/cancel/${appointmentId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Lịch hẹn đã được hủy.');
-                                location.reload(); // Tải lại trang để cập nhật danh sách
-                            } else {
-                                alert('Hủy lịch hẹn thất bại. Vui lòng thử lại.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Lỗi:', error);
-                            alert('Có lỗi xảy ra. Vui lòng thử lại.');
-                        });
-                }
+                    if (confirmation) {
+                        fetch(`/appoinment/appointments/cancel/${appointmentId}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert('Lịch hẹn đã được hủy.');
+                                    location.reload();
+                                } else {
+                                    alert('Hủy lịch hẹn thất bại. Vui lòng thử lại.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi:', error);
+                                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                            });
+                    }
+                });
             });
         });
-    });
+
+
+        const ctx = document.getElementById('appointmentStatsChart').getContext('2d');
+        const appointmentStatsData = @json($appoinmentsStats);
+
+        const labels = appointmentStatsData.map(item => item.status_appoinment);
+        const data = appointmentStatsData.map(item => item.count);
+
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số lượng',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     </script>
     @endsection
 </body>

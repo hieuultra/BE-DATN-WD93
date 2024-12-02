@@ -37,6 +37,9 @@ use App\Http\Controllers\Admin\AdminAppoinmentController;
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Models\Product;
+use App\Models\VariantPackage;
+use App\Models\VariantProduct;
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -73,11 +76,54 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     });
 });
-//appoinment
+//appoinment 
 Route::prefix('appoinment')
     ->as('appoinment.')
     ->group(function () {
         Route::get('/', [AppoinmentController::class, 'appoinment'])->name('index');
+        Route::get('/searchap', [AppoinmentController::class, 'searchap'])->name('searchap');
+        Route::get('/appointments/today', [AppoinmentController::class, 'loadTodayAppointments'])->name('appointments.today');
+
+        //appointment_histories
+        Route::get('/get-drug-categories', function () {
+            return response()->json(
+                Category::all(['id', 'name', 'img'])->map(function ($category) {
+                    $category->img = asset('upload/' . $category->img);
+                    return $category;
+                })
+            );
+        });
+
+
+        Route::get('/get-drugs-by-category/{categoryId}', function ($categoryId) {
+            $products = Product::with(['variantProduct.variantPackage'])
+                ->where('category_id', $categoryId)
+                ->get();
+        
+            return response()->json($products->map(function ($product) {
+                
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'discount' => $product->discount,
+                    'image_url' => asset('upload/' . $product->img),
+                    'variantProducts' => $product->variantProduct->map(function ($variant) use ($product) {
+                        return [
+                            'id' => $variant->id,
+                            'name' => $variant->variantPackage->name,
+                            'quantity' => $variant->quantity,
+                            'price' => $variant->price * (1 - $product->discount / 100),
+                        ];
+                    }),
+                ];                
+            }));
+        });
+        
+
+
+
+
 
         Route::get('/booKingCare/{id}', [AppoinmentController::class, 'booKingCare'])->name('booKingCare');
         Route::get('/booKingCarePackage/{id}', [AppoinmentController::class, 'booKingCarePackage'])->name('booKingCarePackage');
@@ -115,7 +161,7 @@ Route::prefix('appoinment')
         Route::get('/appointments/get-details', [AppoinmentController::class, 'getDetails']);
         Route::get('/appointments/get_patient_info', [AppoinmentController::class, 'getPatientInfo']);
 
-        //siuuu
+        //siuuu physicianManagement
         Route::post('/appointments/get-review-data', [AppoinmentController::class, 'getReviewData'])->name('appointments.getReviewData');
         Route::get('/reviews/{id}/edit', [AppoinmentController::class, 'edit']);
         Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');

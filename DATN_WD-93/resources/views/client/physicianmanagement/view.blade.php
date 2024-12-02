@@ -222,6 +222,59 @@
         color: #ff9e0b;
         }
 
+        .button-group a {
+            display: inline-block;
+            width: 120px; /* Đảm bảo nút có kích thước bằng nhau */
+            text-align: center;
+            margin: 0 5px; /* Khoảng cách giữa các nút */
+            padding: 8px 10px;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Màu gradient xanh dương từ đậm đến nhạt */
+        .custom-btn {
+            background: linear-gradient(to right, #0056b3, #007bff); /* Xanh đậm đến nhạt */
+            border: none;
+        }
+
+        .category-item {
+            display: inline-block;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .category-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-item img {
+            border: 1px solid #ddd;
+            transition: border-color 0.2s ease;
+        }
+
+        .category-item img:hover {
+            border-color: #007bff;
+        }
+
+
+        /* Hiệu ứng hover */
+        .custom-btn:hover {
+            background: linear-gradient(to right, #004085, #0056b3); /* Tăng độ đậm khi hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tạo hiệu ứng nổi bật */
+        }
+
+        /* Hiệu ứng focus */
+        .custom-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Viền focus màu xanh nhạt */
+        }
+
+
         .rating > input:checked ~ label {
         color: #ffa723;
         }
@@ -267,6 +320,7 @@
             }
         }
     </style>
+   
 </head>
 
 <body>
@@ -277,7 +331,7 @@
             <a class="navbar-brand" href="#">
                 <i class="fas fa-stethoscope">
                 </i>
-                BookingCare
+                Quản lý bệnh nhận và hồ sơ bệnh nhân của bác sỹ {{$doctor->user->name}}
             </a>
             <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon">
@@ -294,7 +348,6 @@
             <img alt="Doctor's profile picture" height="100" src="{{ asset('upload/' . $doctor->user->image) }}" width="100" />
             <div class="ml-md-3 mt-2 mt-md-0 text-center text-md-start">
                 <h1>Bác Sỹ: {{$doctor->user->name}}</h1>
-                <button class="btn btn-primary mb-1">Chỉnh sửa thông tin</button>
                 <a href="{{ route('appoinment.statistics', $doctor->id) }}" class="btn btn-secondary">Thống kê chi tiết</a>
             </div>
         </div>
@@ -313,67 +366,92 @@
 
         <div class="appointments mt-3" style="margin-top: 10px;">
             <h5>Lịch hẹn ngày hôm nay</h5>
-            <div class="appointments-grid2">
-                @foreach($doctors->timeSlot as $timeSlot)
-                    @foreach($timeSlot->appoinment as $appoinment)
-                        @if($appoinment->status_appoinment !== null)
-                            @php
-                                $formattedDateTime = \Carbon\Carbon::parse($timeSlot->date . ' ' . $timeSlot->startTime)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
-                            @endphp
-                            <div class="appointment-item2">
-                                <p>Tên bệnh nhân: {{$appoinment->user->name}}</p>
-                                <p>Số điện thoại: {{$appoinment->user->phone}}</p>
-                                <p>Lý do khám: {{$appoinment->notes}}</p>
-                                <p>Ngày: {{ $formattedDateTime }}</p>
-                                <p>Thời gian: {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
-                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
-                                </p>
-                                @if($appoinment->status_appoinment === 'huy_lich_hen')
-                                    <p style="color: red;">Lịch hẹn đã bị hủy</p>
-                                @elseif($appoinment->status_appoinment === 'da_xac_nhan')
-                                <div class="appointment-actions">
-                                    <a href="{{ $appoinment->meet_link }}" target="_blank" rel="noopener noreferrer">
-                                        {{ $appoinment->meet_link }}
-                                    </a>
-                                    <a href="#" class="action-link confirm" data-appointment-id="{{ $appoinment->id }}" style="text-decoration: none;">Xác nhận đang khám</a>
-                                    <a style="text-decoration: none;" href="#" class="action-link pending" data-user-id="{{ $appoinment->user_id }}" data-appointment-id="{{ $appoinment->id }}" data-doctor-id="{{ $doctor->id }}">Bệnh nhân chưa đến</a>
-                                </div>
-                                @elseif($appoinment->status_appoinment === 'kham_hoan_thanh')
-                                    <p style="color: blue;">Đã khám thành công</p>
-                                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
-                                @elseif($appoinment->status_appoinment === 'can_tai_kham')
-                                    <p style="color: blueviolet;">Cần tái khám</p>
-                                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
-                                @elseif($appoinment->status_appoinment === 'benh_nhan_khong_den')
-                                    <p style="color: green;">Bệnh nhân vắng mặt</p>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tên bệnh nhân</th>
+                            <th>Số điện thoại</th>
+                            <th>Lý do khám</th>
+                            <th>Ngày</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($doctors->timeSlot as $timeSlot)
+                            @foreach($timeSlot->appoinment as $appoinment)
+                                @if($appoinment->status_appoinment !== null)
+                                    @php
+                                        $formattedDateTime = \Carbon\Carbon::parse($timeSlot->date . ' ' . $timeSlot->startTime)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $appoinment->user->name }}</td>
+                                        <td>{{ $appoinment->user->phone }}</td>
+                                        <td>{{ $appoinment->notes }}</td>
+                                        <td>{{ $formattedDateTime }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} - 
+                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
+                                        </td>
+                                        <td>
+                                            @if($appoinment->status_appoinment === 'huy_lich_hen')
+                                                <span class="text-danger">Lịch hẹn đã bị hủy</span>
+                                            @elseif($appoinment->status_appoinment === 'da_xac_nhan')
+                                                <span class="text-success">Đã xác nhận</span>
+                                            @elseif($appoinment->status_appoinment === 'kham_hoan_thanh')
+                                                <span class="text-primary">Đã khám thành công</span>
+                                            @elseif($appoinment->status_appoinment === 'can_tai_kham')
+                                                <span class="text-warning">Cần tái khám</span>
+                                            @elseif($appoinment->status_appoinment === 'benh_nhan_khong_den')
+                                                <span class="text-info">Bệnh nhân vắng mặt</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($appoinment->status_appoinment === 'da_xac_nhan')
+                                            <div class="button-group">
+                                                @if($appoinment->meet_link)
+                                                <a href="{{ $appoinment->meet_link }}" target="_blank" class="btn custom-btn">Link Khám</a>
+                                                @else
+                                                
+                                                @endif
+                                                <a href="#" class="btn action-link confirm" data-appointment-id="{{ $appoinment->id }}">Xác nhận đang khám</a>
+                                                <a href="#" class="btn action-link pending" data-user-id="{{ $appoinment->user_id }}" data-appointment-id="{{ $appoinment->id }}" data-doctor-id="{{ $doctor->id }}">Bệnh nhân chưa đến</a>
+                                            </div>
+                                            @elseif($appoinment->status_appoinment === 'kham_hoan_thanh' || $appoinment->status_appoinment === 'can_tai_kham')
+                                                <a href="#" class="btn btn-info btn-sm appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
+                                            @endif
+                                        </td>
+                                    </tr>
                                 @endif
-                            </div>
-                        @endif
-                    @endforeach
-                @endforeach
+                            @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+
         </div>
 
 
         <div id="appointmentHistoryModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Chi tiết lịch hẹn</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="appointmentHistoryContent">
-                        <!-- Nội dung sẽ được AJAX cập nhật -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Chi tiết lịch hẹn</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="appointmentHistoryContent">
+                                <!-- Nội dung sẽ được AJAX cập nhật -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
 
 
         <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
@@ -394,10 +472,46 @@
                                 <label for="" class="form-label">Chuẩn đoán</label>
                                 <textarea class="form-control" name="diagnosis" rows="3" placeholder="Chuẩn đoán" required></textarea>
                             </div>
+
                             <div class="mb-3">
-                                <label for="" class="form-label">Toa thuốc hoặc chỉ định</label>
-                                <textarea class="form-control" name="prescription" rows="3" placeholder="Toa thuốc hoặc chỉ định" required></textarea>
+                                <h4>Danh mục thuốc:</h4>
+                                <div id="drug-category" class="d-flex flex-wrap">
+                                    
+                                </div>
+
+                                <h4>Danh sách thuốc theo danh mục:</h4>
+                                <div id="drug-list" class="d-flex flex-wrap">
+                                    <p>Chọn danh mục để hiển thị thuốc.</p>
+                                </div>
+
+                                <h4>Thuốc đã chọn:</h4>
+                                <div id="selected-drugs">
+                                    <p>Chưa có thuốc nào được chọn.</p>
+                                </div>
+                                <!-- Nơi lưu thông tin thuốc đã chọn -->
+                                <div id="selected-drugs-container"></div>
+                                <input type="hidden" id="total_price_input" name="total_price">
+
                             </div>
+
+                            
+                            <div class="modal fade" id="drugInfoModal" tabindex="-1" aria-labelledby="drugInfoLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="drugInfoLabel">Thông tin thuốc</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" id="drug-info-body">
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="mb-3">
                                 <label for="dateSelect-{{ $doctor->id }}" class="form-label">Chọn ngày tái khám</label>
@@ -474,18 +588,270 @@
                                             timeSlotItems.forEach(btn => btn.classList.replace('btn-primary', 'btn-outline-primary'));
 
                                             selectedTimeSlotInput.value = `${item.getAttribute('data-start-time')} - ${item.getAttribute('data-end-time')}`;
-                                            selectedTimeSlotIdInput.value = item.getAttribute('data-id'); // Store the time slot ID
+                                            selectedTimeSlotIdInput.value = item.getAttribute('data-id');
                                             item.classList.replace('btn-outline-primary', 'btn-primary');
                                         });
                                     });
                                 });
+
+                                document.addEventListener("DOMContentLoaded", function () {
+                                const drugCategoryContainer = document.getElementById("drug-category");
+                                const drugListContainer = document.getElementById("drug-list");
+                                const selectedDrugsContainer = document.getElementById("selected-drugs");
+
+                                let selectedDrugs = {};
+                                let totalPrice = 0;
+
+                                function loadDrugCategories() {
+                                    fetch('/appoinment/get-drug-categories')
+                                        .then(response => response.json())
+                                        .then(categories => {
+                                            drugCategoryContainer.innerHTML = '';
+                                            categories.forEach(category => {
+                                                const categoryDiv = document.createElement('div');
+                                                categoryDiv.className = 'category-item m-2 text-center';
+                                                categoryDiv.style = "cursor: pointer; width: 150px;";
+
+                                                const categoryImg = document.createElement('img');
+                                                categoryImg.src = category.img;
+                                                categoryImg.alt = category.name;
+                                                categoryImg.style = "width: 100%; height: 100px; object-fit: cover; border-radius: 8px;";
+
+                                                const categoryName = document.createElement('div');
+                                                categoryName.textContent = category.name;
+                                                categoryName.style = "margin-top: 8px; font-weight: bold;";
+
+                                                categoryDiv.addEventListener('click', () => loadDrugs(category.id));
+
+                                                categoryDiv.appendChild(categoryImg);
+                                                categoryDiv.appendChild(categoryName);
+
+                                                drugCategoryContainer.appendChild(categoryDiv);
+                                            });
+                                        });
+                                }
+
+                                function loadDrugs(categoryId) {
+                                    fetch(`/appoinment/get-drugs-by-category/${categoryId}`)
+                                        .then(response => response.json())
+                                        .then(drugs => {
+                                            drugListContainer.innerHTML = '';
+                                            if (drugs.length === 0) {
+                                                drugListContainer.innerHTML = '<p>Không có thuốc nào trong danh mục này.</p>';
+                                                return;
+                                            }
+                                            drugs.forEach(drug => {
+                                                if (!selectedDrugs[drug.id]) {
+                                                    const drugDiv = document.createElement('div');
+                                                    drugDiv.className = 'drug-item mb-3';
+
+                                                    const drugImg = document.createElement('img');
+                                                    drugImg.src = drug.image_url;
+                                                    drugImg.alt = drug.name;
+                                                    drugImg.style = "width: 100px; height: 100px; cursor: pointer;";
+
+                                                    const drugInfo = document.createElement('div');
+                                                    drugInfo.className = 'drug-info';
+                                                    drugInfo.style.display = 'none';
+                                                    drugInfo.innerHTML = `
+                                                        <p><strong>Thành phần:</strong> ${drug.description}</p>
+                                                    `;
+
+                                                    drugImg.addEventListener('mouseover', () => {
+                                                        drugInfo.style.display = 'block';
+                                                    });
+
+                                                    drugImg.addEventListener('mouseout', () => {
+                                                        drugInfo.style.display = 'none';
+                                                    });
+
+                                                    const drugCheckbox = document.createElement('input');
+                                                    drugCheckbox.type = 'checkbox';
+                                                    drugCheckbox.id = `drug-${drug.id}`;
+                                                    drugCheckbox.addEventListener('change', () => addDrugToSelection(drug, drugCheckbox.checked));
+
+                                                    const drugLabel = document.createElement('label');
+                                                    drugLabel.htmlFor = `drug-${drug.id}`;
+                                                    drugLabel.textContent = drug.name;
+
+                                                    drugDiv.appendChild(drugImg);
+                                                    drugDiv.appendChild(drugInfo);
+                                                    drugDiv.appendChild(drugLabel);
+                                                    drugDiv.appendChild(drugCheckbox);
+
+                                                    drugListContainer.appendChild(drugDiv);
+                                                }
+                                            });
+                                        });
+                                }
+
+                                function addDrugToSelection(drug, isChecked) {
+                                    if (isChecked) {
+                                        if (!selectedDrugs[drug.id]) {
+                                            const drugDiv = document.createElement('div');
+                                            drugDiv.id = `selected-drug-${drug.id}`;
+                                            drugDiv.className = 'selected-drug mb-3';
+
+                                            const drugLabel = document.createElement('h5');
+                                            drugLabel.textContent = drug.name;
+
+                                            const variantSelect = document.createElement('select');
+                                            variantSelect.className = 'form-control mt-2';
+                                            variantSelect.addEventListener('change', () => {
+                                                const selectedVariant = drug.variantProducts.find(v => v.id == variantSelect.value);
+                                                selectedDrugs[drug.id].variant = selectedVariant;
+                                                updateVariantQuantity(drug.id, selectedVariant);
+                                                updatePrice(drug.id);
+                                            });
+
+                                            drug.variantProducts.forEach(variant => {
+                                                const option = document.createElement('option');
+                                                option.value = variant.id;
+                                                option.textContent = `${variant.name} - Giá: ${variant.price} VND - Số lượng: ${variant.quantity}`;
+                                                variantSelect.appendChild(option);
+                                            });
+
+                                            const quantityInput = document.createElement('input');
+                                            quantityInput.type = 'number';
+                                            quantityInput.min = '1';
+                                            quantityInput.value = '1';
+                                            quantityInput.className = 'form-control mt-2';
+                                            quantityInput.addEventListener('input', (e) => {
+                                                selectedDrugs[drug.id].quantity = parseInt(e.target.value) || 1;
+                                                updatePrice(drug.id);
+                                            });
+
+                                            const priceLabel = document.createElement('p');
+                                            priceLabel.id = `price-${drug.id}`;
+                                            priceLabel.textContent = `Giá: ${drug.variantProducts[0].price} VND`;
+
+                                            const removeButton = document.createElement('button');
+                                            removeButton.className = 'btn btn-danger mt-2';
+                                            removeButton.textContent = 'Xóa';
+                                            removeButton.addEventListener('click', () => removeDrugFromSelection(drug.id));
+
+                                            drugDiv.appendChild(drugLabel);
+                                            drugDiv.appendChild(variantSelect);
+                                            drugDiv.appendChild(quantityInput);
+                                            drugDiv.appendChild(priceLabel);
+                                            drugDiv.appendChild(removeButton);
+
+                                            selectedDrugsContainer.appendChild(drugDiv);
+
+                                            selectedDrugs[drug.id] = {
+                                                name: drug.name,
+                                                variant: drug.variantProducts[0],
+                                                quantity: 1
+                                            };
+
+                                            updatePrice(drug.id);
+                                        }
+                                    } else {
+                                        removeDrugFromSelection(drug.id);
+                                    }
+                                }
+
+                                function updatePrice(drugId) {
+                                    if (selectedDrugs[drugId]) {
+                                        const drug = selectedDrugs[drugId];
+                                        const totalDrugPrice = drug.variant.price * drug.quantity;
+
+                                        const priceLabel = document.getElementById(`price-${drugId}`);
+                                        if (priceLabel) {
+                                            priceLabel.textContent = `Giá: ${totalDrugPrice.toLocaleString()} VND`;
+                                        }
+
+                                        calculateTotalPrice();
+                                    }
+                                }
+
+                                function removeDrugFromSelection(drugId) {
+                                    delete selectedDrugs[drugId];
+
+                                    const selectedDrugElement = document.getElementById(`selected-drug-${drugId}`);
+                                    if (selectedDrugElement) {
+                                        selectedDrugElement.remove(); 
+                                    }
+
+                                    calculateTotalPrice();
+                                }
+
+                                function calculateTotalPrice() {
+                                    totalPrice = Object.values(selectedDrugs).reduce((sum, drug) => {
+                                        return sum + (drug.variant.price * drug.quantity);
+                                    }, 0);
+
+                                    const totalPriceElement = document.getElementById('total-price');
+                                    if (!totalPriceElement) {
+                                        const priceDiv = document.createElement('div');
+                                        priceDiv.id = 'total-price';
+                                        priceDiv.className = 'mt-3';
+                                        priceDiv.style = 'font-weight: bold; font-size: 1.2em;';
+                                        priceDiv.textContent = `Tổng tiền: ${totalPrice.toLocaleString()} VND`;
+                                        selectedDrugsContainer.appendChild(priceDiv);
+                                    } else {
+                                        totalPriceElement.textContent = `Tổng tiền: ${totalPrice.toLocaleString()} VND`;
+                                    }
+                                }
+
+                                document.getElementById("confirmPurchase").addEventListener("click", function () {
+                                    const selectedDrugsContainer = document.getElementById("selected-drugs-container");
+                                    const totalPriceInput = document.getElementById("total_price_input");
+
+                                    selectedDrugsContainer.innerHTML = '';  
+
+                                    const drugIds = Object.keys(selectedDrugs); 
+
+                                    
+                                    drugIds.forEach(drugId => {
+                                        const drug = selectedDrugs[drugId];  
+                                        const productIdInput = document.createElement("input");
+                                        productIdInput.type = "hidden";
+                                        productIdInput.name = "order_details[][product_id]";
+                                        productIdInput.value = drugId;
+
+                                        const unitPriceInput = document.createElement("input");
+                                        unitPriceInput.type = "hidden";
+                                        unitPriceInput.name = "order_details[][unit_price]";
+                                        unitPriceInput.value = drug.variant.price;
+
+                                        const quantityInput = document.createElement("input");
+                                        quantityInput.type = "hidden";
+                                        quantityInput.name = "order_details[][quantity]";
+                                        quantityInput.value = drug.quantity;
+
+                                        const totalMoneyInput = document.createElement("input");
+                                        totalMoneyInput.type = "hidden";
+                                        totalMoneyInput.name = "order_details[][total_money]";
+                                        totalMoneyInput.value = drug.variant.price * drug.quantity;
+
+                                        const variantIdInput = document.createElement("input");
+                                        variantIdInput.type = "hidden";
+                                        variantIdInput.name = "order_details[][variant_id]";
+                                        variantIdInput.value = drug.variant.id;
+
+                                     
+                                        selectedDrugsContainer.appendChild(productIdInput);
+                                        selectedDrugsContainer.appendChild(unitPriceInput);
+                                        selectedDrugsContainer.appendChild(quantityInput);
+                                        selectedDrugsContainer.appendChild(totalMoneyInput);
+                                        selectedDrugsContainer.appendChild(variantIdInput);
+                                    });
+
+                                    totalPriceInput.value = totalPrice;
+                                });
+
+                                loadDrugCategories();
+                            });
+
+
                             </script>
 
                             <div class="mb-3">
                                 <label for="" class="form-label">Ghi chu thêm</label>
                                 <textarea class="form-control" name="notes" rows="3" placeholder="Ghi chu thêm" required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Xác nhận</button>
+                            <button type="submit" id="confirmPurchase" class="btn btn-primary">Xác nhận</button>
                         </form>
                     </div>
                 </div>
@@ -662,6 +1028,7 @@
                 },
                 success: function(data) {
                     $('#userId').val(data.user_id);
+                    $('#confirmModalLabel').text('Xác nhận đang khám bệnh nhân: ' + data.user_name);
                     $('#appointmentId').val(data.appointment_id);
                     $('#doctorId').val(data.doctor_id);
                     $('#confirmModal').modal('show');
@@ -691,7 +1058,7 @@
             const appointmentId = $(this).data('appointment-id');
 
             $.ajax({
-                url: `/appoinment/appointment_histories/${appointmentId}`, // Sửa lỗi chính tả
+                url: `/appoinment/appointment_histories/${appointmentId}`,
                 type: 'GET',
                 success: function(data) {
                     if (data.error) {
@@ -701,11 +1068,34 @@
 
                     let content = `<p>ID lịch hẹn: ${data.appoinment_id}</p>`;
                     content += `<p>Chẩn đoán: ${data.diagnosis || 'Không có thông tin'}</p>`;
-                    content += `<p>Đơn thuốc: ${data.prescription || 'Không có thông tin'}</p>`;
-                    content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có thông tin'}</p>`;
+                    content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có có ngày tái khám'}</p>`;
                     content += `<p>Ghi chú: ${data.notes || 'Không có thông tin'}</p>`;
-                    $('#appointmentHistoryContent').html(content);
 
+                    // Kiểm tra và hiển thị danh sách `order_details`
+                    if (data.order_details && data.order_details.length > 0) {
+                        content += `<h5>Chi tiết đơn thuốc:</h5>`;
+                        content += `<table class="table table-bordered"><thead>
+                                        <tr>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
+                                        </tr>
+                                    </thead><tbody>`;
+                        data.order_details.forEach(order => {
+                            content += `<tr>
+                                            <td><a href="http://127.0.0.1:8000/products/detail/${order.product_id}" target="_blank">${order.product_name}</a></td>
+                                            <td>${order.quantity}</td>
+                                            <td>${order.unit_price}</td>
+                                            <td>${order.total_money}</td>
+                                        </tr>`;
+                        });
+                        content += `</tbody></table>`;
+                    } else {
+                        content += `<p>Không có chi tiết đơn thuốc.</p>`;
+                    }
+
+                    $('#appointmentHistoryContent').html(content);
                     $('#appointmentHistoryModal').modal('show');
                 },
                 error: function(xhr) {
@@ -713,6 +1103,7 @@
                     alert(errorMessage);
                 }
             });
+
         });
 
         $(document).on('click', '.action-link.pending', function(event) {
@@ -748,16 +1139,69 @@
                 url: "{{ route('appoinment.appointments.pending') }}",
                 type: 'GET',
                 data: {
-                doctor_id: {{ $doctor->id }}
+                    doctor_id: {{ $doctor->id }}
                 },
                 success: function(data) {
-                    $('#appointments-grid').html(data);
+                    $('#appointments-grid').html(data); // Cập nhật danh sách chờ xác nhận
+                    autoConfirmAppointments(); // Tự động xác nhận
                 }
             });
         }
 
+        function loadTodayAppointments() {
+            $.ajax({
+                url: "{{ route('appoinment.appointments.today') }}",
+                type: 'GET',
+                data: {
+                    doctor_id: {{ $doctor->id }}
+                },
+                success: function(data) {
+                    $('.appointments-grid2').html(data); // Cập nhật lịch hẹn hôm nay
+                }
+            });
+        }
+
+        function autoConfirmAppointments() {
+            const appointments = document.querySelectorAll('.appointment-item');
+
+            if (appointments.length > 0) {
+                appointments.forEach((appointment) => {
+                    const status = appointment.querySelector('.text-warning');
+                    const form = appointment.querySelector('.confirm-form');
+
+                    if (status && form) {
+                        // Đặt timeout để tự động xác nhận sau 5 giây
+                        setTimeout(() => {
+                            const appointmentId = appointment.dataset.appointmentId;
+                            console.log(`Tự động xác nhận đơn hàng ID: ${appointmentId}`);
+
+                            // AJAX gửi yêu cầu xác nhận
+                            $.ajax({
+                                url: form.action,
+                                type: 'POST',
+                                data: {
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function(response) {
+                                    console.log(`Đơn hàng ID ${appointmentId} đã được xác nhận.`);
+                                    loadPendingAppointments(); // Cập nhật danh sách chờ xác nhận
+                                    loadTodayAppointments(); // Cập nhật lịch hẹn hôm nay
+                                },
+                                error: function(error) {
+                                    console.error(`Lỗi khi xác nhận đơn hàng ID ${appointmentId}:`, error);
+                                }
+                            });
+                        }, 5000); // 5 giây
+                    }
+                });
+            }
+        }
+
+        // Tải dữ liệu định kỳ và tự động xác nhận
         setInterval(loadPendingAppointments, 5000);
         loadPendingAppointments();
+        loadTodayAppointments();
+
 
         document.querySelectorAll('.date-select').forEach(function(select) {
             select.addEventListener('change', function() {
