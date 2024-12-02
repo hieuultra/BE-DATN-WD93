@@ -199,6 +199,8 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::get('/dashborad', function () {
             return view('admin.dashboard');
         })->name('dashboard');
+        Route::get('/dashborad-user', [AdminController::class, 'user'])->name('dashborad.user');
+        Route::get('/dashborad-user-search', [AdminController::class, 'loc'])->name('dashborad.user.search');
         //categories
         Route::prefix('categories')
             ->as('categories.')

@@ -43,7 +43,7 @@
 
                             <i class="fa-solid fa-money-bills fa-2xl"></i>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="?act=total_revenue">Xem thêm</a>
+                                <a class="small text-white stretched-link" href="">Xem thêm</a>
                                 <div class="small text-white">
                                     <i class="fas fa-angle-right"></i>
                                 </div>
@@ -60,7 +60,7 @@
                                     ?> --> --}}
                             <i class="fa-solid fa-user fa-2xl"></i>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="?act=order_sold">Xem thêm</a>
+                                <a class="small text-white stretched-link" href="{{ route('admin.dashborad.user')}}">Xem thêm</a>
                                 <div class="small text-white">
                                     <i class="fas fa-angle-right"></i>
                                 </div>
