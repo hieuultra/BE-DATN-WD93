@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-md-5">
                             <label for="end_date" class="me-2 mb-0">Thời gian kết thúc:</label>
-                            <input type="date" id="end_date" name="end_date" class="form-control form-control-sm""
+                            <input type="date" id="end_date" name="end_date" class="form-control form-control-sm"
                                 value="{{ request('end_date') }}">
                             @error('end_date')
                                 <span class="text-danger">{{ $message }}</span>

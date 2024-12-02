@@ -458,7 +458,7 @@
                                                 </div>
                                             @endif
                                             <div class="form-group mb-0">
-                                                <input type="submit" value="Leave Your Review"
+                                                <input type="submit" value="Để lại đánh giá"
                                                     class="btn btn-primary px-3">
                                             </div>
                                         </form>
