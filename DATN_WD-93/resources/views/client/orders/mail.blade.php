@@ -1,24 +1,38 @@
 @component('mail::message')
-    # Order Confirmation
+<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; font-size: 16px;">
+    <h1 style="color: #2c3e50; font-family: Verdana, sans-serif;">Xác nhận đơn hàng</h1>
+    Xin chào {{ $bill->nameUser }}
 
-     Hello {{ $bill->nameUser }},
+    Cảm ơn bạn đã đặt hàng! Dưới đây là thông tin đơn hàng của bạn:
 
-     Thank you for your order. This is infor your order:
+    Chi tiết đơn hàng:
 
-     *** Code Order *** {{ $bill->billCode }}.
+    Mã đơn hàng:{{ $bill->billCode }}
 
-     *** Products ***
-     @foreach($bill->order_detail as $ct)
-              - {{ $ct->product->name }} x {{ $ct->quantity }} : {{ number_format($ct->totalMoney) }} $
-     @endforeach
+    Sản phẩm
+        @foreach($bill->order_detail as $ct)
+            {{ $ct->product->name }}
+            Số lượng: {{ $ct->quantity }}
+            Giá: {{ number_format($ct->totalMoney) }} ₫
+                            @php
+                             $variant = $ct->productVariant;
+                            @endphp
+            @if($variant)
+            Loại:
+                    {{ $variant->variantPackage->name }}
 
-     *** Total *** {{ number_format($bill->totalPrice) }} $
+            @endif
 
-     *** We will contact you as soon as possible to confirm the order ***
+        @endforeach
 
-     *** Thank you for your purchase from us  ***
+    Tổng cộng:
+    {{ number_format($bill->totalPrice) }} ₫
 
-     Best regards,
-     {{ config('app.name') }}
+    Chúng tôi sẽ giao hàng cho bạn sớm nhất có thể. Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi!
 
+    Cảm ơn bạn đã mua hàng! Chúng tôi hy vọng được phục vụ bạn lần nữa.
+
+    Trân trọng,
+    {{ config('app.name') }}
+</div>
 @endcomponent

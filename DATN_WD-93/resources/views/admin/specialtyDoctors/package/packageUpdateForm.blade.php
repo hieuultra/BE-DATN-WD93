@@ -85,14 +85,13 @@
                 </div>
             </div>
         </div>
+        <input type="submit" class="btn btn-primary" value="Lưu">
+        <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
+            <input type="button" class="btn btn-primary" value="Quay lại">
+        </a>
+        </form>
 </div>
 
-<input type="submit" class="btn btn-primary" value="Lưu">
-<a href="{{ route('admin.specialties.specialtyDoctorList') }}">
-    <input type="button" class="btn btn-primary" value="Quay lại">
-</a>
-</form>
-</div>
 
 <script>
     //hien thi image khi add

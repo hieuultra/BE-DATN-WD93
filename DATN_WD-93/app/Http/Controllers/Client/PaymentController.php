@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Controller;
-use App\Mail\OrderConfirm;
 use App\Models\Bill;
 use App\Models\Cart;
-use App\Models\VariantProduct;
+use App\Models\Coupon;
+use App\Mail\OrderConfirm;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\VariantProduct;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
@@ -21,6 +22,18 @@ class PaymentController extends Controller
             $total = $request->input('totalPrice');
             $cart = Cart::where('user_id', Auth::id())->with('items')->first();
 
+            $moneyShip = $request->moneyShip;
+            if ($moneyShip !== 0) {
+                if ($cart->coupon_code !== null) {
+                    $couponTable = Coupon::where('code', $cart->coupon_code)->first();
+                    if ($couponTable->usage_limit !== null) {
+                        $couponTable->decrement('usage_limit');
+                        $couponTable->save();
+                    }
+                    $cart->coupon_code = null;
+                    $cart->save();
+                }
+            }
             // Tạo đơn hàng
             $bill = Bill::create([
                 'billCode' => uniqid('ORDER_'),
@@ -35,7 +48,7 @@ class PaymentController extends Controller
                     return $item->price * $item->quantity;
                 }),
                 'status_bill' => Bill::CHO_XAC_NHAN,
-                'moneyShip' => 40000,
+                'moneyShip' => $moneyShip,
             ]);
 
             // Lưu chi tiết đơn hàng
