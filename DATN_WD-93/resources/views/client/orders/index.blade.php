@@ -26,6 +26,14 @@
         color: #007bff;  /* Màu chữ khi hover */
         text-decoration: underline;  /* Gạch chân khi hover */
     }
+    .status-pending { color: dodgerblue; }  /* Chờ xác nhận */
+.status-confirmed { color: orange; }    /* Đã xác nhận */
+.status-preparing { color: darkorange; } /* Đang chuẩn bị */
+.status-shipping { color: green; }      /* Đang vận chuyển */
+.status-rejected { color: gray; }       /* Khách hàng từ chối */
+.status-delivered { color: darkgreen; } /* Đã giao hàng */
+.status-canceled { color: red; }        /* Đã hủy */
+
 
 </style>
 <div class="container-fluid pt-5">
@@ -102,7 +110,7 @@
                     <td class="text-center">
                         {{ $item->created_at->format('d-m-Y') }}
                     </td>
-                    <td class="text-center" style="color: dodgerblue">
+                    <td class="text-center {{ $item->getStatusClass() }}">
                         {{ $statusBill[$item->status_bill] }}
                     </td>
                     <td class="text-center">
