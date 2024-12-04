@@ -34,6 +34,7 @@ class CartController extends Controller
         $subTotal = 0;
         $shipping = 40000;
         $discount = 0;
+        $checkMinDiscount = 0;
         if ($cart && $cart->items->count() > 0) {
             foreach ($cart->items as  $item) {
                 $price = is_numeric($item['price']) ? $item['price'] : 0;
@@ -60,12 +61,18 @@ class CartController extends Controller
                 $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
                 if ($coupon && $coupon->isValid()) {
                     $discount = $coupon->value;
-                    $cart->coupon_code = $coupon->code;
-                    $cart->save();
-                    if ($coupon->type == 'percentage') {
-                        $checkTypeDiscount = 'percentage';
+                    $checkMinDiscount = $coupon->min_order_value;
+                    if ($checkMinDiscount < $subTotal) {
+                        $cart->coupon_code = $coupon->code;
+                        $cart->save();
+                        if ($coupon->type == 'percentage') {
+                            $checkTypeDiscount = 'percentage';
+                        } else {
+                            $checkTypeDiscount = 'fixed';
+                        }
                     } else {
-                        $checkTypeDiscount = 'fixed';
+                        $fmCheckMinDiscount = number_format($checkMinDiscount, 0, ',', '.');
+                        return back()->with('error', 'Mã chỉ áp dụng cho đơn hàng lớn hơn ' . $fmCheckMinDiscount . 'đ');
                     }
                 } else {
                     return back()->with('error', 'Mã giảm giá không hợp lệ hoặc đã hết hạn!');
@@ -74,8 +81,7 @@ class CartController extends Controller
         }
 
         $total = $subTotal + $shipping - $discount;
-
-        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total', 'discount', 'checkTypeDiscount'));
+        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total', 'discount', 'checkTypeDiscount', 'checkMinDiscount'));
     }
     public function addCart(Request $request)
     {
