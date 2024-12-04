@@ -133,6 +133,10 @@
                             <input type="checkbox" class="custom-control-input" name="price[]" value="400000-500000" id="price-5">
                             <label class="custom-control-label" for="price-5">400000 VND - 500000 VND</label>
                         </div>
+                        <div class="custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" name="price[]" value="500000-1000000" id="price-6">
+                            <label class="custom-control-label" for="price-6">500000 VND - 1000000 VND</label>
+                        </div>
                         <button type="submit" class="btn btn-primary">Lọc</button>
                     </form>
                 </div>

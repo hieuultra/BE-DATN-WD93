@@ -233,6 +233,16 @@
             font-weight: bold;
             color: black;
         }
+        .description-text {
+    max-height: 100px; /* Giới hạn chiều cao */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.description-text.expanded {
+    max-height: none; /* Gỡ bỏ giới hạn chiều cao khi mở rộng */
+    white-space: normal;
+}
     </style>
 
     <!-- Breadcrumb Start -->
@@ -417,7 +427,8 @@
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab-pane-1">
-                            <p class="mb-4">{!! $sp->description !!}</p>
+                            <p class="mb-4 description-text" id="description">{!! Str::limit($sp->description, 50) !!}</p>
+                            <button class="btn btn-link p-0" id="toggle-description">Xem thêm</button>
                         </div>
                         <div class="tab-pane fade" id="tab-pane-2">
                             <p class="mb-3" style="font-weight: bold"> Instinct Pharmacy > {{ $sp->category->name }} >
@@ -622,6 +633,27 @@
         </div>
     </div>
     <!-- Products End -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.querySelector('#toggle-description');
+            const description = document.querySelector('#description');
+
+            toggleButton.addEventListener('click', function () {
+                if (description.classList.contains('expanded')) {
+                    // Thu gọn
+                    description.classList.remove('expanded');
+                    description.innerHTML = `{!! Str::limit($sp->description, 50) !!}`;
+                    toggleButton.textContent = 'Xem thêm';
+                } else {
+                    // Mở rộng
+                    description.classList.add('expanded');
+                    description.innerHTML = `{!! $sp->description !!}`;
+                    toggleButton.textContent = 'Thu gọn';
+                }
+            });
+        });
+    </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

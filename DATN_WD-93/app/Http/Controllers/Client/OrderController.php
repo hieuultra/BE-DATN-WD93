@@ -118,7 +118,13 @@ class OrderController extends Controller
                 if ($couponTable) {
                     $couponType = $couponTable->type;
                     $couponValue = $couponTable->value;
-
+                    // kiểm tra mã giảm giá min
+                    $checkMinDiscount = $couponTable->min_order_value;
+                    if ($checkMinDiscount > $subTotal) {
+                        $fmCheckMinDiscount = number_format($checkMinDiscount, 0, ',', '.');
+                        return redirect(route('cart.listCart', ['coupon_code' => 'loaibo']))
+                            ->with('error', 'Mã chỉ áp dụng cho đơn hàng lớn hơn ' . $fmCheckMinDiscount . 'đ');
+                    }
                     if ($couponType == 'fixed') {
                         // Mã giảm giá cố định
                         $coupon = $couponValue;

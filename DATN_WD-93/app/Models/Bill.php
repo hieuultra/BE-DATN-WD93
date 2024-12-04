@@ -58,4 +58,25 @@ class Bill extends Model
         return $this->belongsToMany(Product::class, 'order_details', 'bill_id', 'product_id')
             ->withPivot('quantity');
     }
+    public function getStatusClass()
+    {
+        switch ($this->status_bill) {
+            case self::CHO_XAC_NHAN:
+                return 'status-pending';
+            case self::DA_XAC_NHAN:
+                return 'status-confirmed';
+            case self::DANG_CHUAN_BI:
+                return 'status-preparing';
+            case self::DANG_VAN_CHUYEN:
+                return 'status-shipping';
+            case self::KHACH_HANG_TU_CHOI:
+                return 'status-rejected';
+            case self::DA_GIAO_HANG:
+                return 'status-delivered';
+            case self::DA_HUY:
+                return 'status-canceled';
+            default:
+                return '';
+        }
+    }
 }
