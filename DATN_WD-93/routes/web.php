@@ -357,7 +357,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/specialtyAdd', [SpecialtyController::class, 'specialtyAdd'])->name('specialtyAdd');
                 Route::get('/specialtyUpdateForm/{id}', [SpecialtyController::class, 'specialtyUpdateForm'])->name('specialtyUpdateForm');
                 Route::post('/specialtyUpdate', [SpecialtyController::class, 'specialtyUpdate'])->name('specialtyUpdate');
-                Route::delete('/specialtyDestroy/{id}', [SpecialtyController::class, 'specialtyDestroy'])->name('specialtyDestroy');
+                Route::post('/specialtyDestroy/{id}', [SpecialtyController::class, 'specialtyDestroy'])->name('specialtyDestroy');
             });
         //doctor
         Route::prefix('doctors')
@@ -368,7 +368,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/doctorAdd', [DoctorController::class, 'doctorAdd'])->name('doctorAdd');
                 Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
                 Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');
-                Route::delete('/doctorDestroy/{id}', [DoctorController::class, 'doctorDestroy'])->name('doctorDestroy');
+                Route::post('/doctorDestroy/{id}', [DoctorController::class, 'doctorDestroy'])->name('doctorDestroy');
             });
         //timeslot
         Route::prefix('timeslot')

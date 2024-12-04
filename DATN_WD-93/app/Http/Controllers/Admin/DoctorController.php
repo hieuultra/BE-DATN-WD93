@@ -113,6 +113,10 @@ class DoctorController extends Controller
         $specialty = Specialty::where('id', $request->specialty_id)->first();
         $doctor = Doctor::where('id', $request->id)->first();
 
+        $user = User::where('id', $doctor->user_id)->first();
+        $user->role = 'Doctor';
+        $user->save();
+
         if (!$doctor) {
             return redirect()->back()->with('error', 'Không tìm thấy bác sĩ.');
         }
@@ -203,9 +207,10 @@ class DoctorController extends Controller
     public function doctorDestroy($id)
     {
         $package = Doctor::findOrFail($id);
-
-        $package->delete();
-        return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Variant đã được xóa thành công.');
+        $user = User::where('id', $package->user_id)->first();
+        $user->role = 'User';
+        $user->save();
+        return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Bác sỹ này đã bị cho nghỉ việc.');
     }
 
     // lịch làm việc

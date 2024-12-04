@@ -235,20 +235,13 @@
                     <input checked="" class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
                         value="thanh_toan_tai_benh_vien" >
                     <label class="form-check-label" for="selfPayLater">
-                        Thanh toán sau tại cơ sở y tế (không dùng được khi thanh toán cho khám từ xa)
+                        Thanh toán sau tại cơ sở y tế
                     </label>
                 </div>
                 @else
                 <div class="form-check">
-                    <input checked="" class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
-                        value="thanh_toan_tai_benh_vien" >
-                    <label class="form-check-label" for="selfPayLater">
-                        Thanh toán tại nhà sau khi nhận được thuốc
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
-                        value="thanh_toan_vnpay" >
+                    <input class="form-check-input" name="status_payment_method" id="thanh_toan_vnpay" name="selfPaymentMethod" type="radio"
+                        value="da_thanh_toan" >
                     <label class="form-check-label" for="selfPayLater">
                         Thanh toán qua vnpay
                     </label>
@@ -423,15 +416,8 @@
                 </div>
                 @else
                 <div class="form-check">
-                    <input checked="" class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
-                        value="thanh_toan_tai_benh_vien" >
-                    <label class="form-check-label" for="selfPayLater">
-                        Thanh toán tại (không dùng được ở đặt khám qua video)
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
-                        value="thanh_toan_vnpay2" >
+                    <input class="form-check-input" name="status_payment_method" id="thanh_toan_vnpay2" name="selfPaymentMethod" type="radio"
+                        value="da_thanh_toan" >
                     <label class="form-check-label" for="selfPayLater">
                         Thanh toán qua vnpay
                     </label>
@@ -540,7 +526,7 @@
 
     <script>
        document.addEventListener("DOMContentLoaded", function () {
-            const vnpayOption = document.querySelector('input[value="thanh_toan_vnpay2"]');
+            const vnpayOption = document.getElementById("thanh_toan_vnpay2");
             const bookingButtonContainer = document.querySelector(".siuu2");
             const vnpayModal = new bootstrap.Modal(document.getElementById("vnpayModal2"));
             const submitPaymentButton = document.getElementById("submitVnpayPayment2");
@@ -601,7 +587,7 @@
 
     <script>
        document.addEventListener("DOMContentLoaded", function () {
-            const vnpayOption = document.querySelector('input[value="thanh_toan_vnpay"]');
+            const vnpayOption = document.getElementById("thanh_toan_vnpay");
             const bookingButtonContainer = document.querySelector(".siuu");
             const vnpayModal = new bootstrap.Modal(document.getElementById("vnpayModal"));
             const submitPaymentButton = document.getElementById("submitVnpayPayment");
