@@ -337,7 +337,7 @@
                         </button>
                     </div>
                     <div class="modal-body" id="appointmentHistoryContent">
-                        
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -578,7 +578,7 @@
 
                     const appointmentCard = this.closest('.appointment-card');
                     const appointmentId = appointmentCard.getAttribute('data-id');
-                    const userName = "{{ auth()->user()->name }}";
+                    const userName = "{{ auth()->user()->name ?? '' }}";
                     const appointmentDate = appointmentCard.querySelector('.card-body p:nth-child(2)').innerText.split(': ')[1];
                     const appointmentTime = appointmentCard.querySelector('.card-body p:nth-child(3)').innerText.split(': ')[1];
                     const doctorName = appointmentCard.querySelector('.card-body p:nth-child(4)').innerText.split(': ')[1];

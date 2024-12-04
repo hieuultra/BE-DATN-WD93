@@ -17,13 +17,9 @@
             <div class="row">
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-primary text-white mb-4">
-                        {{-- <!-- <?php
-                        foreach ($countsp as $c) {
-                            extract($c);
-                            echo ' <div class="card-body">' . $count_sp . ' Count_products</div>';
-                        }
-                        ?> --> --}}
-                        <i class="fa-solid fa-box-open fa-2xl"></i>
+                        
+
+                    <i class="fa-solid fa-user fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{{ route('admin.dashborad.user') }}">Thống kê khách hàng</a>
                             <div class="small text-white">
@@ -34,12 +30,7 @@
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-warning text-white mb-4">
-                        {{-- <!-- <?php
-                        foreach ($sum as $s) {
-                            extract($s);
-                            echo ' <div class="card-body">' . number_format($sum_total, 0, ',', '.') . '$ Total revenue</div>';
-                        }
-                        ?> --> --}}
+
 
                         <i class="fa-solid fa-money-bills fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
@@ -53,13 +44,7 @@
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-success text-white mb-4">
-                        {{-- <!-- <?php
-                        foreach ($sum_user as $s) {
-                            extract($s);
-                            echo ' <div class="card-body">' . $sum_user . ' Customer</div>';
-                        }
-                        ?> --> --}}
-                        <i class="fa-solid fa-user fa-2xl"></i>
+                        <i class="fa-solid fa-box-open fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{{ route('admin.dashborad.revenue') }}">Thống kê Doanh Thu</a>
                             <div class="small text-white">

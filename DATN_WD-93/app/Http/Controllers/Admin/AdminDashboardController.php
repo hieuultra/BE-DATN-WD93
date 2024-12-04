@@ -137,8 +137,8 @@ class AdminDashboardController extends Controller
                 $specialtyImage = $specialty->image; // Giả sử bạn có trường 'image' trong bảng Specialty
             } else {
                 // Nếu không có chuyên khoa, có thể gán tên và ảnh mặc định
-                $specialtyName = 'Chưa xác định';
-                $specialtyImage = 'default_image.png'; // Tên ảnh mặc định
+                $specialtyName = 'khám tổng quát';
+                $specialtyImage = 'khám tổng quát'; // Tên ảnh mặc định
             }
 
             // Đếm số lượng cuộc hẹn trong nhóm này
@@ -165,6 +165,7 @@ class AdminDashboardController extends Controller
 
         // Lấy bác sỹ
         $topDoctorsData = Appoinment::with('doctor.user') // Lấy thông tin bác sĩ
+        // ->whereNotNull('doctor_id') // Loại bỏ các bản ghi không có doctor_id
             ->selectRaw('doctor_id, COUNT(*) as appointments_count,
                      SUM(CASE WHEN status_appoinment = "kham_hoan_thanh" THEN 1 ELSE 0 END) as completed_appointments_count')
             ->groupBy('doctor_id')
@@ -175,8 +176,8 @@ class AdminDashboardController extends Controller
         for ($i = 0; $i < 5; $i++) {
             if (isset($topDoctorsData[$i])) {
                 $dataDoctors[] = [
-                    'doctor_name' => $topDoctorsData[$i]->doctor->title ?? 'chưa có',
-                    'doctor_image' => $topDoctorsData[$i]->doctor->user->image ?? 'chưa có',
+                    'doctor_name' => $topDoctorsData[$i]->doctor->user->name ?? 'khám tổng quát',
+                    'doctor_image' => $topDoctorsData[$i]->doctor->user->image ?? 'khám tổng quát',
                     'appointments_count' => $topDoctorsData[$i]->appointments_count ?? 0,
                     'completed_appointments_count' => $topDoctorsData[$i]->completed_appointments_count ?? 0,
                 ];
@@ -416,13 +417,13 @@ class AdminDashboardController extends Controller
             $orderIds = Bill::whereBetween('created_at', [$start_date, $end_date])
                 ->where('status_bill', 'da_giao_hang')  // Lọc theo trạng thái
                 ->pluck('id');
-                if ($orderIds->isEmpty()) {
-                    return response()->json([
-                        'orderIds' => [],
-                        'topProducts' => [],
-                        'message' => 'No orders found for the given date range.'
-                    ]);
-                }
+            if ($orderIds->isEmpty()) {
+                return response()->json([
+                    'orderIds' => [],
+                    'topProducts' => [],
+                    'message' => 'No orders found for the given date range.'
+                ]);
+            }
             // Truy vấn bảng 'order_details' để lấy 'product_id' và 'variant_id' từ các đơn hàng
             $orderDetails = OrderDetail::whereIn('bill_id', $orderIds)
                 ->join('products', 'order_details.product_id', '=', 'products.id') // Kết nối với bảng products
