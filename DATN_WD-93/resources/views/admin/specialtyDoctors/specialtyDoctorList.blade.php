@@ -71,7 +71,7 @@
               </thead>
               <tbody>
                 @foreach($specialty as $items)
-                <tr>
+                <tr @if($items->classification == 0) style="background-color: gray;" @endif>
                   <th scope="row">{{ $loop->iteration }}</th>
                   <td>{{$items->name}}</td>
                   <td> <img src="{{ asset('upload/'.$items->image)  }}" width="150" height="90" alt=""></td>
@@ -89,9 +89,7 @@
                     <a href="" class="btn btn-danger">
                       <form action="{{ route('admin.specialties.specialtyDestroy', $items->id) }}" method="POST">
                         @csrf
-                        @method('DELETE')
-                        {{-- Sử dụng @method('DELETE') trong đoạn mã nhằm mục đích gửi một yêu cầu HTTP DELETE từ form HTML.  --}}
-                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">
+                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn dừng hoạt động chuyên khoa này?')">
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                           </svg>
@@ -167,7 +165,7 @@
                 $docs = $d->specialty;
                 $do = $d->clinic->first();
                 @endphp
-                <tr>
+                <tr @if($doc->role == 'User') style="background-color: gray;" @endif>
                   <th scope="row">{{ $d->id }}</th>
                   <td>
                     {{$doc->name}}
@@ -186,11 +184,13 @@
                     @endif
                   <td>{{$docs->name}}</td>
                   <td class="text-center">
+                    <div @if($doc->role == 'User') style="display: none;" @endif>
                     <div class="time-icon">
                       <a href="{{ route('admin.timeslot.doctor.schedule', $d->id) }}"><i class="fas fa-clock"></i></a>
                     </div>
                     <div class="time-icon">
                       <a style="text-decoration: none;" href="{{ route('admin.achievements.doctor.achievements', $d->id) }}">Thành tựu bác sĩ</a>
+                    </div>
                     </div>
 
                     <a href="" class="btn btn-warning">
@@ -206,9 +206,7 @@
                     <a href="" class="btn btn-danger">
                       <form action="{{ route('admin.doctors.doctorDestroy', $d->id) }}" method="POST">
                         @csrf
-                        @method('DELETE')
-                        {{-- Sử dụng @method('DELETE') trong đoạn mã nhằm mục đích gửi một yêu cầu HTTP DELETE từ form HTML.  --}}
-                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">
+                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn bác sỹ này nghỉ việc không?')">
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                           </svg>
@@ -313,16 +311,6 @@
                     </a>
                     <!-- Thêm nút delete -->
                     <a href="" class="btn btn-danger">
-                      <form action="{{ route('admin.packages.packageDestroy', $d->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        {{-- Sử dụng @method('DELETE') trong đoạn mã nhằm mục đích gửi một yêu cầu HTTP DELETE từ form HTML.  --}}
-                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">
-                          <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                          </svg>
-                        </button>
-                      </form>
                     </a>
                   </td>
                 </tr>

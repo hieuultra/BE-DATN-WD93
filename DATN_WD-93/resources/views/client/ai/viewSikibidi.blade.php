@@ -100,10 +100,10 @@
                 </div>
 
               
-                <div class="option" onclick="window.location.href='/'">
+                <div class="option" onclick="window.location.href='/huong-dan-dl'">
                     <div class="option-icon">🩺</div>
-                    <div class="option-title">Khám tổng quát</div>
-                    <div class="option-description">Đặt lịch khám tổng quát cho sức khỏe của bạn.</div>
+                    <div class="option-title">Hướng dẫn đặt lịch khám</div>
+                    <div class="option-description">Hướng dẫn đặt lịch khám nếu bạn là người lần đầu tiên sử dụng.</div>
                 </div>
             </div>
         </div>

@@ -18,6 +18,7 @@ use App\Models\Package;
 use App\Models\Review;
 use App\Models\Specialty;
 use App\Models\User;
+use App\Models\VariantProduct;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
@@ -429,7 +430,7 @@ class AppoinmentController extends Controller
         $clinics = Specialty::where('name', 'LIKE', '%' . $query . '%')->get();
         return response()->json($clinics);
     }
-//getPrescriptions
+    //getPrescriptions
     public function appointmentHistory($id)
     {
         $orderCount = 1;
@@ -641,16 +642,15 @@ class AppoinmentController extends Controller
         $orderDetails = $request->input('order_details');
         $formattedOrderDetails = [];
 
-        // Lặp qua danh sách và gom nhóm 5 phần tử thành 1 đơn hàng
+
         $tempOrder = [];
         foreach ($orderDetails as $item) {
-            $key = array_key_first($item); // Lấy key đầu tiên của mảng (vd: 'product_id')
-            $tempOrder[$key] = $item[$key]; // Thêm vào $tempOrder
+            $key = array_key_first($item);
+            $tempOrder[$key] = $item[$key];
 
-            // Khi đủ 5 cặp key-value, nhóm lại thành một đơn hàng
             if (count($tempOrder) === 5) {
                 $formattedOrderDetails[] = $tempOrder;
-                $tempOrder = []; // Reset lại $tempOrder
+                $tempOrder = [];
             }
         }
 
@@ -663,6 +663,13 @@ class AppoinmentController extends Controller
                 'totalMoney' => $detail['total_money'],
                 'variant_id' => $detail['variant_id'],
             ]);
+
+            $variantProduct = VariantProduct::find($detail['variant_id']);
+
+            if ($variantProduct) {
+                $variantProduct->quantity -= $detail['quantity'];
+                $variantProduct->save();
+            }
         }
 
 
@@ -844,10 +851,10 @@ class AppoinmentController extends Controller
 
         return redirect()->back()->with('success', 'Lịch hẹn đã được xác nhận hủy.');
     }
-//physicianManagement
+    //physicianManagement
     public function getAppointmentHistory($appointment_id)
     {
-       $appointmentHistory = AppoinmentHistory::where('appoinment_id', $appointment_id)->first();
+        $appointmentHistory = AppoinmentHistory::where('appoinment_id', $appointment_id)->first();
 
         if (!$appointmentHistory) {
             return response()->json(['error' => 'Không tìm thấy thông tin lịch hẹn.'], 404);
@@ -873,7 +880,7 @@ class AppoinmentController extends Controller
                 'quantity' => $order->quantity,
                 'total_money' => $order->totalMoney,
             ];
-        });        
+        });
 
         return response()->json([
             'appoinment_id' => $appointmentHistory->appoinment_id,
@@ -1040,7 +1047,7 @@ class AppoinmentController extends Controller
                 'quantity' => $order->quantity,
                 'total_money' => $order->totalMoney,
             ];
-        });        
+        });
 
         return response()->json([
             'appoinment_id' => $appointmentHistory->appoinment_id,

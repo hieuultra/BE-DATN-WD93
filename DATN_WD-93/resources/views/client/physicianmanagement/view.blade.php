@@ -368,8 +368,8 @@
 
 
     <div class="container">
-        <div class="row mt-4">
-        <div class="col-md-8">
+        <div class="mt-9">
+        <div class="col-md-12">
         <div class="profile-header d-flex flex-column flex-md-row align-items-center">
             <img alt="Doctor's profile picture" height="100" src="{{ asset('upload/' . $doctor->user->image) }}" width="100" />
             <div class="ml-md-3 mt-2 mt-md-0 text-center text-md-start">
@@ -514,7 +514,7 @@
                                 <div id="selected-drugs">
                                     <p>Chưa có thuốc nào được chọn.</p>
                                 </div>
-                                <!-- Nơi lưu thông tin thuốc đã chọn -->
+                             
                                 <div id="selected-drugs-container"></div>
                                 <input type="hidden" id="total_price_input" name="total_price">
 
@@ -728,12 +728,31 @@
 
                                             const variantSelect = document.createElement('select');
                                             variantSelect.className = 'form-control mt-2';
-                                            variantSelect.addEventListener('change', () => {
-                                                const selectedVariant = drug.variantProducts.find(v => v.id == variantSelect.value);
-                                                selectedDrugs[drug.id].variant = selectedVariant;
-                                                updateVariantQuantity(drug.id, selectedVariant);
-                                                updatePrice(drug.id);
+                                            variantSelect.addEventListener('change', (e) => {
+                                                const selectedVariantId = e.target.value;
+                                                const selectedVariant = drug.variantProducts.find(v => v.id == selectedVariantId);
+
+                                                if (selectedVariant) {
+                                                    // Cập nhật biến thể đã chọn trong dữ liệu
+                                                    selectedDrugs[drug.id].variant = selectedVariant;
+
+                                                    // Cập nhật số lượng tồn kho hiện tại
+                                                    const quantityInput = document.querySelector(`#selected-drug-${drug.id} input[type='number']`);
+                                                    if (quantityInput) {
+                                                        const currentInputQuantity = parseInt(quantityInput.value) || 1;
+
+                                                        if (currentInputQuantity > selectedVariant.quantity) {
+                                                            // Cảnh báo nếu số lượng vượt quá tồn kho
+                                                            alert(`Số lượng nhập vượt quá tồn kho! Tồn kho hiện tại là ${selectedVariant.quantity}.`);
+                                                            quantityInput.value = selectedVariant.quantity; // Đặt giá trị tối đa bằng tồn kho
+                                                        }
+                                                    }
+
+                                                    // Cập nhật giá hiển thị theo biến thể mới
+                                                    updatePrice(drug.id);
+                                                }
                                             });
+
 
                                             drug.variantProducts.forEach(variant => {
                                                 const option = document.createElement('option');
@@ -749,14 +768,16 @@
                                             quantityInput.className = 'form-control mt-2';
                                             quantityInput.addEventListener('input', (e) => {
                                                 const inputQuantity = parseInt(e.target.value) || 1;
+                                                const currentVariant = selectedDrugs[drug.id].variant;
 
                                                 if (inputQuantity <= 0) {
                                                     alert("Số lượng phải lớn hơn 0!");
-                                                    e.target.value = 1; // Reset về giá trị tối thiểu
-                                                } else if (inputQuantity > drug.variantProducts[0].quantity) {
-                                                    alert(`Số lượng nhập vượt quá tồn kho! Tồn kho hiện tại là ${drug.variantProducts[0].quantity}.`);
-                                                    e.target.value = drug.variantProducts[0].quantity; // Reset về giá trị tồn kho tối đa
+                                                    e.target.value = 1; // Đặt giá trị tối thiểu
+                                                } else if (inputQuantity > currentVariant.quantity) {
+                                                    alert(`Số lượng nhập vượt quá tồn kho! Tồn kho hiện tại là ${currentVariant.quantity}.`);
+                                                    e.target.value = currentVariant.quantity; // Đặt giá trị tối đa bằng tồn kho
                                                 } else {
+                                                    // Cập nhật số lượng
                                                     selectedDrugs[drug.id].quantity = inputQuantity;
                                                     updatePrice(drug.id);
                                                 }

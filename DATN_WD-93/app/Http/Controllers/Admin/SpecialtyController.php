@@ -99,10 +99,8 @@ class SpecialtyController extends Controller
     public function specialtyDestroy($id)
     {
         $specialty = Specialty::findOrFail($id);
-        if ($specialty->image && File::exists(public_path('upload/' . $specialty->image))) {
-            File::delete(public_path('upload/' . $specialty->image));
-        }
-        $specialty->delete();
-        return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Specialty đã được xóa thành công.');
+        $specialty->classification = 0;
+        $specialty->save();
+        return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Specialty đã được cho dừng hoạt động.');
     }
 }
