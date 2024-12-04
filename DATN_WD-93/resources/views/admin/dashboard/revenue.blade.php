@@ -287,6 +287,7 @@
                     });
 
 
+
                 } else {
                     $('#validate').text('');
                     $('#overlay').fadeIn();
@@ -366,6 +367,8 @@
 
                         }
                     });
+                    console.log(start_date);
+                    console.log(end_date);
                 } else {
                     $('#overlay').fadeIn();
                     $('#popup').fadeIn();

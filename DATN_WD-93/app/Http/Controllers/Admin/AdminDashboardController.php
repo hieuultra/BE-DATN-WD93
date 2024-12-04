@@ -315,12 +315,17 @@ class AdminDashboardController extends Controller
             ->sum('moneyProduct'); //doanh thu tháng này
         $moneyProductsLastMonth = Bill::whereMonth('created_at', $lastMonth)->where('status_bill', 'da_giao_hang')
             ->sum('moneyProduct'); //doanh thu tháng trước
-        if ($moneyProducts > $moneyProductsLastMonth) {
-            $message = "Tăng " . round((($moneyProducts - $moneyProductsLastMonth) / $moneyProductsLastMonth) * 100, 2) . "% .";
-            $color = 'green';
-        } elseif ($moneyProducts < $moneyProductsLastMonth) {
-            $message = "Giảm " . round((($moneyProductsLastMonth - $moneyProducts) / $moneyProductsLastMonth) * 100, 2) . "% .";
-            $color = 'red';
+        if ($moneyProductsLastMonth != 0 && $moneyProductsLastMonth !== null) {
+            if ($moneyProducts > $moneyProductsLastMonth) {
+                $message = "Tăng " . round((($moneyProducts - $moneyProductsLastMonth) / $moneyProductsLastMonth) * 100, 2) . "% .";
+                $color = 'green';
+            } elseif ($moneyProducts < $moneyProductsLastMonth) {
+                $message = "Giảm " . round((($moneyProductsLastMonth - $moneyProducts) / $moneyProductsLastMonth) * 100, 2) . "% .";
+                $color = 'red';
+            } else {
+                $message = "Doanh thu không thay đổi .";
+                $color = 'gray';
+            }
         } else {
             $message = "Doanh thu không thay đổi .";
             $color = 'gray';
@@ -405,12 +410,19 @@ class AdminDashboardController extends Controller
     }
     public function revenuesProductSale(Request $request)
     {
-        $start_date = $request->input('startDate');
-        $end_date = $request->input('endDate');
+        $start_date = Carbon::parse($request->input('startDate'))->startOfDay();
+        $end_date = Carbon::parse($request->input('endDate'))->endOfDay();
         if ($start_date && $end_date) {
             $orderIds = Bill::whereBetween('created_at', [$start_date, $end_date])
                 ->where('status_bill', 'da_giao_hang')  // Lọc theo trạng thái
                 ->pluck('id');
+                if ($orderIds->isEmpty()) {
+                    return response()->json([
+                        'orderIds' => [],
+                        'topProducts' => [],
+                        'message' => 'No orders found for the given date range.'
+                    ]);
+                }
             // Truy vấn bảng 'order_details' để lấy 'product_id' và 'variant_id' từ các đơn hàng
             $orderDetails = OrderDetail::whereIn('bill_id', $orderIds)
                 ->join('products', 'order_details.product_id', '=', 'products.id') // Kết nối với bảng products
@@ -422,14 +434,13 @@ class AdminDashboardController extends Controller
                 )
                 ->groupBy('order_details.product_id', 'products.name', 'products.img') // Nhóm theo product_id và thông tin sản phẩm
                 ->orderByDesc('total_quantity') // Sắp xếp theo tổng quantity giảm dần
-                ->limit(5) // Giới hạn 5 sản phẩm
                 ->get();
             return response()->json([
                 'orderIds' => $orderIds,
                 'topProducts' => $orderDetails,
             ]);
         }
-        return view('admin.dashboard.revenue', compact('orderDetails'));
+        // return view('admin.dashboard.revenue', compact('orderDetails'));
     }
     public function revenuesProductSaleNone(Request $request)
     {
