@@ -265,6 +265,11 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         })->name('dashboard');
         Route::get('/dashborad-user', [AdminController::class, 'user'])->name('dashborad.user');
         Route::get('/dashborad-user-search', [AdminController::class, 'loc'])->name('dashborad.user.search');
+        // revenue
+        Route::get('/dashborad-revenues', [AdminDashboardController::class, 'revenues'])->name('dashborad.revenue');
+        Route::post('/ajax-revenues', [AdminDashboardController::class, 'revenues'])->name('revenues');
+        Route::post('/ajax-revenuesProductSale', [AdminDashboardController::class, 'revenuesProductSale'])->name('revenuesProductSale');
+        Route::post('/ajax-revenuesProductSaleNone', [AdminDashboardController::class, 'revenuesProductSaleNone'])->name('revenuesProductSaleNone');
         //categories
         Route::prefix('categories')
             ->as('categories.')

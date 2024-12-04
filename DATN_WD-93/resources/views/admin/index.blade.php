@@ -61,21 +61,15 @@
                         ?> --> --}}
                         <i class="fa-solid fa-user fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="?act=order_sold">Xem thêm</a>
+                            <a class="small text-white stretched-link" href="{{ route('admin.dashborad.revenue') }}">Thống kê Doanh Thu</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-6">
+                {{-- <div class="col-xl-3 col-md-6">
                     <div class="card bg-danger text-white mb-4">
-                        {{-- <!-- <?php
-                        foreach ($sum_quantity as $s) {
-                            extract($s);
-                            echo ' <div class="card-body">' . $quantity_pro . ' Products sold</div>';
-                        }
-                        ?> --> --}}
                         <i class="fa-solid fa-cart-shopping fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="?act=sold">Xem thêm</a>
@@ -84,7 +78,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </main>
