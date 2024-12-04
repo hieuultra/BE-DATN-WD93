@@ -213,19 +213,42 @@
             color: #999;
             font-size: 16px;
             font-weight: bold;
-            display: inline-block;
+            display:
+             inline-block;
         }
+        .custom-navbar {
+            background-color: #FFD700; /* Màu vàng */
+            color: #000; /* Màu chữ đen */
+        }
+
+        .custom-navbar .navbar-brand,
+        .custom-navbar .nav-link {
+            color: #000 !important; /* Màu chữ đen cho liên kết */
+        }
+
+        .custom-navbar .nav-link:hover {
+            color: #333 !important; /* Màu chữ đậm hơn khi hover */
+        }
+
+.custom-navbar .navbar-brand:hover {
+    text-decoration: underline; /* Gạch chân khi hover */
+}
     </style>
 </head>
 
 <body>
     @extends('layout')
     @section('content')
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
             <a class="navbar-brand" href="#" id="navbarDropdown">
                 <i class="fas fa-bars"></i> BookingCare
             </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+
+                </ul>
+            </div>
         </div>
     </nav>
 
