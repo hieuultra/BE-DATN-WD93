@@ -306,12 +306,15 @@
         </div>
     </nav>
 
-    <div class="mt-5">
-        <h5>Thống kê số lượng đặt lịch khám</h5>
-        <canvas id="appointmentStatsChart" width="400" height="200"></canvas>
-    </div>
+   
 
     <div class="container">
+
+    <div class="mt-5">
+        <h5>Thống kê số lượng đặt lịch khám</h5>
+        <canvas id="appointmentStatsChart" style="width:100%; max-width:1200px; height: 200px;"></canvas>
+    </div>
+
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="profile-header d-flex flex-column flex-md-row align-items-center">

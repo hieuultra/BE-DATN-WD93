@@ -123,15 +123,15 @@
     @endif
 
 
-
+    <a href="{{route('appoinment.booKingCare', $doctor->specialty->id)}}">Quay lại</a>
     <div class="container">
         <div class="doctor-info">
             <img alt="Doctor's profile picture" class="profile-img" height="60"
                 src="{{ asset('upload/' . $doctor->user->image) }}"
                 width="60" />
             <div>
-                <h5>
-                    {{$doctor->user->name}}
+                <h5 class="text-primary">
+                    {{$doctor->user->name}} - Chuyên khoa: {{$doctor->specialty->name}}
                 </h5>
                 <p>
                     @php
@@ -142,6 +142,7 @@
                     {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
                     {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }} - {{ $formattedDate }}
                 </p>
+                
             </div>
         </div>
 
@@ -157,7 +158,7 @@
         <!-- Form đặt cho người thân -->
         <form id="form1" action="{{route('appoinment.bookAnAppointment')}}" method="POST"  @if(isset($existingAppointment))  @else style="display: none;" @endif>
             @csrf
-            <h1>Đặt cho người thân</h1>
+            <h5>Đặt cho người thân</h5>
             <input type="text" name="lua_chon" value="cho_nguoi_than" style="display: none;">
             <input type="text" name="user_id" value="{{ $user = Auth::user()->id;}}" style="display: none;">
             <input type="text" name="doctor_id" value="{{$doctor->id}}" style="display: none;">

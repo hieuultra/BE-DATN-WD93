@@ -66,7 +66,7 @@ class AdminController extends Controller
             ->with('user')
             ->get();
         // dd($topUsersByCanceledOrders);
-        return view('admin.dashboradUser', compact(
+        return view('admin.dashboard.dashboradUser', compact(
             'topUsersByOrders',
             "topUsersByCanceledOrders",
             'cancelRate',
@@ -117,7 +117,7 @@ class AdminController extends Controller
         $totalCanceledAppointments = (clone $appointmentQuery)->where('status_appoinment', 'huy_lich_hen')->count();
         $totalSuccessfulAppointments = (clone $appointmentQuery)->where('status_appoinment', 'kham_hoan_thanh')->count();
         $totalRemainingAppointments = (clone $appointmentQuery)->whereNotIn('status_appoinment', ['kham_hoan_thanh', 'huy_lich_hen'])->count();
-        
+
         $appointmentCancelRate = $totalAppointments > 0 ? round(($totalCanceledAppointments / $totalAppointments) * 100, 2) : 0;
         $appointmentOngoingRate = $totalAppointments > 0 ? round(($totalRemainingAppointments / $totalAppointments) * 100, 2) : 0;
         $appointmentSuccessRate = $totalAppointments > 0 ? round(($totalSuccessfulAppointments / $totalAppointments) * 100, 2) : 0;
@@ -164,7 +164,7 @@ class AdminController extends Controller
         // dd($topUsersByAppointments,$topUsersByCanceledAppointments,$topUsersByCanceledOrders,$topUsersByOrders);
 
         // Trả về view với dữ liệu
-        return view('admin.dashboradUser', compact(
+        return view('admin.dashboard.dashboradUser', compact(
             'topUsersByOrders',
             "topUsersByCanceledOrders",
             'cancelRate',

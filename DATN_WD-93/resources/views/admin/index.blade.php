@@ -86,77 +86,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xl-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-chart-area me-1"></i>
-                            Area Chart Example
-                        </div>
-                        <div class="card-body">
-                            <canvas id="myAreaChart" width="100%" height="40"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-chart-bar me-1"></i>
-                            Bar Chart Example
-                        </div>
-                        <div class="card-body">
-                            <canvas id="myBarChart" width="100%" height="40"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- doanh so start --}}
-            <div class="row">
-                <div class="col-xl-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-chart-area me-1"></i>
-                            Doanh số bán hàng
-                            <canvas id="salesChart" width="400" height="200"></canvas>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="myAreaChart" width="100%" height="40"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- doanh so end --}}
         </div>
     </main>
 
-    <script>
-        // Dữ liệu mẫu cho biểu đồ
-        const salesData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-            datasets: [{
-                label: 'Sales',
-                data: [1000, 1500, 1200, 1800, 2000, 1700],
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        };
-
-        // Lấy thẻ canvas và vẽ biểu đồ doanh số
-        const salesChartCanvas = document.getElementById('salesChart').getContext('2d');
-        const salesChart = new Chart(salesChartCanvas, {
-            type: 'line',
-            data: salesData,
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-    </script>
 @endsection

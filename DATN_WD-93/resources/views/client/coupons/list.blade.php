@@ -41,6 +41,7 @@
             <th class="pro-thumbnail" style="text-align: center">Mã</th>
             <th class="pro-title" style="text-align: center">Giảm giá:</th>
             <th class="pro-title" style="text-align: center">Hạn dùng:</th>
+            <th class="pro-title" style="text-align: center">Giá trị đơn hàng tối thiểu:</th>
             <th class="pro-remove" style="text-align: center">Thao tác</th>
         </tr>
     </thead>
@@ -60,6 +61,9 @@
                 </td>
                 <td class="pro-price" style="text-align: center">
                     {{ $coupon->expiry_date }}
+                </td>
+                <td class="pro-title" style="text-align: center">
+                    {{ number_format($coupon->min_order_value, 0, ',', '.') }} VNĐ
                 </td>
                 <td class="pro-subtotal" style="text-align: center"><button class="btn btn-primary" onclick="copyToClipboard('{{ $coupon->code }}')">Sao chép mã</button>
                 </td>

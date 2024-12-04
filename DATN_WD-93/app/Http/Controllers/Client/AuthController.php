@@ -22,11 +22,6 @@ class AuthController extends Controller
         }
         return view('client.auth_backup.viewLogin', compact('orderCount', 'categories'));
     }
-    // public function viewLogin()
-    // {
-    //     $categories = Category::orderBy('name', 'asc')->get();
-    //     return view('auth.login', compact('categories'));
-    // }
     public function login(Request $request)
     {
         $users = $request->validate([

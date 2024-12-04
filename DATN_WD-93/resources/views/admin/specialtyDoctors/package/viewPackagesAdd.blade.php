@@ -82,14 +82,13 @@
                 </div>
             </div>
         </div>
+        <input type="submit" class="btn btn-primary" value="Thêm">
+        <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
+            <input type="button" class="btn btn-primary" value="Quay lại">
+        </a>
+        </form>
 </div>
 
-<input type="submit" class="btn btn-primary" value="Thêm">
-<a href="{{ route('admin.specialties.specialtyDoctorList') }}">
-    <input type="button" class="btn btn-primary" value="Quay lại">
-</a>
-</form>
-</div>
 
 <script>
     function showImage(event) {

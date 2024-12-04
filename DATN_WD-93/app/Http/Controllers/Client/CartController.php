@@ -46,7 +46,7 @@ class CartController extends Controller
         }
         // Xử lý mã giảm giá nếu có
         $checkTypeDiscount = 0;
-        if ($cart->coupon_code !== null) {
+        if ($cart && $cart->coupon_code !== null) {
             $discountCheck = $cart->coupon_code;
             $couponCheck = Coupon::where('code', $discountCheck)->first();
             $checkTypeDiscount = $couponCheck->type;

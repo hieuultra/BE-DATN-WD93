@@ -86,6 +86,7 @@
 <body>
     @extends('layout')
     @section('content')
+    <a href="{{route('viewSikibidi')}}" class="">Quay lại</a>
     <div class="body">
         <h1>CÁC CÂU TRẢ LỜI CHỈ MANG TÍNH CHẤT THAM KHẢO</h1>
 
@@ -93,16 +94,16 @@
             <div id="chatbox"></div>
             <div id="inputContainer">
                 <input type="text" id="userInput" placeholder="Nhập câu hỏi bạn muốn hỏi..." />
-                <button id="sendButton">Gửi</button>
+                <button id="sendButton" class="btn btn-primary">Gửi</button>
             </div>
         </div>
 
         <div id="teachContainer" style="display: none;">
             <textarea id="textInput" rows="4" cols="50" placeholder="Nhập đoạn văn bản để dạy chatbot..."></textarea>
-            <button id="teachButton">Dạy Chatbot</button>
+            <button id="teachButton" class="btn btn-success">Dạy Chatbot</button>
         </div>
 
-        <button id="toggleButton">Chuyển sang Dạy Chatbot</button>
+        <button id="toggleButton" class="btn btn-secondary mt-3">Chuyển sang Dạy Chatbot</button>
     </div>
 
 

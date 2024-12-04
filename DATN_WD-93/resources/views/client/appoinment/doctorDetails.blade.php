@@ -264,49 +264,13 @@
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="#">
-                BookingCare
+                Quay lại
             </a>
             <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
                 class="navbar-toggler" data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon">
                 </span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Chuyên khoa
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Cơ sở y tế
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Bác sĩ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Gói khám
-                        </a>
-                    </li>
-                </ul>
-                <div class="header-icons">
-                    <a href="#">
-                        <i class="fas fa-calendar-alt">
-                        </i>
-                        Lịch hẹn
-                    </a>
-                    <a href="#">
-                        <i class="fas fa-question-circle">
-                        </i>
-                        Hỗ trợ
-                    </a>
-                </div>
-            </div>
         </div>
     </nav>
     <div class="container">
@@ -330,9 +294,6 @@
                 width="100" />
             <div class="doctor-details">
                 <h2>
-                    <span class="badge bg-warning text-dark">
-                        Yêu thích
-                    </span>
                     {{$doctor->user->name}}
                 </h2>
                 <p>
@@ -345,22 +306,10 @@
                         {{$doctor->user->address}}
                     </span>
                 </div>
-                <div class="buttons">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-thumbs-up">
-                        </i>
-                        Thích 0
-                    </button>
-                    <button class="btn btn-outline-primary">
-                        <i class="fas fa-share">
-                        </i>
-                        Chia sẻ
-                    </button>
-                </div>
             </div>
         </div>
         <div class="schedule">
-            <label for="dateSelect-{{ $doctor->id }}">Chọn ngày:</label>
+            <label for="dateSelect-{{ $doctor->id }}">Lịch khám của bác sỹ</label>
             <select id="dateSelect-{{ $doctor->id }}" class="form-select date-select" aria-label="Chọn ngày">
                 @php
                 $availableDates = $doctor->timeSlot->filter(function ($timeSlot) {
@@ -395,7 +344,7 @@
             </div>
 
             <p style="margin-top: 10px;">
-                Chọn <i class="fas fa-check-circle"></i> và đặt {{ number_format($doctor->price, 0, ',', '.') }} vnd
+                Giá mỗi buổi khám <i class="fas fa-check-circle"></i> {{ number_format($doctor->examination_fee, 0, ',', '.') }} vnd
             </p>
         </div>
         <div class="clinic-info">
