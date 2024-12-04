@@ -64,6 +64,10 @@
             margin-right: 20px;
         }
 
+        .modal-backdrop {
+            display: none !important;
+        }
+
         .form-control {
             margin-bottom: 15px;
         }
@@ -226,13 +230,30 @@
                 <label class="form-label">
                     Hình thức thanh toán
                 </label>
+                @if($doctor->specialty->classification == 'chuyen_khoa' || $doctor->specialty->classification == 'tong_quat')
                 <div class="form-check">
-                    <input checked="" name="status_payment_method" class="form-check-input" id="payLater" name="paymentMethod" type="radio"
-                        value="thanh_toan_tai_benh_vien" />
-                    <label class="form-check-label" for="payLater">
-                        Thanh toán sau tại cơ sở y tế
+                    <input checked="" class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
+                        value="thanh_toan_tai_benh_vien" >
+                    <label class="form-check-label" for="selfPayLater">
+                        Thanh toán sau tại cơ sở y tế (không dùng được khi thanh toán cho khám từ xa)
                     </label>
                 </div>
+                @else
+                <div class="form-check">
+                    <input checked="" class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
+                        value="thanh_toan_tai_benh_vien" >
+                    <label class="form-check-label" for="selfPayLater">
+                        Thanh toán tại nhà sau khi nhận được thuốc
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
+                        value="thanh_toan_vnpay" >
+                    <label class="form-check-label" for="selfPayLater">
+                        Thanh toán qua vnpay
+                    </label>
+                </div>
+                @endif
             </div>
 
             <div class="mb-3">
@@ -254,13 +275,77 @@
                     <li>Quý khách vui lòng kiểm tra kỹ thông tin trước khi nhấn "Xác nhận".</li>
                 </ul>
             </div>
+            @if($doctor->specialty->classification == 'chuyen_khoa' || $doctor->specialty->classification == 'tong_quat')
             <div class="mb-3">
-                <button class="btn btn-primary" type="submit">
+                 <button class="btn btn-primary" type="submit">
                     Đặt lịch
                 </button>
             </div>
+            @else
+            <div class="mb-3">
+               <div class="siuu" style="display: none;">
+                 <button class="btn btn-primary" type="submit">
+                    Đặt lịch
+                </button>
+               </div>
+            </div>
+            @endif
         </form>
 
+        <div class="modal fade" id="vnpayModal" tabindex="-1" aria-labelledby="vnpayModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="vnpayModalLabel">Thanh toán qua VNPAY</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="text-center mb-3">
+                            <img src="https://th.bing.com/th/id/OIP.DU7OoLbkclicTJS46K_BfwHaCg?rs=1&pid=ImgDetMain" alt="VNPAY Logo" class="img-fluid">
+                        </div>
+                        <div id="paymentInfo">
+                            <div class="row">
+                                <div class="col-md-6 text-center">
+                                    <p class="fw-bold">Quét mã QR để thanh toán</p>
+                                    <div id="qrCodeContainer"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p class="text-muted text-center">Hoặc nhập thông tin thẻ bên dưới:</p>
+                                    <form id="vnpayForm">
+                                        <div class="mb-3">
+                                            <label for="vnpCardNumber" class="form-label">Số thẻ</label>
+                                            <input type="text" class="form-control" id="vnpCardNumber" placeholder="Nhập số thẻ" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="vnpCardHolder" class="form-label">Tên chủ thẻ</label>
+                                            <input type="text" class="form-control" id="vnpCardHolder" placeholder="Nhập tên chủ thẻ" required>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="vnpExpireDate" class="form-label">Ngày hết hạn</label>
+                                                <input type="text" class="form-control" id="vnpExpireDate" placeholder="MM/YY" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="vnpCvv" class="form-label">CVV</label>
+                                                <input type="text" class="form-control" id="vnpCvv" placeholder="Nhập CVV" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 text-center">
+                                            <button class="btn btn-success w-100" type="button" id="submitVnpayPayment">Thanh toán</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         @if(isset($existingAppointment))
 
         @else
@@ -268,6 +353,7 @@
         @if(Auth::check())
         <form id="form2" action="{{route('appoinment.bookAnAppointment')}}" method="POST">
             @csrf
+            <h5>Đặt cho bản thân mình</h5>
             <input type="text" name="lua_chon" value="dat_cho_minh" style="display: none;">
             <input type="text" name="user_id" value="{{ $user = Auth::user()->id }}" style="display: none;">
             <input type="text" name="doctor_id" value="{{$doctor->id}}" style="display: none;">
@@ -327,6 +413,7 @@
                 <label class="form-label">
                     Hình thức thanh toán
                 </label>
+                @if($doctor->specialty->classification == 'chuyen_khoa' || $doctor->specialty->classification == 'tong_quat')
                 <div class="form-check">
                     <input checked="" class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
                         value="thanh_toan_tai_benh_vien" >
@@ -334,6 +421,22 @@
                         Thanh toán sau tại cơ sở y tế
                     </label>
                 </div>
+                @else
+                <div class="form-check">
+                    <input checked="" class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
+                        value="thanh_toan_tai_benh_vien" >
+                    <label class="form-check-label" for="selfPayLater">
+                        Thanh toán tại (không dùng được ở đặt khám qua video)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" name="status_payment_method" id="selfPayLater" name="selfPaymentMethod" type="radio"
+                        value="thanh_toan_vnpay2" >
+                    <label class="form-check-label" for="selfPayLater">
+                        Thanh toán qua vnpay
+                    </label>
+                </div>
+                @endif
             </div>
 
             <div class="mb-3">
@@ -355,15 +458,212 @@
                     <li>Quý khách vui lòng kiểm tra kỹ thông tin trước khi nhấn "Xác nhận".</li>
                 </ul>
             </div>
+            @if($doctor->specialty->classification == 'chuyen_khoa' || $doctor->specialty->classification == 'tong_quat')
             <div class="mb-3">
-                <button class="btn btn-primary" type="submit">
+                 <button class="btn btn-primary" type="submit">
                     Đặt lịch
                 </button>
             </div>
+            @else
+            <div class="mb-3">
+               <div class="siuu2" style="display: none;">
+                 <button class="btn btn-primary" type="submit">
+                    Đặt lịch
+                </button>
+               </div>
+            </div>
+            @endif
         </form>
         @endif
         @endif
     </div>
+
+
+    <div class="modal fade" id="vnpayModal2" tabindex="-1" aria-labelledby="vnpayModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="vnpayModalLabel">Thanh toán qua VNPAY</h5>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <img src="https://th.bing.com/th/id/OIP.DU7OoLbkclicTJS46K_BfwHaCg?rs=1&pid=ImgDetMain" alt="VNPAY Logo" class="img-fluid">
+                    </div>
+                    <div id="paymentInfo">
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                <p class="fw-bold">Quét mã QR để thanh toán</p>
+                                <div id="qrCodeContainer2"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted text-center">Hoặc nhập thông tin thẻ bên dưới:</p>
+                                <form id="vnpayForm">
+                                    <div class="mb-3">
+                                        <label for="vnpCardNumber2" class="form-label">Số thẻ</label>
+                                        <input type="text" class="form-control" id="vnpCardNumber2" placeholder="Nhập số thẻ" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="vnpCardHolder2" class="form-label">Tên chủ thẻ</label>
+                                        <input type="text" class="form-control" id="vnpCardHolder2" placeholder="Nhập tên chủ thẻ" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="vnpExpireDate2" class="form-label">Ngày hết hạn</label>
+                                            <input type="text" class="form-control" id="vnpExpireDate2" placeholder="MM/YY" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="vnpCvv2" class="form-label">CVV</label>
+                                            <input type="text" class="form-control" id="vnpCvv2" placeholder="Nhập CVV" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 text-center">
+                                        <button class="btn btn-success w-100" type="button" id="submitVnpayPayment2">Thanh toán</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", function () {
+            const vnpayOption = document.querySelector('input[value="thanh_toan_vnpay2"]');
+            const bookingButtonContainer = document.querySelector(".siuu2");
+            const vnpayModal = new bootstrap.Modal(document.getElementById("vnpayModal2"));
+            const submitPaymentButton = document.getElementById("submitVnpayPayment2");
+            const qrCodeContainer = document.getElementById("qrCodeContainer2");
+
+            const fakeCardData = {
+                cardNumber: "1234567812345678",
+                cardHolder: "Nguyen Van A",
+                expireDate: "12/25",
+                cvv: "123"
+            };
+
+            bookingButtonContainer.style.display = "none"; 
+
+            vnpayOption.addEventListener("change", function () {
+                if (this.checked) {
+                    vnpayModal.show();
+                    generateQRCode(); 
+                }
+            });
+
+           
+            function generateQRCode() {
+                qrCodeContainer.innerHTML = "";
+                const randomPaymentUrl = "https://example.com/payment/" + Math.random().toString(36).substring(2, 10);
+                
+                const qrCode = new QRCode(qrCodeContainer, {
+                    text: randomPaymentUrl,
+                    width: 200,
+                    height: 200,
+                });
+
+                return randomPaymentUrl;
+            }
+
+            submitPaymentButton.addEventListener("click", function () {
+                const cardNumber = document.getElementById("vnpCardNumber2").value;
+                const cardHolder = document.getElementById("vnpCardHolder2").value;
+                const expireDate = document.getElementById("vnpExpireDate2").value;
+                const cvv = document.getElementById("vnpCvv2").value;
+
+                if (cardNumber === fakeCardData.cardNumber && 
+                    cardHolder === fakeCardData.cardHolder && 
+                    expireDate === fakeCardData.expireDate && 
+                    cvv === fakeCardData.cvv) {
+                    alert("Thanh toán thành công!");
+                    vnpayModal.hide(); // Đóng modal VNPAY
+                    bookingButtonContainer.style.display = "block"; // Hiển thị nút Đặt lịch
+                    document.querySelector('.modal-backdrop').remove(); // Xóa backdrop
+                } else {
+                    alert("Thông tin thẻ không hợp lệ!");
+                }
+            });
+        });
+
+
+    </script>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", function () {
+            const vnpayOption = document.querySelector('input[value="thanh_toan_vnpay"]');
+            const bookingButtonContainer = document.querySelector(".siuu");
+            const vnpayModal = new bootstrap.Modal(document.getElementById("vnpayModal"));
+            const submitPaymentButton = document.getElementById("submitVnpayPayment");
+            const qrCodeContainer = document.getElementById("qrCodeContainer");
+
+            // Dữ liệu thẻ giả
+            const fakeCardData = {
+                cardNumber: "1234567812345678",
+                cardHolder: "Nguyen Van A",
+                expireDate: "12/25",
+                cvv: "123"
+            };
+
+            // Ẩn nút Đặt lịch khi chưa thanh toán
+            bookingButtonContainer.style.display = "none"; 
+
+            // Hiển thị modal VNPAY khi chọn thanh toán VNPAY
+            vnpayOption.addEventListener("change", function () {
+                if (this.checked) {
+                    vnpayModal.show();
+                    generateQRCode();  // Tạo QR Code khi chọn thanh toán VNPAY
+                }
+            });
+
+            // Tạo QR Code
+            function generateQRCode() {
+                qrCodeContainer.innerHTML = "";
+                const randomPaymentUrl = "https://example.com/payment/" + Math.random().toString(36).substring(2, 10);
+                
+                const qrCode = new QRCode(qrCodeContainer, {
+                    text: randomPaymentUrl,
+                    width: 200,
+                    height: 200,
+                });
+
+                return randomPaymentUrl;
+            }
+
+            // Xử lý khi thanh toán thành công
+            submitPaymentButton.addEventListener("click", function () {
+                const cardNumber = document.getElementById("vnpCardNumber").value;
+                const cardHolder = document.getElementById("vnpCardHolder").value;
+                const expireDate = document.getElementById("vnpExpireDate").value;
+                const cvv = document.getElementById("vnpCvv").value;
+
+                if (cardNumber === fakeCardData.cardNumber && 
+                    cardHolder === fakeCardData.cardHolder && 
+                    expireDate === fakeCardData.expireDate && 
+                    cvv === fakeCardData.cvv) {
+                    alert("Thanh toán thành công!");
+                    vnpayModal.hide(); // Đóng modal VNPAY
+                    bookingButtonContainer.style.display = "block"; // Hiển thị nút Đặt lịch
+                    document.querySelector('.modal-backdrop').remove(); // Xóa backdrop
+                } else {
+                    alert("Thông tin thẻ không hợp lệ!");
+                }
+            });
+        });
+
+
+    </script>
+
 
     <script>
 

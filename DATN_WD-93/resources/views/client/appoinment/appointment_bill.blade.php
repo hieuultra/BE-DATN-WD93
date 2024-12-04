@@ -21,7 +21,6 @@
         <p><strong>Ngày hẹn:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y') }}</p>
         @if($appointment->meet_link)
             <li><strong>Link meet:</strong> {{ $appointment->meet_link }}</li>
-            <img src="https://th.bing.com/th/id/R.cb0ad1516e89c7ec6f319ef07a4cf8b1?rik=c2rDmSpcoV3usg&pid=ImgRaw&r=0" alt="">
         @else
             <li><strong>Link meet:</strong> Không có link meet nào</li>
         @endif

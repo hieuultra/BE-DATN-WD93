@@ -69,6 +69,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
 
 
+//thanh toán vnpay
+
 //login success + admin
 Route::middleware('auth')->group(function () {
     Route::get('/loginSuccess', [AuthController::class, 'loginSuccess'])->name('loginSuccess')->middleware('auth');
@@ -197,6 +199,17 @@ Route::get('/chat-zalo', function () {
     }
     $categories = Category::orderBy('name', 'asc')->get();
     return view('client.ai.chatZalo', compact('orderCount', 'categories'));
+});
+
+
+Route::get('/huong-dan-dl', function () {
+    $orderCount = 1;
+    if (Auth::check()) {
+        $user = Auth::user();
+        $orderCount = $user->bill()->count();
+    }
+    $categories = Category::orderBy('name', 'asc')->get();
+    return view('client.ai.datlichhd', compact('orderCount', 'categories'));
 });
 
 Auth::routes();

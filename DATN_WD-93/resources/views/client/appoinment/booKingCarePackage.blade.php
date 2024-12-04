@@ -226,20 +226,6 @@
             <a class="navbar-brand" href="#" id="navbarDropdown">
                 <i class="fas fa-bars"></i> BookingCare
             </a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        @if(Auth::check())
-                        <a class="nav-link" href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">Lịch sửa đặt khám</a>
-                        @endif
-                    </li>
-                    <li class="nav-item">
-                        @if(Auth::check())
-                        <a class="nav-link" href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }}">Bác sỹ quản lý</a>
-                        @endif
-                    </li>
-                </ul>
-            </div>
         </div>
     </nav>
 
