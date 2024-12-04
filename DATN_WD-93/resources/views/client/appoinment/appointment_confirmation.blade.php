@@ -18,7 +18,7 @@
         @else
         <li><strong>Tên khoa khám:</strong> {{ $appoinment->package->hospital_name }}</li>
         <li><strong>Địa chỉ:</strong> {{ $appoinment->package->address }}</li>
-        <li><strong>Giá:</strong> {{ $appoinment->package->price }}</li>
+        <li><strong>Giá:</strong> {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} VND</li>
         @endif
         <li><strong>Ngày hẹn:</strong> {{ \Carbon\Carbon::parse($available->date)->format('d/m/Y') }}</li>
         <li><strong>Thời gian cụ thể:</strong> {{ $available->startTime }} - {{ $available->endTime }}</li>
