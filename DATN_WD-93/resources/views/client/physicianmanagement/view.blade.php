@@ -9,6 +9,7 @@
     </title>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -268,6 +269,31 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tạo hiệu ứng nổi bật */
         }
 
+        .custom-alert {
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    .custom-alert button {
+        background: #721c24;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .custom-alert.hidden {
+        display: none;
+    }
+
         /* Hiệu ứng focus */
         .custom-btn:focus {
             outline: none;
@@ -494,6 +520,10 @@
 
                             </div>
 
+                            <div id="custom-alert" class="custom-alert hidden">
+                                <p id="alert-text"></p>
+                                <button id="close-alert">Đóng</button>
+                            </div>
                             
                             <div class="modal fade" id="drugInfoModal" tabindex="-1" aria-labelledby="drugInfoLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
@@ -558,6 +588,7 @@
                             <input type="hidden" name="selected_time_slot" id="selectedTimeSlot">
                             <input type="hidden" name="selected_time_slot_id" id="selectedTimeSlotId">
 
+                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                             <script>
                                 document.addEventListener('DOMContentLoaded', function () {
                                     const dateSelect = document.getElementById('dateSelect-{{ $doctor->id }}');
@@ -717,8 +748,18 @@
                                             quantityInput.value = '1';
                                             quantityInput.className = 'form-control mt-2';
                                             quantityInput.addEventListener('input', (e) => {
-                                                selectedDrugs[drug.id].quantity = parseInt(e.target.value) || 1;
-                                                updatePrice(drug.id);
+                                                const inputQuantity = parseInt(e.target.value) || 1;
+
+                                                if (inputQuantity <= 0) {
+                                                    alert("Số lượng phải lớn hơn 0!");
+                                                    e.target.value = 1; // Reset về giá trị tối thiểu
+                                                } else if (inputQuantity > drug.variantProducts[0].quantity) {
+                                                    alert(`Số lượng nhập vượt quá tồn kho! Tồn kho hiện tại là ${drug.variantProducts[0].quantity}.`);
+                                                    e.target.value = drug.variantProducts[0].quantity; // Reset về giá trị tồn kho tối đa
+                                                } else {
+                                                    selectedDrugs[drug.id].quantity = inputQuantity;
+                                                    updatePrice(drug.id);
+                                                }
                                             });
 
                                             const priceLabel = document.createElement('p');
@@ -762,6 +803,28 @@
                                         }
 
                                         calculateTotalPrice();
+                                    }
+                                }
+
+                                function updateVariantQuantity(drugId, selectedVariant) {
+                                    const quantityInput = document.querySelector(`#selected-drug-${drugId} input[type='number']`);
+                                    const alertBox = document.getElementById('custom-alert');
+                                    const alertText = document.getElementById('alert-text');
+                                    const closeAlertButton = document.getElementById('close-alert');
+
+                                    if (quantityInput) {
+                                        const currentQuantity = parseInt(quantityInput.value) || 1;
+                                        if (currentQuantity > selectedVariant.quantity) {
+                                            alertText.textContent = `Số lượng vượt quá tồn kho! Tồn kho hiện tại: ${selectedVariant.quantity}.`;
+                                            alertBox.classList.remove('hidden');
+
+                                            closeAlertButton.addEventListener('click', () => {
+                                                alertBox.classList.add('hidden');
+                                            });
+
+                                            quantityInput.value = selectedVariant.quantity;
+                                            selectedDrugs[drugId].quantity = selectedVariant.quantity;
+                                        }
                                     }
                                 }
 
@@ -1071,7 +1134,6 @@
                     content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có có ngày tái khám'}</p>`;
                     content += `<p>Ghi chú: ${data.notes || 'Không có thông tin'}</p>`;
 
-                    // Kiểm tra và hiển thị danh sách `order_details`
                     if (data.order_details && data.order_details.length > 0) {
                         content += `<h5>Chi tiết đơn thuốc:</h5>`;
                         content += `<table class="table table-bordered"><thead>
@@ -1142,8 +1204,8 @@
                     doctor_id: {{ $doctor->id }}
                 },
                 success: function(data) {
-                    $('#appointments-grid').html(data); // Cập nhật danh sách chờ xác nhận
-                    autoConfirmAppointments(); // Tự động xác nhận
+                    $('#appointments-grid').html(data); 
+                    autoConfirmAppointments(); 
                 }
             });
         }
@@ -1156,7 +1218,7 @@
                     doctor_id: {{ $doctor->id }}
                 },
                 success: function(data) {
-                    $('.appointments-grid2').html(data); // Cập nhật lịch hẹn hôm nay
+                    $('.appointments-grid2').html(data); 
                 }
             });
         }
@@ -1170,12 +1232,11 @@
                     const form = appointment.querySelector('.confirm-form');
 
                     if (status && form) {
-                        // Đặt timeout để tự động xác nhận sau 5 giây
                         setTimeout(() => {
                             const appointmentId = appointment.dataset.appointmentId;
                             console.log(`Tự động xác nhận đơn hàng ID: ${appointmentId}`);
 
-                            // AJAX gửi yêu cầu xác nhận
+                            
                             $.ajax({
                                 url: form.action,
                                 type: 'POST',
@@ -1184,8 +1245,8 @@
                                 },
                                 success: function(response) {
                                     console.log(`Đơn hàng ID ${appointmentId} đã được xác nhận.`);
-                                    loadPendingAppointments(); // Cập nhật danh sách chờ xác nhận
-                                    loadTodayAppointments(); // Cập nhật lịch hẹn hôm nay
+                                    loadPendingAppointments(); 
+                                    loadTodayAppointments();
                                 },
                                 error: function(error) {
                                     console.error(`Lỗi khi xác nhận đơn hàng ID ${appointmentId}:`, error);

@@ -64,6 +64,7 @@
 <body>
     @extends('layout')
     @section('content')
+    <a href="{{route('viewSikibidi')}}" class="">Quay lại</a>
     <div class="body">
         <div class="container">
             <div class="qr-code">

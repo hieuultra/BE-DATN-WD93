@@ -14,11 +14,11 @@
         @if($appoinment->doctor)
         <li><strong>Bác Sỹ:</strong> {{ $appoinment->doctor->user->name }}</li>
         <li><strong>Số điện thoại:</strong> {{ $appoinment->doctor->user->phone }}</li>
-        <li><strong>Giá:</strong> {{ $appoinment->doctor->user->examination_fee }}</li>
+        <li><strong>Giá:</strong> {{ number_format($appoinment->doctor->examination_fee, 0, ',', '.') }} VND</li>
         @else
         <li><strong>Tên khoa khám:</strong> {{ $appoinment->package->hospital_name }}</li>
         <li><strong>Địa chỉ:</strong> {{ $appoinment->package->address }}</li>
-        <li><strong>Giá:</strong> {{ $appoinment->package->price }}</li>
+        <li><strong>Giá:</strong> {{ number_format($appoinment->package->price, 0, ',', '.') }} VND</li>
         @endif
         <li><strong>Ngày hẹn:</strong> {{ \Carbon\Carbon::parse($available->date)->format('d/m/Y') }}</li>
         <li><strong>Thời gian cụ thể:</strong> {{ $available->startTime }} - {{ $available->endTime }}</li>

@@ -147,6 +147,25 @@
             color: #666;
         }
 
+        .custom-navbar {
+            background-color: #FFD700; /* Màu vàng */
+            color: #000; /* Màu chữ đen */
+        }
+
+        .custom-navbar .navbar-brand,
+        .custom-navbar .nav-link {
+            color: #000 !important; /* Màu chữ đen cho liên kết */
+        }
+
+        .custom-navbar .nav-link:hover {
+            color: #333 !important; /* Màu chữ đậm hơn khi hover */
+        }
+
+.custom-navbar .navbar-brand:hover {
+    text-decoration: underline; /* Gạch chân khi hover */
+}
+
+
         .specialty-details {
             background-color: #f8f9fa; /* Light background for the section */
             padding: 20px;
@@ -158,15 +177,28 @@
             margin-right: auto;
         }
 
+        .description {
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Hiển thị 3 dòng */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .description.expanded {
+            display: block; /* Hiển thị toàn bộ nội dung */
+            -webkit-line-clamp: unset;
+            overflow: visible;
+        }
+
         .specialty-name {
-            font-size: 2em; /* Larger font size for the specialty name */
-            color: #007bff; /* A blue color for the title */
+            font-size: 1.5em; /* Larger font size for the specialty name */
             font-weight: bold;
             margin-bottom: 15px;
         }
 
         .specialty-description {
-            font-size: 1.2em; /* Slightly larger font for the description */
+            font-size: 1em; /* Slightly larger font for the description */
             color: #333; /* Darker color for the description text */
             line-height: 1.6;
             font-style: italic;
@@ -264,9 +296,9 @@
 <body>
     @extends('layout')
     @section('content')
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
-            <a class="navbar-brand" href="http://127.0.0.1:8000/appoinment" id="navbarDropdown">
+            <a class="navbar-brand" href="{{route('appoinment.index')}}" id="navbarDropdown">
                 Quay Lại
             </a>
             <div class="collapse navbar-collapse">
@@ -289,10 +321,14 @@
         </div>
     </nav>
 
+
     <div class="container mt-4">
     <div class="specialty-details">
-        <h1 class="specialty-name">CHUYÊN KHOA: {{$specialty->name}}</h1>
-        <h3 class="specialty-description">Mô tả: {!! Str::limit($specialty->description, 300, '...') !!}</h3>
+        <h1 class="specialty-name text-primary">CHUYÊN KHOA: {{$specialty->name}}</h1>
+        <h3 class="specialty-description">Mô tả: <div id="description" class="description">
+            {!! nl2br(e($specialty->description)) !!}
+        </div>
+        <button id="toggle-button" class="btn btn-primary mt-2">Xem thêm</button></h3>
     </div>
 
 
@@ -310,7 +346,7 @@
             <div class="doctor-info">
                 <div class="d-flex align-items-center mb-2">
                     <span class="badge bg-warning text-dark me-2">Yêu thích</span>
-                    <h5>{{ $doctor->user->name }}</h5>
+                    <h5 class="text-primary">{{ $doctor->user->name }}</h5>
                 </div>
                 <p>{!! Str::limit($doctor->bio, 300, '...') !!}</p>
                 <div class="location">
@@ -370,7 +406,7 @@
                 <div class="address">
                     <strong>ĐỊA CHỈ KHÁM: {{ $clinic->address }}</strong>
                     <p>{{ $clinic->clinic_name}}</p>
-                    <p>{{ $clinic->city}}, {{ $clinic->address }}</p>
+                    <p>{{ $clinic->city}}</p>
                 </div>
                 @else
 
@@ -385,6 +421,23 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <script>
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const description = document.getElementById("description");
+                const toggleButton = document.getElementById("toggle-button");
+
+                toggleButton.addEventListener("click", () => {
+                    if (description.classList.contains("expanded")) {
+                        description.classList.remove("expanded");
+                        toggleButton.textContent = "Xem thêm";
+                    } else {
+                        description.classList.add("expanded");
+                        toggleButton.textContent = "Thu gọn";
+                    }
+                });
+            });
+
+
             document.querySelectorAll('.date-select').forEach(function(select) {
                 select.addEventListener('change', function() {
                     let selectedDate = this.value;
