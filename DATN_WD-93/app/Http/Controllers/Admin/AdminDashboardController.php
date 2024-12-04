@@ -312,9 +312,9 @@ class AdminDashboardController extends Controller
 
         //doanh thu
         $moneyProducts = Bill::whereMonth('created_at', $currentMonth)->where('status_bill', 'da_giao_hang')
-            ->sum('moneyProduct'); //doanh thu tháng này
+            ->sum('totalPrice'); //doanh thu tháng này
         $moneyProductsLastMonth = Bill::whereMonth('created_at', $lastMonth)->where('status_bill', 'da_giao_hang')
-            ->sum('moneyProduct'); //doanh thu tháng trước
+            ->sum('totalPrice'); //doanh thu tháng trước
         if ($moneyProductsLastMonth != 0 && $moneyProductsLastMonth !== null) {
             if ($moneyProducts > $moneyProductsLastMonth) {
                 $message = "Tăng " . round((($moneyProducts - $moneyProductsLastMonth) / $moneyProductsLastMonth) * 100, 2) . "% .";
