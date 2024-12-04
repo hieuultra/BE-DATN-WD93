@@ -179,7 +179,7 @@ Route::get('/viewSikibidi', function () {
     }
     $categories = Category::orderBy('name', 'asc')->get();
     return view('client.ai.viewSikibidi', compact('orderCount', 'categories'));
-});
+})->name('viewSikibidi');
 Route::get('/chat-ai', function () {
     $orderCount = 1;
     if (Auth::check()) {

@@ -80,6 +80,7 @@
 <body>
     @extends('layout')
     @section('content')
+    <a href="{{route('appoinment.index')}}">Quay lại</a>
     <div class="body1">
         <div class="container">
             <h1>Bạn muốn lựa chọn dịch vụ nào</h1>
@@ -99,7 +100,7 @@
                 </div>
 
               
-                <div class="option" onclick="window.location.href='/generalExamination'">
+                <div class="option" onclick="window.location.href='/'">
                     <div class="option-icon">🩺</div>
                     <div class="option-title">Khám tổng quát</div>
                     <div class="option-description">Đặt lịch khám tổng quát cho sức khỏe của bạn.</div>
