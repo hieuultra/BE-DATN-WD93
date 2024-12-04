@@ -33,13 +33,22 @@ class AdminCouponController extends Controller
     {
         // Validate dữ liệu nhập vào
         $request->validate([
-            'code' => 'required|unique:coupons,code',  // Kiểm tra tính duy nhất của mã giảm giá
-            'value' => 'required|numeric|min:0',      // Giá trị giảm giá không âm
-            'min_order_value' => 'required|numeric|min:0',  // Giá trị đơn hàng tối thiểu không âm
-            'expiry_date' => 'required|date|after:today',  // Ngày hết hạn phải sau ngày hôm nay
-            'usage_limit' => 'required|numeric|min:1',   // Số lần sử dụng phải lớn hơn hoặc bằng 1
+            'code' => 'required|unique:coupons,code',
+            'value' => [
+                'required',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value > $request->min_order_value) {
+                        $fail('Giá trị giảm giá phải nhỏ hơn hoặc bằng giá trị đơn hàng tối thiểu.');
+                    }
+                }
+            ],
+            'min_order_value' => 'required|numeric|min:0',
+            'expiry_date' => 'required|date|after:today',
+            'usage_limit' => 'required|numeric|min:1',
             'is_active' => 'required|boolean',
-            'type' => 'required'    // Trạng thái hoạt động (0 hoặc 1)
+            'type' => 'required'
         ]);
 
         // Lưu mã giảm giá vào cơ sở dữ liệu
@@ -73,11 +82,20 @@ class AdminCouponController extends Controller
         // Validate dữ liệu nhập vào
         $request->validate([
             'code' => 'required|unique:coupons,code,' . $id,  // Kiểm tra tính duy nhất, bỏ qua mã giảm giá đang sửa
-            'value' => 'required|numeric|min:0',      // Giá trị giảm giá không âm
-            'min_order_value' => 'required|numeric|min:0',  // Giá trị đơn hàng tối thiểu không âm
-            'expiry_date' => 'required|date|after:today',  // Ngày hết hạn phải sau ngày hôm nay
-            'usage_limit' => 'required|numeric|min:1',   // Số lần sử dụng phải lớn hơn hoặc bằng 1
-            'is_active' => 'required|boolean',           // Trạng thái hoạt động (0 hoặc 1)
+            'value' => [
+                'required',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value > $request->min_order_value) {
+                        $fail('Giá trị giảm giá phải nhỏ hơn hoặc bằng giá trị đơn hàng tối thiểu.');
+                    }
+                }
+            ],
+            'min_order_value' => 'required|numeric|min:0',
+            'expiry_date' => 'required|date|after:today',
+            'usage_limit' => 'required|numeric|min:1',
+            'is_active' => 'required|boolean',
             'type' => 'required'
         ]);
 
