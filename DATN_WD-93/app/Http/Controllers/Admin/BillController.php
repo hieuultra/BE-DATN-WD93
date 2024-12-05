@@ -60,6 +60,7 @@ class BillController extends Controller
 
         $bill->status_bill = $newStatus;
         $bill->save();
+
         return redirect()->route('admin.bills.index')->with('success', 'Trạng thái hóa đơn đã được cập nhật thành công');
     }
 

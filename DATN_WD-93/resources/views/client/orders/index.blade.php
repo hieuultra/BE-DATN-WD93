@@ -140,11 +140,7 @@
                 @endforeach
             </tbody>
         </table>
-        {{-- <div class="cart-update" style="float: right">
-            <button type="submit" href="" class="btn btn-primary">Update Cart</button>
-        </div> --}}
       </div>
     </div>
   </div>
-
 @endsection
