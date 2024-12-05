@@ -245,6 +245,7 @@ Route::middleware('auth')->prefix('orders')
         Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
         Route::put('{id}/update', [OrderController::class, 'update'])->name('update');
     });
+Route::get('/order-status/{id}', [BillController::class, 'getOrderStatus'])->name('order.status');
 //review
 Route::post('/products/{productId}/reviews/{billId}', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 Route::post('/submit-rating', [ReviewController::class, 'storeRating'])->name('submitRating');

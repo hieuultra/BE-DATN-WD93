@@ -107,6 +107,7 @@
                         <tr>
                             <th>Mã sản phẩm</th>
                             <th>Tên</th>
+                            <th>Loại</th>
                             <th>Ảnh</th>
                             <th>Đơn giá</th>
                             <th>Số lượng</th>
@@ -117,10 +118,12 @@
                         @foreach($bill->order_detail as $detail)
                             @php
                                 $product= $detail->product;
+                                $variant = $detail->productVariant;
                             @endphp
                             <tr>
                                 <td>{{ $product->idProduct }}</td>
                                 <td>{{ $product->name }}</td>
+                                <td>{{ $variant->variantPackage->name ?? 'Không xác định' }}</td>
                                 <td><img class="img-fluid" src="{{ asset('upload/'.$product->img) }}" width="75px"></td>
                                 <td>{{ number_format($detail->unitPrice,0,',','.') }}VND</td>
                                 <td>{{ $detail->quantity }}</td>
