@@ -69,7 +69,7 @@ class CartController extends Controller
                 if ($coupon && $coupon->isValid()) {
                     $discount = $coupon->value;
                     $checkMinDiscount = $coupon->min_order_value;
-                    if ($checkMinDiscount < $subTotal) {
+                    if ($checkMinDiscount < ($subTotal + 40000)) {
                         $cart->coupon_code = $coupon->code;
                         $cart->save();
                         if ($coupon->type == 'percentage') {
