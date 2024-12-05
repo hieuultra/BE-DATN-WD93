@@ -131,6 +131,12 @@ class OrderController extends Controller
                     } elseif ($couponType == 'percentage') {
                         // Mã giảm giá theo phần trăm
                         $coupon = ($subTotal + $shipping) * ($couponValue / 100);
+                        $maxDiscount = $couponTable->max_discount ?? 0;
+                        if ($maxDiscount != 0) {
+                            if ($maxDiscount < $coupon) {
+                                $coupon = $maxDiscount;
+                            }
+                        }
                     }
                 }
             }
