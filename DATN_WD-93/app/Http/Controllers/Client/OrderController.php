@@ -245,15 +245,27 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
+            $messageType = 'success'; // Mặc định là success
             if ($request->has('da_huy')) {
-                $bill->update(['status_bill' => Bill::DA_HUY]);
-                // Hoàn lại số lượng sản phẩm về kho
-                foreach ($bill->order_detail as $orderDetail) {
-                    $productVariant = VariantProduct::findOrFail($orderDetail->variant_id); // Truy vấn sản phẩm biến thể
-                    $productVariant->quantity += $orderDetail->quantity; // Hoàn lại số lượng
-                    $productVariant->save();
+                if (
+                    $bill->status_bill != 'da_giao_hang'
+                    && $bill->status_bill != 'dang_van_chuyen'
+                    && $bill->status_bill != 'dang_chuan_bi'
+                    && $bill->status_bill != 'da_xac_nhan'
+                ) {
+                    $bill->update(['status_bill' => Bill::DA_HUY]);
+                    // Hoàn lại số lượng sản phẩm về kho
+
+                    foreach ($bill->order_detail as $orderDetail) {
+                        $productVariant = VariantProduct::findOrFail($orderDetail->variant_id); // Truy vấn sản phẩm biến thể
+                        $productVariant->quantity += $orderDetail->quantity; // Hoàn lại số lượng
+                        $productVariant->save();
+                    }
+                    $message = 'Hủy đơn hàng thành công';
+                } else {
+                    $message = 'Đơn hàng không thể hủy ở trạng thái hiện tại';
+                    $messageType = 'error'; // Chuyển sang thông báo lỗi
                 }
-                $message = 'Hủy đơn hàng thành công';
             } elseif ($request->has('da_giao_hang')) {
                 $bill->update(['status_bill' => Bill::DA_GIAO_HANG]);
 
@@ -264,7 +276,7 @@ class OrderController extends Controller
             //Sử dụng DB::commit() để xác nhận thay đổi nếu mọi thứ thành công.
             //Nếu có lỗi, sử dụng DB::rollBack() để hoàn tác tất cả các thay đổi.
             DB::commit();
-            return redirect()->route('orders.index')->with('success', $message);
+            return redirect()->route('orders.index')->with($messageType, $message);
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('orders.index')->with('error', 'Cập nhập đơn hàng thất bại');
