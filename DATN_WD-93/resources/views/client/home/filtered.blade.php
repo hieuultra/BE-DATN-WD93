@@ -256,7 +256,13 @@
 
                     @forelse ($filteredVariants as $variant)
                         @php  $item = $variant->product;
-                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100);
+                               if ($variant) {
+                                    // Nếu biến thể tồn tại, tính toán giá trị
+                                    $tt = $variant->price - (($variant->price * $item['discount']) / 100);
+                                } else {
+                                    // Nếu không có biến thể, đặt giá trị mặc định
+                                    $tt = null;
+                                }
                                @endphp
                         <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
                             <div class="product-item bg-light mb-4">
@@ -282,7 +288,7 @@
                                         {{ $variant->product->name }}
                                     </a>
                                     <div class="d-flex align-items-center justify-content-center mt-2">
-                                        <h5 class="text-danger"> {{ number_format($tt, 0, ',', '.') }} VND</h5>
+                                        <h6 class="text-danger"> {{ number_format($tt, 0, ',', '.') }} VND</h6>
                                         <h6 class="text-muted ml-2">@if ($item->variantProduct->isNotEmpty())
                                             @php
                                                 $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên

@@ -71,7 +71,11 @@
 
                     <div class="mb-3">
                         <label class="form-label">Giảm giá (%)</label>
-                        <input type="number" class="form-control @error('discount') is-invalid @enderror" value="{{ old('discount') }}" name="discount" placeholder="Discount">
+                        <input type="number"
+                        class="form-control @error('discount') is-invalid @enderror" value="{{ old('discount') }}"
+                        name="discount"
+                        placeholder="Discount"
+                        min="0">
                         @error('discount')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror

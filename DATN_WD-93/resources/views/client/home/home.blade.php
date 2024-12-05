@@ -711,9 +711,9 @@
                                             style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $item->name }}</a>
                                         <div class="d-flex align-items-center justify-content-center mt-2">
                                             @if ($tt !== null)
-                                            <h5 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h5>
+                                            <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
                                             @else
-                                                <h5 class="text-danger">Giá: Chưa thêm giá</h5>
+                                                <h6 class="text-danger">Giá: Chưa thêm giá</h6>
                                             @endif
                                             <h6 class="text-muted ml-2">
                                                 @if ($item->variantProduct->isNotEmpty())
@@ -722,7 +722,7 @@
                                                             @endphp
                                                             <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
                                                         @else
-                                                            <del>Giá: Không có thông tin</del>
+                                                            <del>Giá: Chưa có biến thể</del>
                                                         @endif
                                                     </h6>
                                             <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
@@ -790,7 +790,7 @@
                                             style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             {{ $item->name }}</a>
                                         <div class="d-flex align-items-center justify-content-center mt-2">
-                                            <h5 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h5>
+                                            <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
                                             <h6 class="text-muted ml-2">
                                                 @if ($item->variantProduct->isNotEmpty())
                                                             @php
@@ -917,14 +917,14 @@
                                 style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 {{ $item->name }}</a>
                             <div class="d-flex align-items-center justify-content-center mt-2">
-                                <h5 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h5>
+                                <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
                                 <h6 class="text-muted ml-2"> @if ($item->variantProduct->isNotEmpty())
                                     @php
                                         $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
                                     @endphp
                                     <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
                                 @else
-                                    <del>Giá: Không có thông tin</del>
+                                    <del>Giá: Chưa có biến thể</del>
                                 @endif
                                 </h6>
                                 <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
@@ -1019,14 +1019,14 @@
                                 style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 {{ $item->name }}</a>
                             <div class="d-flex align-items-center justify-content-center mt-2">
-                                <h5 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h5>
+                                <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
                                 <h6 class="text-muted ml-2"> @if ($item->variantProduct->isNotEmpty())
                                     @php
                                         $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
                                     @endphp
                                     <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
                                 @else
-                                    <del>Giá: Không có thông tin</del>
+                                    <del>Giá: Chưa có biến thể</del>
                                 @endif
                                 </h6>
                                 <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>

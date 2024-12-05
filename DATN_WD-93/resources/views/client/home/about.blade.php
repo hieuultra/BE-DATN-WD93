@@ -45,6 +45,7 @@
 
         .info-content {
             max-width: 700px;
+            width: 53%;
         }
 
         .info-content h2 {
@@ -86,11 +87,12 @@
         }
 
         .info-image {
-            flex-shrink: 0;
+            /* flex-shrink: 0; */
+            width: 40%;
         }
 
         .info-image img {
-            max-width: 320px;
+            max-width: 220px;
             transform: scale(1.4);
             margin-top: 70px;
             border-radius: 10px;
@@ -537,7 +539,7 @@
                 </ul>
             </div>
             <div class="info-image">
-                <img src="{{ asset('img/1-trang-gioi-thieu.webp') }}" alt="Thiết bị y tế hiện đại">
+                <img src="{{ asset('img/1-trang-gioi-thieu.webp') }}" alt="Thiết bị y tế hiện đại" width="90%">
             </div>
         </section>
         <section class="stats-section">
@@ -812,7 +814,7 @@
 
     </div>
     <div class="container-fluid custom-container" style="background-color: #0385d0dc; padding-bottom: 70px">
-        <section class="info-section">
+        <section class="info-section" style="">
             <div class="info-content" style="margin-top: 60px">
                 <h2 style="color: white">Hợp tác và đào tạo chuyên sâu</h2>
                 <div style="background-color: white" class="underline"></div>
