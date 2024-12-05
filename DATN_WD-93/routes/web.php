@@ -234,6 +234,7 @@ Route::get('/listCoupons', [CouponController::class, 'listCoupons'])->name('list
 Route::get('/blog',                       [ClientBlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/list/{topic_id}',       [ClientBlogController::class, 'list'])->name('blog.list');
 Route::get('/blog/show/{id}',             [ClientBlogController::class, 'show'])->name('blog.show');
+
 // order
 Route::middleware('auth')->prefix('orders')
     ->as('orders.')
