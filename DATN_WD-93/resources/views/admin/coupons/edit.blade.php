@@ -46,7 +46,14 @@
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
-
+            <div class="form-group">
+                <label for="max_discount">Giảm giá tối đa</label>
+                <input type="number" name="max_discount" class="form-control" id="max_discount"
+                    value="{{ old('min_order_value', $coupon->max_discount) }}">
+                @error('max_discount')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
             <div class="form-group">
                 <label for="expiry_date">Ngày hết hạn</label>
                 <input type="date" name="expiry_date" class="form-control" id="expiry_date"
@@ -83,23 +90,52 @@
         </form>
     </div>
     <script>
-       document.getElementById('type').addEventListener('change', function() {
+        document.getElementById('type').addEventListener('change', function() {
             const valueInput = document.getElementById('value');
+            const maxDiscountInput = document.getElementById('max_discount');
+
+            // Nếu là giảm theo % thì đặt giới hạn max = 99
             if (this.value === 'percentage') {
                 valueInput.setAttribute('max', 99);
+                maxDiscountInput.removeAttribute('disabled'); // Bật lại max_discount
             } else {
-                valueInput.removeAttribute('max'); // Loại bỏ giới hạn nếu là "Giảm theo giá trị mặc định"
+                // Nếu là giảm cố định thì không cần max
+                valueInput.removeAttribute('max');
+                maxDiscountInput.setAttribute('disabled', true); // Vô hiệu hóa max_discount
+                maxDiscountInput.value = ''; // Xóa giá trị nếu không cần
             }
         });
 
         document.querySelector('form').addEventListener('submit', function(event) {
             const type = document.getElementById('type').value;
             const value = document.getElementById('value').value;
+            const maxDiscountInput = document.getElementById('max_discount').value;
 
-            // Kiểm tra nếu chọn "Giảm theo %" và giá trị nhập vào lớn hơn 100
+            // Kiểm tra nếu giảm theo % và giá trị vượt quá 99
             if (type === 'percentage' && parseInt(value) > 99) {
                 alert('Giá trị giảm theo % không được lớn hơn 99');
                 event.preventDefault(); // Ngừng việc gửi form
+                return;
+            }
+
+            // Kiểm tra nếu là giảm cố định mà max_discount có giá trị
+            if (type === 'fixed' && maxDiscountInput.trim() !== '') {
+                alert('Giảm theo giá trị cố định không cần nhập giá trị giảm giá tối đa');
+                event.preventDefault(); // Ngừng việc gửi form
+                return;
+            }
+        });
+
+        // Khi tải trang, tự động kiểm tra trạng thái của max_discount
+        document.addEventListener('DOMContentLoaded', function() {
+            const type = document.getElementById('type').value;
+            const maxDiscountInput = document.getElementById('max_discount');
+
+            if (type === 'fixed') {
+                maxDiscountInput.setAttribute('disabled', true);
+                maxDiscountInput.value = ''; // Xóa giá trị nếu không cần
+            } else {
+                maxDiscountInput.removeAttribute('disabled');
             }
         });
     </script>

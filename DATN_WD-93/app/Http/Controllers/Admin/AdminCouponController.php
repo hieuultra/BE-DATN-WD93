@@ -31,6 +31,7 @@ class AdminCouponController extends Controller
      */
     public function store(Request $request)
     {
+        $max_discount = $request->max_discount;
         // Validate dữ liệu nhập vào
         $request->validate([
             'code' => 'required|unique:coupons,code',
@@ -60,6 +61,7 @@ class AdminCouponController extends Controller
             'usage_limit' => $request->usage_limit,
             'is_active' => $request->is_active,
             'type' => $request->type,
+            'max_discount' => $max_discount
         ]);
 
         // Trả về thông báo thành công và chuyển hướng
@@ -79,6 +81,7 @@ class AdminCouponController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $max_discount = $request->max_discount;
         // Validate dữ liệu nhập vào
         $request->validate([
             'code' => 'required|unique:coupons,code,' . $id,  // Kiểm tra tính duy nhất, bỏ qua mã giảm giá đang sửa
@@ -109,6 +112,7 @@ class AdminCouponController extends Controller
             'usage_limit' => $request->usage_limit,
             'is_active' => $request->is_active,
             'type' => $request->type,
+            'max_discount' => $max_discount
         ]);
 
         // Trả về thông báo thành công và chuyển hướng
