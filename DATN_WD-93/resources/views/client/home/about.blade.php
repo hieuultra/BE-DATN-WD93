@@ -45,6 +45,7 @@
 
         .info-content {
             max-width: 700px;
+            width: 53%;
         }
 
         .info-content h2 {
@@ -86,11 +87,12 @@
         }
 
         .info-image {
-            flex-shrink: 0;
+            /* flex-shrink: 0; */
+            width: 40%;
         }
 
         .info-image img {
-            max-width: 320px;
+            max-width: 220px;
             transform: scale(1.4);
             margin-top: 70px;
             border-radius: 10px;
@@ -521,23 +523,26 @@
     <div class="container-fluid my-5 custom-container" style="background-color: #f0f8ff">
         <section class="info-section">
             <div class="info-content" style="margin-top: 60px">
-                <h2>Về Phòng khám Đa khoa</h2>
+                <h2>Về nhà thuốc Instinct Pharmacy</h2>
                 <div class="underline"></div>
                 <p>
-                    Được xây dựng và thành lập bởi Công ty TNHH Tổ hợp Y tế Phương Đông - Đơn vị thành viên của Tập đoàn
-                    Intracom, Bệnh viện Đa khoa Phương Đông có nền tảng sức mạnh vững chắc về mọi mặt, từ năng lực tài
-                    chính, bộ máy con người, cơ sở vật chất, hạ tầng kỹ thuật. Với phương châm chia sẻ giá trị tốt đẹp cho
-                    xã hội về chăm sóc sức khỏe, Bệnh viện đa khoa Phương Đông là bước tiến tiếp theo của Intracom trên hành
-                    trình “Tỏa sáng cùng đất nước”.
+                    Phòng khám Instinct, trực thuộc Công ty TNHH Tổ hợp Y tế Phương Đông -
+                     thành viên của Tập đoàn Intracom, được xây dựng trên nền tảng vững chắc với sự kết
+                      hợp hài hòa giữa tài chính mạnh mẽ, đội ngũ nhân sự giàu kinh nghiệm và hệ thống cơ sở vật chất tiên tiến.
+                    Chúng tôi luôn cam kết mang đến dịch vụ chăm sóc sức khỏe tốt nhất cho cộng đồng,
+                     góp phần nâng cao chất lượng cuộc sống và lan tỏa những giá trị tốt đẹp.
                 </p>
                 <ul>
-                    <li>Đứng đầu trong lĩnh vực y tế, luôn đặt uy tín lên hàng đầu.</li>
-                    <li>Đội ngũ với đầy kinh nghiệm, đam mê và nhiệt huyết trong công việc.</li>
-                    <li>Trang thiết bị hiện đại, hàng đầu thế giới.</li>
+                    <li><strong>Uy tín hàng đầu trong lĩnh vực y tế:</strong> Luôn đặt lợi ích và sức khỏe của khách hàng lên trên hết.</li>
+                    <li><strong>Đội ngũ chuyên gia:</strong> Các bác sĩ, dược sĩ giàu kinh nghiệm, tận tâm và đầy nhiệt huyết.</li>
+                    <li><strong>Trang thiết bị hiện đại:</strong> Sử dụng công nghệ tiên tiến nhất để đảm bảo hiệu quả và an toàn tối ưu.</li>
                 </ul>
+                <p>
+                    Với sứ mệnh trở thành địa chỉ tin cậy trong chăm sóc sức khỏe và cung cấp các sản phẩm thuốc chất lượng, Phòng khám Instinct không ngừng hoàn thiện và nâng cao dịch vụ. Đặt lịch khám nhanh chóng và dễ dàng ngay trên website của chúng tôi!
+                </p>
             </div>
             <div class="info-image">
-                <img src="{{ asset('img/1-trang-gioi-thieu.webp') }}" alt="Thiết bị y tế hiện đại">
+                <img src="{{ asset('img/1-trang-gioi-thieu.webp') }}" alt="Thiết bị y tế hiện đại" width="90%">
             </div>
         </section>
         <section class="stats-section">
@@ -812,7 +817,7 @@
 
     </div>
     <div class="container-fluid custom-container" style="background-color: #0385d0dc; padding-bottom: 70px">
-        <section class="info-section">
+        <section class="info-section" style="">
             <div class="info-content" style="margin-top: 60px">
                 <h2 style="color: white">Hợp tác và đào tạo chuyên sâu</h2>
                 <div style="background-color: white" class="underline"></div>

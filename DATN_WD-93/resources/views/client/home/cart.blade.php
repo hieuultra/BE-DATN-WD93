@@ -351,6 +351,12 @@
                     // Nếu là phần trăm
                     let discountPercent = discount;
                     let discountAmount = (subTotal + shipping) * (discountPercent / 100);
+                    let maxDiscount = {{ $maxDiscount ?? 0 }};
+                    if (maxDiscount) {
+                        if (maxDiscount < discountAmount) {
+                            discountAmount = maxDiscount
+                        }
+                    }
                     total = subTotal + shipping - discountAmount; // Trừ mã giảm giá theo phần trăm
                 } else {
                     // Nếu là giá trị cố định

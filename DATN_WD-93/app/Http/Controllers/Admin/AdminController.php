@@ -127,7 +127,7 @@ class AdminController extends Controller
         $topUsersByOrders = $billQuery
             ->select('user_id', DB::raw('COUNT(*) as total_orders'))
             ->groupBy('user_id')
-            ->orderBy(DB::raw('COUNT(*)')) // Sắp xếp trực tiếp bằng COUNT(*)
+            ->orderByDesc(DB::raw('COUNT(*)')) // Sắp xếp trực tiếp bằng COUNT(*)
             ->with('user') // Tải thông tin người dùng
             ->take(5)
             ->get();
@@ -137,7 +137,7 @@ class AdminController extends Controller
             ->select('user_id', DB::raw('COUNT(*) as total_canceled'))
             ->where('status_bill', 'da_huy') // Chỉ lấy đơn hàng bị hủy
             ->groupBy('user_id')
-            ->orderBy(DB::raw('COUNT(*)')) // Sắp xếp trực tiếp bằng COUNT(*)
+            ->orderByDesc(DB::raw('COUNT(*)')) // Sắp xếp trực tiếp bằng COUNT(*)
             ->with('user') // Tải thông tin người dùng
             ->take(5)
             ->get();
@@ -146,7 +146,7 @@ class AdminController extends Controller
         $topUsersByAppointments = $appointmentQuery
             ->select('user_id', DB::raw('COUNT(*) as total_appointments'))
             ->groupBy('user_id')
-            ->orderBy(DB::raw('COUNT(*)')) // Sắp xếp trực tiếp bằng COUNT(*)
+            ->orderByDesc(DB::raw('COUNT(*)')) // Sắp xếp trực tiếp bằng COUNT(*)
             ->with('user') // Tải thông tin người dùng
             ->take(5)
             ->get();
@@ -156,7 +156,7 @@ class AdminController extends Controller
             ->select('user_id', DB::raw('COUNT(*) as total_canceled'))
             ->where('status_appoinment', 'huy_lich_hen') // Chỉ lấy lịch hẹn bị hủy
             ->groupBy('user_id')
-            ->orderBy(DB::raw('COUNT(*)')) // Sắp xếp trực tiếp bằng COUNT(*)
+            ->orderByDesc(DB::raw('COUNT(*)')) // Sắp xếp trực tiếp bằng COUNT(*)
             ->with('user') // Tải thông tin người dùng
             ->take(5)
             ->get();

@@ -6,8 +6,12 @@ use Carbon\Carbon;
 use App\Models\Review;
 use App\Models\Specialty;
 use App\Models\Appoinment;
+use App\Models\Bill;
+use App\Models\OrderDetail;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
@@ -133,8 +137,8 @@ class AdminDashboardController extends Controller
                 $specialtyImage = $specialty->image; // Giả sử bạn có trường 'image' trong bảng Specialty
             } else {
                 // Nếu không có chuyên khoa, có thể gán tên và ảnh mặc định
-                $specialtyName = 'Chưa xác định';
-                $specialtyImage = 'default_image.png'; // Tên ảnh mặc định
+                $specialtyName = 'khám tổng quát';
+                $specialtyImage = 'khám tổng quát'; // Tên ảnh mặc định
             }
 
             // Đếm số lượng cuộc hẹn trong nhóm này
@@ -161,6 +165,7 @@ class AdminDashboardController extends Controller
 
         // Lấy bác sỹ
         $topDoctorsData = Appoinment::with('doctor.user') // Lấy thông tin bác sĩ
+        // ->whereNotNull('doctor_id') // Loại bỏ các bản ghi không có doctor_id
             ->selectRaw('doctor_id, COUNT(*) as appointments_count,
                      SUM(CASE WHEN status_appoinment = "kham_hoan_thanh" THEN 1 ELSE 0 END) as completed_appointments_count')
             ->groupBy('doctor_id')
@@ -171,8 +176,8 @@ class AdminDashboardController extends Controller
         for ($i = 0; $i < 5; $i++) {
             if (isset($topDoctorsData[$i])) {
                 $dataDoctors[] = [
-                    'doctor_name' => $topDoctorsData[$i]->doctor->title ?? 'chưa có',
-                    'doctor_image' => $topDoctorsData[$i]->doctor->user->image ?? 'chưa có',
+                    'doctor_name' => $topDoctorsData[$i]->doctor->user->name ?? 'khám tổng quát',
+                    'doctor_image' => $topDoctorsData[$i]->doctor->user->image ?? 'khám tổng quát',
                     'appointments_count' => $topDoctorsData[$i]->appointments_count ?? 0,
                     'completed_appointments_count' => $topDoctorsData[$i]->completed_appointments_count ?? 0,
                 ];
@@ -299,5 +304,163 @@ class AdminDashboardController extends Controller
             'reviewsYear' => $reviews['year'],
             'latestReviews' => $latestReviews
         ]);
+    }
+    public function revenues(Request $request)
+    {
+        $currentTimeInTimezone = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+        $currentMonth = Carbon::now()->month; // tháng hiện tại
+        $lastMonth = Carbon::now()->subMonth(); // tháng trước
+
+        //doanh thu
+        $moneyProducts = Bill::whereMonth('created_at', $currentMonth)->where('status_bill', 'da_giao_hang')
+            ->sum('totalPrice'); //doanh thu tháng này
+        $moneyProductsLastMonth = Bill::whereMonth('created_at', $lastMonth)->where('status_bill', 'da_giao_hang')
+            ->sum('totalPrice'); //doanh thu tháng trước
+        if ($moneyProductsLastMonth != 0 && $moneyProductsLastMonth !== null) {
+            if ($moneyProducts > $moneyProductsLastMonth) {
+                $message = "Tăng " . round((($moneyProducts - $moneyProductsLastMonth) / $moneyProductsLastMonth) * 100, 2) . "% .";
+                $color = 'green';
+            } elseif ($moneyProducts < $moneyProductsLastMonth) {
+                $message = "Giảm " . round((($moneyProductsLastMonth - $moneyProducts) / $moneyProductsLastMonth) * 100, 2) . "% .";
+                $color = 'red';
+            } else {
+                $message = "Doanh thu không thay đổi .";
+                $color = 'gray';
+            }
+        } else {
+            $message = "Doanh thu không thay đổi .";
+            $color = 'gray';
+        }
+        //sl khách mua
+        //tháng này
+        $uniqueUserIds = Bill::whereMonth('created_at', $currentMonth)
+            ->where('status_bill', 'da_giao_hang')
+            ->distinct()
+            ->count('user_id');
+        //tháng trước
+        $uniqueUserIdsLastMonth = Bill::whereMonth('created_at', $currentMonth)
+            ->where('status_bill', 'da_giao_hang')
+            ->distinct()
+            ->count('user_id');
+        if ($uniqueUserIds > $uniqueUserIdsLastMonth) {
+            $message2 = "Tăng " . round((($uniqueUserIds - $uniqueUserIdsLastMonth) / $uniqueUserIdsLastMonth) * 100, 2) . "% .";
+            $color2 = 'green';
+        } elseif ($uniqueUserIds < $uniqueUserIdsLastMonth) {
+            $message2 = "Giảm" . round((($uniqueUserIdsLastMonth - $uniqueUserIds) / $uniqueUserIdsLastMonth) * 100, 2) . "% .";
+            $color2 = 'red';
+        } else {
+            $message2 = "SL người mua không thay đổi .";
+            $color2 = 'gray';
+        }
+        // Thống kê doanh thu theo ngày
+        $start_date = $request->input('startDate');
+        $end_date = $request->input('endDate');
+        if ($start_date && $end_date) {
+            //lấy doanh thu
+            $moneyProductsPopup = Bill::whereBetween('created_at', [$start_date, $end_date])
+                ->where('status_bill', 'da_giao_hang')
+                ->sum('moneyProduct');
+            $formattedMoney = number_format($moneyProductsPopup, 0, ',', '.');
+            $formattedMoney .= ' VNĐ';
+            //lấy số lượng đơn thành công
+            $orderCountSuccess = Bill::whereBetween('created_at', [$start_date, $end_date])
+                ->where('status_bill', 'da_giao_hang')
+                ->count();
+            //số lượng đơn hàng thất bại
+            $orderCountFail = Bill::whereBetween('created_at', [$start_date, $end_date])
+                ->where('status_bill', 'da_huy')
+                ->count();
+            //tính tỉ lệ thành công / tổng đơn
+            $totalOrders = Bill::whereBetween('created_at', [$start_date, $end_date])->count(); //tổng đơn hàng
+
+            // Tính phần trăm đơn hàng thành công
+            if ($totalOrders > 0) {
+                $successRate = ($orderCountSuccess / $totalOrders) * 100;
+            } else {
+                $successRate = 0;
+            }
+            $percentSuccess = round($successRate, 2);
+            if ($totalOrders > 0) {
+                $failRate = ($orderCountFail / $totalOrders) * 100;
+            } else {
+                $failRate = 0;
+            }
+            $percentFail = round($failRate, 2);
+            // phần trăm đơn hàng thất bại
+            return response()->json([
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'moneyProductsPopup' => $formattedMoney,
+                'orderCountSuccess' => $orderCountSuccess,
+                'orderCountFail' => $orderCountFail,
+                'percentSuccess' => $percentSuccess,
+                'percentFail' => $percentFail,
+            ]);
+        }
+        return view('admin.dashboard.revenue', compact(
+            'currentTimeInTimezone',
+            'currentMonth',
+            'moneyProducts',
+            'message',
+            'color',
+            'color2',
+            'message2',
+            'uniqueUserIds',
+
+        ));
+    }
+    public function revenuesProductSale(Request $request)
+    {
+        $start_date = Carbon::parse($request->input('startDate'))->startOfDay();
+        $end_date = Carbon::parse($request->input('endDate'))->endOfDay();
+        if ($start_date && $end_date) {
+            $orderIds = Bill::whereBetween('created_at', [$start_date, $end_date])
+                ->where('status_bill', 'da_giao_hang')  // Lọc theo trạng thái
+                ->pluck('id');
+            if ($orderIds->isEmpty()) {
+                return response()->json([
+                    'orderIds' => [],
+                    'topProducts' => [],
+                    'message' => 'No orders found for the given date range.'
+                ]);
+            }
+            // Truy vấn bảng 'order_details' để lấy 'product_id' và 'variant_id' từ các đơn hàng
+            $orderDetails = OrderDetail::whereIn('bill_id', $orderIds)
+                ->join('products', 'order_details.product_id', '=', 'products.id') // Kết nối với bảng products
+                ->select(
+                    'order_details.product_id',
+                    'products.name as product_name',
+                    'products.img as product_img',
+                    DB::raw('SUM(order_details.quantity) as total_quantity')
+                )
+                ->groupBy('order_details.product_id', 'products.name', 'products.img') // Nhóm theo product_id và thông tin sản phẩm
+                ->orderByDesc('total_quantity') // Sắp xếp theo tổng quantity giảm dần
+                ->get();
+            return response()->json([
+                'orderIds' => $orderIds,
+                'topProducts' => $orderDetails,
+            ]);
+        }
+        // return view('admin.dashboard.revenue', compact('orderDetails'));
+    }
+    public function revenuesProductSaleNone(Request $request)
+    {
+        $start_date = $request->input('startDate');
+        $end_date = $request->input('endDate');
+        if ($start_date && $end_date) {
+            $allProductIds = Product::pluck('id')->toArray(); // Lấy tất cả id từ bảng products
+            $orderIds = Bill::whereBetween('created_at', [$start_date, $end_date])
+                ->pluck('id');
+            $productIdsFromOrderDetails = OrderDetail::whereIn('bill_id', $orderIds) // Lọc theo danh sách bill_id
+                ->distinct('product_id')
+                ->pluck('product_id')->toArray();
+            $uniqueProductIds = array_diff($allProductIds, $productIdsFromOrderDetails);
+            $uniqueProducts = Product::whereIn('id', $uniqueProductIds) // Lọc theo danh sách product_id
+                ->select('id', 'name', 'img') // Chọn các cột cần thiết
+                ->get(); // Trả về tất cả các sản phẩm thỏa mãn điều kiện
+            return response()->json([
+                'uniqueProducts' => $uniqueProducts,
+            ]);
+        }
     }
 }

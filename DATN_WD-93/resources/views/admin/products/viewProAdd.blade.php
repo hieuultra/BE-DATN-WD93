@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="mb-3">
                         <label class="form-label">Mã</label>
-                        <input type="text" class="form-control @error('idProduct') is-invalid @enderror" value="{{ old('idProduct') }}" name="idProduct" placeholder="idProduct">
+                        <input type="text" class="form-control @error('idProduct') is-invalid @enderror" value="{{ old('idProduct') }}" name="idProduct" placeholder="Mã sản phẩm">
                         @error('idProduct')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -28,7 +28,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Tên</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" name="name" placeholder="Name">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" name="name" placeholder="Tên">
                         @error('name')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -71,7 +71,11 @@
 
                     <div class="mb-3">
                         <label class="form-label">Giảm giá (%)</label>
-                        <input type="number" class="form-control @error('discount') is-invalid @enderror" value="{{ old('discount') }}" name="discount" placeholder="Discount">
+                        <input type="number"
+                        class="form-control @error('discount') is-invalid @enderror" value="{{ old('discount') }}"
+                        name="discount"
+                        placeholder="Discount"
+                        min="0">
                         @error('discount')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -112,22 +116,22 @@
                     <div class="form-switch mb-3 ps-3 d-flex justify-content-between">
                         <div class="form-check">
                             <input class="form-check-input bg-danger" type="checkbox" name="is_new" checked>
-                            <label for="is_new" class="form-check-label">Sản phẩm mới</label>
+                            <label for="is_new" class="form-check-label">Sản <br> phẩm mới</label>
                         </div>
 
                         <div class="form-check">
                             <input class="form-check-input bg-secondary" type="checkbox" name="is_hot" checked>
-                            <label for="is_hot" class="form-check-label">Sản phẩm nóng</label>
+                            <label for="is_hot" class="form-check-label">Sản <br> phẩm nóng</label>
                         </div>
 
                         <div class="form-check">
                             <input class="form-check-input bg-warning" type="checkbox" name="is_hot_deal" checked>
-                            <label for="is_hot_deal" class="form-check-label">Giảm giá mạnh</label>
+                            <label for="is_hot_deal" class="form-check-label">Giảm <br> giá mạnh</label>
                         </div>
 
                         <div class="form-check">
                             <input class="form-check-input bg-success" type="checkbox" name="is_show_home" checked>
-                            <label for="is_show_home" class="form-check-label">Hiện trang chủ</label>
+                            <label for="is_show_home" class="form-check-label">Hiện <br> trang chủ</label>
                         </div>
                     </div>
                 </div>

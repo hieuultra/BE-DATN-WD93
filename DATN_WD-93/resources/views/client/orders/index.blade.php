@@ -81,7 +81,7 @@
     <!-- Tìm kiếm đơn hàng -->
     <form method="GET" action="{{ route('orders.index') }}" class="mb-3">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Bạn có thể tìm kiếm theo Mã đơn hàng hoặc Tên sản phẩm">
             </div>
             <div class="col-md-2">
@@ -140,11 +140,7 @@
                 @endforeach
             </tbody>
         </table>
-        {{-- <div class="cart-update" style="float: right">
-            <button type="submit" href="" class="btn btn-primary">Update Cart</button>
-        </div> --}}
       </div>
     </div>
   </div>
-
 @endsection

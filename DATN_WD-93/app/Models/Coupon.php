@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Coupon extends Model
 {
     use HasFactory;
-    protected $fillable = ['code', 'value', 'min_order_value', 'expiry_date', 'is_active', 'usage_limit', 'type'];
+    protected $fillable = ['code', 'value', 'min_order_value', 'expiry_date', 'is_active', 'usage_limit', 'type', 'max_discount'];
     /**
      * Kiểm tra xem mã giảm giá có hợp lệ hay không
      *

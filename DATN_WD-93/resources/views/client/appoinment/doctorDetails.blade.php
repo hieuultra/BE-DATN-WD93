@@ -371,7 +371,7 @@
         </div>
 
         <div>
-            <h3>Quá trình đào tạo </h3>
+            <h4>Quá trình đào tạo </h4>
             @if(isset($achievements) && $achievements->isNotEmpty())
             @foreach($achievements as $achievement)
             <p>{{ $achievement->description }}, năm {{ $achievement->year }}</p>
@@ -383,7 +383,7 @@
         </div>
 
         <div class="feedback-section">
-            <h1>Phản hồi của bệnh nhân sau khi đi khám</h1>
+            <h4>Phản hồi của bệnh nhân sau khi đi khám</h4>
             @foreach($doctorrv->review as $review)
             <div class="card mb-3">
                 <div class="card-body">

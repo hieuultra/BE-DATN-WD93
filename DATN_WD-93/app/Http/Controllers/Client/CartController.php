@@ -35,6 +35,7 @@ class CartController extends Controller
         $shipping = 40000;
         $discount = 0;
         $checkMinDiscount = 0;
+        $maxDiscount = 0;
         if ($cart && $cart->items->count() > 0) {
             foreach ($cart->items as  $item) {
                 $price = is_numeric($item['price']) ? $item['price'] : 0;
@@ -44,6 +45,7 @@ class CartController extends Controller
                 $subTotal += $price * $quantity;
             }
         }
+
         // Xử lý mã giảm giá nếu có
         $checkTypeDiscount = 0;
         if ($cart && $cart->coupon_code !== null) {
@@ -51,6 +53,10 @@ class CartController extends Controller
             $couponCheck = Coupon::where('code', $discountCheck)->first();
             $checkTypeDiscount = $couponCheck->type;
             $discount = $couponCheck->value;
+            if ($couponCheck->type == 'percentage') {
+                $checkTypeDiscount = 'percentage';
+                $maxDiscount = $couponCheck->max_discount;
+            }
         }
         if ($request->has('coupon_code')) {
             if (request()->query('coupon_code') == 'loaibo') {
@@ -58,15 +64,17 @@ class CartController extends Controller
                 $cart->save();
                 $discount = 0;
             } else {
+
                 $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
                 if ($coupon && $coupon->isValid()) {
                     $discount = $coupon->value;
                     $checkMinDiscount = $coupon->min_order_value;
-                    if ($checkMinDiscount < $subTotal) {
+                    if ($checkMinDiscount < ($subTotal + 40000)) {
                         $cart->coupon_code = $coupon->code;
                         $cart->save();
                         if ($coupon->type == 'percentage') {
                             $checkTypeDiscount = 'percentage';
+                            $maxDiscount = $coupon->max_discount ?? 0;
                         } else {
                             $checkTypeDiscount = 'fixed';
                         }
@@ -81,7 +89,7 @@ class CartController extends Controller
         }
 
         $total = $subTotal + $shipping - $discount;
-        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total', 'discount', 'checkTypeDiscount', 'checkMinDiscount'));
+        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total', 'discount', 'checkTypeDiscount', 'checkMinDiscount', 'maxDiscount'));
     }
     public function addCart(Request $request)
     {
