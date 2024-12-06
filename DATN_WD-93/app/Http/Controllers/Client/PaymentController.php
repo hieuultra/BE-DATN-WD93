@@ -44,7 +44,7 @@ class PaymentController extends Controller
         $vnp_Locale = 'vn';
         $vnp_BankCode = "NCB";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-
+        
         $inputData = array(
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => $vnp_TmnCode,

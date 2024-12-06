@@ -71,7 +71,7 @@ Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('s
 
 //thanh toán vnpay
 
-//login success + admin
+//login success + admin payments.return
 Route::middleware('auth')->group(function () {
     Route::get('/loginSuccess', [AuthController::class, 'loginSuccess'])->name('loginSuccess')->middleware('auth');
     Route::middleware('auth.admin')->group(function () {
@@ -86,7 +86,7 @@ Route::prefix('appoinment')
         Route::get('/searchap', [AppoinmentController::class, 'searchap'])->name('searchap');
         Route::get('/appointments/today', [AppoinmentController::class, 'loadTodayAppointments'])->name('appointments.today');
 
-        //appointment_histories
+        //formbookingdt
         Route::get('/get-drug-categories', function () {
             return response()->json(
                 Category::all(['id', 'name', 'img'])->map(function ($category) {
@@ -121,6 +121,9 @@ Route::prefix('appoinment')
                 ];
             }));
         });
+
+        Route::post('/vnpay-payment', [AppoinmentController::class, 'createPayment'])->name('vnpay.payment');
+        Route::get('/vnpay-return', [AppoinmentController::class, 'returnPayment'])->name('vnpay.return');
 
         Route::get('/booKingCare/{id}', [AppoinmentController::class, 'booKingCare'])->name('booKingCare');
         Route::get('/booKingCarePackage/{id}', [AppoinmentController::class, 'booKingCarePackage'])->name('booKingCarePackage');
@@ -158,7 +161,7 @@ Route::prefix('appoinment')
         Route::get('/appointments/get-details', [AppoinmentController::class, 'getDetails']);
         Route::get('/appointments/get_patient_info', [AppoinmentController::class, 'getPatientInfo']);
 
-        //siuuu physicianManagement
+        //siuuu listCart
         Route::post('/appointments/get-review-data', [AppoinmentController::class, 'getReviewData'])->name('appointments.getReviewData');
         Route::get('/reviews/{id}/edit', [AppoinmentController::class, 'edit']);
         Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
@@ -171,6 +174,28 @@ Route::prefix('appoinment')
         Route::post('/schedule', [AppoinmentController::class, 'schedule'])->name('schedule');
 
         Route::get('/appointment_histories/{appointment}',  [AppoinmentController::class, 'getPrescriptions']);
+    });
+
+    //timeslot
+    Route::prefix('timeslot')
+    ->as('timeslot.')
+    ->group(function () {
+        Route::get('/timeslotList', [DoctorController::class, 'timeslotList'])->name('timeslotList');
+        Route::get('/viewTimeslotAdd/{id}', [DoctorController::class, 'viewTimeslotAdd'])->name('viewTimeslotAdd');
+        Route::post('{doctorId}/timeslotAdd', [DoctorController::class, 'timeslotAdd'])->name('timeslotAdd');
+        Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
+        Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
+        Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
+
+        Route::get('/schedule/{doctorId}', [DoctorController::class, 'showSchedule'])->name('doctor.schedule');
+        Route::post('/scheduleAdd', [DoctorController::class, 'scheduleAdd'])->name('scheduleAdd');
+        Route::get('/scheduleEdit/{id}', [DoctorController::class, 'scheduleEdit']);
+        Route::put('/scheduleUpdate/{id}', [DoctorController::class, 'scheduleUpdate'])->name('scheduleUpdate');
+        Route::delete('/scheduleDestroy/{id}', [DoctorController::class, 'scheduleDestroy']);
+
+
+        Route::get('/showPackages/{packageId}', [DoctorController::class, 'showPackages'])->name('showPackages');
+        Route::post('/schedulePackageAdd', [DoctorController::class, 'schedulePackageAdd'])->name('schedulePackageAdd');
     });
 
 Route::get('/viewSikibidi', function () {
@@ -376,27 +401,6 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::get('/doctorUpdateForm/{id}', [DoctorController::class, 'doctorUpdateForm'])->name('doctorUpdateForm');
                 Route::post('/doctorUpdate', [DoctorController::class, 'doctorUpdate'])->name('doctorUpdate');
                 Route::post('/doctorDestroy/{id}', [DoctorController::class, 'doctorDestroy'])->name('doctorDestroy');
-            });
-        //timeslot
-        Route::prefix('timeslot')
-            ->as('timeslot.')
-            ->group(function () {
-                Route::get('/timeslotList', [DoctorController::class, 'timeslotList'])->name('timeslotList');
-                Route::get('/viewTimeslotAdd/{id}', [DoctorController::class, 'viewTimeslotAdd'])->name('viewTimeslotAdd');
-                Route::post('{doctorId}/timeslotAdd', [DoctorController::class, 'timeslotAdd'])->name('timeslotAdd');
-                Route::get('/timeslotUpdateForm/{id}', [DoctorController::class, 'timeslotUpdateForm'])->name('timeslotUpdateForm');
-                Route::post('/timeslotUpdate', [DoctorController::class, 'timeslotUpdate'])->name('timeslotUpdate');
-                Route::delete('/timeslotDestroy/{id}', [DoctorController::class, 'timeslotDestroy'])->name('timeslotDestroy');
-
-                Route::get('/schedule/{doctorId}', [DoctorController::class, 'showSchedule'])->name('doctor.schedule');
-                Route::post('/scheduleAdd', [DoctorController::class, 'scheduleAdd'])->name('scheduleAdd');
-                Route::get('/scheduleEdit/{id}', [DoctorController::class, 'scheduleEdit']);
-                Route::put('/scheduleUpdate/{id}', [DoctorController::class, 'scheduleUpdate'])->name('scheduleUpdate');
-                Route::delete('/scheduleDestroy/{id}', [DoctorController::class, 'scheduleDestroy']);
-
-
-                Route::get('/showPackages/{packageId}', [DoctorController::class, 'showPackages'])->name('showPackages');
-                Route::post('/schedulePackageAdd', [DoctorController::class, 'schedulePackageAdd'])->name('schedulePackageAdd');
             });
 
         Route::prefix('achievements')

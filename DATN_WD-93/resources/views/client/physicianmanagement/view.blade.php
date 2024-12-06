@@ -375,6 +375,7 @@
             <div class="ml-md-3 mt-2 mt-md-0 text-center text-md-start">
                 <h1>Bác Sỹ: {{$doctor->user->name}}</h1>
                 <a href="{{ route('appoinment.statistics', $doctor->id) }}" class="btn btn-secondary">Thống kê chi tiết</a>
+                <a href="{{ route('timeslot.doctor.schedule', $doctor->id) }}" class="btn btn-secondary">Quản lý thời gian làm việc</a>
             </div>
         </div>
 
@@ -459,7 +460,7 @@
 
         </div>
 
-
+        
         <div id="appointmentHistoryModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -470,7 +471,7 @@
                                 </button>
                             </div>
                             <div class="modal-body" id="appointmentHistoryContent">
-                                <!-- Nội dung sẽ được AJAX cập nhật -->
+                                
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -733,22 +734,18 @@
                                                 const selectedVariant = drug.variantProducts.find(v => v.id == selectedVariantId);
 
                                                 if (selectedVariant) {
-                                                    // Cập nhật biến thể đã chọn trong dữ liệu
                                                     selectedDrugs[drug.id].variant = selectedVariant;
 
-                                                    // Cập nhật số lượng tồn kho hiện tại
                                                     const quantityInput = document.querySelector(`#selected-drug-${drug.id} input[type='number']`);
                                                     if (quantityInput) {
                                                         const currentInputQuantity = parseInt(quantityInput.value) || 1;
 
                                                         if (currentInputQuantity > selectedVariant.quantity) {
-                                                            // Cảnh báo nếu số lượng vượt quá tồn kho
                                                             alert(`Số lượng nhập vượt quá tồn kho! Tồn kho hiện tại là ${selectedVariant.quantity}.`);
-                                                            quantityInput.value = selectedVariant.quantity; // Đặt giá trị tối đa bằng tồn kho
+                                                            quantityInput.value = selectedVariant.quantity;
                                                         }
                                                     }
 
-                                                    // Cập nhật giá hiển thị theo biến thể mới
                                                     updatePrice(drug.id);
                                                 }
                                             });
@@ -772,12 +769,11 @@
 
                                                 if (inputQuantity <= 0) {
                                                     alert("Số lượng phải lớn hơn 0!");
-                                                    e.target.value = 1; // Đặt giá trị tối thiểu
+                                                    e.target.value = 1; 
                                                 } else if (inputQuantity > currentVariant.quantity) {
                                                     alert(`Số lượng nhập vượt quá tồn kho! Tồn kho hiện tại là ${currentVariant.quantity}.`);
-                                                    e.target.value = currentVariant.quantity; // Đặt giá trị tối đa bằng tồn kho
+                                                    e.target.value = currentVariant.quantity; 
                                                 } else {
-                                                    // Cập nhật số lượng
                                                     selectedDrugs[drug.id].quantity = inputQuantity;
                                                     updatePrice(drug.id);
                                                 }
@@ -1022,23 +1018,49 @@
 
 
     <div id="patientList">
-        @foreach($users as $us)
-            <div class="card mb-3 patient-card" data-name="{{ $us->name }}">
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-3">
-                        <img src="{{ asset('upload/' . $us->image) }}" alt="Ảnh bệnh nhân" class="img-fluid rounded">
-                        <a href="{{ route('appoinment.physicianManagementdoctor', ['id1' => $us->id, 'id2' => $doctor->id]) }}">Chi tiết hóa đơn bệnh nhân</a>
-                    </div>
-                    <div class="col-md-9">
-                        <div class="card-body">
-                            <p>Tên bệnh nhân: <strong>{{ $us->name }}</strong></p>
-                            <p>Số điện thoại bệnh nhân: <strong>{{ $us->phone }}</strong></p>
-                            <p>Email bệnh nhân: <strong>{{ $us->email }}</strong></p>
-                        </div>
-                    </div>
+    @foreach($users as $us)
+    @php
+        // Tìm thông tin thống kê của người dùng hiện tại
+        $userStat = $completionStats->firstWhere('user_id', $us->id);
+
+        // Kiểm tra xem người dùng có phải là người mới hay không
+        $isNewUser = !$userStat || $userStat->total_appointments < 3;
+
+        // Xác định màu nền
+        $bgColor = 'background-color: #ffffff;'; // Mặc định màu trắng
+        if (!$isNewUser) {
+            if ($userStat->completion_rate >= 70) {
+                $bgColor = 'background-color: #28a745;'; // Xanh lá cây
+            } elseif ($userStat->completion_rate >= 50) {
+                $bgColor = 'background-color: #ff9800;'; // Màu cam
+            } else {
+                $bgColor = 'background-color: #dc3545;'; // Màu đỏ
+            }
+        }
+    @endphp
+
+    <div class="card mb-3 patient-card" data-name="{{ $us->name }}" style="{{ $bgColor }}">
+        <div class="row g-0 align-items-center">
+            <div class="col-md-3">
+                <img src="{{ asset('upload/' . $us->image) }}" alt="Ảnh bệnh nhân" class="img-fluid rounded">
+            </div>
+            <div class="col-md-9">
+                <div class="card-body">
+                    <a href="{{ route('appoinment.physicianManagementdoctor', ['id1' => $us->id, 'id2' => $doctor->id]) }}">Chi tiết bệnh nhân</a>
+                    <p>Tên bệnh nhân: <strong>{{ $us->name }}</strong></p>
+                    <p>Số điện thoại bệnh nhân: <strong>{{ $us->phone }}</strong></p>
+                    <p>Email bệnh nhân: <strong>{{ $us->email }}</strong></p>
+                    @if(!$isNewUser)
+                        <p>Phần trăm hoàn thành đơn: <strong>{{ $userStat->completion_rate }}%</strong></p>
+                    @else
+                        <p>Phần trăm hoàn thành đơn: <strong>Chưa có đủ dữ liệu</strong></p>
+                    @endif
                 </div>
             </div>
-        @endforeach
+        </div>
+    </div>
+@endforeach
+
     </div>
 
     </div>
@@ -1273,13 +1295,12 @@
                                     console.error(`Lỗi khi xác nhận đơn hàng ID ${appointmentId}:`, error);
                                 }
                             });
-                        }, 5000); // 5 giây
+                        }, 5000); 
                     }
                 });
             }
         }
 
-        // Tải dữ liệu định kỳ và tự động xác nhận
         setInterval(loadPendingAppointments, 5000);
         loadPendingAppointments();
         loadTodayAppointments();

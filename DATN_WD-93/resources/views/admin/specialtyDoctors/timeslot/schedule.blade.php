@@ -1,8 +1,6 @@
-@extends('admin.layout')
-@section('titlepage','')
-
+@extends('layout')
 @section('content')
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <div class="container">
     @if (session('error'))
     <div class="alert alert-danger">
@@ -30,14 +28,14 @@
 
     <!-- Nút Thêm Lịch -->
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEditScheduleModal" onclick="showAddForm()">Thêm Lịch</button>
-    <a href="{{ route('admin.specialties.specialtyDoctorList') }}">
-        <input type="button" class="btn btn-primary" value="Quay lại">
+
+    <a href="{{ route('appoinment.physicianManagement', $doctor->user->id) }}">
+        Quay lại
     </a>
     @if($schedules->isEmpty())
     <p>Không có lịch làm việc nào được ghi nhận.</p>
     @else
-    <div class="table-responsive">
-        @php
+    @php
         $daysOfWeek = [
         0 => '',
         1 => 'Thứ 2',
@@ -48,65 +46,83 @@
         6 => 'Thứ 7',
         7 => 'Chủ nhật',
         ];
-        @endphp
+    @endphp
 
-        @foreach ($daysOfWeek as $dayIndex => $dayName)
-            @php
-            $filteredSchedules = $schedules->filter(function($schedule) use ($dayIndex) {
-            return $schedule->dayOfWeek == $dayIndex;
-            });
-            @endphp
+    <div class="mb-3">
+    <label for="daysFilter" class="form-label">Chọn số lượng lịch hiển thị</label>
+    <select id="daysFilter" class="form-control">
+        <option value="10">10 lịch gần nhất</option>
+        <option value="20">20 lịch gần nhất</option>
+        <option value="50">50 lịch gần nhất</option>
+        <option value="100">100 lịch gần nhất</option>
+    </select>
+</div>
 
-                @if ($filteredSchedules->count() > 0)
-                <h3>{{ $dayName }}</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Ca</th>
-                            <th>Thời gian bắt đầu</th>
-                            <th>Thời gian kết thúc</th>
-                            <th>Ngày</th>
-                            <th>Có sẵn</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($filteredSchedules as $schedule)
-                        @if($schedule->isAvailable == 0)
 
-                        @else
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Thứ</th>
+                    <th>Ngày</th>
+                    <th>Giờ bắt đầu</th>
+                    <th>Giờ kết thúc</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $previousDate = null;  // Biến để lưu ngày trước đó
+                @endphp
+                @foreach ($schedules as $schedule)
+                    @php
+                        $currentDate = $schedule->formattedDate;  // Lấy ngày hiện tại từ lịch
+                    @endphp
+                    
+                    @if ($currentDate != $previousDate)
+                        @if ($previousDate !== null) 
+                            <!-- Chèn khoảng trắng giữa các ngày khác nhau -->
+                            <tr><td colspan="6" style="height: 20px;"></td></tr>
+                        @endif
                         @php
-                        $formattedDate = \Carbon\Carbon::parse($schedule->date)
-                        ->locale('vi')
-                        ->isoFormat('dddd, D/MM/YYYY');
-                        $startTime = \Carbon\Carbon::parse($schedule->startTime);
-                        $shift = $startTime->hour < 12 ? 'Ca sáng' : 'Ca chiều' ;
-                            @endphp
-                            <tr id="schedule-row-{{ $schedule->id }}">
-                            <td>{{ $shift }}</td>
-                            <td>{{ $schedule->startTime }}</td>
-                            <td>{{ $schedule->endTime }}</td>
-                            <td>{{ $formattedDate }}</td>
-                            <td>{{ $schedule->isAvailable ? 'Có' : 'Không' }}</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm edit-btn"
-                                    data-id="{{ $schedule->id }}"
-                                    data-day="{{ $schedule->dayOfWeek }}"
-                                    data-start="{{ $schedule->startTime }}"
-                                    data-end="{{ $schedule->endTime }}"
-                                    data-date="{{ $schedule->date }}"
-                                    data-available="{{ $schedule->isAvailable }}">Sửa</button>
-                                <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $schedule->id }}">Xóa</button>
-                            </td>
-                            </tr>
+                            $previousDate = $currentDate;  // Cập nhật ngày trước đó
+                        @endphp
+                    @endif
+
+                    <tr id="schedule-row-{{ $schedule->id }}" class="{{ $schedule->isAvailable ? 'table-success' : 'table-danger' }}">
+                        <td>{{ $schedule->dayOfWeek }}</td>
+                        <td>{{ $schedule->formattedDate }}</td>
+                        <td>{{ $schedule->startTime }}</td>
+                        <td>{{ $schedule->endTime }}</td>
+                        <td>
+                            @if ($schedule->isAvailable == 0)
+                                <span class="badge badge-danger">Đã có người đặt</span>
+                            @else
+                                <span class="badge badge-success">Chưa có người đặt</span>
                             @endif
-                            @endforeach
-                    </tbody>
-                </table>
-                @endif
-        @endforeach
+                        </td>
+                        <td>
+                            @if ($schedule->isAvailable != 0)
+                                <button class="btn btn-warning btn-sm edit-btn"
+                                        data-id="{{ $schedule->id }}"
+                                        data-day="{{ $schedule->dayOfWeek }}"
+                                        data-start="{{ $schedule->startTime }}"
+                                        data-end="{{ $schedule->endTime }}"
+                                        data-date="{{ $schedule->date }}"
+                                        data-available="{{ $schedule->isAvailable }}">Sửa</button>
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $schedule->id }}">Xóa</button>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
+
+
+    </div>
     @endif
 
     <div class="modal fade" id="addEditScheduleModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -117,7 +133,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('admin.timeslot.scheduleAdd') }}" method="POST">
+                    <form action="{{ route('timeslot.scheduleAdd') }}" method="POST">
                         @csrf
                         <input type="hidden" id="scheduleId" name="id">
                         <input type="hidden" name="doctor_id" value="{{ $doctor->id }}">
@@ -170,7 +186,7 @@
                             <div id="shiftsContainer"></div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3" style="display: none;">
                             <label for="isAvailable" class="form-label">Có sẵn</label>
                             <select class="form-select" id="isAvailable" name="isAvailable">
                                 <option value="1">Có</option>
@@ -184,7 +200,6 @@
     </div>
 
 
-    <!-- Form chỉnh sửa ẩn -->
     <div class="modal fade" id="editScheduleModal" tabindex="-1" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -199,29 +214,39 @@
                         <input type="hidden" id="edit_schedule_id" name="id">
 
                         <div class="mb-3">
-                            <label for="edit_dayOfWeek" class="form-label">Chọn Thứ và Ngày trong Tháng</label>
+                            <label for="edit_dayOfWeek" class="form-label">Chọn thứ ngày tháng mà bạn muốn chuyển sang</label>
                             <select class="form-control" id="edit_dayOfWeek" name="dayOfWeek">
                                 @for($day = 1; $day <= $daysInMonth; $day++)
                                     @php
-                                    $date=Carbon::createFromDate($currentDate->year, $currentDate->month, $day);
-                                    $dayOfWeek = $date->dayOfWeek;
-                                    if ($date->isToday() || $date->isFuture()) {
-                                    @endphp
-                                    @if(empty($daysOfWeek) != 'Null')
-                                    <option value="{{$dayOfWeek}}" data-date="{{ $date->format('Y-m-d') }}">
-                                        {{ $daysOfWeek[$dayOfWeek] }} ({{ $date->format('d/m/Y') }})
-                                    </option>
-                                    @endif
+                                        $date=Carbon::createFromDate($currentDate->year, $currentDate->month, $day);
+                                        $dayOfWeek = $date->dayOfWeek;
+                                        if ($date->isToday() || $date->isFuture()) {
+                                        @endphp
+                                        @if(empty($daysOfWeek) != 'Null')
+                                        <option value="{{$dayOfWeek}}" data-date="{{ $date->format('Y-m-d') }}">
+                                            {{ $daysOfWeek[$dayOfWeek] }} ({{ $date->format('d/m/Y') }})
+                                        </option>
+                                        @endif
                                     @php
-                                    }
+                                        }
                                     @endphp
-                                    @endfor
+                                @endfor
                             </select>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3" style="display: none;">
                             <label for="edit_date" class="form-label">Ngày</label>
-                            <input type="text" class="form-control" id="edit_date" name="date" readonly>
+                            <input type="text" class="form-control" id="edit_date" name="date">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit_date2" class="form-label">Ngày trước khi cập nhật</label>
+                            <input type="text" class="form-control" id="edit_date2" name="date" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit_date2" class="form-label">Thứ trước khi cập nhật</label>
+                            <input type="text" class="form-control" id="edit_dayOfWeek2" readonly>
                         </div>
 
 
@@ -237,13 +262,13 @@
                             </select>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3" style="display: none;">
                             <label for="edit_endTime" class="form-label">Thời gian Kết thúc</label>
-                            <input type="text" class="form-control" id="edit_endTime" name="endTime" readonly>
+                            <input type="text" class="form-control" id="edit_endTime" name="endTime">
                         </div>
 
 
-                        <div class="mb-3">
+                        <div class="mb-3" style="display: none;">
                             <label for="edit_isAvailable" class="form-label">Có sẵn</label>
                             <select class="form-select" id="edit_isAvailable" name="isAvailable">
                                 <option value="1">Có</option>
@@ -259,6 +284,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const dayOfWeekSelect = document.getElementById('edit_dayOfWeek');
@@ -374,9 +400,11 @@
 
                     document.getElementById('edit_schedule_id').value = scheduleId;
                     document.getElementById('edit_dayOfWeek').value = dayOfWeek;
+                    document.getElementById('edit_dayOfWeek2').value = dayOfWeek;
                     document.getElementById('edit_startTime').value = startTime;
                     document.getElementById('edit_endTime').value = endTime;
                     document.getElementById('edit_date').value = date;
+                    document.getElementById('edit_date2').value = date;
                     document.getElementById('edit_isAvailable').value = isAvailable ? '1' : '0';
                     editScheduleModal.show();
                 });
@@ -388,9 +416,11 @@
 
                 const scheduleId = document.getElementById('edit_schedule_id').value;
                 const dayOfWeek = document.getElementById('edit_dayOfWeek').value;
+                const dayOfWeek2 = document.getElementById('edit_dayOfWeek2').value;
                 const selectedDate = document.querySelector('#edit_dayOfWeek option:checked').getAttribute('data-date');
                 const startTime = document.getElementById('edit_startTime').value;
                 const endTime = document.getElementById('edit_endTime').value;
+                const date2 = document.getElementById('edit_date2').value;
                 const isAvailable = document.getElementById('edit_isAvailable').value;
 
                 const formData = {
@@ -407,7 +437,7 @@
                 console.log('endTime:', endTime);
                 console.log('isAvailable:', isAvailable);
 
-                axios.put(`/admin/timeslot/scheduleUpdate/${scheduleId}`, formData)
+                axios.put(`/timeslot/scheduleUpdate/${scheduleId}`, formData)
                     .then(response => {
                         editScheduleModal.hide();
                         alert(response.data.message);
@@ -428,20 +458,25 @@
                     const scheduleId = this.getAttribute('data-id');
 
                     if (confirm('Bạn có chắc chắn muốn xóa lịch làm việc này không?')) {
-                        axios.delete(`/admin/timeslot/scheduleDestroy/${scheduleId}`)
+                        axios.delete(`/timeslot/scheduleDestroy/${scheduleId}`)
                             .then(response => {
-                                const row = document.getElementById('schedule-row-' + scheduleId);
-                                row.remove();
                                 alert(response.data.message);
+
+                                if (response.data.message.includes('đã được xóa')) {
+                                    const row = document.getElementById('schedule-row-' + scheduleId);
+                                    if (row) {
+                                        row.remove(); 
+                                    }
+                                }
                             })
                             .catch(error => {
-                                alert('Đã xảy ra lỗi: ' + error.response.data.message);
+                            
+                                alert('Đã xảy ra lỗi: ' + error.response?.data?.message || 'Lỗi không xác định');
                             });
                     }
                 });
             });
         });
-
 
 
         setTimeout(function() {
@@ -454,5 +489,31 @@
                 }, 500);
             });
         }, 5000);
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const daysFilter = document.getElementById('daysFilter');
+            const rows = Array.from(document.querySelectorAll('tbody tr'));
+            const totalRows = rows.length;
+
+            function updateScheduleDisplay(days) {
+                rows.forEach((row, index) => {
+                    if (index < days) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            daysFilter.addEventListener('change', function() {
+                const days = parseInt(this.value);
+                updateScheduleDisplay(days);
+            });
+
+            updateScheduleDisplay(10);
+        });
+
+
     </script>
-    @endsection
+@endsection
