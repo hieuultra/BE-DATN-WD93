@@ -9,8 +9,10 @@ use Illuminate\Http\Request;
 use App\Models\AvailableTimeslot;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Clinic;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 use App\Models\doctorAchievement;
 use App\Models\MedicalPackage;
 use App\Models\Package;
@@ -213,24 +215,48 @@ class DoctorController extends Controller
         return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Bác sỹ này đã bị cho nghỉ việc.');
     }
 
-    // lịch làm việc
     public function showSchedule($doctorId)
     {
         $now = Carbon::now('Asia/Ho_Chi_Minh');
+
         $expiredSchedules = AvailableTimeslot::where('date', '<', $now->toDateString())
             ->orWhere(function ($query) use ($now) {
                 $query->where('date', '=', $now->toDateString())
-                    ->where('endTime', '<', $now->toTimeString());
+                    ->where('startTime', '<', $now->toTimeString());
             })
             ->get();
         foreach ($expiredSchedules as $schedule) {
             $schedule->isAvailable = 0;
             $schedule->save();
         }
-        $schedules = AvailableTimeslot::where('doctor_id', $doctorId)->get();
+
+        $schedules = AvailableTimeslot::where('doctor_id', $doctorId)
+            ->where('date', '>=', $now->toDateString())
+            ->orderBy('date', 'asc')
+            ->orderBy('startTime', 'asc')
+            ->get();
+
+        $schedules->map(function ($schedule) use ($now) {
+            $schedule->isExpired = ($schedule->date === $now->toDateString() && $schedule->endTime < $now->toTimeString());
+            $date = Carbon::createFromFormat('Y-m-d', $schedule->date);
+            $schedule->dayOfWeek = $date->locale('vi')->dayName;
+            $schedule->formattedDate = $date->format('d/m/Y');
+            return $schedule;
+        });
+
         $doctor = Doctor::with('user', 'specialty')->findOrFail($doctorId);
-        return view('admin.specialtyDoctors.timeslot.schedule', compact('schedules', 'doctor'));
+        $orderCount = 0;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count();
+        }
+
+        $categories = Category::orderBy('name', 'asc')->get();
+
+        return view('admin.specialtyDoctors.timeslot.schedule', compact('schedules', 'doctor', 'orderCount', 'categories'));
     }
+
 
     public function showPackages($packageId)
     {
@@ -370,35 +396,42 @@ class DoctorController extends Controller
 
         $schedule = AvailableTimeslot::findOrFail($id);
 
-        // Check if there's an existing schedule with the same date and startTime but a different ID
-        $existingSchedule = AvailableTimeslot::where('date', $validatedData['date'])
-            ->where('startTime', $validatedData['startTime'])
-            ->where('id', '!=', $schedule->id)
-            ->first();
+        if ($schedule->isAvailable == 0) {
+            return response()->json(['message' => 'Lịch làm việc đã có người đặt không được cập nhật.']);
+        } else {
+            $existingSchedule = AvailableTimeslot::where('date', $validatedData['date'])
+                ->where('startTime', $validatedData['startTime'])
+                ->where('id', '!=', $schedule->id)
+                ->first();
 
-        if ($existingSchedule) {
+            if ($existingSchedule) {
+                return response()->json([
+                    'message' => 'Lịch làm việc bị trùng. Đã có lịch với ngày và thời gian bắt đầu này.',
+                ], 422);
+            }
+            $schedule->update($validatedData);
+
             return response()->json([
-                'message' => 'Lịch làm việc bị trùng. Đã có lịch với ngày và thời gian bắt đầu này.',
-            ], 422);
+                'success' => true,
+                'message' => 'Lịch làm việc đã được cập nhật thành công.',
+                'schedule' => $schedule,
+            ]);
         }
-
-        // Update the schedule if no conflict is found
-        $schedule->update($validatedData);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Lịch làm việc đã được cập nhật thành công.',
-            'schedule' => $schedule,
-        ]);
     }
 
 
     public function scheduleDestroy($id)
     {
         $schedule = AvailableTimeslot::findOrFail($id);
-        $schedule->delete();
-        return response()->json(['success' => true]);
+        if ($schedule->isAvailable == 0) {
+            return response()->json(['message' => 'Lịch làm việc đã có người đặt không được xóa.']);
+        } else {
+            $schedule->delete();
+            return response()->json(['message' => 'Lịch làm việc đã được xóa thành công.']);
+        }
     }
+    
+
 
     //Thành tựu bác sĩ
     public function showAchievements($id)

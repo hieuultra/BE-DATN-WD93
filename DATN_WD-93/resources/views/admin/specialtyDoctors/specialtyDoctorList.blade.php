@@ -186,7 +186,7 @@
                   <td class="text-center">
                     <div @if($doc->role == 'User') style="display: none;" @endif>
                     <div class="time-icon">
-                      <a href="{{ route('admin.timeslot.doctor.schedule', $d->id) }}"><i class="fas fa-clock"></i></a>
+                      <a href="{{ route('timeslot.doctor.schedule', $d->id) }}"><i class="fas fa-clock"></i></a>
                     </div>
                     <div class="time-icon">
                       <a style="text-decoration: none;" href="{{ route('admin.achievements.doctor.achievements', $d->id) }}">Thành tựu bác sĩ</a>
@@ -294,7 +294,7 @@
                   </td>
                   <td class="text-center">
                     <div class="time-icon">
-                      <a href="{{ route('admin.timeslot.showPackages', $d->id) }}"><i class="fas fa-clock"></i></a>
+                      <a href="{{ route('timeslot.showPackages', $d->id) }}"><i class="fas fa-clock"></i></a>
                     </div>
                     <div class="time-icon">
                       <a style="text-decoration: none;" href="{{ route('admin.medicalPackages.medicalPackages', $d->id) }}">Danh mục khám</a>

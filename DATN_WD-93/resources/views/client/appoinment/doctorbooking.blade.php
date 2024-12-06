@@ -301,23 +301,6 @@
             <a class="navbar-brand" href="{{route('appoinment.index')}}" id="navbarDropdown">
                 Quay Lại
             </a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        @if(Auth::check())
-                        <a class="nav-link" href="{{ route('appoinment.appointmentHistory', $user = Auth::user()->id) }}">Lịch sử đặt khám</a>
-                        @endif
-                    </li>
-                    <li class="nav-item">
-                        @if(Auth::check() && (Auth::user()->role == 'Doctor'))
-                        <a class="nav-link" href="{{ route('appoinment.physicianManagement', $user = Auth::user()->id) }}">Quản lý lịch khám</a>
-                        @endif
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Gói khám</a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </nav>
 
@@ -345,7 +328,6 @@
             <img alt="Doctor's portrait" height="80" src="{{ asset('upload/' . $doctor->user->image) }}" width="80" />
             <div class="doctor-info">
                 <div class="d-flex align-items-center mb-2">
-                    <span class="badge bg-warning text-dark me-2">Yêu thích</span>
                     <h5 class="text-primary">{{ $doctor->user->name }}</h5>
                 </div>
                 <p>{!! Str::limit($doctor->bio, 300, '...') !!}</p>
@@ -358,24 +340,26 @@
 
 
             <div class="schedule">
-                <label for="dateSelect-{{ $doctor->id }}">Chọn ngày:</label>
+                <label for="dateSelect-{{ $doctor->id }}">Chọn ngày đặt khám:</label>
                 <select id="dateSelect-{{ $doctor->id }}" class="form-select date-select" aria-label="Chọn ngày">
                     @php
-                    $availableDates = $doctor->timeSlot->filter(function ($timeSlot) {
-                    return $timeSlot->isAvailable == 1;
-                    })->unique(function ($item) {
-                    return \Carbon\Carbon::parse($item->date)->format('Y-m-d');
-                    });
+                        $availableDates = $doctor->timeSlot->filter(function ($timeSlot) {
+                            return $timeSlot->isAvailable == 1;
+                        })->unique(function ($item) {
+                            return \Carbon\Carbon::parse($item->date)->format('Y-m-d');
+                        });
+                        $availableDates = $availableDates->sortBy(function ($timeSlot) {
+                            return \Carbon\Carbon::parse($timeSlot->date);
+                        });
                     @endphp
-                    @foreach($availableDates as $timeSlots)
-                    @php
-                    $formattedDate = \Carbon\Carbon::parse($timeSlots->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
-                    $formattedDateValue = \Carbon\Carbon::parse($timeSlots->date)->format('Y-m-d');
-                    @endphp
-                    <option value="{{ $formattedDateValue }}">{{ $formattedDate }}</option>
+                    @foreach($availableDates as $timeSlot)
+                        @php
+                            $formattedDate = \Carbon\Carbon::parse($timeSlot->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
+                            $formattedDateValue = \Carbon\Carbon::parse($timeSlot->date)->format('Y-m-d');
+                        @endphp
+                        <option value="{{ $formattedDateValue }}">{{ $formattedDate }}</option>
                     @endforeach
                 </select>
-
 
                 <div class="time-slot mt-3">
                     @foreach($doctor->timeSlot as $timeSlot)
@@ -389,11 +373,6 @@
                             {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
                         </div>
                     </a>
-                    @else
-                    <div class="time-slot-item" style="color: red;">
-                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
-                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }} (đã có người đặt)
-                    </div>
                     @endif
                     @endforeach
                 </div>
@@ -406,7 +385,6 @@
                 <div class="address">
                     <strong>ĐỊA CHỈ KHÁM: {{ $clinic->address }}</strong>
                     <p>{{ $clinic->clinic_name}}</p>
-                    <p>{{ $clinic->city}}</p>
                 </div>
                 @else
 
@@ -420,6 +398,19 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                @if (session('jsError'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: "{{ session('jsError') }}",
+                    });
+                @endif
+            });
+        </script>
+
         <script>
 
             document.addEventListener("DOMContentLoaded", function () {

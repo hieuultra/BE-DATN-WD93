@@ -11,7 +11,7 @@
 
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet" />
 
-
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
 
     <style>
@@ -222,55 +222,50 @@
             border-radius: 8px;
         }
 
-        /* Style the overall container */
         .doctor-info {
-            background-color: #f9f9f9; /* Light background */
+            background-color: #f9f9f9; 
             padding: 15px;
-            border-radius: 8px; /* Rounded corners */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            margin-bottom: 15px; /* Space below each entry */
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px; 
         }
 
-        /* Style the heading */
         .doctor-info h1 {
             font-size: 24px;
             margin: 0;
             font-family: 'Arial', sans-serif;
-            color: #333; /* Dark text */
+            color: #333; 
             display: flex;
-            align-items: center; /* Align items horizontally */
-            justify-content: space-between; /* Space out doctor name and specialty */
+            align-items: center; 
+            justify-content: space-between;
         }
 
-        /* Style for doctor name link */
         .doctor-name {
             text-decoration: none;
             font-weight: bold;
-            color: #007BFF; /* Blue color */
+            color: #007BFF; 
             transition: color 0.3s ease;
         }
 
         .doctor-name:hover {
-            color: #0056b3; /* Darker blue on hover */
+            color: #0056b3;
         }
 
-        /* Style for specialty name link */
         .specialty-name {
             text-decoration: none;
             font-weight: normal;
-            color: #28a745; /* Green color for specialty */
+            color: #28a745; 
             transition: color 0.3s ease;
         }
 
         .specialty-name:hover {
-            color: #218838; /* Darker green on hover */
+            color: #218838; 
         }
 
-        /* Separator between doctor name and specialty */
         .separator {
             font-size: 18px;
             margin: 0 10px;
-            color: #999; /* Light grey separator */
+            color: #999; 
         }
 
 
@@ -367,10 +362,8 @@
             </button>
         </div>
         @endif
-
-       
-
     </div>
+
 
     <div class="hero-section">
         <div class="hero-content">
@@ -676,13 +669,24 @@
 
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+      
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         @if (session('error'))
         <script>
             alert('{{ session('error') }}');
         </script>
         @endif
-
+        @if (isset($notification))
+            <script type="text/javascript">
+                Swal.fire({
+                    title: 'Thông báo',
+                    text: "{{ $notification }}", // Nội dung thông báo
+                    icon: 'info', // Loại thông báo: 'success', 'error', 'warning', 'info'
+                    confirmButtonText: 'OK' // Nút xác nhận
+                });
+            </script>
+        @endif
         <script>
             let debounceTimer;
 

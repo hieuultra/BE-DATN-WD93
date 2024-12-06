@@ -388,7 +388,7 @@
                                         @elseif($appointment->status_appoinment === 'can_tai_kham')
                                         <span style="color: blueviolet;">Cần tái khám</span>
                                         @elseif($appointment->status_appoinment === 'benh_nhan_khong_den')
-                                        <span style="color: green;">Bệnh nhân vắng mặt</span>
+                                        <span style="color: red;">Bệnh nhân vắng mặt</span>
                                         @else
                                         <span style="color: yellowgreen;">Đã xác nhận đang chờ đến ngày khám</span>
                                         @endif
@@ -396,7 +396,7 @@
                                     <td>
                                         @if($appointment->status_appoinment === 'kham_hoan_thanh' || $appointment->status_appoinment === 'can_tai_kham')
                                         <a href="#" class="appointment-history-link" data-appointment-id="{{ $appointment->id }}">Chi tiết</a>
-                                        @elseif($appointment->status_appoinment !== 'huy_lich_hen')
+                                        @elseif($appointment->status_appoinment !== 'huy_lich_hen' && $appointment->status_appoinment !== 'benh_nhan_khong_den')
                                         <a href="#" class="cancel-appointment-link" data-appointment-id="{{ $appointment->id }}">Hủy lịch hẹn</a>
                                         @endif
                                     </td>
