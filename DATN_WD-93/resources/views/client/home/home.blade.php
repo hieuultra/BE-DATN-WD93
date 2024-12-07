@@ -674,6 +674,8 @@
         <div id="productCarousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
+                    {{-- <div class="flash-sale">
+                        <h2 class="text-center text-danger">🔥 Flash Sale - Hôm Nay 🔥</h2> --}}
                     <div class="row px-xl-5">
                         <!-- Product list for the first slide -->
                         @foreach ($newProducts as $item)
@@ -757,6 +759,7 @@
                             </div>
                         @endforeach
                     </div>
+                    {{-- </div> --}}
                 </div>
 
                 <!-- Thêm một carousel-item mới cho các sản phẩm khác -->
@@ -887,7 +890,7 @@
         <!-- Title -->
         <div class="text-center mb-4">
             <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-                <span class="px-2 stylish-text-most-viewed">LƯỢT XEM NHIỀU</span>
+                <span class="px-2 stylish-text-most-viewed"> 🔥LƯỢT XEM NHIỀU🔥</span>
             </h2>
         </div>
         <div class="row px-xl-5">
@@ -990,7 +993,7 @@
         <!-- Title -->
         <div class="text-center mb-4">
             <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-                <span class="px-2 stylish-text-best-sellers">SẢN PHẨM KHUYẾN MÃI</span>
+                <span class="px-2 stylish-text-best-sellers">🔥SẢN PHẨM KHUYẾN MÃI🔥</span>
             </h2>
         </div>
         <div class="row px-xl-5">

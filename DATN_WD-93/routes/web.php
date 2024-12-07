@@ -161,7 +161,7 @@ Route::prefix('appoinment')
         Route::get('/appointments/get-details', [AppoinmentController::class, 'getDetails']);
         Route::get('/appointments/get_patient_info', [AppoinmentController::class, 'getPatientInfo']);
 
-        //siuuu listCart
+        // appoinment
         Route::post('/appointments/get-review-data', [AppoinmentController::class, 'getReviewData'])->name('appointments.getReviewData');
         Route::get('/reviews/{id}/edit', [AppoinmentController::class, 'edit']);
         Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
@@ -176,8 +176,8 @@ Route::prefix('appoinment')
         Route::get('/appointment_histories/{appointment}',  [AppoinmentController::class, 'getPrescriptions']);
     });
 
-    //timeslot
-    Route::prefix('timeslot')
+//timeslot
+Route::prefix('timeslot')
     ->as('timeslot.')
     ->group(function () {
         Route::get('/timeslotList', [DoctorController::class, 'timeslotList'])->name('timeslotList');
