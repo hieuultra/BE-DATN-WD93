@@ -93,16 +93,28 @@ class HomeController extends Controller
                 ->withAvg('review', 'rating') // Tính trung bình số sao
                 ->orderBy('id', 'desc')
                 ->paginate(12);
+            // Lọc thương hiệu liên quan đến danh mục
+            $brand_ids = Product::where('category_id', $request->category_id)
+                ->pluck('brand_id') // Lấy danh sách `brand_id`
+                ->unique(); // Loại bỏ các ID trùng lặp
+
+            $brands = Brand::whereIn('id', $brand_ids)
+                ->withCount('products')
+                ->orderBy('name', 'asc')
+                ->get();
         } else {
             $products = Product::withCount('review') // Đếm số lượt đánh giá
                 ->withAvg('review', 'rating') // Tính trung bình số sao
                 ->orderBy('id', 'desc')
                 ->paginate(12);
-            //phan trang 9sp/1page
-        }
-        $brands = Brand::orderBy('name', 'asc')->get();
 
-        return view('client.home.products', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
+            // Hiển thị tất cả thương hiệu
+            $brands = Brand::withCount('products')
+                ->orderBy('name', 'asc')
+                ->get();
+        }
+
+        return view('client.home.products', compact('orderCount', 'categories', 'products', 'kyw', 'category_id', 'brands'));
     }
     function productsByBrandId(Request $request)
     {
@@ -128,8 +140,11 @@ class HomeController extends Controller
                 ->orderBy('id', 'desc')
                 ->paginate(12); // Phân trang 12 sản phẩm mỗi trang
         }
+        $brands = Brand::withCount('products')
+            ->orderBy('name', 'asc')
+            ->get();
 
-        return view('client.home.products', compact('orderCount', 'categories', 'products', 'brand_id'));
+        return view('client.home.products', compact('orderCount', 'categories', 'products', 'brand_id', 'brands'));
     }
 
     function detail(Request $request, $productId) //truyen id o route vao phai co request
@@ -359,12 +374,25 @@ class HomeController extends Controller
                 ->withAvg('review', 'rating') // Tính trung bình số sao
                 ->orderBy('id', 'desc')
                 ->paginate(12);
+            // Lọc thương hiệu liên quan đến danh mục
+            $brand_ids = Product::where('category_id', $request->category_id)
+                ->pluck('brand_id') // Lấy danh sách `brand_id`
+                ->unique(); // Loại bỏ các ID trùng lặp
+
+            $brands = Brand::whereIn('id', $brand_ids)
+                ->withCount('products')
+                ->orderBy('name', 'asc')
+                ->get();
         } else {
             $products = Product::withCount('review') // Đếm số lượt đánh giá
                 ->withAvg('review', 'rating') // Tính trung bình số sao
                 ->orderBy('id', 'desc')
                 ->paginate(12);
             //phan trang 9sp/1page
+            // Hiển thị tất cả thương hiệu
+            $brands = Brand::withCount('products')
+                ->orderBy('name', 'asc')
+                ->get();
         }
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
@@ -394,6 +422,6 @@ class HomeController extends Controller
         }
 
         // Trả về view
-        return view('client.home.filtered', compact('filteredVariants', 'categories', 'orderCount', 'products', 'category_id'));
+        return view('client.home.filtered', compact('filteredVariants', 'categories', 'orderCount', 'products', 'category_id', 'brands'));
     }
 }

@@ -79,7 +79,7 @@
                 </div>
               </div>
             </form>
-            <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+            <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Chúng tôi</h6>
             <div class="d-flex">
               <a class="btn btn-primary btn-square mr-2" href="#"
                 ><i class="fab fa-twitter"></i
@@ -106,11 +106,10 @@
     >
       <div class="col-md-6 px-xl-0">
         <p class="mb-md-0 text-center text-md-left text-secondary">
-          &copy; <a class="text-primary" href="#">Domain</a>. All Rights
-          Reserved. Designed by
-          <a class="text-primary" href="https://htmlcodex.com">HTML Codex</a>
-          <br />Distributed By:
-          <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+          &copy; <a class="text-primary" href="#">Instinct Pharmacy</a>.
+          {{-- <a class="text-primary" href="https://htmlcodex.com">Instinct Pharmacy</a> --}}
+          <br />
+          {{-- <a href="https://themewagon.com" target="_blank">Instinct Pharmacy</a> --}}
         </p>
       </div>
       <div class="col-md-6 px-xl-0 text-center text-md-right">

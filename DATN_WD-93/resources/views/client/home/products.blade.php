@@ -85,6 +85,26 @@
         .option:focus {
             border: 2px solid gray;
         }
+        .brand-filter-item {
+    transition: all 0.3s ease;
+}
+
+.brand-filter-item:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.brand-image {
+    border: 2px solid #ddd;
+    padding: 5px;
+    transition: border-color 0.3s ease;
+}
+
+.brand-image:hover {
+    border-color: #007bff;
+}
+
     </style>
 
     <!-- Breadcrumb Start -->
@@ -180,43 +200,35 @@
                 </div> --}}
                 <!-- Color End -->
 
-                <!-- Size Start -->
-                {{-- <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by size</span></h5>
-                <div class="bg-light p-4 mb-30">
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="size-all">
-                            <label class="custom-control-label" for="size-all">All Size</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-1">
-                            <label class="custom-control-label" for="size-1">XS</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-2">
-                            <label class="custom-control-label" for="size-2">S</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-3">
-                            <label class="custom-control-label" for="size-3">M</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-4">
-                            <label class="custom-control-label" for="size-4">L</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="size-5">
-                            <label class="custom-control-label" for="size-5">XL</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                    </form>
-                </div> --}}
-                <!-- Size End -->
+                <!-- brand Start -->
+                <h5 class="section-title position-relative text-uppercase mb-3">
+                    <span class="bg-secondary px-3">Lọc theo thương hiệu</span>
+                </h5>
+                <div class="bg-light p-4 mb-30 rounded shadow-sm">
+                    <div class="row">
+                        @if($brands->isEmpty())
+                        <p>Không có thương hiệu nào liên quan đến danh mục này.</p>
+                    @else
+                        @foreach($brands as $brand)
+                            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                                <div class="brand-filter-item text-center border rounded p-3 bg-white">
+                                    <a href="{{ route('productsByBrandId', ['brand_id' => $brand->id]) }}">
+                                        <img
+                                            src="{{ Storage::url($brand->image) }}"
+                                            alt="{{ $brand->name }}"
+                                            class="img-fluid rounded-circle brand-image"
+                                            style="width: 80px; height: 80px; object-fit: cover;"
+                                        />
+                                    </a>
+                                    <h6 class="mt-2 text-truncate">{{ $brand->name }}</h6>
+
+                                </div>
+                            </div>
+                        @endforeach
+                        @endif
+                    </div>
+                </div>
+                <!-- brand End -->
             </div>
             <!-- Shop Sidebar End -->
 
