@@ -77,7 +77,7 @@
           style="height: 65px; padding: 0 30px"
         >
           <h6 class="text-dark m-0">
-            <i class="fa fa-bars mr-2"></i>Danh Mục
+            <i class="fa fa-bars mr-2"></i>Chuyên khoa
           </h6>
           <i class="fa fa-angle-down text-dark"></i>
         </a>
@@ -87,8 +87,8 @@
           style="width: calc(100% - 30px); z-index: 999"
         >
           <div class="navbar-nav w-100">
-                @foreach ($categories as $category)
-                <a href="{{ route('productsByCategoryId', $category->id) }}" class="dropdown-item">{{ $category->name }}</a>
+                @foreach ($spe as $s)
+                <a href="{{ route('appoinment.booKingCare', $s->id) }}" class="dropdown-item">{{ $s->name }}</a>
                 @endforeach
           </div>
         </nav>

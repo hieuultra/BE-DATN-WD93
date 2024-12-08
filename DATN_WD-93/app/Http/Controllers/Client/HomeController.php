@@ -11,6 +11,7 @@ use App\Models\Review;
 use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\Specialty;
 use Illuminate\Http\Request;
 use App\Models\VariantPackage;
 use App\Models\VariantProduct;
@@ -54,6 +55,9 @@ class HomeController extends Controller
             ->withCount('review')->withAvg('review', 'rating')->get();
         // Kết hợp danh mục và số lượng sản phẩm
         $categories = Category::withCount('products')->orderBy('name', 'asc')->get();
+        $spe =  Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $brands = Brand::withCount('products')->orderBy('name', 'asc')->get();
         $blogs = Blog::latest()->take(5)->get(); // Lấy 5 bài viết mới nhất
 
@@ -73,7 +77,8 @@ class HomeController extends Controller
             'instockProducts',
             'mostViewedProducts',
             'highestDiscountProducts',
-            'blogs'
+            'blogs',
+            'spe'
         ));
     }
     function products(Request $request)
@@ -87,6 +92,9 @@ class HomeController extends Controller
         $category_id = $request->input('category_id');
 
         $categories = Category::orderBy('name', 'ASC')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         if ($request->category_id) {
             $products = Product::where('category_id', $request->category_id)
                 ->withCount('review') // Đếm số lượt đánh giá
@@ -114,7 +122,7 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('client.home.products', compact('orderCount', 'categories', 'products', 'kyw', 'category_id', 'brands'));
+        return view('client.home.products', compact('orderCount', 'categories', 'products', 'kyw', 'category_id', 'brands', 'spe'));
     }
     function productsByBrandId(Request $request)
     {
@@ -126,6 +134,9 @@ class HomeController extends Controller
 
         $brand_id = $request->brand_id; // Lấy ID thương hiệu từ request
         $categories = Category::orderBy('name', 'ASC')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
 
         // Lọc sản phẩm theo thương hiệu
         if ($brand_id) {
@@ -144,7 +155,7 @@ class HomeController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('client.home.products', compact('orderCount', 'categories', 'products', 'brand_id', 'brands'));
+        return view('client.home.products', compact('orderCount', 'categories', 'products', 'brand_id', 'brands', 'spe'));
     }
 
     function detail(Request $request, $productId) //truyen id o route vao phai co request
@@ -173,6 +184,9 @@ class HomeController extends Controller
             $sp->save(); // lưu lại số lượt xem sản phẩm
 
             $categories = Category::orderBy('name', 'asc')->get();
+            $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+                ->orderBy('name', 'asc')
+                ->get();
 
             // Kiểm tra số lượng đơn hàng của người dùng nếu đã đăng nhập
             $orderCount = 0;
@@ -207,7 +221,7 @@ class HomeController extends Controller
             $product = Product::with('review.user')->findOrFail($productId);
 
             // Trả về view với các thông tin cần thiết
-            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'canReview', 'product', 'billId', 'soldQuantity'));
+            return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'canReview', 'product', 'billId', 'soldQuantity', 'spe'));
         }
 
         return redirect()->route('products')->with('error', 'Không tìm thấy sản phẩm.');
@@ -259,6 +273,9 @@ class HomeController extends Controller
     function search(Request $request)
     {
         $categories = Category::orderBy('name', 'ASC')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -271,7 +288,7 @@ class HomeController extends Controller
         $products = Product::where('name', 'LIKE', "%$kyw%")->withCount('review')
             ->withAvg('review', 'rating')->orderBy('id', 'DESC')->paginate(9);
         // echo var_dump($dssp);
-        return view('client.home.proSearch', compact('orderCount', 'categories', 'products', 'kyw', 'category_id'));
+        return view('client.home.proSearch', compact('orderCount', 'categories', 'products', 'kyw', 'category_id', 'spe'));
     }
     //
     function getProductInfo(Request $request)
@@ -368,6 +385,9 @@ class HomeController extends Controller
     {
         $category_id = $request->input('category_id');
         $categories = Category::orderBy('name', 'ASC')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         if ($request->category_id) {
             $products = Product::where('category_id', $request->category_id)
                 ->withCount('review') // Đếm số lượt đánh giá
@@ -422,6 +442,6 @@ class HomeController extends Controller
         }
 
         // Trả về view
-        return view('client.home.filtered', compact('filteredVariants', 'categories', 'orderCount', 'products', 'category_id', 'brands'));
+        return view('client.home.filtered', compact('filteredVariants', 'categories', 'orderCount', 'products', 'category_id', 'brands', 'spe'));
     }
 }

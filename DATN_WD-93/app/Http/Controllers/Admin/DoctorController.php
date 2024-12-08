@@ -253,8 +253,11 @@ class DoctorController extends Controller
         }
 
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe =  Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
 
-        return view('admin.specialtyDoctors.timeslot.schedule', compact('schedules', 'doctor', 'orderCount', 'categories'));
+        return view('admin.specialtyDoctors.timeslot.schedule', compact('schedules', 'doctor', 'orderCount', 'categories','spe'));
     }
 
 
@@ -430,7 +433,7 @@ class DoctorController extends Controller
             return response()->json(['message' => 'Lịch làm việc đã được xóa thành công.']);
         }
     }
-    
+
 
 
     //Thành tựu bác sĩ

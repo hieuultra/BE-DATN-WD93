@@ -8,10 +8,11 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\Specialty;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\VariantPackage;
 use App\Models\VariantProduct;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -20,6 +21,9 @@ class CartController extends Controller
     {
 
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -89,7 +93,19 @@ class CartController extends Controller
         }
 
         $total = $subTotal + $shipping - $discount;
-        return view('client.home.cart', compact('orderCount', 'categories', 'cart', 'subTotal', 'shipping', 'total', 'discount', 'checkTypeDiscount', 'checkMinDiscount', 'maxDiscount'));
+        return view('client.home.cart', compact(
+            'orderCount',
+            'categories',
+            'cart',
+            'subTotal',
+            'shipping',
+            'total',
+            'discount',
+            'checkTypeDiscount',
+            'checkMinDiscount',
+            'maxDiscount',
+            'spe'
+        ));
     }
     public function addCart(Request $request)
     {

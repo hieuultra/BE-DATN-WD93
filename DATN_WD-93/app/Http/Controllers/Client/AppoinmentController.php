@@ -30,6 +30,7 @@ class AppoinmentController extends Controller
     {
         $categories = Category::orderBy('name', 'asc')->get();
         $specialties = Specialty::where('classification', 'chuyen_khoa')->orderBy('name', 'asc')->get();
+        $spe = Specialty::orderBy('name', 'desc')->get();
         $specialtiestx = Specialty::where('classification', 'kham_tu_xa')->orderBy('name', 'asc')->get();
         $specialtiestq = Specialty::where('classification', 'tong_quat')->orderBy('name', 'asc')->get();
         $doctors = Doctor::with('user', 'specialty')
@@ -74,7 +75,8 @@ class AppoinmentController extends Controller
                 'doctors',
                 'specialtiestx',
                 'specialtiestq',
-                'notification'
+                'notification',
+                'spe'
             ));
         } else {
             return view('client.appoinment.index', compact(
@@ -84,6 +86,7 @@ class AppoinmentController extends Controller
                 'doctors',
                 'specialtiestx',
                 'specialtiestq',
+                'spe'
             ));
         }
     }
@@ -137,10 +140,13 @@ class AppoinmentController extends Controller
 
         $orderCount = Auth::check() ? Auth::user()->bill()->count() : 0;
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $specialty = Specialty::findOrFail($id);
         $clinics = Clinic::all();
 
-        return view('client.appoinment.doctorbooking', compact('doctors', 'specialty', 'categories', 'orderCount', 'clinics'));
+        return view('client.appoinment.doctorbooking', compact('doctors', 'specialty', 'categories', 'orderCount', 'clinics', 'spe'));
     }
 
 
@@ -169,8 +175,11 @@ class AppoinmentController extends Controller
             $orderCount = $user->bill()->count();
         }
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $specialty = Specialty::where('id', $id)->first();
-        return view('client.appoinment.booKingCarePackage', compact('packages', 'specialty', 'categories', 'orderCount'));
+        return view('client.appoinment.booKingCarePackage', compact('packages', 'specialty', 'categories', 'orderCount', 'spe'));
     }
 
     public function doctorDetails($id)
@@ -198,11 +207,14 @@ class AppoinmentController extends Controller
             $orderCount = $user->bill()->count();
         }
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $doctorrv = Doctor::with('review')->findOrFail($doctor->id);
         $specialty = Specialty::where('id', $doctor->specialty_id)->first();
         $clinics = Clinic::where('doctor_id', $id)->first();
         $achievements = doctorAchievement::where('doctor_id', $id)->get();
-        return view('client.appoinment.doctorDetails', compact('doctor', 'specialty', 'doctorrv', 'orderCount', 'categories', 'clinics', 'achievements'));
+        return view('client.appoinment.doctorDetails', compact('doctor', 'specialty', 'doctorrv', 'orderCount', 'categories', 'clinics', 'achievements', 'spe'));
     }
 
     public function packaceDetails($id)
@@ -230,9 +242,12 @@ class AppoinmentController extends Controller
             $orderCount = $user->bill()->count();
         }
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $packagerv = Package::with('review')->findOrFail($package->id);
         $specialty = Specialty::where('id', $package->specialty_id)->first();
-        return view('client.appoinment.packaceDetails', compact('package', 'packagerv', 'specialty', 'orderCount', 'categories'));
+        return view('client.appoinment.packaceDetails', compact('package', 'packagerv', 'specialty', 'orderCount', 'categories', 'spe'));
     }
 
     public function formbookingdt($id)
@@ -297,6 +312,9 @@ class AppoinmentController extends Controller
         }
 
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
 
         if (!$completionStats) {
             if ($appointmentsToday >= 3) {
@@ -304,7 +322,6 @@ class AppoinmentController extends Controller
             }
         } else {
             if ($completionRate >= 70) {
-                
             } elseif ($completionRate >= 50) {
                 if ($appointmentsToday >= 3) {
                     return redirect()->back()->with('jsError', 'Bạn đã đạt giới hạn đặt lịch với bác sĩ này hôm nay (tối đa 3 lần).');
@@ -316,7 +333,7 @@ class AppoinmentController extends Controller
             }
         }
 
-        return view('client.appoinment.formbookingdt', compact('doctor', 'timeSlot', 'orderCount', 'categories'))
+        return view('client.appoinment.formbookingdt', compact('doctor', 'timeSlot', 'orderCount', 'categories', 'spe'))
             ->with('existingAppointment', $existingAppointment)
             ->with('jsError', 'Bạn đã đặt lịch khám với bác sĩ khác vào thời điểm này.');
     }
@@ -343,7 +360,10 @@ class AppoinmentController extends Controller
             $orderCount = $user->bill()->count();
         }
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('client.appoinment.formbookingPackage', compact('package', 'timeSlot', 'orderCount', 'categories'));
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
+        return view('client.appoinment.formbookingPackage', compact('package', 'timeSlot', 'orderCount', 'categories', 'spe'));
     }
 
     public function bookAnAppointment(Request $request)
@@ -388,8 +408,11 @@ class AppoinmentController extends Controller
                     $orderCount = $user->bill()->count();
                 }
                 $categories = Category::orderBy('name', 'asc')->get();
+                $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+                    ->orderBy('name', 'asc')
+                    ->get();
                 $appointment = Appoinment::with(['doctor', 'user', 'timeSlot'])->findOrFail($appoinment->id);
-                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories'));
+                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories', 'spe'));
             } else {
                 $appoinment = new Appoinment();
                 $appoinment->user_id = $request->user_id;
@@ -419,8 +442,11 @@ class AppoinmentController extends Controller
                     $orderCount = $user->bill()->count();
                 }
                 $categories = Category::orderBy('name', 'asc')->get();
+                $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+                    ->orderBy('name', 'asc')
+                    ->get();
                 $appointment = Appoinment::with(['doctor', 'user', 'timeSlot'])->findOrFail($appoinment->id);
-                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories'));
+                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories', 'spe'));
             }
         }
     }
@@ -467,8 +493,11 @@ class AppoinmentController extends Controller
                     $orderCount = $user->bill()->count();
                 }
                 $categories = Category::orderBy('name', 'asc')->get();
+                $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+                    ->orderBy('name', 'asc')
+                    ->get();
                 $appointment = Appoinment::with(['doctor', 'user', 'timeSlot'])->findOrFail($appoinment->id);
-                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories'));
+                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories', 'spe'));
             } else {
                 $appoinment = new Appoinment();
                 $appoinment->user_id = $request->user_id;
@@ -498,8 +527,11 @@ class AppoinmentController extends Controller
                     $orderCount = $user->bill()->count();
                 }
                 $categories = Category::orderBy('name', 'asc')->get();
+                $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+                    ->orderBy('name', 'asc')
+                    ->get();
                 $appointment = Appoinment::with(['doctor', 'user', 'timeSlot'])->findOrFail($appoinment->id);
-                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories'));
+                return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories', 'spe'));
             }
         }
     }
@@ -520,12 +552,15 @@ class AppoinmentController extends Controller
         }
 
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $appoinments = Appoinment::with('user', 'doctor')->where('user_id', $id)->orderBy('created_at', 'desc')->get();
         $available = AvailableTimeslot::all();
         $reviewDortor = Review::where('user_id', $id)->get();
         $clinics = Clinic::All();
 
-        return view('client.appoinment.appointmentHistory', compact('appoinments', 'available', 'reviewDortor', 'orderCount', 'categories', 'clinics'));
+        return view('client.appoinment.appointmentHistory', compact('appoinments', 'available', 'reviewDortor', 'orderCount', 'categories', 'clinics', 'spe'));
     }
 
     public function doctorDetailsall()
@@ -536,10 +571,13 @@ class AppoinmentController extends Controller
             $orderCount = $user->bill()->count();
         }
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
 
         $doctors = Doctor::with(['specialty', 'user'])->get();
         $specialties = Specialty::whereIn('classification', ['chuyen_khoa', 'tong_quat', 'kham_tu_xa'])->get();
-        return view('client.appoinment.allDoctor', compact('orderCount', 'categories', 'doctors', 'specialties'));
+        return view('client.appoinment.allDoctor', compact('orderCount', 'categories', 'doctors', 'specialties', 'spe'));
     }
 
     public function fetchHistory($appointmentId)
@@ -626,8 +664,11 @@ class AppoinmentController extends Controller
                 $orderCount = $user->bill()->count();
             }
             $categories = Category::orderBy('name', 'asc')->get();
+            $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+                ->orderBy('name', 'asc')
+                ->get();
             $clinic = Clinic::where('doctor_id', $doctors->id)->first();
-            return view('client.physicianmanagement.view', compact('completionStats', 'doctor', 'users', 'doctorhtr', 'doctors', 'doctorrv', 'orderCount', 'categories', 'clinic'));
+            return view('client.physicianmanagement.view', compact('completionStats', 'doctor', 'users', 'doctorhtr', 'doctors', 'doctorrv', 'orderCount', 'categories', 'clinic', 'spe'));
         } else {
             return redirect()->route('appoinment.index')->with('error', 'Bạn không được cấp quyền truy cập.');
         }
@@ -657,6 +698,9 @@ class AppoinmentController extends Controller
             $orderCount = $user->bill()->count();
         }
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
 
         $user = User::where('id', $id1)->first();
 
@@ -673,7 +717,7 @@ class AppoinmentController extends Controller
 
         $timeSlot = DB::table('available_timeslots')->get();
 
-        return view('client.physicianmanagement.viewdoctor', compact('timeSlot', 'orderCount', 'categories', 'user', 'appoinments', 'appoinmentsStats'));
+        return view('client.physicianmanagement.viewdoctor', compact('timeSlot', 'orderCount', 'categories', 'user', 'appoinments', 'appoinmentsStats', 'spe'));
     }
 
     public function cancelAppointment($id)
@@ -1089,6 +1133,9 @@ class AppoinmentController extends Controller
             $orderCount = $user->bill()->count();
         }
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
 
         return view('client.appoinment.statistics', compact(
             'doctor',
@@ -1105,7 +1152,8 @@ class AppoinmentController extends Controller
             'categories',
             'positiveReviewsCount',
             'negativeReviewsCount',
-            'neutralReviewsCount'
+            'neutralReviewsCount',
+            'spe'
         ));
     }
 
@@ -1154,6 +1202,9 @@ class AppoinmentController extends Controller
     public function specialistExamination()
     {
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $firstBatch = Specialty::orderBy('name', 'asc')->take(4)->get();
         $secondBatch = Specialty::orderBy('name', 'asc')->skip(4)->take(4)->get();
         $thirdBatch = Specialty::orderBy('name', 'asc')->skip(8)->take(4)->get();
@@ -1162,12 +1213,15 @@ class AppoinmentController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count();
         }
-        return view('client.appoinment.specialist', compact('orderCount', 'categories', 'firstBatch', 'secondBatch', 'thirdBatch'));
+        return view('client.appoinment.specialist', compact('orderCount', 'categories', 'firstBatch', 'secondBatch', 'thirdBatch', 'spe'));
     }
 
     function doctors(Request $request)
     {
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $orderCount = 0;
         if (Auth::check()) {
             $user = Auth::user();
@@ -1181,7 +1235,7 @@ class AppoinmentController extends Controller
         } else {
             $doctors = Doctor::orderBy('id', 'desc')->paginate(12);
         }
-        return view('client.appoinment.doctors', compact('orderCount', 'specialty', 'doctors', 'specialty_id', 'categories'));
+        return view('client.appoinment.doctors', compact('orderCount', 'specialty', 'doctors', 'specialty_id', 'categories', 'spe'));
     }
 
 
@@ -1348,8 +1402,11 @@ class AppoinmentController extends Controller
                             $orderCount = $user->bill()->count();
                         }
                         $categories = Category::orderBy('name', 'asc')->get();
+                        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+                            ->orderBy('name', 'asc')
+                            ->get();
                         $appointment = Appoinment::with(['doctor', 'user', 'timeSlot'])->findOrFail($appoinment->id);
-                        return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories'));
+                        return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories', 'spe'));
                     } else {
                         $appoinment = new Appoinment();
                         $appoinment->user_id = $user_id;
@@ -1379,8 +1436,11 @@ class AppoinmentController extends Controller
                             $orderCount = $user->bill()->count();
                         }
                         $categories = Category::orderBy('name', 'asc')->get();
+                        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+                            ->orderBy('name', 'asc')
+                            ->get();
                         $appointment = Appoinment::with(['doctor', 'user', 'timeSlot'])->findOrFail($appoinment->id);
-                        return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories'));
+                        return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories', 'spe'));
                     }
                 }
             }
