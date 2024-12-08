@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Appoinment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Bill;
 
 class AdminAppoinmentController extends Controller
 {
@@ -17,14 +18,32 @@ class AdminAppoinmentController extends Controller
         $listAppoinment = Appoinment::query()->orderBy('updated_at', 'desc')->get();
         $statusAppoinment = Appoinment::status_appoinment;
         $statusPayment = Appoinment::status_payment_method;
-        return view('admin.appoinments.index', compact('listAppoinment', 'statusAppoinment', 'statusPayment'));
+        $daysOfWeek = [
+            1 => 'Thứ Hai',
+            2 => 'Thứ Ba',
+            3 => 'Thứ Tư',
+            4 => 'Thứ Năm',
+            5 => 'Thứ Sáu',
+            6 => 'Thứ Bảy',
+            7 => 'Chủ Nhật',
+        ];
+        return view('admin.appoinments.index', compact('listAppoinment', 'statusAppoinment', 'statusPayment','daysOfWeek'));
     }
     public function show(string $id)
     {
         $appoinmentDetail = Appoinment::query()->findOrFail($id);
         $statusAppoinment = Appoinment::status_appoinment;
         $statusPayment = Appoinment::status_payment_method;
-        return view('admin.appoinments.show', compact('appoinmentDetail', 'statusAppoinment', 'statusPayment'));
+        $daysOfWeek = [
+            1 => 'Thứ Hai',
+            2 => 'Thứ Ba',
+            3 => 'Thứ Tư',
+            4 => 'Thứ Năm',
+            5 => 'Thứ Sáu',
+            6 => 'Thứ Bảy',
+            7 => 'Chủ Nhật',
+        ];
+        return view('admin.appoinments.show', compact('appoinmentDetail', 'statusAppoinment', 'statusPayment','daysOfWeek'));
     }
     public function update(Request $request, string $id)
     {

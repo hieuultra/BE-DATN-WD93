@@ -165,7 +165,7 @@
                                     <label for="appointment-time">Thời Gian Hẹn:</label>
                                     <p id="appointment-time">Ca: {{ $appoinmentDetail->timeSlot->startTime }}h ->
                                         {{ $appoinmentDetail->timeSlot->endTime }}h</p>
-                                    <p id="appointment-time">Thứ: {{ $appoinmentDetail->timeSlot->dayOfWeek }}</p>
+                                    <p id="appointment-time">{{ $daysOfWeek[$appoinmentDetail->timeSlot->dayOfWeek] ?? 'Không xác định' }}</p>
                                     <p id="appointment-time">Ca: {{ $appoinmentDetail->appointment_date }}</p>
                                 </div>
                             </div>
