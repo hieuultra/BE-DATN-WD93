@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <h1>Thống kê cho bác sĩ: {{ $doctor->user->name }}</h1>
-
+    <a href="{{ route('appoinment.physicianManagement', Auth::user()->id) }}">Quay lại</a>
     
     <div>
         

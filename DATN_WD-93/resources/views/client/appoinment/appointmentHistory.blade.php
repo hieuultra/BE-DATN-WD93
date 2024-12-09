@@ -129,7 +129,7 @@
                     <p><strong>Địa chỉ khoa khám:</strong> {{ $appointment->package->address }}</p>
                     @endif
                     @if($appointment->meet_link)
-                    <p><strong>Link meet:</strong> {{ $appointment->meet_link }}</p>
+                    <p><strong>Link meet:</strong> <a href="{{ $appointment->meet_link }}" target="_blank">{{ $appointment->meet_link }}</a></p>
                     @else
 
                     @endif
@@ -254,8 +254,6 @@
             </div>
         </div>
 
-
-
         <div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-labelledby="appointmentDetailsModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -277,7 +275,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="modal fade" id="cancelAppointmentModal" tabindex="-1" aria-labelledby="cancelAppointmentModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -379,7 +376,7 @@
                     <p><strong>Địa chỉ khoa khám:</strong> {{ $appointment->package->address }}</p>
                     @endif
                     @if($appointment->meet_link)
-                    <p><strong>Link meet:</strong> {{ $appointment->meet_link }}</p>
+                    <p><strong>Link meet:</strong> <a href="{{ $appointment->meet_link }}" target="_blank">{{ $appointment->meet_link }}</a></p>
                     @else
 
                     @endif
@@ -431,6 +428,33 @@
             @endforeach
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: '{{ session('error') }}',
+                timer: 5000, 
+                timerProgressBar: true
+            })
+        </script>
+    @endif
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: '{{ session('success') }}',
+                timer: 5000, 
+                timerProgressBar: true
+            })
+        </script>
+    @endif
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
@@ -643,7 +667,6 @@
                     content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có có ngày tái khám'}</p>`;
                     content += `<p>Ghi chú: ${data.notes || 'Không có thông tin'}</p>`;
 
-                    // Kiểm tra và hiển thị danh sách `order_details`
                     if (data.order_details && data.order_details.length > 0) {
                         content += `<h5>Chi tiết đơn thuốc:</h5>`;
                         content += `<table class="table table-bordered"><thead>

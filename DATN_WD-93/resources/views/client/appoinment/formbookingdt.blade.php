@@ -115,6 +115,7 @@
         {{ session('error') }}
     </div>
     @endif
+
     @if(isset($existingAppointment))
     <div id="appointment-notification" class="alert alert-warning" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: none;">
         <p>Bạn đã đặt lịch vào thời điểm này:</p>
@@ -126,6 +127,11 @@
     </div>
     @endif
 
+    @if(isset($notification))
+    <div id="appointment-notification2" class="alert alert-warning" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: none;">
+        <p>{{$notification}}</p>
+    </div>
+    @endif
 
     <a href="{{route('appoinment.booKingCare', $doctor->specialty->id)}}">Quay lại</a>
     <div class="container">
@@ -380,8 +386,7 @@
         @endif
     </div>
 
-    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>
         document.getElementById('submitButton').addEventListener('click', function() {
             const paymentMethod = document.querySelector('input[name="status_payment_method"]:checked');
@@ -417,7 +422,7 @@
                 return;
             }
             const paymentValue = paymentMethod.value;
-            const form = document.getElementById('form2');
+            const form = document.getElementById('form1');
             const hiddenPaymentMethod = document.getElementById('paymentMethodnn');
 
             if (!form || !hiddenPaymentMethod) {
@@ -439,6 +444,20 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const notification = document.getElementById('appointment-notification');
+
+            if (notification) {
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 500);
+                }, 10000);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const notification = document.getElementById('appointment-notification2');
 
             if (notification) {
                 notification.style.display = 'block';

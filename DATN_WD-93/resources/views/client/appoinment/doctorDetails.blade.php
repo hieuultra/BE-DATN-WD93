@@ -263,7 +263,7 @@
     @section('content')
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{{ route('appoinment.booKingCare', $doctor->specialty->id) }}">
                 Quay lại
             </a>
             <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
