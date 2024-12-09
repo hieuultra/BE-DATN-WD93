@@ -271,68 +271,15 @@
                 <span class="navbar-toggler-icon">
                 </span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Chuyên khoa
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Cơ sở y tế
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Bác sĩ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Gói khám
-                        </a>
-                    </li>
-                </ul>
-                <div class="header-icons">
-                    <a href="#">
-                        <i class="fas fa-calendar-alt">
-                        </i>
-                        Lịch hẹn
-                    </a>
-                    <a href="#">
-                        <i class="fas fa-question-circle">
-                        </i>
-                        Hỗ trợ
-                    </a>
-                </div>
-            </div>
         </div>
     </nav>
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="#">
-                        Khám chuyên khoa
-                    </a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="#">
-                        {{$package->specialty->name}}
-                    </a>
-                </li>
-            </ol>
-        </nav>
         <div class="doctor-info">
             <img alt="Doctor's portrait" height="100"
                 src="{{ asset('upload/' . $package->image) }}"
                 width="100" />
             <div class="doctor-details">
                 <h2>
-                    <span class="badge bg-warning text-dark">
-                        Yêu thích
-                    </span>
                     {{$package->hospital_name}}
                 </h2>
                 <p>

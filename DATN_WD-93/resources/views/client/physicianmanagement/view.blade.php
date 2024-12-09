@@ -290,6 +290,39 @@
         border-radius: 4px;
         cursor: pointer;
     }
+
+    .custom-btn {
+        background-color: #6c757d;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: none;
+        position: relative;
+        transition: all 0.3s ease-in-out;
+        overflow: hidden;
+    }
+
+    .custom-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.3);
+        transition: all 0.3s;
+    }
+
+    .custom-btn:hover::before {
+        left: 100%;
+    }
+
+    .custom-btn:hover {
+        transform: scale(1.1);
+    }
+
     .custom-alert.hidden {
         display: none;
     }
@@ -297,7 +330,7 @@
         /* Hiệu ứng focus */
         .custom-btn:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Viền focus màu xanh nhạt */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); 
         }
 
 
@@ -374,8 +407,8 @@
             <img alt="Doctor's profile picture" height="100" src="{{ asset('upload/' . $doctor->user->image) }}" width="100" />
             <div class="ml-md-3 mt-2 mt-md-0 text-center text-md-start">
                 <h1>Bác Sỹ: {{$doctor->user->name}}</h1>
-                <a href="{{ route('appoinment.statistics', $doctor->id) }}" class="btn btn-secondary">Thống kê chi tiết</a>
-                <a href="{{ route('timeslot.doctor.schedule', $doctor->id) }}" class="btn btn-secondary">Quản lý thời gian làm việc</a>
+                <a href="{{ route('appoinment.statistics', $doctor->id) }}" class="btn custom-btn" style="color: white;">Thống kê chi tiết</a>
+                <a href="{{ route('timeslot.doctor.schedule', $doctor->id) }}" class="btn custom-btn" style="color: white;">Quản lý thời gian làm việc</a>
             </div>
         </div>
 
@@ -408,6 +441,77 @@
                     </thead>
                     <tbody>
                         @foreach($doctors->timeSlot as $timeSlot)
+                            @foreach($timeSlot->appoinment as $appoinment)
+                                @if($appoinment->status_appoinment !== null)
+                                    @php
+                                        $formattedDateTime = \Carbon\Carbon::parse($timeSlot->date . ' ' . $timeSlot->startTime)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $appoinment->user->name }}</td>
+                                        <td>{{ $appoinment->user->phone }}</td>
+                                        <td>{{ $appoinment->notes }}</td>
+                                        <td>{{ $formattedDateTime }}</td>
+                                        <td>
+                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} - 
+                                            {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}
+                                        </td>
+                                        <td>
+                                            @if($appoinment->status_appoinment === 'huy_lich_hen')
+                                                <span class="text-danger">Lịch hẹn đã bị hủy</span>
+                                            @elseif($appoinment->status_appoinment === 'da_xac_nhan')
+                                                <span class="text-success">Đã xác nhận</span>
+                                            @elseif($appoinment->status_appoinment === 'kham_hoan_thanh')
+                                                <span class="text-primary">Đã khám thành công</span>
+                                            @elseif($appoinment->status_appoinment === 'can_tai_kham')
+                                                <span class="text-warning">Cần tái khám</span>
+                                            @elseif($appoinment->status_appoinment === 'benh_nhan_khong_den')
+                                                <span class="text-info">Bệnh nhân vắng mặt</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($appoinment->status_appoinment === 'da_xac_nhan')
+                                            <div class="button-group">
+                                                @if($appoinment->meet_link)
+                                                <a href="{{ $appoinment->meet_link }}" target="_blank" class="btn custom-btn">Link Khám</a>
+                                                @else
+                                                
+                                                @endif
+                                                <a href="#" class="btn action-link confirm" data-appointment-id="{{ $appoinment->id }}">Xác nhận đang khám</a>
+                                                <a href="#" class="btn action-link pending" data-user-id="{{ $appoinment->user_id }}" data-appointment-id="{{ $appoinment->id }}" data-doctor-id="{{ $doctor->id }}">Bệnh nhân chưa đến</a>
+                                            </div>
+                                            @elseif($appoinment->status_appoinment === 'kham_hoan_thanh' || $appoinment->status_appoinment === 'can_tai_kham')
+                                                <a href="#" class="btn btn-info btn-sm appointment-history-link" data-appointment-id="{{ $appoinment->id }}">Chi tiết hóa đơn</a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+
+        <div class="appointments mt-3" style="margin-top: 10px;">
+            <h5>Lịch hẹn mà bạn bỏ lỡ</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tên bệnh nhân</th>
+                            <th>Số điện thoại</th>
+                            <th>Lý do khám</th>
+                            <th>Ngày</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($doctorlt->timeSlot as $timeSlot)
                             @foreach($timeSlot->appoinment as $appoinment)
                                 @if($appoinment->status_appoinment !== null)
                                     @php

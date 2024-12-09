@@ -29,7 +29,7 @@
           <div class="card-header d-flex justify-content-between">
             <div>
               <i class="fas fa-table me-1"></i>
-             Danh sách chuyên khoa
+              Danh sách chuyên khoa
             </div>
             <a href="{{ route('admin.specialties.viewSpecialtyAdd') }}">
               <input type="submit" class="btn btn-primary" name="them" value="Thêm">
@@ -69,27 +69,26 @@
                   <th class="text-center" scope="col">Hành động</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="specialtyTableBody">
                 @foreach($specialty as $items)
                 <tr @if($items->classification == 0) style="background-color: gray;" @endif>
                   <th scope="row">{{ $loop->iteration }}</th>
-                  <td>{{$items->name}}</td>
-                  <td> <img src="{{ asset('upload/'.$items->image)  }}" width="150" height="90" alt=""></td>
+                  <td>{{ $items->name }}</td>
+                  <td><img src="{{ asset('upload/'.$items->image) }}" width="150" height="90" alt=""></td>
                   <td class="text-center">
                     <a href="" class="btn btn-warning">
                       <form action="{{ route('admin.specialties.specialtyUpdateForm', $items->id) }}" method="GET">
-                        <button style="background: none;  border: none; outline: none;" type="submit">
+                        <button style="background: none; border: none; outline: none;" type="submit">
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
                             <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001" />
                           </svg>
                         </button>
                       </form>
                     </a>
-                    <!-- Thêm nút delete -->
                     <a href="" class="btn btn-danger">
                       <form action="{{ route('admin.specialties.specialtyDestroy', $items->id) }}" method="POST">
                         @csrf
-                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn dừng hoạt động chuyên khoa này?')">
+                        <button style="background: none; border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn dừng hoạt động chuyên khoa này?')">
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                           </svg>
@@ -101,50 +100,84 @@
                 @endforeach
               </tbody>
             </table>
+            <!-- Vùng hiển thị các nút phân trang -->
+            <div id="paginationControls" class="mt-3"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div style="display: flex; justify-content: center; margin-top: 20px;">
-      <nav aria-label="Page navigation">
-        <ul class="pagination">
-          {{ $specialty->links('pagination::bootstrap-4') }}
-        </ul>
-      </nav>
-    </div>
+    <script>
+      const rowsPerPage = 4;
+      const tableBody = document.getElementById('specialtyTableBody');
+      const paginationControls = document.getElementById('paginationControls');
+      const rows = Array.from(tableBody.getElementsByTagName('tr'));
+
+      let currentPage = 1;
+
+      function displayPage(page) {
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = page * rowsPerPage;
+        rows.forEach((row, index) => {
+          row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
+        });
+      }
 
 
-    {{-- List Product Variant --}}
+      function createPaginationControls() {
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
+        paginationControls.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+          const button = document.createElement('button');
+          button.textContent = i;
+          button.className = 'btn btn-primary mx-1';
+          button.addEventListener('click', () => {
+            currentPage = i;
+            displayPage(currentPage);
+            updateActiveButton();
+          });
+          paginationControls.appendChild(button);
+        }
+
+        updateActiveButton();
+      }
+
+      function updateActiveButton() {
+        const buttons = paginationControls.getElementsByTagName('button');
+        Array.from(buttons).forEach((button, index) => {
+          if (index === currentPage - 1) {
+            button.classList.add('active');
+          } else {
+            button.classList.remove('active');
+          }
+        });
+      }
+
+      createPaginationControls();
+      displayPage(currentPage);
+    </script>
+
     <div class="row">
-      {{-- Package --}}
       <div class="col">
         <div class="card mb-4">
-
-          {{-- hien thi tb success --}}
-
           <div class="card-header d-flex justify-content-between">
             <div>
-              <i class="fas fa-table me-1"></i>
-              Danh sách bác sỹ
+              <i class="fas fa-table me-1"></i> Danh sách bác sỹ
             </div>
             <a href="{{ route('admin.doctors.viewDoctorAdd') }}">
-              <input type="submit" class="btn btn-primary" name="them" value="Thêm">
+              <input type="submit" class="btn btn-primary" name="them" value="Thêm mới bác sỹ">
+            </a>
+            <a href="{{ route('admin.timeslot.timdoctorlist') }}" style="text-decoration: none;">
+               Quản lý lịch làm việc của bác sỹ
             </a>
           </div>
           <div class="card-body">
-            {{-- Hiển thị thông báo --}}
-            @if (session('success'))
-            <div class="alert alert-success">
-              {{ session('success') }}
+            {{-- Search Input --}}
+            <div class="mb-3">
+              <input type="text" id="doctorSearch" class="form-control" placeholder="Tìm bác sỹ theo họ hoặc tên..." onkeyup="searchDoctor()">
             </div>
-            @endif
 
-            @if (session('error'))
-            <div class="alert alert-danger">
-              {{ session('error') }}
-            </div>
-            @endif
             <table class="table">
               <thead>
                 <tr>
@@ -157,8 +190,7 @@
                   <th class="text-center" style="width: 190px;" scope="col">Hành động</th>
                 </tr>
               </thead>
-              <tbody>
-
+              <tbody id="doctorTableBody">
                 @foreach($doctor as $d)
                 @php
                 $doc = $d->user;
@@ -167,46 +199,27 @@
                 @endphp
                 <tr @if($doc->role == 'User') style="background-color: gray;" @endif>
                   <th scope="row">{{ $d->id }}</th>
-                  <td>
-                    {{$doc->name}}
-                  </td>
-
-                  <td>
-                    <img src="{{ asset('upload/'.$doc->image)  }}" width="150" height="90" alt="">
-                  </td>
-                  <td>
-                    {{$doc->phone}}
-                  </td>
-                   @if ($do)
-                    <td> {{ $do->city }} </td>
-                    @else
-                       <td>Chưa có địa chỉ</td>
-                    @endif
-                  <td>{{$docs->name}}</td>
+                  <td id="doctor">{{ $doc->name }}</td>
+                  <td><img src="{{ asset('upload/'.$doc->image) }}" width="150" height="90" alt=""></td>
+                  <td>{{ $doc->phone }}</td>
+                  <td>@if ($do) {{ $do->city }} @else Chưa có địa chỉ @endif</td>
+                  <td>{{ $docs->name }}</td>
                   <td class="text-center">
-                    <div @if($doc->role == 'User') style="display: none;" @endif>
-                    <div class="time-icon">
-                      <a href="{{ route('timeslot.doctor.schedule', $d->id) }}"><i class="fas fa-clock"></i></a>
-                    </div>
-                    <div class="time-icon">
-                      <a style="text-decoration: none;" href="{{ route('admin.achievements.doctor.achievements', $d->id) }}">Thành tựu bác sĩ</a>
-                    </div>
-                    </div>
 
                     <a href="" class="btn btn-warning">
                       <form action="{{ route('admin.doctors.doctorUpdateForm', $d->id) }}" method="GET">
-                        <button style="background: none;  border: none; outline: none;" type="submit">
+                        <button style="background: none; border: none; outline: none;" type="submit">
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
                             <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001" />
                           </svg>
                         </button>
                       </form>
                     </a>
-                    <!-- Thêm nút delete -->
+
                     <a href="" class="btn btn-danger">
                       <form action="{{ route('admin.doctors.doctorDestroy', $d->id) }}" method="POST">
                         @csrf
-                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn bác sỹ này nghỉ việc không?')">
+                        <button style="background: none; border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn bác sỹ này nghỉ việc không?')">
                           <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                           </svg>
@@ -218,13 +231,117 @@
                 @endforeach
               </tbody>
             </table>
+
+            <div id="doctorPaginationControls" class="mt-3"></div>
           </div>
         </div>
       </div>
     </div>
-    <div style="display: flex; justify-content: center; margin-top: 20px;">
-      {{ $doctor->links('pagination::bootstrap-4') }}
-    </div>
+
+    <script>
+      const rowsPerPageDoctor = 4;
+      const doctorTableBody = document.getElementById('doctorTableBody');
+      const doctorSearchInput = document.getElementById('doctorSearch');
+      const doctorPaginationControls = document.getElementById('doctorPaginationControls');
+      let currentPageDoctor = 1;
+
+      function searchDoctor() {
+        const query = doctorSearchInput.value.toLowerCase().trim();
+        const queryWords = query.split(' ').filter(Boolean); 
+        const rows = Array.from(doctorTableBody.getElementsByTagName('tr'));
+
+        if (!query) {
+          rows.forEach(row => row.style.display = '');
+          displayPageDoctor(currentPageDoctor, rows);
+          createPaginationControlsDoctor(rows);
+          return;
+        }
+
+        let exactMatches = [];
+        let partialMatches = [];
+
+        rows.forEach(row => {
+          const doctorNameElement = row.querySelector('td#doctor');
+          if (!doctorNameElement) return;
+
+          const doctorName = doctorNameElement.textContent.toLowerCase().trim();
+          if (doctorName === query) {
+            exactMatches.push(row);
+          }
+         
+          else if (queryWords.every(word => doctorName.includes(word))) {
+            partialMatches.push(row);
+          } else {
+            row.style.display = 'none'; 
+          }
+        });
+
+        const filteredRows = [...exactMatches, ...partialMatches]; 
+
+        if (filteredRows.length === 0) {
+         
+          rows.forEach(row => row.style.display = 'none');
+          doctorPaginationControls.innerHTML = ''; 
+          if (!document.getElementById('noResultsRow')) {
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.id = 'noResultsRow';
+            noResultsRow.innerHTML = `
+        <td colspan="7" class="text-center text-danger">Không tìm thấy bác sĩ nào</td>
+      `;
+            doctorTableBody.appendChild(noResultsRow);
+          }
+        } else {
+          if (document.getElementById('noResultsRow')) {
+            document.getElementById('noResultsRow').remove();
+          }
+          rows.forEach(row => row.style.display = 'none'); 
+          filteredRows.forEach(row => row.style.display = ''); 
+          createPaginationControlsDoctor(filteredRows);
+          displayPageDoctor(1, filteredRows);
+        }
+      }
+
+      function displayPageDoctor(page, rows) {
+        const startIndex = (page - 1) * rowsPerPageDoctor;
+        const endIndex = page * rowsPerPageDoctor;
+
+        rows.forEach((row, index) => {
+          row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
+        });
+      }
+
+      function createPaginationControlsDoctor(rows) {
+        const totalPages = Math.ceil(rows.length / rowsPerPageDoctor);
+        doctorPaginationControls.innerHTML = '';
+
+        if (totalPages <= 1) {
+          return;
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+          const button = document.createElement('button');
+          button.textContent = i;
+          button.classList.add('btn', 'btn-sm', 'btn-primary', 'mx-1');
+          button.onclick = () => {
+            currentPageDoctor = i;
+            displayPageDoctor(i, rows);
+          };
+          doctorPaginationControls.appendChild(button);
+        }
+      }
+
+      function initializePaginationDoctor() {
+        const rows = Array.from(doctorTableBody.getElementsByTagName('tr'));
+        createPaginationControlsDoctor(rows);
+        displayPageDoctor(currentPageDoctor, rows);
+      }
+
+      initializePaginationDoctor();
+    </script>
+
+
+
+
 
     {{-- List Product Variant --}}
     <div class="row">
@@ -311,14 +428,14 @@
                     </a>
                     <!-- Thêm nút delete -->
                     <a href="" class="btn btn-danger">
-                        <form action="{{ route('admin.packages.packageDestroy', $d->id) }}" method="POST">
-                            @csrf
-                            <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa dịch vụ khám này không?')">
-                              <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                              </svg>
-                            </button>
-                          </form>
+                      <form action="{{ route('admin.packages.packageDestroy', $d->id) }}" method="POST">
+                        @csrf
+                        <button style="background: none;  border: none; outline: none;" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa dịch vụ khám này không?')">
+                          <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                          </svg>
+                        </button>
+                      </form>
                     </a>
                   </td>
                 </tr>
