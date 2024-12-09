@@ -35,9 +35,34 @@
 
     {{-- <link rel="stylesheet" href="{{ asset('css/styleAppoinment.css') }}"> --}}
   </head>
+<style>
+    /* CSS for snowflakes */
+    .snowflake {
+    position: fixed;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: fall linear infinite;
+}
 
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
+
+
+</style>
 <!-- CSS for Popup -->
   <body>
+
     <!-- Kiểm tra route và chỉ hiển thị popup khi ở trang chủ -->
     @if (request()->routeIs('home'))
     <!-- Popup Modal -->
@@ -295,6 +320,31 @@ var Tawk_API = Tawk_API || {},
       }
     });
   </script>
+<script>
+let snowflakes = [];
+const maxSnowflakes = 100; // Số bông tuyết tối đa
+
+function createSnowflake() {
+  if (snowflakes.length >= maxSnowflakes) return;
+
+  const snowflake = document.createElement("div");
+  snowflake.className = "snowflake";
+  snowflake.style.left = Math.random() * window.innerWidth + "px";
+  snowflake.style.animationDuration = Math.random() * 3 + 2 + "s";
+  snowflake.style.opacity = Math.random();
+  document.body.appendChild(snowflake);
+  snowflakes.push(snowflake);
+
+  setTimeout(() => {
+    snowflake.remove();
+    snowflakes = snowflakes.filter((flake) => flake !== snowflake);
+  }, 5000); // Tự động xóa sau 5 giây
+}
+
+setInterval(createSnowflake, 100);
+
+
+</script>
 
 </body>
 
