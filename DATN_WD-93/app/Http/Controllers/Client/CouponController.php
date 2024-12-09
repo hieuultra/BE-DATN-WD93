@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\Specialty;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -61,6 +62,9 @@ class CouponController extends Controller
     public function listCoupons()
     {
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -69,6 +73,6 @@ class CouponController extends Controller
         $coupons = Coupon::orderBy('updated_at', 'asc')
             ->get();
 
-        return view('client.coupons.list', compact('coupons', 'orderCount', 'categories'));
+        return view('client.coupons.list', compact('coupons', 'orderCount', 'categories', 'spe'));
     }
 }

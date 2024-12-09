@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Client;
 
 use App\Models\Bill;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\Specialty;
 use App\Mail\OrderConfirm;
 use Illuminate\Http\Request;
 use App\Models\VariantProduct;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
-use App\Models\Coupon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -24,6 +25,9 @@ class OrderController extends Controller
      */
     public function index(Request $request, $status = null)
     {
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
         $categories = Category::orderBy('name', 'asc')->get();
         $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get(); // Lấy tất cả các đơn hàng
 
@@ -82,7 +86,8 @@ class OrderController extends Controller
             'bills',
             'type_da_giao_hang',
             'type_da_huy',
-            'type_khach_hang_tu_choi'
+            'type_khach_hang_tu_choi',
+            'spe'
         ));
     }
 
@@ -93,6 +98,9 @@ class OrderController extends Controller
     public function create()
     {
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -141,7 +149,7 @@ class OrderController extends Controller
                 }
             }
             $total = $subTotal + $shipping - $coupon;
-            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal', 'coupon'));
+            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal', 'coupon','spe'));
         }
         return redirect()->route('cart.listCart');
     }
@@ -223,6 +231,9 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -233,7 +244,7 @@ class OrderController extends Controller
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;
         $type_da_giao_hang = Bill::DA_GIAO_HANG;
-        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories', 'type_da_giao_hang'));
+        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories', 'type_da_giao_hang','spe'));
     }
 
     /**

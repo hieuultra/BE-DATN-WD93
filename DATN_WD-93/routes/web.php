@@ -1,14 +1,18 @@
 <?php
 
+use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Support\Facades\Auth;
 //
+use App\Models\Specialty;
+use App\Models\VariantPackage;
+use App\Models\VariantProduct;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+//
 use App\Http\Controllers\Admin\BillController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
-//
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
@@ -28,18 +32,15 @@ use App\Http\Controllers\Admin\AdminTopicController;
 use App\Http\Controllers\Admin\AdminCouponController;
 use App\Http\Controllers\Client\AppoinmentController;
 use App\Http\Controllers\Client\ClientBlogController;
+
+
 use App\Http\Controllers\Client\SubscriptionController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\AdminAppoinmentController;
-
-
 use App\Http\Controllers\Admin\VariantProductsController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Models\Product;
-use App\Models\VariantPackage;
-use App\Models\VariantProduct;
 
 //Guest
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -205,7 +206,10 @@ Route::get('/viewSikibidi', function () {
         $orderCount = $user->bill()->count();
     }
     $categories = Category::orderBy('name', 'asc')->get();
-    return view('client.ai.viewSikibidi', compact('orderCount', 'categories'));
+    $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
+    return view('client.ai.viewSikibidi', compact('orderCount', 'categories', 'spe'));
 })->name('viewSikibidi');
 Route::get('/chat-ai', function () {
     $orderCount = 1;
@@ -214,7 +218,10 @@ Route::get('/chat-ai', function () {
         $orderCount = $user->bill()->count();
     }
     $categories = Category::orderBy('name', 'asc')->get();
-    return view('client.ai.chatAI', compact('orderCount', 'categories'));
+    $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
+    return view('client.ai.chatAI', compact('orderCount', 'categories', 'spe'));
 });
 Route::get('/chat-zalo', function () {
     $orderCount = 1;
@@ -223,7 +230,10 @@ Route::get('/chat-zalo', function () {
         $orderCount = $user->bill()->count();
     }
     $categories = Category::orderBy('name', 'asc')->get();
-    return view('client.ai.chatZalo', compact('orderCount', 'categories'));
+    $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
+    return view('client.ai.chatZalo', compact('orderCount', 'categories', 'spe'));
 });
 
 
@@ -234,7 +244,10 @@ Route::get('/huong-dan-dl', function () {
         $orderCount = $user->bill()->count();
     }
     $categories = Category::orderBy('name', 'asc')->get();
-    return view('client.ai.datlichhd', compact('orderCount', 'categories'));
+    $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
+    return view('client.ai.datlichhd', compact('orderCount', 'categories', 'spe'));
 });
 
 Auth::routes();
