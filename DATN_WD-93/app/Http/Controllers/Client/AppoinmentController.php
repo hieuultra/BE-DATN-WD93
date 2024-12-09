@@ -61,7 +61,7 @@ class AppoinmentController extends Controller
                     DB::raw('SUM(CASE WHEN status_appoinment IN ("kham_hoan_thanh", "can_tai_kham") THEN 1 ELSE 0 END) as completed'),
                     DB::raw('SUM(CASE WHEN status_appoinment IN ("huy_lich_hen", "benh_nhan_khong_den") THEN 1 ELSE 0 END) as cancelled_or_missed'),
                     DB::raw('ROUND(
-                    SUM(CASE WHEN status_appoinment IN ("kham_hoan_thanh", "can_tai_kham") THEN 1 ELSE 0 END) / 
+                    SUM(CASE WHEN status_appoinment IN ("kham_hoan_thanh", "can_tai_kham") THEN 1 ELSE 0 END) /
                     NULLIF(SUM(CASE WHEN status_appoinment IN ("huy_lich_hen", "benh_nhan_khong_den", "kham_hoan_thanh", "can_tai_kham") THEN 1 ELSE 0 END), 0) * 100, 2
                 ) as completion_rate')
                 )
@@ -105,7 +105,8 @@ class AppoinmentController extends Controller
                 'specialties',
                 'doctors',
                 'specialtiestx',
-                'specialtiestq'
+                'specialtiestq',
+                'spe'
             ));
         }
     }
@@ -294,6 +295,9 @@ class AppoinmentController extends Controller
         }
 
         $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
 
         $existingAppointment = Appoinment::where('user_id', $user->id)
             ->whereHas('timeSlot', function ($query) use ($timeSlot) {
@@ -327,7 +331,7 @@ class AppoinmentController extends Controller
                 return redirect()->back()->with('jsError', 'Bạn đã đạt giới hạn 3 lần đặt lịch với bác sĩ này hôm nay.');
             } else {
                 $notification = 'Bạn có thể đặt thêm ' . $remainingAppointments . ' lần nữa với bác sĩ này hôm nay.';
-                return view('client.appoinment.formbookingdt', compact('doctor', 'timeSlot', 'orderCount', 'categories', 'notification'))
+                return view('client.appoinment.formbookingdt', compact('doctor', 'timeSlot', 'orderCount', 'categories', 'notification','spe'))
                     ->with('existingAppointment', $existingAppointment)
                     ->with('jsError', 'Bạn đã đặt lịch khám với bác sĩ khác vào thời điểm này.');
             }
@@ -702,10 +706,10 @@ class AppoinmentController extends Controller
             $doctorlt = Doctor::with(['timeSlot' => function ($query) use ($yesterday) {
                 $query->whereDate('date', '<=', $yesterday)
                     ->whereHas('appoinment', function ($subQuery) {
-                        $subQuery->where('status_appoinment', 'da_xac_nhan'); 
+                        $subQuery->where('status_appoinment', 'da_xac_nhan');
                     })
                     ->with(['appoinment' => function ($appQuery) {
-                        $appQuery->where('status_appoinment', 'da_xac_nhan') 
+                        $appQuery->where('status_appoinment', 'da_xac_nhan')
                             ->with('user');
                     }]);
             }])->findOrFail($doctor->id);
@@ -721,7 +725,7 @@ class AppoinmentController extends Controller
                 ->orderBy('name', 'asc')
                 ->get();
             $clinic = Clinic::where('doctor_id', $doctors->id)->first();
-            return view('client.physicianmanagement.view', compact('completionStats', 'doctor', 'users', 'doctorhtr', 'doctors', 'doctorrv', 'orderCount', 'categories', 'clinic', 'doctorlt'));
+            return view('client.physicianmanagement.view', compact('completionStats', 'doctor', 'users', 'doctorhtr', 'doctors', 'doctorrv', 'orderCount', 'categories', 'clinic', 'doctorlt','spe'));
         } else {
             return redirect()->route('appoinment.index')->with('error', 'Bạn không được cấp quyền truy cập.');
         }
@@ -809,7 +813,7 @@ class AppoinmentController extends Controller
         if (!$user) {
             return back()->withErrors('Không tìm thấy người dùng.');
         }
-            
+
         $appointment = Appoinment::where('id', $request->appoinment_id)->first();
         try {
             $bill = new Bill();
@@ -820,26 +824,26 @@ class AppoinmentController extends Controller
             $bill->nameUser = $user->name;
             $bill->emailUser = $user->email;
             $bill->totalPrice = $request->total_price;
-        
-           
+
+
             if ($appointment->meet_link) {
-                $bill->status_bill = 'cho_xac_nhan';  
-                $bill->status_payment_method = 'chua_thanh_toan';  
+                $bill->status_bill = 'cho_xac_nhan';
+                $bill->status_payment_method = 'chua_thanh_toan';
             } else {
-                $bill->status_bill = 'da_giao_hang';  
-                $bill->status_payment_method = 'da_thanh_toan';  
+                $bill->status_bill = 'da_giao_hang';
+                $bill->status_payment_method = 'da_thanh_toan';
             }
-        
+
             $bill->moneyProduct = $request->total_price;
-            $bill->moneyShip = '0';  
+            $bill->moneyShip = '0';
             $bill->save();
-        
+
             return back()->with('success', 'Hóa đơn đã được tạo thành công.');
         } catch (\Exception $e) {
             // Xử lý khi có lỗi
             return back()->withErrors('Lỗi khi tạo hóa đơn: ' . $e->getMessage());
         }
-        
+
 
         $orderDetails = $request->input('order_details');
         $formattedOrderDetails = [];
@@ -1490,7 +1494,7 @@ class AppoinmentController extends Controller
                         $appoinment->appointment_date = $appointment_date;
                         $appoinment->notes = $notes;
                         $appoinment->status_payment_method = 'da_thanh_toan';
-                        $appoinment->classify = $lua_chon;
+                        $appoinment->classify = 'ban_than';
                         if ($specialtie->classification == 'kham_tu_xa') {
                             $meetLink = 'https://meet.jit.si/' . uniqid();
                             $appoinment->meet_link = $meetLink;
