@@ -56,7 +56,81 @@
         transform: translateY(100vh) rotate(360deg);
     }
 }
+#chatbox-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+      }
 
+      #toggle-chatbox {
+        padding: 10px 20px;
+        background-color: #ffff00c2;
+        color: rgb(0, 0, 0);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .chatbox {
+        display: none;  /* Initially hidden */
+        width: 300px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        position: relative;
+        bottom: 60px;
+        right: 0;
+      }
+
+      .chat-header {
+        background-color: #cdc200;
+        padding: 10px;
+        color: white;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+
+      .chat-content {
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .chat-input {
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .chat-input input {
+        width: 80%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .chat-input button {
+        padding: 8px 15px;
+        background-color: #ffc506;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .message {
+        background-color: #f0f0f0;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
 
 
 </style>
@@ -260,8 +334,23 @@
     </main>
 
     @include('footer')
-
-
+        <!-- Chatbox HTML -->
+        <div id="chatbox-container">
+            <button id="toggle-chatbox" onclick="toggleChatbox()">Chat</button>
+            <div id="chatbox" class="chatbox">
+              <div id="chat-header" class="chat-header">
+                <span>Chat</span>
+                <button id="close-chatbox" onclick="toggleChatbox()">X</button>
+              </div>
+              <div id="chat-content" class="chat-content">
+                <!-- Messages will be displayed here -->
+              </div>
+              <div id="chat-input" class="chat-input">
+                <input type="text" id="message-input" placeholder="Nhập tin nhắn..." />
+                <button onclick="sendMessage()">Gửi</button>
+              </div>
+            </div>
+          </div>
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"
@@ -286,21 +375,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API = Tawk_API || {},
-  Tawk_LoadStart = new Date();
-(function () {
-  var s1 = document.createElement("script"),
-    s0 = document.getElementsByTagName("script")[0];
-  s1.async = true;
-  s1.src = "https://embed.tawk.to/66fa718e4cbc4814f7e0df96/1i914n53o";
-  s1.charset = "UTF-8";
-  s1.setAttribute("crossorigin", "*");
-  s0.parentNode.insertBefore(s1, s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+
 <script>
     function changeLanguage(lang) {
       localStorage.setItem('preferredLanguage', lang);
@@ -345,6 +420,52 @@ setInterval(createSnowflake, 100);
 
 
 </script>
+<script>
+    // Toggle chatbox visibility
+    function toggleChatbox() {
+      const chatbox = document.getElementById('chatbox');
+      const display = chatbox.style.display;
+      chatbox.style.display = display === 'none' || display === '' ? 'block' : 'none';
+    }
+
+    // Send message to AI and display in the chatbox
+    function sendMessage() {
+      const messageInput = document.getElementById('message-input');
+      const message = messageInput.value.trim();
+      if (message) {
+        addMessageToChat('Bạn: ' + message, 'user');
+
+        // Send the message to AI (or server) via AJAX
+        $.ajax({
+          url: '{{ route("chat.ai") }}', // Đường dẫn tới route của bạn
+          method: 'POST',
+          data: {
+            message: message,
+            _token: '{{ csrf_token() }}' // Nếu bạn sử dụng Laravel, thêm token CSRF
+          },
+          success: function(response) {
+            // Hiển thị phản hồi từ AI
+            addMessageToChat('AI: ' + response.message, 'ai');
+          },
+          error: function() {
+            alert('Có lỗi xảy ra, vui lòng thử lại!');
+          }
+        });
+
+        messageInput.value = ''; // Xóa ô nhập sau khi gửi
+      }
+    }
+
+    // Add message to the chatbox
+    function addMessageToChat(message, sender) {
+      const chatContent = document.getElementById('chat-content');
+      const messageElement = document.createElement('div');
+      messageElement.classList.add(sender === 'ai' ? 'ai-message' : 'user-message');
+      messageElement.textContent = message;
+      chatContent.appendChild(messageElement);
+      chatContent.scrollTop = chatContent.scrollHeight; // Cuộn xuống cuối
+    }
+  </script>
 
 </body>
 

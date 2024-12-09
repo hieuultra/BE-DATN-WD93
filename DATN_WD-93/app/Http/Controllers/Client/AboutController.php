@@ -23,4 +23,22 @@ class AboutController extends Controller
         }
         return view('client.home.about', compact('orderCount', 'categories', 'spe'));
     }
+    public function handleChat(Request $request)
+    {
+        // Lấy tin nhắn từ người dùng
+        $userMessage = $request->input('message');
+
+        // Xử lý hoặc gọi API AI ở đây (ví dụ: sử dụng OpenAI API)
+        $aiResponse = $this->getAiResponse($userMessage);
+
+        // Trả về phản hồi từ AI
+        return response()->json(['message' => $aiResponse]);
+    }
+
+    private function getAiResponse($message)
+    {
+        // Gọi OpenAI API hoặc một dịch vụ AI khác ở đây
+        // Ví dụ: Trả về một câu trả lời giả lập
+        return "Đây là câu trả lời từ AI cho tin nhắn: " . $message;
+    }
 }
