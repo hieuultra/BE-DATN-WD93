@@ -43,6 +43,7 @@ use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
 //Guest
+Route::post('/chat/ai', [AboutController::class, 'handleChat'])->name('chat.ai');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
@@ -79,6 +80,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     });
 });
+
 //appoinment
 Route::prefix('appoinment')
     ->as('appoinment.')
@@ -87,7 +89,6 @@ Route::prefix('appoinment')
         Route::get('/searchap', [AppoinmentController::class, 'searchap'])->name('searchap');
         Route::get('/appointments/today', [AppoinmentController::class, 'loadTodayAppointments'])->name('appointments.today');
 
-        //formbookingdt
         Route::get('/get-drug-categories', function () {
             return response()->json(
                 Category::all(['id', 'name', 'img'])->map(function ($category) {
@@ -162,7 +163,7 @@ Route::prefix('appoinment')
         Route::get('/appointments/get-details', [AppoinmentController::class, 'getDetails']);
         Route::get('/appointments/get_patient_info', [AppoinmentController::class, 'getPatientInfo']);
 
-        // appoinment
+        //siuuu
         Route::post('/appointments/get-review-data', [AppoinmentController::class, 'getReviewData'])->name('appointments.getReviewData');
         Route::get('/reviews/{id}/edit', [AppoinmentController::class, 'edit']);
         Route::post('/reviewDortor', [AppoinmentController::class, 'reviewDortor'])->name('reviewDortor');
@@ -397,7 +398,7 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
         Route::prefix('specialties')
             ->as('specialties.')
             ->group(function () {
-                Route::get('/specialtyDoctorList', [SpecialtyController::class, 'specialtyDoctorList'])->name('specialtyDoctorList');
+                Route::get('/specialties', [SpecialtyController::class, 'specialtyDoctorList'])->name('specialtyDoctorList');
                 Route::get('/viewSpecialtyAdd', [SpecialtyController::class, 'viewSpecialtyAdd'])->name('viewSpecialtyAdd');
                 Route::post('/specialtyAdd', [SpecialtyController::class, 'specialtyAdd'])->name('specialtyAdd');
                 Route::get('/specialtyUpdateForm/{id}', [SpecialtyController::class, 'specialtyUpdateForm'])->name('specialtyUpdateForm');
@@ -423,6 +424,23 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
                 Route::post('/achievementsAdd', [DoctorController::class, 'achievementsAdd'])->name('achievementsAdd');
                 Route::delete('/achievementsds/{id}', [DoctorController::class, 'destroy']);
                 Route::post('/achievementsUpdate', [DoctorController::class, 'achievementsUpdate'])->name('achievementsUpdate');
+            });
+
+        Route::prefix('timeslot')
+            ->as('timeslot.')
+            ->group(function () {
+                Route::get('/timeslotList/{id}', [SpecialtyController::class, 'timeslotList'])->name('timeslotList');
+                Route::get('/timdoctorlist', [SpecialtyController::class, 'timdoctorlist'])->name('timdoctorlist');
+
+                Route::get('/schedule/{doctorId}', [DoctorController::class, 'showSchedule'])->name('doctor.schedule');
+                Route::post('/scheduleAdd', [DoctorController::class, 'scheduleAdd'])->name('scheduleAdd');
+                Route::get('/scheduleEdit/{id}', [DoctorController::class, 'scheduleEdit']);
+                Route::put('/scheduleUpdate/{id}', [DoctorController::class, 'scheduleUpdate'])->name('scheduleUpdate');
+                Route::delete('/scheduleDestroy/{id}', [DoctorController::class, 'scheduleDestroy']);
+
+
+                Route::get('/showPackages/{packageId}', [DoctorController::class, 'showPackages'])->name('showPackages');
+                Route::post('/schedulePackageAdd', [DoctorController::class, 'schedulePackageAdd'])->name('schedulePackageAdd');
             });
 
         Route::prefix('packages')

@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\DB;
 
 class AppoinmentController extends Controller
 {
-    function appoinment()
+    public function appoinment()
     {
         $categories = Category::orderBy('name', 'asc')->get();
         $specialties = Specialty::where('classification', 'chuyen_khoa')->orderBy('name', 'asc')->get();
@@ -40,33 +40,53 @@ class AppoinmentController extends Controller
             ->take(10)
             ->get();
 
+        $orderCount = 0; // Biến kiểm tra số đơn hợp lệ
+        $notification = null;
 
-        $orderCount = 0;
         if (Auth::check()) {
             $user = Auth::user();
-            $orderCount = $user->bill()->count();
 
+            // Đếm số lịch hẹn hợp lệ của người dùng
+            $orderCount = DB::table('appoinments')
+                ->where('user_id', $user->id)
+                ->whereIn('status_appoinment', ['kham_hoan_thanh', 'can_tai_kham', 'huy_lich_hen', 'benh_nhan_khong_den'])
+                ->count();
+
+            // Thống kê tỷ lệ hoàn thành của người dùng
             $completionStats = DB::table('appoinments')
                 ->where('user_id', $user->id)
                 ->select(
                     'user_id',
                     DB::raw('COUNT(*) as total_appointments'),
-                    DB::raw('SUM(CASE WHEN status_appoinment = "kham_hoan_thanh" THEN 1 ELSE 0 END) as completed'),
+                    DB::raw('SUM(CASE WHEN status_appoinment IN ("kham_hoan_thanh", "can_tai_kham") THEN 1 ELSE 0 END) as completed'),
                     DB::raw('SUM(CASE WHEN status_appoinment IN ("huy_lich_hen", "benh_nhan_khong_den") THEN 1 ELSE 0 END) as cancelled_or_missed'),
                     DB::raw('ROUND(
-                    SUM(CASE WHEN status_appoinment = "kham_hoan_thanh" THEN 1 ELSE 0 END) /
-                    NULLIF(SUM(CASE WHEN status_appoinment IN ("huy_lich_hen", "benh_nhan_khong_den", "kham_hoan_thanh") THEN 1 ELSE 0 END), 0) * 100, 2
+                    SUM(CASE WHEN status_appoinment IN ("kham_hoan_thanh", "can_tai_kham") THEN 1 ELSE 0 END) /
+                    NULLIF(SUM(CASE WHEN status_appoinment IN ("huy_lich_hen", "benh_nhan_khong_den", "kham_hoan_thanh", "can_tai_kham") THEN 1 ELSE 0 END), 0) * 100, 2
                 ) as completion_rate')
                 )
                 ->groupBy('user_id')
                 ->first();
-            $notification = 'Bạn có độ uy tin cao không có giới hạn đặt lịch.';
 
-            if ($completionStats && $completionStats->completion_rate < 50) {
-                $notification = 'Uy tín của bạn quá thấp chỉ được đặt tối đa mỗi bác sỹ 1 lịch khám trong 1 ngày và phải thanh toán qua VNPay.';
-            } elseif ($completionStats && $completionStats->completion_rate >= 50 && $completionStats->completion_rate < 70) {
-                $notification = 'Uy tín của bạn đang ở mức trung bình chỉ được đặt tối đa mỗi bác sỹ 3 lịch khám trong 1 ngày.';
+            // Kiểm tra nếu người dùng là người dùng mới hay cũ
+            if ($orderCount < 3) {
+                $notification = 'Bạn là người mới chỉ được đặt lịch khám tối đa 3 lần với 1 bác sĩ trong một ngày.';
+            } else if ($completionStats) {
+                if ($completionStats->completion_rate < 50) {
+                    $notification = 'Uy tín của bạn quá thấp, chỉ được đặt tối đa mỗi bác sĩ 1 lịch khám trong 1 ngày và phải thanh toán qua VNPay.';
+                } elseif ($completionStats->completion_rate >= 50 && $completionStats->completion_rate < 70) {
+                    $notification = 'Uy tín của bạn đang ở mức trung bình, chỉ được đặt tối đa mỗi bác sĩ 3 lịch khám trong 1 ngày.';
+                } else {
+                    $notification = 'Bạn có độ uy tín cao, không có giới hạn đặt lịch.';
+                }
             }
+
+            // **Kiểm tra xem thông báo đã được hiển thị hay chưa**
+            if (!session()->has('has_seen_appoinment_notification') && !empty($notification)) {
+                // Lưu thông báo và đánh dấu rằng thông báo đã được xem
+                session()->put('has_seen_appoinment_notification', $notification);
+            }
+
             return view('client.appoinment.index', compact(
                 'completionStats',
                 'orderCount',
@@ -90,6 +110,9 @@ class AppoinmentController extends Controller
             ));
         }
     }
+
+
+
 
 
     public function searchap(Request $request)
@@ -266,8 +289,54 @@ class AppoinmentController extends Controller
         $now = Carbon::now('Asia/Ho_Chi_Minh');
         $todayStart = $now->copy()->startOfDay();
         $todayEnd = $now->copy()->endOfDay();
+        $orderCount = 0;
+        if (Auth::check()) {
+            $orderCount = $user->bill()->count();
+        }
 
-        // Thống kê tỉ lệ hoàn thành
+        $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+        ->orderBy('name', 'asc')
+        ->get();
+
+        $existingAppointment = Appoinment::where('user_id', $user->id)
+            ->whereHas('timeSlot', function ($query) use ($timeSlot) {
+                $query->where('startTime', $timeSlot->startTime)
+                    ->where('date', $timeSlot->date);
+            })
+            ->where('doctor_id', '!=', $timeSlot->doctor_id)
+            ->first();
+
+        $doctor = Doctor::with('user', 'specialty', 'timeSlot')
+            ->whereHas('timeSlot', function ($query) use ($id) {
+                $query->where('id', $id);
+            })
+            ->first();
+
+        $totalAppointments = DB::table('appoinments')
+            ->where('user_id', $user->id)
+            ->whereIn('status_appoinment', ['kham_hoan_thanh', 'can_tai_kham', 'huy_lich_hen', 'benh_nhan_khong_den'])
+            ->count();
+
+        $isNewUser = $totalAppointments < 3;
+        $appointmentsToday = Appoinment::where('user_id', $user->id)
+            ->where('doctor_id', $timeSlot->doctor_id)
+            ->whereBetween('created_at', [$todayStart, $todayEnd])
+            ->count();
+
+        if ($isNewUser) {
+            $remainingAppointments = 3 - $appointmentsToday;
+
+            if ($appointmentsToday >= 3) {
+                return redirect()->back()->with('jsError', 'Bạn đã đạt giới hạn 3 lần đặt lịch với bác sĩ này hôm nay.');
+            } else {
+                $notification = 'Bạn có thể đặt thêm ' . $remainingAppointments . ' lần nữa với bác sĩ này hôm nay.';
+                return view('client.appoinment.formbookingdt', compact('doctor', 'timeSlot', 'orderCount', 'categories', 'notification','spe'))
+                    ->with('existingAppointment', $existingAppointment)
+                    ->with('jsError', 'Bạn đã đặt lịch khám với bác sĩ khác vào thời điểm này.');
+            }
+        }
+
         $completionStats = DB::table('appoinments')
             ->where('user_id', $user->id)
             ->select(
@@ -285,36 +354,10 @@ class AppoinmentController extends Controller
 
         $completionRate = $completionStats->completion_rate ?? 0;
 
-        // Đếm số lịch hẹn hôm nay
         $appointmentsToday = Appoinment::where('user_id', $user->id)
             ->where('doctor_id', $timeSlot->doctor_id)
             ->whereBetween('created_at', [$todayStart, $todayEnd])
             ->count();
-
-        // Kiểm tra người dùng có lịch trùng với bác sĩ khác hay không
-        $existingAppointment = Appoinment::where('user_id', $user->id)
-            ->whereHas('timeSlot', function ($query) use ($timeSlot) {
-                $query->where('startTime', $timeSlot->startTime)
-                    ->where('date', $timeSlot->date);
-            })
-            ->where('doctor_id', '!=', $timeSlot->doctor_id)
-            ->first();
-
-        $doctor = Doctor::with('user', 'specialty', 'timeSlot')
-            ->whereHas('timeSlot', function ($query) use ($id) {
-                $query->where('id', $id);
-            })
-            ->first();
-
-        $orderCount = 0;
-        if (Auth::check()) {
-            $orderCount = $user->bill()->count();
-        }
-
-        $categories = Category::orderBy('name', 'asc')->get();
-        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
-            ->orderBy('name', 'asc')
-            ->get();
 
         if (!$completionStats) {
             if ($appointmentsToday >= 3) {
@@ -383,7 +426,7 @@ class AppoinmentController extends Controller
                 $appoinment->available_timeslot_id = $request->available_timeslot_id;
                 $appoinment->appointment_date = $request->appointment_date;
                 $appoinment->notes = $request->notes;
-                $appoinment->status_payment_method = $request->status_payment_method;
+                $appoinment->status_payment_method = $request->status_payment_method_nn;
                 $appoinment->classify = 'cho_gia_dinh';
                 $appoinment->name = $request->name;
                 $appoinment->phone = $request->phone;
@@ -657,6 +700,20 @@ class AppoinmentController extends Controller
                     ->with(['appoinment.user']);
             }])->findOrFail($doctor->id);
 
+
+            $yesterday = Carbon::yesterday('Asia/Ho_Chi_Minh')->format('Y-m-d');
+
+            $doctorlt = Doctor::with(['timeSlot' => function ($query) use ($yesterday) {
+                $query->whereDate('date', '<=', $yesterday)
+                    ->whereHas('appoinment', function ($subQuery) {
+                        $subQuery->where('status_appoinment', 'da_xac_nhan');
+                    })
+                    ->with(['appoinment' => function ($appQuery) {
+                        $appQuery->where('status_appoinment', 'da_xac_nhan')
+                            ->with('user');
+                    }]);
+            }])->findOrFail($doctor->id);
+
             $doctorrv = Doctor::with('review')->findOrFail($doctor->id);
             $orderCount = 1;
             if (Auth::check()) {
@@ -668,7 +725,7 @@ class AppoinmentController extends Controller
                 ->orderBy('name', 'asc')
                 ->get();
             $clinic = Clinic::where('doctor_id', $doctors->id)->first();
-            return view('client.physicianmanagement.view', compact('completionStats', 'doctor', 'users', 'doctorhtr', 'doctors', 'doctorrv', 'orderCount', 'categories', 'clinic', 'spe'));
+            return view('client.physicianmanagement.view', compact('completionStats', 'doctor', 'users', 'doctorhtr', 'doctors', 'doctorrv', 'orderCount', 'categories', 'clinic', 'doctorlt','spe'));
         } else {
             return redirect()->route('appoinment.index')->with('error', 'Bạn không được cấp quyền truy cập.');
         }
@@ -757,6 +814,7 @@ class AppoinmentController extends Controller
             return back()->withErrors('Không tìm thấy người dùng.');
         }
 
+        $appointment = Appoinment::where('id', $request->appoinment_id)->first();
         try {
             $bill = new Bill();
             $bill->billCode = $this->generateUniqueOrderCode();
@@ -766,14 +824,26 @@ class AppoinmentController extends Controller
             $bill->nameUser = $user->name;
             $bill->emailUser = $user->email;
             $bill->totalPrice = $request->total_price;
-            $bill->status_bill = 'da_giao_hang';
-            $bill->status_payment_method = 'da_thanh_toan';
+
+
+            if ($appointment->meet_link) {
+                $bill->status_bill = 'cho_xac_nhan';
+                $bill->status_payment_method = 'chua_thanh_toan';
+            } else {
+                $bill->status_bill = 'da_giao_hang';
+                $bill->status_payment_method = 'da_thanh_toan';
+            }
+
             $bill->moneyProduct = $request->total_price;
             $bill->moneyShip = '0';
             $bill->save();
+
+            return back()->with('success', 'Hóa đơn đã được tạo thành công.');
         } catch (\Exception $e) {
+            // Xử lý khi có lỗi
             return back()->withErrors('Lỗi khi tạo hóa đơn: ' . $e->getMessage());
         }
+
 
         $orderDetails = $request->input('order_details');
         $formattedOrderDetails = [];
@@ -1048,6 +1118,14 @@ class AppoinmentController extends Controller
 
     public function reviewDortor(Request $request)
     {
+        $existingReview = Review::where('user_id', $request->user_id)
+            ->where('doctor_id', $request->doctor_id)
+            ->where('appoinment_id', $request->appoinment_id)
+            ->first();
+        if ($existingReview) {
+            return redirect()->back()->with('error', 'Bạn đã bình luận bác sĩ này rồi!');
+        }
+
         $reviewDt = new Review();
         $reviewDt->user_id = $request->user_id;
         $reviewDt->doctor_id = $request->doctor_id;
@@ -1056,8 +1134,9 @@ class AppoinmentController extends Controller
         $reviewDt->comment = $request->comment;
         $reviewDt->save();
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Đánh giá của bạn đã được ghi nhận.');
     }
+
 
     public function statistics(Request $request, $id)
     {
