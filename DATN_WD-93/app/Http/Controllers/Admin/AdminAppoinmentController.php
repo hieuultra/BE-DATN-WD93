@@ -40,8 +40,8 @@ class AdminAppoinmentController extends Controller
         }
         // dd($prescriptionID);
         $idA = (int) $prescriptionID;
-        // dd($idA);
-        $donThuoc = Bill::query()->findOrFail($idA);
+        $donThuoc = Bill::query()->find($idA);
+        // dd($donThuoc);
         $statusAppoinment = Appoinment::status_appoinment;
         $statusPayment = Appoinment::status_payment_method;
         $daysOfWeek = [
@@ -53,7 +53,7 @@ class AdminAppoinmentController extends Controller
             6 => 'Thứ Bảy',
             7 => 'Chủ Nhật',
         ];
-        return view('admin.appoinments.show', compact('appoinmentDetail', 'statusAppoinment', 'statusPayment','daysOfWeek'));
+        return view('admin.appoinments.show', compact('appoinmentDetail', 'statusAppoinment', 'donThuoc','statusPayment','daysOfWeek'));
     }
     public function update(Request $request, string $id)
     {

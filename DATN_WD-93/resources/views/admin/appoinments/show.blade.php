@@ -2,8 +2,8 @@
 @section('titlepage', '')
 
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .appointment-card {
             border: 1px solid #ddd;
@@ -78,79 +78,101 @@
                                 </div>
                                 <hr>
                                 @if (isset($appoinmentDetail->doctor_id))
-                                @php
-                                if (empty($appoinmentDetail->meet_link)) {
-                                    echo('<div class="info-item">
+                                    @php
+                                        if (empty($appoinmentDetail->meet_link)) {
+                                            echo '<div class="info-item">
                                         <label for="hospital-name">Tên Bệnh Viện:</label>
                                         <p id="hospital-name">
-                                            ' . ($appoinmentDetail->doctor->clinic->first()->clinic_name ?? "") . '
+                                            ' .
+                                                ($appoinmentDetail->doctor->clinic->first()->clinic_name ?? '') .
+                                                '
                                         </p>
                                     </div>
                                     <div class="info-item">
                                         <label for="hospital-address">Địa Chỉ:</label>
-                                        <p id="hospital-address">' . ($appoinmentDetail->doctor->clinic->first()->address ?? "") . '</p>
-                                    </div>');
-                                } else {
-                                    echo('<div class="info-item">
+                                        <p id="hospital-address">' .
+                                                ($appoinmentDetail->doctor->clinic->first()->address ?? '') .
+                                                '</p>
+                                    </div>';
+                                        } else {
+                                            echo '<div class="info-item">
                                         <label for="hospital-address">Link cuộc gọi khám online:</label>
-                                        <p id="hospital-address">' . ($appoinmentDetail->meet_link ?? "") . '</p>
-                                    </div>');
-                                }
-                            @endphp
-                            
-                                <div class="info-item">
-                                    <label for="hospital-address">Khoa:</label>
-                                    <p id="hospital-address">{{ $appoinmentDetail->doctor->specialty->first()->name ?? '' }}
-                                    </p>
-                                </div>
-                                <div class="info-item">
-                                    <label for="appointment-price">Giá Tiền:</label>
-                                    <p id="appointment-price">
-                                        {{ number_format($appoinmentDetail->doctor->examination_fee, 0, ',', '.') ?? '0' }}
-                                        VND</p>
-                                </div>
+                                        <p id="hospital-address">' .
+                                                ($appoinmentDetail->meet_link ?? '') .
+                                                '</p>
+                                    </div>';
+                                        }
+                                    @endphp
+
+                                    <div class="info-item">
+                                        <label for="hospital-address">Khoa:</label>
+                                        <p id="hospital-address">
+                                            {{ $appoinmentDetail->doctor->specialty->first()->name ?? '' }}
+                                        </p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label for="appointment-price">Giá Tiền:</label>
+                                        <p id="appointment-price">
+                                            {{ number_format($appoinmentDetail->doctor->examination_fee, 0, ',', '.') ?? '0' }}
+                                            VND</p>
+                                    </div>
                                 @else
-                                <div class="info-item">
-                                    <label for="appointment-package">Gói Khám:</label>
-                                    <p id="appointment-package">
-                                        {{ $appoinmentDetail->package->hospital_name }}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label for="hospital-address">Địa Chỉ:</label>
-                                    <p id="hospital-address">{{ $appoinmentDetail->package->address ?? '' }}
-                                    </p>
-                                </div>
-                                <div class="info-item">
-                                    <label for="appointment-price">Giá Tiền:</label>
-                                    <p id="appointment-price">
-                                        {{ number_format($appoinmentDetail->package->price, 0, ',', '.') ?? '0' }}
-                                        VND</p>
-                                </div>
+                                    <div class="info-item">
+                                        <label for="appointment-package">Gói Khám:</label>
+                                        <p id="appointment-package">
+                                            {{ $appoinmentDetail->package->hospital_name }}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label for="hospital-address">Địa Chỉ:</label>
+                                        <p id="hospital-address">{{ $appoinmentDetail->package->address ?? '' }}
+                                        </p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label for="appointment-price">Giá Tiền:</label>
+                                        <p id="appointment-price">
+                                            {{ number_format($appoinmentDetail->package->price, 0, ',', '.') ?? '0' }}
+                                            VND</p>
+                                    </div>
                                 @endif
                                 <div class="info-item">
                                     <label for="appointment-package">Loại khám:</label>
                                     <p id="appointment-package">
-                                    @if (isset($appoinmentDetail->doctor_id))
-                                        @php
-                                            if ($appoinmentDetail->doctor->specialty->classification == 'tong_quat') {
-                                                echo('Khám tổng quát');
-                                            } elseif ($appoinmentDetail->doctor->specialty->classification == 'kham_tu_xa') {
-                                                echo('Khám từ xa');
-                                            } elseif ($appoinmentDetail->doctor->specialty->classification == 'chuyen_khoa') {
-                                                echo("Khám chuyên khoa");
-                                            }
-                                        @endphp
-                                        {{-- {{ $appoinmentDetail->doctor->specialty->classification }} --}}
+                                        @if (isset($appoinmentDetail->doctor_id))
+                                            @php
+                                                if (
+                                                    $appoinmentDetail->doctor->specialty->classification == 'tong_quat'
+                                                ) {
+                                                    echo 'Khám tổng quát';
+                                                } elseif (
+                                                    $appoinmentDetail->doctor->specialty->classification == 'kham_tu_xa'
+                                                ) {
+                                                    echo 'Khám từ xa';
+                                                } elseif (
+                                                    $appoinmentDetail->doctor->specialty->classification ==
+                                                    'chuyen_khoa'
+                                                ) {
+                                                    echo 'Khám chuyên khoa';
+                                                }
+                                            @endphp
+                                            {{-- {{ $appoinmentDetail->doctor->specialty->classification }} --}}
                                         @else
-                                        @php
-                                            if ($appoinmentDetail->package->specialty->classification == 'tong_quat') {
-                                                echo('Khám tổng quát');
-                                            } elseif ($appoinmentDetail->package->specialty->classification == 'kham_tu_xa') {
-                                                echo('Khám từ xa');
-                                            } elseif ($appoinmentDetail->package->specialty->classification == 'chuyen_khoa') {
-                                                echo("Khám chuyên khoa");
-                                            }
-                                        @endphp
+                                            @php
+                                                if (
+                                                    $appoinmentDetail->package->specialty->classification == 'tong_quat'
+                                                ) {
+                                                    echo 'Khám tổng quát';
+                                                } elseif (
+                                                    $appoinmentDetail->package->specialty->classification ==
+                                                    'kham_tu_xa'
+                                                ) {
+                                                    echo 'Khám từ xa';
+                                                } elseif (
+                                                    $appoinmentDetail->package->specialty->classification ==
+                                                    'chuyen_khoa'
+                                                ) {
+                                                    echo 'Khám chuyên khoa';
+                                                }
+                                            @endphp
                                         @endif
                                     </p>
                                 </div>
@@ -165,36 +187,37 @@
                                     <label for="appointment-time">Thời Gian Hẹn:</label>
                                     <p id="appointment-time">Ca: {{ $appoinmentDetail->timeSlot->startTime }}h ->
                                         {{ $appoinmentDetail->timeSlot->endTime }}h</p>
-                                    <p id="appointment-time">{{ $daysOfWeek[$appoinmentDetail->timeSlot->dayOfWeek] ?? 'Không xác định' }}</p>
+                                    <p id="appointment-time">
+                                        {{ $daysOfWeek[$appoinmentDetail->timeSlot->dayOfWeek] ?? 'Không xác định' }}</p>
                                     <p id="appointment-time">Ca: {{ $appoinmentDetail->appointment_date }}</p>
                                 </div>
                             </div>
                         </div>
                         @if (isset($appoinmentDetail->doctor_id))
-                        <div class="col-md-4">
-                            <div class="column border border-primary">
-                                <div class="info-item mt-2">
-                                    <h4 class="text-center">Thông tin bác sĩ</h4>
-                                </div>
-                                <hr>
-                                <div class="info-item">
-                                    <label for="hospital-name">Tên bác sĩ:</label>
-                                    <p id="hospital-name">{{ $appoinmentDetail->doctor->user->name ?? '' }}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label for="hospital-address">Số điện thoại:</label>
-                                    <p id="hospital-address">{{ $appoinmentDetail->doctor->user->phone ?? '' }}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label for="patient-name">Email:</label>
-                                    <p id="patient-name">{{ $appoinmentDetail->doctor->user->email ?? '' }}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label for="appointment-package">Chức vụ:</label>
-                                    <p id="appointment-package">{{ $appoinmentDetail->doctor->title ?? '' }}</p>
+                            <div class="col-md-4">
+                                <div class="column border border-primary">
+                                    <div class="info-item mt-2">
+                                        <h4 class="text-center">Thông tin bác sĩ</h4>
+                                    </div>
+                                    <hr>
+                                    <div class="info-item">
+                                        <label for="hospital-name">Tên bác sĩ:</label>
+                                        <p id="hospital-name">{{ $appoinmentDetail->doctor->user->name ?? '' }}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label for="hospital-address">Số điện thoại:</label>
+                                        <p id="hospital-address">{{ $appoinmentDetail->doctor->user->phone ?? '' }}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label for="patient-name">Email:</label>
+                                        <p id="patient-name">{{ $appoinmentDetail->doctor->user->email ?? '' }}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label for="appointment-package">Chức vụ:</label>
+                                        <p id="appointment-package">{{ $appoinmentDetail->doctor->title ?? '' }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         @endif
                         <div class="col-md-4">
                             <div class="column border border-primary">
@@ -260,12 +283,6 @@
                                     </p>
                                 </div>
                                 <div class="info-item">
-                                    <label for="appointment-package">Toa thuốc được kê:</label>
-                                    <p id="appointment-package">
-                                        {{ $appoinmentDetail->appoinmentHistory->first()->prescription ?? 'Hiện chưa có thông tin' }}
-                                    </p>
-                                </div>
-                                <div class="info-item">
                                     <label for="appointment-package">Ngày theo dõi:</label>
                                     <p id="appointment-package">
                                         {{ $appoinmentDetail->appoinmentHistory->first()->follow_up_date ?? 'Hiện chưa có ngày theo dõi' }}
@@ -286,23 +303,69 @@
                                 </div>
                                 <hr>
                                 @if ($appoinmentDetail->status_appoinment == 'kham_hoan_thanh' || $appoinmentDetail->status_appoinment == 'huy_lich_hen')
-                                {{ $statusAppoinment[$appoinmentDetail->status_appoinment] }}
-                            @else
-                                <form action="{{ route('admin.appoinments.update1', $appoinmentDetail->id) }}"
-                                    method="POST">
-                                    @csrf
-                                    @method('PUT')
-                                    <select name="status_appoinment" class="form-select"
-                                        onchange="confirmSubmit(this)"
-                                        data-default-value="{{ $appoinmentDetail->status_appoinment }}">
-                                        @foreach ($statusAppoinment as $key => $value)
-                                            <option value="{{ $key }}"
-                                                {{ $key == $appoinmentDetail->status_appoinment ? 'selected' : '' }}>
-                                                {{ $value }}</option>
-                                        @endforeach
-                                    </select>
-                                </form>
+                                    {{ $statusAppoinment[$appoinmentDetail->status_appoinment] }}
+                                @else
+                                    <form action="{{ route('admin.appoinments.update1', $appoinmentDetail->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <select name="status_appoinment" class="form-select"
+                                            onchange="confirmSubmit(this)"
+                                            data-default-value="{{ $appoinmentDetail->status_appoinment }}">
+                                            @foreach ($statusAppoinment as $key => $value)
+                                                <option value="{{ $key }}"
+                                                    {{ $key == $appoinmentDetail->status_appoinment ? 'selected' : '' }}>
+                                                    {{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                    </form>
                                 @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="column border border-primary">
+                                <div class="info-item">
+                                    <label for="">Toa thuốc được kê:</label>
+                                    @if (isset($donThuoc))
+                                        <table class="table table-bordered mt-2">
+                                            <thead>
+                                                <tr>
+                                                    <th>Mã sản phẩm</th>
+                                                    <th>Tên</th>
+                                                    <th>Loại</th>
+                                                    <th>Ảnh</th>
+                                                    <th>Đơn giá</th>
+                                                    <th>Số lượng</th>
+                                                    <th>Tổng giá</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($donThuoc->order_detail as $detail)
+                                                    @php
+                                                        $product = $detail->product;
+                                                        $variant = $detail->productVariant;
+                                                    @endphp
+                                                    <tr>
+                                                        <td>{{ $product->idProduct }}</td>
+                                                        <td>{{ $product->name }}</td>
+                                                        <td>{{ $variant->variantPackage->name ?? 'Không xác định' }}
+                                                        </td>
+                                                        <td><img class="img-fluid"
+                                                                src="{{ asset('upload/' . $product->img) }}"
+                                                                width="75px"></td>
+                                                        <td>{{ number_format($detail->unitPrice, 0, ',', '.') }}VND</td>
+                                                        <td>{{ $detail->quantity }}</td>
+                                                        <td>{{ number_format($detail->totalMoney, 0, ',', '.') }}VND</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        {{ 'Hiện chưa có thông tin' }}
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
