@@ -32,6 +32,16 @@ class AdminAppoinmentController extends Controller
     public function show(string $id)
     {
         $appoinmentDetail = Appoinment::query()->findOrFail($id);
+        if ($appoinmentDetail->status_appoinment == 'kham_hoan_thanh') {
+            $prescriptionID = $appoinmentDetail->appoinmentHistory->first()->prescription;
+        }
+        else {
+            $prescriptionID = null;
+        }
+        // dd($prescriptionID);
+        $idA = (int) $prescriptionID;
+        // dd($idA);
+        $donThuoc = Bill::query()->findOrFail($idA);
         $statusAppoinment = Appoinment::status_appoinment;
         $statusPayment = Appoinment::status_payment_method;
         $daysOfWeek = [
