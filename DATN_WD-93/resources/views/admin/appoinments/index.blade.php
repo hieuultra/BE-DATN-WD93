@@ -61,32 +61,32 @@
                                     <td class="text">
                                         Ca: {{ $item->timeSlot->startTime }} -> {{ $item->timeSlot->endTime }}
                                         <br>
-                                        Thứ: {{ $item->timeSlot->dayOfWeek }}
+                                        {{ $daysOfWeek[$item->timeSlot->dayOfWeek] ?? 'Không xác định' }}
                                         <br>
                                         Ngày: {{ $item->appointment_date }}
                                     </td>
                                     <td class="text-center">
                                         @if (isset($item->doctor_id))
-                                        @php
-                                            if ($item->doctor->specialty->classification == 'tong_quat') {
-                                                echo('Khám tổng quát');
-                                            } elseif ($item->doctor->specialty->classification == 'kham_tu_xa') {
-                                                echo('Khám từ xa');
-                                            } elseif ($item->doctor->specialty->classification == 'chuyen_khoa') {
-                                                echo("Khám chuyên khoa");
-                                            }
-                                        @endphp
-                                        {{-- {{ $item->doctor->specialty->classification }} --}}
+                                            @php
+                                                if ($item->doctor->specialty->classification == 'tong_quat') {
+                                                    echo 'Khám tổng quát';
+                                                } elseif ($item->doctor->specialty->classification == 'kham_tu_xa') {
+                                                    echo 'Khám từ xa';
+                                                } elseif ($item->doctor->specialty->classification == 'chuyen_khoa') {
+                                                    echo 'Khám chuyên khoa';
+                                                }
+                                            @endphp
+                                            {{-- {{ $item->doctor->specialty->classification }} --}}
                                         @else
-                                        @php
-                                            if ($item->package->specialty->classification == 'tong_quat') {
-                                                echo('Khám tổng quát');
-                                            } elseif ($item->package->specialty->classification == 'kham_tu_xa') {
-                                                echo('Khám từ xa');
-                                            } elseif ($item->package->specialty->classification == 'chuyen_khoa') {
-                                                echo("Khám chuyên khoa");
-                                            }
-                                        @endphp
+                                            @php
+                                                if ($item->package->specialty->classification == 'tong_quat') {
+                                                    echo 'Khám tổng quát';
+                                                } elseif ($item->package->specialty->classification == 'kham_tu_xa') {
+                                                    echo 'Khám từ xa';
+                                                } elseif ($item->package->specialty->classification == 'chuyen_khoa') {
+                                                    echo 'Khám chuyên khoa';
+                                                }
+                                            @endphp
                                         @endif
                                     </td>
                                     <td class="">
