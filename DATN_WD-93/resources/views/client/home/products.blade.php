@@ -204,20 +204,20 @@
                 <h5 class="section-title position-relative text-uppercase mb-3">
                     <span class="bg-secondary px-3">Lọc theo thương hiệu</span>
                 </h5>
-                <div class="bg-light p-4 mb-30 rounded shadow-sm">
+                <div class="bg-light p-1 mb-30 rounded shadow-sm">
                     <div class="row">
                         @if($brands->isEmpty())
                         <p>Không có thương hiệu nào liên quan đến danh mục này.</p>
                     @else
                         @foreach($brands as $brand)
                             <div class="col-6 col-md-4 col-lg-3 mb-3">
-                                <div class="brand-filter-item text-center border rounded p-3 bg-white">
+                                <div class="brand-filter-item text-center border rounded p-1 bg-white">
                                     <a href="{{ route('productsByBrandId', ['brand_id' => $brand->id]) }}">
                                         <img
                                             src="{{ Storage::url($brand->image) }}"
                                             alt="{{ $brand->name }}"
                                             class="img-fluid rounded-circle brand-image"
-                                            style="width: 80px; height: 80px; object-fit: cover;"
+                                            style="width: 100px; height: 80px; object-fit: cover;"
                                         />
                                     </a>
                                     <h6 class="mt-2 text-truncate">{{ $brand->name }}</h6>

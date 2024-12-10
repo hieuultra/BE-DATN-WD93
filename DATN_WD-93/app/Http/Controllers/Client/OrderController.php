@@ -26,8 +26,8 @@ class OrderController extends Controller
     public function index(Request $request, $status = null)
     {
         $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
-        ->orderBy('name', 'asc')
-        ->get();
+            ->orderBy('name', 'asc')
+            ->get();
         $categories = Category::orderBy('name', 'asc')->get();
         $Bills = Auth::user()->bill()->orderBy('created_at', 'desc')->get(); // Lấy tất cả các đơn hàng
 
@@ -99,8 +99,8 @@ class OrderController extends Controller
     {
         $categories = Category::orderBy('name', 'asc')->get();
         $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
-        ->orderBy('name', 'asc')
-        ->get();
+            ->orderBy('name', 'asc')
+            ->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -149,7 +149,7 @@ class OrderController extends Controller
                 }
             }
             $total = $subTotal + $shipping - $coupon;
-            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal', 'coupon','spe'));
+            return view('client.orders.create', compact('orderCount', 'categories', 'carts', 'total', 'shipping', 'subTotal', 'coupon', 'spe'));
         }
         return redirect()->route('cart.listCart');
     }
@@ -232,8 +232,8 @@ class OrderController extends Controller
     {
         $categories = Category::orderBy('name', 'asc')->get();
         $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
-        ->orderBy('name', 'asc')
-        ->get();
+            ->orderBy('name', 'asc')
+            ->get();
         $orderCount = 0; // Mặc định nếu chưa đăng nhập
         if (Auth::check()) {
             $user = Auth::user();
@@ -244,7 +244,7 @@ class OrderController extends Controller
         $statusBill = Bill::status_bill;
         $status_payment_method = Bill::status_payment_method;
         $type_da_giao_hang = Bill::DA_GIAO_HANG;
-        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories', 'type_da_giao_hang','spe'));
+        return view('client.orders.show', compact('orderCount', 'bill', 'statusBill', 'status_payment_method', 'categories', 'type_da_giao_hang', 'spe'));
     }
 
     /**

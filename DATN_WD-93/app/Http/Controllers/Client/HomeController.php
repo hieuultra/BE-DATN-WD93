@@ -218,7 +218,10 @@ class HomeController extends Controller
 
 
             // Lấy thông tin đánh giá sản phẩm
-            $product = Product::with('review.user')->findOrFail($productId);
+            $product = Product::with(['review' => function ($query) {
+                $query->orderBy('created_at', 'desc'); // Sắp xếp review mới nhất trước
+            }, 'review.user'])->findOrFail($productId);
+
 
             // Trả về view với các thông tin cần thiết
             return view('client.home.detail', compact('orderCount', 'sp', 'splq', 'categories', 'canReview', 'product', 'billId', 'soldQuantity', 'spe'));
