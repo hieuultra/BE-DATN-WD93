@@ -171,7 +171,7 @@
                     </div>
                     <div class="form-group">
                         <label for="comment">Bình luận:</label>
-                        <textarea id="comment" name="comment" class="form-control" rows="4"></textarea>
+                        <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="Mời bạn chia sẻ thêm cảm nhận...."></textarea>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="submitRating()">Gửi đánh giá</button>
                 </form>

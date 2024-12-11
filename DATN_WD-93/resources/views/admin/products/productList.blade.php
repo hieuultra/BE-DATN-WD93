@@ -90,7 +90,7 @@ table th, table td {
                @endphp
                  <tr>
                     <td>{{ $item->idProduct }}</td>
-                    <td>{{ $item->category->name }}</td>
+                    <td>{{ $item->category->name ?? '' }}</td>
                     <td>{{ $item->brand->name ?? 'Khong co' }}</td>
                     <td class="product-name">{{ $item->name }}</td>
                     <td><img src="{{ asset('upload/'.$item->img)  }}" width="150" height="auto" alt=""></td>

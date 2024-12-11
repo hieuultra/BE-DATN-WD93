@@ -243,6 +243,97 @@
     max-height: none; /* Gỡ bỏ giới hạn chiều cao khi mở rộng */
     white-space: normal;
 }
+.flash-sale {
+  background: linear-gradient(90deg, #ffc107, #f44336);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  margin: 20px 0;
+}
+
+.flash-sale-header {
+  display: flex; /* Sử dụng Flexbox */
+  justify-content: space-between; /* Khoảng cách đều giữa các phần tử */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  margin-bottom: 10px;
+}
+
+.flash-sale-header h5 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.flash-sale-timer {
+  text-align: right;
+}
+
+.flash-sale-timer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+#timer {
+  display: flex;
+  gap: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+#timer span {
+  background: black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.flash-sale-progress {
+  margin-top: 10px;
+}
+
+.flash-sale-progress p {
+  margin: 0 0 5px;
+  font-size: 0.9rem;
+}
+
+.progress-bar {
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 20px;
+  width: 100%;
+  position: relative;
+}
+
+.progress-fill {
+  background: #ffc107;
+  height: 100%;
+  width: 0;
+  transition: width 0.5s ease;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 20px;
+  color: black;
+}
+.thumbnail-images .small-img {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border 0.3s ease;
+}
+
+.thumbnail-images .small-img:hover,
+.thumbnail-images .small-img.active {
+    border: 2px solid #007bff;
+}
+
     </style>
 
     <!-- Breadcrumb Start -->
@@ -251,8 +342,8 @@
             <div class="col-12">
                 <nav class="breadcrumb bg-light mb-30">
                     <a class="breadcrumb-item text-dark" href="#">Trang chủ</a>
-                    <a class="breadcrumb-item text-dark" href="#">Thực phẩm chức năng</a>
-                    <span class="breadcrumb-item active">Chi tiết</span>
+                    <a class="breadcrumb-item text-dark" href="#">{{ $sp->category->name }}</a>
+                    <span class="breadcrumb-item active">{{ $sp->name }}</span>
                 </nav>
             </div>
         </div>
@@ -306,6 +397,21 @@
                         <i class="fa fa-2x fa-angle-right text-dark"></i>
                     </a>
                 </div>
+
+                    <!-- Thumbnail Images -->
+                    <div class="thumbnail-images mt-3">
+                        <div class="row">
+                            <div class="col-3">
+                                <img class="img-thumbnail small-img active" src="{{ asset('upload/' . $sp->img) }}" alt="Thumbnail" data-target="#product-carousel" data-slide-to="0">
+                            </div>
+                            @foreach ($sp->imageProduct as $index => $imgs)
+                                <div class="col-3">
+                                    <img class="img-thumbnail small-img" src="{{ Storage::url($imgs->image) }}" alt="Thumbnail" data-target="#product-carousel" data-slide-to="{{ $index + 1 }}">
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
             </div>
 
             <div class="col-lg-7 h-auto mb-30">
@@ -335,6 +441,25 @@
                         </div>
                         <small class="views-count ml-auto">{{ $sp->view }} Lượt xem</small>
                     </div>
+                    <div class="flash-sale">
+                        <div class="flash-sale-header">
+                          <h4 style="font-weight: bold">Online giá rẻ quá</h4>
+                          <div class="flash-sale-timer">
+                            <p>Kết thúc trong:</p>
+                            <div id="timer">
+                              <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flash-sale-progress">
+                          <p>Còn <span id="">{{ $spQuantity->quantity }}</span>/{{ $spQuantity->quantity }} Suất</p>
+                          <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%;"></div>
+                          </div>
+                        </div>
+                      </div>
+
+
                     <form action="{{ route('cart.addCart') }}" method="post">
                         @csrf
                         <div class="d-flex mb-3 border-box">
@@ -966,5 +1091,59 @@ $('#variantList').on('focus', '.option', function() {
         });
     });
 </script>
+<script>
+    // Set thời gian kết thúc flash sale (ví dụ: 24 giờ từ bây giờ)
+    const flashSaleEnd = new Date().getTime() + 24 * 60 * 60 * 1000;
 
+    // Cập nhật thời gian còn lại mỗi giây
+    const timerInterval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = flashSaleEnd - now;
+
+      if (distance <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById("timer").innerHTML = "Đã kết thúc";
+        return;
+      }
+
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("hours").textContent = hours.toString().padStart(2, "0");
+      document.getElementById("minutes").textContent = minutes.toString().padStart(2, "0");
+      document.getElementById("seconds").textContent = seconds.toString().padStart(2, "0");
+    }, 1000);
+
+    // Tự động giảm số lượng còn lại và cập nhật thanh tiến trình
+    let totalSlots = 50;
+    let soldSlots = 10;
+
+    function updateProgressBar() {
+      const remainingSlots = totalSlots - soldSlots;
+      document.getElementById("remaining-slots").textContent = remainingSlots;
+      const progressPercentage = (soldSlots / totalSlots) * 100;
+      document.querySelector(".progress-fill").style.width = progressPercentage + "%";
+    }
+
+    // Mô phỏng việc bán hàng mỗi 5 giây
+    setInterval(() => {
+      if (soldSlots < totalSlots) {
+        soldSlots++;
+        updateProgressBar();
+      }
+    }, 5000);
+
+    // Khởi tạo thanh tiến trình
+    updateProgressBar();
+  </script>
+<script>
+    document.querySelectorAll('.small-img').forEach((img, index) => {
+    img.addEventListener('click', function() {
+        document.querySelector('.small-img.active').classList.remove('active');
+        this.classList.add('active');
+    });
+});
+
+</script>
 @endsection

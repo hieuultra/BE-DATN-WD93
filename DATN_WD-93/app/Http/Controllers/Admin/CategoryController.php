@@ -79,6 +79,11 @@ class CategoryController extends Controller
     public function cateDestroy($id)
     {
         $category = Category::findOrFail($id); //// Tìm sản phẩm với ID được cung cấp. Nếu không tìm thấy, sẽ ném ra một ngoại lệ ModelNotFoundException.
+        // Kiểm tra xem danh mục có sản phẩm hay không
+        if ($category->products()->exists()) {
+            return redirect()->route('admin.categories.categoriesList')
+                ->with('error', 'Không thể xóa danh mục vì vẫn còn sản phẩm liên quan.');
+        }
         if (!empty($category->img)) {
             $imgpath = "upload/" . $category->img; //duong dan
             if (file_exists($imgpath)) {
