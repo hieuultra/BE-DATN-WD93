@@ -28,7 +28,7 @@ class OrderConfirm extends Mailable
     public function build()
     {
         return $this->subject('Xác nhận đơn hàng')
-            ->markdown('client.orders.mail')
+            ->view('client.orders.mail')
             ->with('bill', $this->bill);
     }
 }
