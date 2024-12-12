@@ -1322,11 +1322,14 @@
                 let name = $("#productName").html();
                 let img = $("#productImage").attr("src");
                 let replaceImg = img.replace('/upload/', '');
-                let replacePrice = price.replace('VNĐ', '');
-                let newPrice = replacePrice.replace('.', '');
-                let priceDis = $("#total").html();
-                let replacePriceDis = priceDis.replace('VND', '');
-                let newPriceDis = replacePriceDis.replace('.', '');
+
+                 // Xử lý giá tiền (bao gồm cả triệu và loại bỏ VNĐ, dấu phân cách)
+                    let replacePrice = price.replace(/[.,\sVNĐ]/g, '');
+                    let newPrice = parseFloat(replacePrice);
+
+                    let priceDis = $("#total").html();
+                    let replacePriceDis = priceDis.replace(/[.,\sVNĐ]/g, '');
+                    let newPriceDis = parseFloat(replacePriceDis);
                 console.log(total);
                 console.log(packageId);
                 console.log(id_variantProduct);
