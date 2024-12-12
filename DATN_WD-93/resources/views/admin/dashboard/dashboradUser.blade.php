@@ -175,7 +175,7 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-chart-area me-1"></i>
-                            Tỉ lệ đặt lịch khám thành công và bị hủy
+                            Tỉ lệ đơn hàng mua thành công và bị hủy
                         </div>
                         <div class="card-body">
                             <canvas id="orderRatesChart"></canvas>
@@ -187,7 +187,7 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-chart-area me-1"></i>
-                            Tỉ lệ đơn hàng mua thành công và bị hủy
+                            Tỉ lệ đặt lịch khám thành công và bị hủy
                         </div>
                         <div class="card-body">
                             <canvas id="appointmentRatesChart"></canvas>
