@@ -55,9 +55,16 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="usage_limit">Số lần sử dụng</label>
+                <label for="usage_limit">Số lượt đổi</label>
                 <input type="number" name="usage_limit" class="form-control" id="usage_limit" required>
                 @error('usage_limit')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="points_required">Số điểm yêu cầu</label>
+                <input type="number" name="points_required" class="form-control" id="points_required">
+                @error('points_required')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>

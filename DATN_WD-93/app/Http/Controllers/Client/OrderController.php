@@ -10,6 +10,7 @@ use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Specialty;
 use App\Mail\OrderConfirm;
+use App\Models\UserCoupon;
 use Illuminate\Http\Request;
 use App\Models\VariantProduct;
 use Illuminate\Support\Facades\DB;
@@ -122,7 +123,10 @@ class OrderController extends Controller
             }
             // Sử lý mã giảm giá theo 2 luồng
             if (!empty($carts->coupon_code)) {
-                $couponTable = Coupon::where('code', $carts->coupon_code)->first();
+                $couponTable = UserCoupon::join('coupons', 'user_coupons.coupon_id', '=', 'coupons.id')
+                    ->where('user_coupons.user_id', Auth::id()) // Lọc theo user_id
+                    ->where('coupons.code', $carts->coupon_code) // Lọc theo coupon_code
+                    ->first(); // Lấy coupon đầu tiên
                 if ($couponTable) {
                     $couponType = $couponTable->type;
                     $couponValue = $couponTable->value;
@@ -176,9 +180,20 @@ class OrderController extends Controller
                 $carts = Cart::where('user_id', Auth::id())->with('items')->first();
                 // Giảm mã giảm giá sau khi sử dụng
                 if ($carts->coupon_code !== null) {
-                    $couponTable = Coupon::where('code', $carts->coupon_code)->first();
-                    if ($couponTable->usage_limit !== null) {
-                        $couponTable->decrement('usage_limit');
+                    $couponTable = UserCoupon::join('coupons', 'user_coupons.coupon_id', '=', 'coupons.id')
+                        ->where('user_coupons.user_id', Auth::id()) // Lọc theo user_id
+                        ->where('coupons.code', $carts->coupon_code) // Lọc theo coupon_code
+                        ->select(
+                            'user_coupons.id as user_coupon_id', // Lấy id của bảng user_coupons
+                            'user_coupons.*', // Lấy tất cả các trường từ bảng user_coupons
+                            'coupons.*'
+                        ) // Lấy tất cả các trường từ bảng coupons
+                        ->first(); // Lấy coupon đầu tiên                    
+                    if ($couponTable && $couponTable->isValid()) {
+                        $deleteCouponTable = UserCoupon::where('id', $couponTable->user_coupon_id)->first();
+                        $deleteCouponTable->delete();
+                    } else {
+                        return redirect()->route('cart.listCart', ['coupon_code' => 'loaibo'])->with('error', 'Mã không hợp lệ');
                     }
                     $carts->coupon_code = null;
                     $carts->save();

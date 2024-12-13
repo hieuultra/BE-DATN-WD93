@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Client;
 
+use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Specialty;
+use App\Models\UserCoupon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -70,9 +72,62 @@ class CouponController extends Controller
             $user = Auth::user();
             $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
         }
-        $coupons = Coupon::orderBy('updated_at', 'asc')
+        $coupons = UserCoupon::join('coupons', 'user_coupons.coupon_id', '=', 'coupons.id')
+            ->where('user_coupons.user_id', Auth::id()) // Lọc theo user_id
+            ->where('user_coupons.quantity', '>', 0) // Kiểm tra số lượng còn lại
+            ->whereDate('coupons.expiry_date', '>=', Carbon::today()) // Kiểm tra thời gian còn hạn (>= ngày hôm nay)
+            ->orderBy('coupons.updated_at', 'asc') // Sắp xếp theo ngày cập nhật của coupon
+            ->get(); // Chỉ lấy các trường từ bảng coupons
+        return view('client.coupons.list', compact('coupons', 'orderCount', 'categories', 'spe'));
+    }
+    public function showCoupons()
+    {
+        $categories = Category::orderBy('name', 'asc')->get();
+        $spe = Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
+            ->orderBy('name', 'asc')
+            ->get();
+        $orderCount = 0; // Mặc định nếu chưa đăng nhập
+        $score = 0;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $orderCount = $user->bill()->count(); // Nếu đăng nhập thì lấy số lượng đơn hàng
+            $score = $user->score;
+        }
+
+        $coupons = Coupon::where('expiry_date', '>=', now()) // Lọc mã giảm giá chưa hết hạn
+            ->where('usage_limit', '>', 0) // Lọc mã giảm giá còn giới hạn sử dụng
+            ->orderBy('updated_at', 'asc')
             ->get();
 
-        return view('client.coupons.list', compact('coupons', 'orderCount', 'categories', 'spe'));
+        return view('client.coupons.show', compact('coupons', 'orderCount', 'categories', 'spe', 'score'));
+    }
+    public function getCoupons(Request $request)
+    {
+        $coupon = Coupon::findOrFail($request->coupon_id);
+        if ($coupon->min_order_value == 0 && $coupon->expiry_date < now()) {
+            return back()->with('errors', 'Mã đã hết!');
+        }
+        $score = Auth::user();
+        if ($score->score < $request->points_required) {
+            return back()->with('error', 'Điểm của bạn không đủ!');
+        }
+        $userCoupon = UserCoupon::where('user_id', $score->id)
+            ->where('coupon_id', $coupon->id)
+            ->first(); // Lấy bản ghi đầu tiên nếu có
+
+        if ($userCoupon) {
+            return back()->with('error', 'Bạn chỉ có thể đổi mã này 1 lần!');
+        } else {
+            UserCoupon::create([
+                'user_id' => $score->id,
+                'coupon_id' => $coupon->id,
+                'quantity' => 1,
+            ]);
+        }
+        $score->score -= $request->points_required;
+        $score->save();
+        $coupon->decrement('usage_limit');
+        $coupon->save();
+        return back()->with('success', 'Đổi mã thành công!');
     }
 }

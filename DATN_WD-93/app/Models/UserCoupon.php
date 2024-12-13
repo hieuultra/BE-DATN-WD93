@@ -6,15 +6,27 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Coupon extends Model
+class UserCoupon extends Model
 {
     use HasFactory;
-    protected $fillable = ['code', 'value', 'min_order_value', 'expiry_date', 'is_active', 'usage_limit', 'type', 'max_discount', 'points_required'];
-    /**
-     * Kiểm tra xem mã giảm giá có hợp lệ hay không
-     *
-     * @return bool
-     */
+
+    protected $fillable = [
+        'user_id',
+        'coupon_id',
+        'quantity'
+    ];
+
+    // Quan hệ với bảng User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Quan hệ với bảng Coupon
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
     public function isValid()
     {
         // Kiểm tra trạng thái hoạt động của mã giảm giá
@@ -28,10 +40,6 @@ class Coupon extends Model
         }
 
         // Kiểm tra số lần sử dụng (nếu được giới hạn)
-        if ($this->usage_limit !== null && $this->usage_limit <= 0) {
-            return false; // Mã đã sử dụng hết
-        }
-
         return true; // Mã giảm giá hợp lệ
     }
 }

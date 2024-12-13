@@ -6,6 +6,7 @@ use App\Models\Bill;
 use App\Models\Cart;
 use App\Models\Coupon;
 use App\Mail\OrderConfirm;
+use App\Models\UserCoupon;
 use Illuminate\Http\Request;
 use App\Models\VariantProduct;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +45,7 @@ class PaymentController extends Controller
         $vnp_Locale = 'vn';
         $vnp_BankCode = "NCB";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-        
+
         $inputData = array(
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => $vnp_TmnCode,
@@ -111,13 +112,25 @@ class PaymentController extends Controller
                     // Xử lý coupon
                     $cart = $paymentData['cart'];
                     if ($paymentData['moneyShip'] !== 0 && $paymentData['coupon_code'] !== null) {
-                        $couponTable = Coupon::where('code', $paymentData['coupon_code'])->first();
-                        if ($couponTable && $couponTable->usage_limit !== null) {
-                            $couponTable->decrement('usage_limit');
-                            $couponTable->save();
+                        $couponTable = UserCoupon::join('coupons', 'user_coupons.coupon_id', '=', 'coupons.id')
+                            ->where('user_coupons.user_id', Auth::id()) // Lọc theo user_id
+                            ->where('coupons.code', $paymentData['coupon_code']) // Lọc theo coupon_code
+                            ->select(
+                                'user_coupons.id as user_coupon_id', // Lấy id của bảng user_coupons
+                                'user_coupons.*', // Lấy tất cả các trường từ bảng user_coupons
+                                'coupons.*'
+                            ) // Lấy tất cả các trường từ bảng coupons
+                            ->first(); // Lấy coupon đầu tiên       
+                        if ($couponTable && $couponTable->isValid()) {
+                            $deleteCouponTable = UserCoupon::where('id', $couponTable->user_coupon_id)->first();
+                            $deleteCouponTable->delete();
+                        } else {
+                            return redirect()->route('cart.listCart', ['coupon_code' => 'loaibo'])->with('error', 'Mã đã dùng');
                         }
                     }
-
+                    $carts = Cart::where('user_id', Auth::id())->with('items')->first();
+                    $carts->coupon_code = null;
+                    $carts->save();
                     // Tạo đơn hàng
                     $bill = Bill::create([
                         'billCode' => $inputData['vnp_TxnRef'],
