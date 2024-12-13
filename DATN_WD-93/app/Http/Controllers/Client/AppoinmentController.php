@@ -838,7 +838,7 @@ class AppoinmentController extends Controller
             $bill->moneyShip = '0';
             $bill->save();
 
-            return back()->with('success', 'Hóa đơn đã được tạo thành công.');
+           
         } catch (\Exception $e) {
             // Xử lý khi có lỗi
             return back()->withErrors('Lỗi khi tạo hóa đơn: ' . $e->getMessage());
