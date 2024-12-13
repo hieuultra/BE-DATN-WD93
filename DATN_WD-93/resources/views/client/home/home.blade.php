@@ -3,7 +3,7 @@
 @section('title', 'Welcome')
 
 @section('content')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .slideshow-container11 {
             width: 100%;
@@ -256,50 +256,52 @@
             border: 2px solid gray;
         }
 
-        /* Card Style */
-        .blog-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+/* Card Style */
+.blog-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-        .blog-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
+.blog-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
 
-        .blog-card img {
-            border-bottom: 1px solid #ddd;
-            transition: opacity 0.3s ease;
-        }
+.blog-card img {
+  border-bottom: 1px solid #ddd;
+  transition: opacity 0.3s ease;
+}
 
-        .blog-card img:hover {
-            opacity: 0.85;
-        }
+.blog-card img:hover {
+  opacity: 0.85;
+}
 
-        .blog-card h5 {
-            font-size: 1.25rem;
-            color: #333;
-            font-weight: bold;
-        }
+.blog-card h5 {
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: bold;
+}
 
-        .blog-card p {
-            font-size: 0.9rem;
-            color: #777;
-        }
+.blog-card p {
+  font-size: 0.9rem;
+  color: #777;
+}
 
-        .blog-card .d-flex {
-            font-size: 0.8rem;
-        }
+.blog-card .d-flex {
+  font-size: 0.8rem;
+}
 
-        .blog-card .fa {
-            color: #888;
-        }
+.blog-card .fa {
+  color: #888;
+}
 
-        /* Optional: Add a background hover effect */
-        .blog-card:hover {
-            background-color: #f8f9fa;
-        }
+/* Optional: Add a background hover effect */
+.blog-card:hover {
+  background-color: #f8f9fa;
+}
     </style>
-    <script></script>
+<script>
+
+</script>
     <!-- Carousel Start -->
     <div class="container-fluid mb-3">
         <div class="row px-xl-5">
@@ -312,7 +314,8 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item position-relative active" style="height: 430px">
-                            <img class="position-absolute w-100 h-100" src="{{ asset('img/b18.png') }}"
+                            <img class="position-absolute w-100 h-100"
+                                src="{{ asset('img/b18.png') }}"
                                 style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
@@ -336,8 +339,8 @@
               </div> --}}
                         </div>
                         <div class="carousel-item position-relative" style="height: 430px">
-                            <img class="position-absolute w-100 h-100" src="{{ asset('img/slidepc4.jpg') }}"
-                                style="object-fit: cover" />
+                            <img class="position-absolute w-100 h-100"
+                                src="{{ asset('img/slidepc4.jpg') }}" style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
               >
@@ -361,7 +364,8 @@
                         </div>
                         <div class="carousel-item position-relative" style="height: 430px">
                             <img class="position-absolute w-100 h-100"
-                                src="{{ asset('img/1610x492_banner_PC_6cce2d4c65.webp') }}" style="object-fit: cover" />
+                                src="{{ asset('img/1610x492_banner_PC_6cce2d4c65.webp') }}"
+                                style="object-fit: cover" />
                             {{-- <div
                 class="carousel-caption d-flex flex-column align-items-center justify-content-center"
               >
@@ -676,10 +680,10 @@
                         <!-- Product list for the first slide -->
                         @foreach ($newProducts as $item)
                             @php
-                                $variant = $item->variantProduct->first();
-                                if ($variant) {
+                             $variant = $item->variantProduct->first();
+                             if ($variant) {
                                     // Nếu biến thể tồn tại, tính toán giá trị
-                                    $tt = $variant->price - ($variant->price * $item['discount']) / 100;
+                                    $tt = $variant->price - (($variant->price * $item['discount']) / 100);
                                 } else {
                                     // Nếu không có biến thể, đặt giá trị mặc định
                                     $tt = null;
@@ -709,20 +713,20 @@
                                             style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $item->name }}</a>
                                         <div class="d-flex align-items-center justify-content-center mt-2">
                                             @if ($tt !== null)
-                                                <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
+                                            <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
                                             @else
                                                 <h6 class="text-danger">Giá: Chưa thêm giá</h6>
                                             @endif
                                             <h6 class="text-muted ml-2">
                                                 @if ($item->variantProduct->isNotEmpty())
-                                                    @php
-                                                        $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
-                                                    @endphp
-                                                    <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
-                                                @else
-                                                    <del>Giá: Chưa có biến thể</del>
-                                                @endif
-                                            </h6>
+                                                            @php
+                                                                $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
+                                                            @endphp
+                                                            <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
+                                                        @else
+                                                            <del>Giá: Chưa có biến thể</del>
+                                                        @endif
+                                                    </h6>
                                             <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
                                         </div>
                                         <div class="card-footer d-flex justify-content-between bg-light">
@@ -762,8 +766,8 @@
                 <div class="carousel-item">
                     <div class="row px-xl-5">
                         @foreach ($newProducts1 as $item)
-                            @php$variant = $item->variantProduct->first();
-                                                                                                                                                                                                                                                            $tt = $variant->price - ($variant->price * $item['discount']) / 100; @endphp ?> ?> ?> ?> ?> ?> ?> ?>
+                            @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100); @endphp
                             <!-- Product 5 -->
                             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                                 <div class="product-item bg-light mb-4">
@@ -792,14 +796,14 @@
                                             <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
                                             <h6 class="text-muted ml-2">
                                                 @if ($item->variantProduct->isNotEmpty())
-                                                    @php
-                                                        $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
-                                                    @endphp
-                                                    <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
-                                                @else
-                                                    <del>Giá: Không có thông tin</del>
-                                                @endif
-                                            </h6>
+                                                            @php
+                                                                $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
+                                                            @endphp
+                                                            <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
+                                                        @else
+                                                            <del>Giá: Không có thông tin</del>
+                                                        @endif
+                                                    </h6>
                                             <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
                                         </div>
                                         <div class="card-footer d-flex justify-content-between bg-light">
@@ -857,7 +861,8 @@
         <div class="row px-xl-5">
             <div class="col-md-6">
                 <div class="product-offer mb-30" style="height: 300px">
-                    <img class="img-fluid" src="{{ asset('img/k1.jpg') }}" alt="" />
+                    <img class="img-fluid"
+                        src="{{ asset('img/k1.jpg') }}" alt="" />
                     <div class="offer-text">
                         <h6 class="text-white text-uppercase">Bạn cần khám sức khỏe</h6>
                         <h3 class="text-white mb-3">Nhanh và chính xác</h3>
@@ -867,7 +872,8 @@
             </div>
             <div class="col-md-6">
                 <div class="product-offer mb-30" style="height: 300px">
-                    <img class="img-fluid" src="{{ asset('img/Frame 3467714-3.webp') }}" alt="" />
+                    <img class="img-fluid" src="{{ asset('img/Frame 3467714-3.webp') }}"
+                        alt="" />
                     <div class="offer-text">
                         <h6 class="text-white text-uppercase">Khuyến mãi lên đến 30%</h6>
                         <h3 class="text-white mb-3">Khuyến mại đặc biệt</h3>
@@ -889,9 +895,9 @@
         </div>
         <div class="row px-xl-5">
             @foreach ($mostViewedProducts as $item)
-                @php$variant = $item->variantProduct->first();
-                                                                                                                                                                                    $tt = $variant->price - ($variant->price * $item['discount']) / 100;
-                                                                                                                                                @endphp ?> ?> ?> ?> ?> ?> ?> ?>
+                @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100);
+                               @endphp
                 <!-- Product 5 -->
                 <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                     <div class="product-item bg-light mb-4">
@@ -915,15 +921,14 @@
                                 {{ $item->name }}</a>
                             <div class="d-flex align-items-center justify-content-center mt-2">
                                 <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
-                                <h6 class="text-muted ml-2">
-                                    @if ($item->variantProduct->isNotEmpty())
-                                        @php
-                                            $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
-                                        @endphp
-                                        <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
-                                    @else
-                                        <del>Giá: Chưa có biến thể</del>
-                                    @endif
+                                <h6 class="text-muted ml-2"> @if ($item->variantProduct->isNotEmpty())
+                                    @php
+                                        $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
+                                    @endphp
+                                    <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
+                                @else
+                                    <del>Giá: Chưa có biến thể</del>
+                                @endif
                                 </h6>
                                 <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
                             </div>
@@ -960,29 +965,28 @@
     </div>
     <!-- Products End -->
 
-    <!-- Vendor Start -->
-    <div class="container-fluid py-5">
-        <!-- Title -->
-        <div class="text-center mb-1">
-            <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-                <span class="px-2 stylish-text">Thương hiệu</span>
-            </h2>
-        </div>
-        <div class="row px-xl-5">
-            <div class="col">
-                <div class="owl-carousel vendor-carousel">
-                    @foreach ($brands as $brand)
-                        <div class="bg-light p-4">
-                            <a href="{{ route('productsByBrandId', ['brand_id' => $brand->id]) }}"><img
-                                    src="{{ Storage::url($brand->image) }} " alt="" /></a>
-                            <span class="d-block text-center mt-2 fw-bold">{{ $brand->products_count }} sản phẩm</span>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+         <!-- Vendor Start -->
+  <div class="container-fluid py-5">
+    <!-- Title -->
+    <div class="text-center mb-1">
+      <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
+        <span class="px-2 stylish-text">Thương hiệu</span>
+      </h2>
     </div>
-    <!-- Vendor End -->
+  <div class="row px-xl-5">
+    <div class="col">
+      <div class="owl-carousel vendor-carousel">
+        @foreach($brands as $brand)
+        <div class="bg-light p-4">
+          <a href="{{ route('productsByBrandId', ['brand_id' => $brand->id]) }}"><img src="{{ Storage::url($brand->image) }} " alt="" /></a>
+          <span class="d-block text-center mt-2 fw-bold">{{ $brand->products_count }} sản phẩm</span>
+        </div>
+       @endforeach
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Vendor End -->
 
     <!-- Vendor Start -->
     <div class="container-fluid py-5">
@@ -994,8 +998,8 @@
         </div>
         <div class="row px-xl-5">
             @foreach ($highestDiscountProducts as $item)
-                @php$variant = $item->variantProduct->first();
-                                                                                                                                                $tt = $variant->price - ($variant->price * $item['discount']) / 100; @endphp ?> ?> ?> ?> ?> ?> ?> ?>
+                @php $variant = $item->variantProduct->first();
+                              $tt = $variant->price - (($variant->price  * $item['discount']) / 100); @endphp
                 <!-- Product 5 -->
                 <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                     <div class="product-item bg-light mb-4">
@@ -1019,15 +1023,14 @@
                                 {{ $item->name }}</a>
                             <div class="d-flex align-items-center justify-content-center mt-2">
                                 <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
-                                <h6 class="text-muted ml-2">
-                                    @if ($item->variantProduct->isNotEmpty())
-                                        @php
-                                            $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
-                                        @endphp
-                                        <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
-                                    @else
-                                        <del>Giá: Chưa có biến thể</del>
-                                    @endif
+                                <h6 class="text-muted ml-2"> @if ($item->variantProduct->isNotEmpty())
+                                    @php
+                                        $variant = $item->variantProduct->first(); // Lấy biến thể đầu tiên
+                                    @endphp
+                                    <del>Giá: {{ number_format($variant->price, 0, ',', '.') }} VND</del>
+                                @else
+                                    <del>Giá: Chưa có biến thể</del>
+                                @endif
                                 </h6>
                                 <p class="discount text-danger mb-0">-{{ $item->discount ?? 0 }}%</p>
                             </div>
@@ -1065,49 +1068,46 @@
 
 
 
-    <!-- Blog Section Start -->
-    <div class="container-fluid py-5">
-        <!-- Section Title -->
-        <div class="text-center mb-5">
-            <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
-                <span class="px-2 stylish-text">Tin mới nhất</span>
-            </h2>
-        </div>
-        <!-- Blog Carousel -->
-        <div class="row px-xl-5">
-            <div class="col">
-                <div class="owl-carousel vendor-carousel">
-                    <!-- Loop qua danh sách blogs -->
-                    @foreach ($blogs as $blog)
-                        <div class="blog-card bg-white shadow-lg rounded overflow-hidden">
-                            <a href="{{ route('blog.show', ['id' => $blog->id]) }}">
-                                <!-- Ảnh bài viết -->
-                                <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}"
-                                    class="img-fluid" />
-                            </a>
-                            <!-- Nội dung bài viết -->
-                            <div class="p-4">
-                                <!-- Tiêu đề bài viết -->
-                                <h5 class="fw-bold text-dark">{{ $blog->title }}</h5>
-                                <!-- Nội dung tóm tắt -->
-                                <p class="text-muted">
-                                    {{ \Illuminate\Support\Str::limit($blog->short_content, 100) }}
-                                </p>
-                                <!-- Thêm thông tin thêm (Ngày đăng, tác giả) -->
-                                <div class="d-flex justify-content-between mt-3">
-                                    <span class="text-muted"><i class="fa fa-clock"></i>
-                                        {{ $blog->created_at->format('d/m/Y') }}</span>
-                                    <span class="text-muted"><i class="fa fa-user"></i>
-                                        {{ $blog->author ?? 'Admin' }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+<!-- Blog Section Start -->
+<div class="container-fluid py-5">
+    <!-- Section Title -->
+    <div class="text-center mb-5">
+      <h2 class="section-title px-5 text-uppercase mx-xl-5 mb-4">
+        <span class="px-2 stylish-text">Tin mới nhất</span>
+      </h2>
     </div>
-    <!-- Blog Section End -->
+    <!-- Blog Carousel -->
+    <div class="row px-xl-5">
+      <div class="col">
+        <div class="owl-carousel vendor-carousel">
+          <!-- Loop qua danh sách blogs -->
+          @foreach($blogs as $blog)
+          <div class="blog-card bg-white shadow-lg rounded overflow-hidden">
+            <a href="{{ route('blog.show', ['id' => $blog->id]) }}">
+              <!-- Ảnh bài viết -->
+              <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="img-fluid" />
+            </a>
+            <!-- Nội dung bài viết -->
+            <div class="p-4">
+              <!-- Tiêu đề bài viết -->
+              <h5 class="fw-bold text-dark">{{ $blog->title }}</h5>
+              <!-- Nội dung tóm tắt -->
+              <p class="text-muted">
+                {{ \Illuminate\Support\Str::limit($blog->short_content, 100) }}
+              </p>
+              <!-- Thêm thông tin thêm (Ngày đăng, tác giả) -->
+              <div class="d-flex justify-content-between mt-3">
+                <span class="text-muted"><i class="fa fa-clock"></i> {{ $blog->created_at->format('d/m/Y') }}</span>
+                <span class="text-muted"><i class="fa fa-user"></i> {{ $blog->author ?? 'Admin' }}</span>
+              </div>
+            </div>
+          </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Blog Section End -->
 
 
 
@@ -1119,9 +1119,7 @@
         {{-- NameProduct --}}
         <div style="display: flex; justify-content: space-between">
             <span id="productName" style="color: black; font-weight: bold; font-size: 18px"></span>
-            <p id="mess2"
-                style="color: red; text-align: left; font-size:14px; margin-top:3px; margin-bottom:0px; margin-left:20px;">
-            </p>
+            <p id="mess2" style="color: red; text-align: left; font-size:14px; margin-top:3px; margin-bottom:0px; margin-left:20px;"></p>
             <button id="closePopup" style="border: none; background-color: white">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-x-lg" viewBox="0 0 16 16">
@@ -1240,27 +1238,27 @@
             // Đóng popup
             $("#closePopup, #overlay").click(function() {
                 $("#total").empty();
-                $("#price").empty();
-                $("#quantity").empty();
+                    $("#price").empty();
+                    $("#quantity").empty();
                 $("#overlay").fadeOut(); // Ẩn nền mờ
                 $("#popup").fadeOut(); // Ẩn popup
                 packageId = '';
             });
         });
         $(document).ready(function() {
-            // Lắng nghe sự kiện focus và blur trên các button có class 'option'
-            $('#variantList').on('focus', '.option', function() {
-                $(this).css({
-                    'background-color': 'yellow',
-                    'border-color': 'red'
-                });
-            }).on('blur', '.option', function() {
-                $(this).css({
-                    'background-color': 'aqua',
-                    'border-color': 'initial'
-                });
-            });
+    // Lắng nghe sự kiện focus và blur trên các button có class 'option'
+    $('#variantList').on('focus', '.option', function() {
+        $(this).css({
+            'background-color': 'yellow',
+            'border-color': 'red'
         });
+    }).on('blur', '.option', function() {
+        $(this).css({
+            'background-color': 'aqua',
+            'border-color': 'initial'
+        });
+    });
+});
         // Tăng giảm số lượng
         $(document).ready(function() {
 
@@ -1310,7 +1308,7 @@
                     $("#price").empty();
                     $("#quantity").empty();
                     packageId = '';
-                });
+          });
             });
             //active button
             $("#addToCart").click(function(e) {
@@ -1318,39 +1316,39 @@
                 let quantity = $("#quantity").html();
                 // console.log(quantity);
 
-                if (packageId && quantity > 0) {
-                    let quantity = $("#quantityAdd").val();
-                    let price = $("#price").html();
-                    let name = $("#productName").html();
-                    let img = $("#productImage").attr("src");
-                    let replaceImg = img.replace('/upload/', '');
+               if (packageId && quantity > 0) {
+                let quantity = $("#quantityAdd").val();
+                let price = $("#price").html();
+                let name = $("#productName").html();
+                let img = $("#productImage").attr("src");
+                let replaceImg = img.replace('/upload/', '');
 
-                    // Xử lý giá tiền (bao gồm cả triệu và loại bỏ VNĐ, dấu phân cách)
+                 // Xử lý giá tiền (bao gồm cả triệu và loại bỏ VNĐ, dấu phân cách)
                     let replacePrice = price.replace(/[.,\sVNĐ]/g, '');
                     let newPrice = parseFloat(replacePrice);
 
                     let priceDis = $("#total").html();
                     let replacePriceDis = priceDis.replace(/[.,\sVNĐ]/g, '');
                     let newPriceDis = parseFloat(replacePriceDis);
-                    console.log(total);
-                    console.log(packageId);
-                    console.log(id_variantProduct);
-                    if (discount !== null) {
-                        // console.log(newPriceDis);
-                        $.ajax({
-                            type: "POST",
-                            url: "/add-to-cart-home",
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                id_product: productId,
-                                id_variantProduct: id_variantProduct,
-                                quantity: quantity,
-                                price: newPriceDis,
-                                name: name,
-                                img: replaceImg,
-                            },
-                            success: function(response) {
-                                if (response.status === 'success') {
+                console.log(total);
+                console.log(packageId);
+                console.log(id_variantProduct);
+                if (discount !== null) {
+                    // console.log(newPriceDis);
+                    $.ajax({
+                    type: "POST",
+                    url: "/add-to-cart-home",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id_product: productId,
+                        id_variantProduct: id_variantProduct,
+                        quantity: quantity,
+                        price: newPriceDis,
+                        name: name,
+                        img: replaceImg,
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Thành công',
@@ -1360,50 +1358,48 @@
                                     });
                                     console.log("Thêm Sản Phẩm Vào Thành Công!!!");
                                     console.log(response.count);
-                                    $('#count').text(response
-                                        .count); // Cập nhật số lượng sản phẩm trong giỏ hàng
+                                    $('#count').text(response.count); // Cập nhật số lượng sản phẩm trong giỏ hàng
                                 }
                                 packageId = '';
-                            }
-                        });
-                    } else if (discount == null) {
-                        // console.log(newPrice);
-                        $.ajax({
-                            type: "POST",
-                            url: "/add-to-cart-home",
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                id_product: productId,
-                                id_variantProduct: id_variantProduct,
-                                quantity: quantity,
-                                price: newPrice,
-                                name: name,
-                                img: replaceImg,
-                            },
-                            success: function(response) {
-                                if (response.status === 'success') {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Thành công',
-                                        text: response.message,
-                                        timer: 3000,
-                                        showConfirmButton: false
-                                    });
-                                    console.log("Thêm Sản Phẩm Vào Thành Công!!!");
-                                    console.log(response.count);
-                                    $('#count').text(response
-                                        .count); // Cập nhật số lượng sản phẩm trong giỏ hàng
-                                }
-                                packageId = '';
-                            }
-                        });
                     }
-                } else {
-                    $("#mess2").text('Vui lòng chọn loại và kiểm tra số lượng!!!');
-                    setTimeout(function() {
-                        $("#mess2").text('');
-                    }, 2000);
+                });
+                } else if(discount == null) {
+                    // console.log(newPrice);
+                    $.ajax({
+                    type: "POST",
+                    url: "/add-to-cart-home",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id_product: productId,
+                        id_variantProduct: id_variantProduct,
+                        quantity: quantity,
+                        price: newPrice,
+                        name: name,
+                        img: replaceImg,
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: response.message,
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
+                                    console.log("Thêm Sản Phẩm Vào Thành Công!!!");
+                                    console.log(response.count);
+                                    $('#count').text(response.count); // Cập nhật số lượng sản phẩm trong giỏ hàng
+                                }
+                                packageId = '';
+                    }
+                });
                 }
+               } else {
+                $("#mess2").text('Vui lòng chọn loại và kiểm tra số lượng!!!');
+                setTimeout(function() {
+                $("#mess2").text('');
+                            }, 2000);
+               }
                 // console.log(id_variantProduct);
 
             });
