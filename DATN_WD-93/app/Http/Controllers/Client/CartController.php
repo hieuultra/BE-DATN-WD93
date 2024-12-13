@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Specialty;
+use App\Models\UserCoupon;
 use Illuminate\Http\Request;
 use App\Models\VariantPackage;
 use App\Models\VariantProduct;
@@ -54,7 +55,10 @@ class CartController extends Controller
         $checkTypeDiscount = 0;
         if ($cart && $cart->coupon_code !== null) {
             $discountCheck = $cart->coupon_code;
-            $couponCheck = Coupon::where('code', $discountCheck)->first();
+            $couponCheck = UserCoupon::join('coupons', 'user_coupons.coupon_id', '=', 'coupons.id')
+                ->where('user_coupons.user_id', Auth::id()) // Kiểm tra theo user_id
+                ->where('coupons.code', $discountCheck) // Kiểm tra theo mã giảm giá
+                ->first(); // Lấy tất cả các trường từ bảng user_coupons và coupons           
             $checkTypeDiscount = $couponCheck->type;
             $discount = $couponCheck->value;
             if ($couponCheck->type == 'percentage') {
@@ -69,7 +73,10 @@ class CartController extends Controller
                 $discount = 0;
             } else {
 
-                $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
+                $coupon = UserCoupon::join('coupons', 'user_coupons.coupon_id', '=', 'coupons.id')
+                    ->where('user_coupons.user_id', Auth::id()) // Lọc theo user_id
+                    ->where('coupons.code', $request->input('coupon_code')) // Kiểm tra mã giảm giá từ request
+                    ->first(); // Lấy tất cả các trường từ bảng user_coupons và coupons
                 if ($coupon && $coupon->isValid()) {
                     $discount = $coupon->value;
                     $checkMinDiscount = $coupon->min_order_value;

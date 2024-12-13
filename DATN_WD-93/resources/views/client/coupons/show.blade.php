@@ -21,6 +21,8 @@
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
             <div class="col-lg-12 table-responsive mb-5">
+                <h1 class="text-center mb-4">Mã giảm giá cho bạn</h1>
+                <h4>Số điểm đang có: {{ $score }} điểm</h4>
                 {{-- Hiển thị thông báo --}}
                 @if (session('success'))
                     <div class="alert alert-success">
@@ -33,16 +35,16 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                <h1 class="text-center mb-4">Mã giảm giá của bạn</h1>
-
                 <table class="table table-bordered" style="">
                     <thead>
                         <tr>
                             <th class="pro-thumbnail" style="text-align: center">Mã</th>
                             <th class="pro-title" style="text-align: center">Giảm giá:</th>
                             <th class="pro-title" style="text-align: center">Hạn dùng:</th>
+                            <th class="pro-title" style="text-align: center">Số lượng:</th>
                             <th class="pro-title" style="text-align: center">Giá trị đơn hàng tối thiểu:</th>
                             <th class="pro-title" style="text-align: center">Giá tối đa giảm:</th>
+                            <th class="pro-title" style="text-align: center">Số điểm cần để đổi:</th>
                             <th class="pro-remove" style="text-align: center">Thao tác</th>
                         </tr>
                     </thead>
@@ -64,13 +66,25 @@
                                     {{ $coupon->expiry_date }}
                                 </td>
                                 <td class="pro-title" style="text-align: center">
+                                    {{ $coupon->usage_limit }}
+                                </td>
+                                <td class="pro-title" style="text-align: center">
                                     {{ number_format($coupon->min_order_value, 0, ',', '.') }} VNĐ
                                 </td>
                                 <td class="pro-title" style="text-align: center">
                                     {{ number_format($coupon->max_discount, 0, ',', '.') }} VNĐ
                                 </td>
-                                <td class="pro-subtotal" style="text-align: center"><button class="btn btn-primary"
-                                        onclick="copyToClipboard('{{ $coupon->code }}')">Sao chép mã</button>
+                                <td class="pro-title" style="text-align: center">
+                                    {{ number_format($coupon->points_required, 0, ',', '.') }} Điểm
+                                </td>
+                                <td class="pro-subtotal" style="text-align: center">
+                                    <form action="{{ route('getCoupons') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="coupon_id" value="{{ $coupon->id }}">
+                                        <input type="hidden" name="points_required"
+                                            value="{{ $coupon->points_required }}">
+                                        <button type="submit" class="btn btn-primary">Đổi mã</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -78,14 +92,4 @@
                 </table>
             </div>
         </div>
-
-        <script>
-            function copyToClipboard(code) {
-                navigator.clipboard.writeText(code).then(() => {
-                    alert('Đã sao chép mã: ' + code);
-                });
-            }
-        </script>
-
-
     @endsection

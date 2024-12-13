@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Coupon;
+use App\Models\UserCoupon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +16,15 @@ class AdminCouponController extends Controller
     public function index()
     {
         $coupons = Coupon::orderBy('updated_at', 'desc')->get();
-        return view('admin.coupons.index', compact('coupons'));
+        $allCouponsUser = UserCoupon::join('coupons', 'user_coupons.coupon_id', '=', 'coupons.id')
+            ->select('user_coupons.coupon_id') // Lấy giá trị coupon_id
+            ->where(function ($query) {
+                $query->whereNull('coupons.expiry_date') // Chấp nhận mã không có ngày hết hạn
+                    ->orWhere('coupons.expiry_date', '>=', Carbon::now()); // Hoặc mã có ngày lớn hơn hoặc bằng hiện tại
+            })
+            ->distinct()
+            ->get();
+        return view('admin.coupons.index', compact('coupons', 'allCouponsUser'));
     }
 
     /**
@@ -49,9 +59,12 @@ class AdminCouponController extends Controller
             'expiry_date' => 'required|date|after:today',
             'usage_limit' => 'required|numeric|min:1',
             'is_active' => 'required|boolean',
-            'type' => 'required'
+            'type' => 'required',
+            'points_required' => 'nullable|numeric|min:0'
         ]);
-
+        if ($request->points_required === null) {
+            $request->points_required = 0;
+        }
         // Lưu mã giảm giá vào cơ sở dữ liệu
         Coupon::create([
             'code' => $request->code,
@@ -61,6 +74,7 @@ class AdminCouponController extends Controller
             'usage_limit' => $request->usage_limit,
             'is_active' => $request->is_active,
             'type' => $request->type,
+            'points_required' => $request->points_required,
             'max_discount' => $max_discount
         ]);
 
@@ -99,9 +113,12 @@ class AdminCouponController extends Controller
             'expiry_date' => 'required|date|after:today',
             'usage_limit' => 'required|numeric|min:1',
             'is_active' => 'required|boolean',
-            'type' => 'required'
+            'type' => 'required',
+            'points_required' => 'nullable|numeric|min:0'
         ]);
-
+        if ($request->points_required === null) {
+            $request->points_required = 0;
+        }
         // Cập nhật mã giảm giá vào cơ sở dữ liệu
         $coupon = Coupon::findOrFail($id);
         $coupon->update([
@@ -112,6 +129,7 @@ class AdminCouponController extends Controller
             'usage_limit' => $request->usage_limit,
             'is_active' => $request->is_active,
             'type' => $request->type,
+            'points_required' => $request->points_required,
             'max_discount' => $max_discount
         ]);
 

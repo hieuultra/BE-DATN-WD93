@@ -600,7 +600,7 @@
                 </a>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-                <a class="text-decoration-none" href="">
+                <a class="text-decoration-none" href="{{ route('showCoupons') }}">
                     <div class="cat-item img-zoom d-flex align-items-center mb-4">
                         <div class="overflow-hidden" style="width: 100px; height: 100px">
                             <img class="img-fluid" src="{{ asset('img/20240327032301-0-Booking (16).webp') }}"

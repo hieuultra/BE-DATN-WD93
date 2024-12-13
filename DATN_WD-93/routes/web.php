@@ -265,7 +265,9 @@ Route::post('/updateCart', [CartController::class, 'updateCart'])->name('cart.up
 Route::post('/removeCart', [CartController::class, 'removeCart'])->name('cart.removeCart');
 Route::post('/reorder/{orderId}', [CartController::class, 'reorder'])->name('cart.reorder');
 Route::post('/cart/apply-coupon', [CouponController::class, 'applyCoupon'])->name('cart.applyCoupon');
-Route::get('/listCoupons', [CouponController::class, 'listCoupons'])->name('listCoupons');;
+Route::get('/listCoupons', [CouponController::class, 'listCoupons'])->name('listCoupons');
+Route::post('/getCoupons', [CouponController::class, 'getCoupons'])->name('getCoupons');
+Route::get('/showCoupons', [CouponController::class, 'showCoupons'])->name('showCoupons');
 
 
 

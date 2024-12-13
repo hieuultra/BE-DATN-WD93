@@ -40,7 +40,8 @@
                                 <th>Giá trị đơn hàng tối thiểu</th>
                                 <th>Giảm giá tối đa</th>
                                 <th>Ngày hết hạn</th>
-                                <th>Số lần sử dụng</th>
+                                <th>Số lượt đổi</th>
+                                <th>Số điểm yêu cầu</th>
                                 <th>Trạng thái</th>
                                 <th>Hành động</th>
                             </tr>
@@ -55,17 +56,20 @@
                                     </td>
                                     <td>{{ $coupon->expiry_date }}</td>
                                     <td>{{ $coupon->usage_limit }}</td>
+                                    <td>{{ $coupon->points_required ? number_format($coupon->points_required, 0, ',', '.') . ' Điểm' : '0 Điểm' }}
                                     <td>{{ $coupon->is_active ? 'Đang hoạt động' : 'Không hoạt động' }}</td>
                                     <td>
-                                        <a href="{{ route('admin.coupons.edit', $coupon->id) }}"
-                                            class="btn btn-warning btn-sm">Sửa</a>
-                                        <form action="{{ route('admin.coupons.destroy', $coupon->id) }}" method="POST"
-                                            style="display: inline-block;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
-                                        </form>
+                                        @if (!$allCouponsUser->contains('coupon_id', $coupon->id))
+                                            <a href="{{ route('admin.coupons.edit', $coupon->id) }}"
+                                                class="btn btn-warning btn-sm">Sửa</a>
+                                            <form action="{{ route('admin.coupons.destroy', $coupon->id) }}" method="POST"
+                                                style="display: inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
+                                            </form>
+                                        @endif  
                                     </td>
                                 </tr>
                             @endforeach

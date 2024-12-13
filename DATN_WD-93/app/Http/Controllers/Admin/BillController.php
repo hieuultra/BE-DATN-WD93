@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Bill;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class BillController extends Controller
 {
@@ -38,7 +39,6 @@ class BillController extends Controller
     public function update(Request $request, string $id)
     {
         $bill = Bill::query()->findOrFail($id);
-
         $currentStatus = $bill->status_bill;
 
         $newStatus = $request->input('status_bill');
@@ -55,6 +55,13 @@ class BillController extends Controller
         }
         //     // Cập nhật trạng thái thanh toán thành ĐÃ THANH TOÁN nếu đã giao hàng
         if ($newStatus === Bill::DA_GIAO_HANG) {
+            // Tính số điểm đổi được
+            $pointsPerUnit = 10000;
+            $pointsRequired = floor($bill->totalPrice / $pointsPerUnit);
+            $scoreUser = User::query()->findOrFail($bill->user_id);
+            $scoreUser->score = $scoreUser->score + $pointsRequired;
+            $scoreUser->save();
+            // kết thúc
             $bill->status_payment_method = Bill::DA_THANH_TOAN;
         }
 
