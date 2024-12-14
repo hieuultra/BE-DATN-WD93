@@ -125,7 +125,7 @@
             })
 
             //Hiển thị nội dung cũ
-            var old_content = `{!! $blog !!}`;
+            var old_content = `{!! $blog->content !!}`;
             quill.root.innerHTML = old_content;
 
             // Cập nhật lại textaria ẩn khi nội dung của quill-edit thay đổi
