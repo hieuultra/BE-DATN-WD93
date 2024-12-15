@@ -521,5 +521,6 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
             ->as('dasboard.')
             ->group(function () {
                 Route::get('/appoinment',      [AdminDashboardController::class, 'appointment'])->name('appointment');
+                Route::get('/appoinmentSreach',      [AdminDashboardController::class, 'appointmentSreach'])->name('appointmentSreach');
             });
     });
