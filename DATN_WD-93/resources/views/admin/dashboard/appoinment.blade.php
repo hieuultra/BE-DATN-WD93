@@ -18,9 +18,10 @@
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-primary text-white mb-4">
 
-                       <i class="fa-solid fa-user fa-2xl"></i>
+                        <i class="fa-solid fa-user fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{{ route('admin.dashborad.user') }}">Thống kê khách hàng</a>
+                            <a class="small text-white stretched-link" href="{{ route('admin.dashborad.user') }}">Thống kê
+                                khách hàng</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -33,7 +34,8 @@
 
                         <i class="fa-solid fa-money-bills fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{{ route('admin.dasboard.appointment') }}">Thống kê đặt lịch khám</a>
+                            <a class="small text-white stretched-link"
+                                href="{{ route('admin.dasboard.appointment') }}">Thống kê đặt lịch khám</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -45,7 +47,8 @@
 
                         <i class="fa-solid fa-box-open fa-2xl"></i>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{{ route('admin.dashborad.revenue') }}">Thống kê Doanh Thu</a>
+                            <a class="small text-white stretched-link" href="{{ route('admin.dashborad.revenue') }}">Thống
+                                kê Doanh Thu</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -66,12 +69,54 @@
                 </div> --}}
             </div>
             {{-- doanh so start --}}
+            <hr>
+            <div class=" mt-4 mb-5">
+                <form method="GET" action="{{ route('admin.dasboard.appointmentSreach') }}" class=" mb-3">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label for="start_date" class="me-2 mb-0">Thời gian bắt đầu:</label>
+                            <input type="date" id="start_date" name="start_date" class="form-control form-control-sm"
+                                value="{{ request('start_date') }}">
+                            @error('start_date')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-5">
+                            <label for="end_date" class="me-2 mb-0">Thời gian kết thúc:</label>
+                            <input type="date" id="end_date" name="end_date" class="form-control form-control-sm"
+                                value="{{ request('end_date') }}">
+                            @error('end_date')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary mt-3" style="width:100%; height:80%">Lọc</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row mb-2" style=" display: flex;  justify-content: center;  align-items: center;">
+                <div class="col-xl-6">
+                    <div class="card mb-4" style=" display: flex;  justify-content: center;  align-items: center;">
+                        <div class="card-header" style="width: 100%; background-color: rgba(160, 255, 65, 0.758)">
+                            <i class="fas fa-chart-area me-1"></i>
+                            Tổng doanh số:
+                        </div>
+                        <div class="card-body " id="ti-le-dat-lich">
+                            <h2>{{ number_format($totalRevenue, 0, ',', '.') }}đ</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- doanh so end --}}
+
+            {{-- Row 2 --}}
             <div class="row">
                 <div class="col-xl-6">
                     <div class="card mb-4">
-                        <div class="card-header">
+                        <div class="card-header" style="background-color: #d7ecfb">
                             <i class="fas fa-chart-area me-1"></i>
-                            Doanh số
+                            So sánh doanh số
                         </div>
                         <div style="display: flex; justify-content: center; width: 100%;">
                             <select id="filterSalesTime" class="form-select form-select-sm"
@@ -87,68 +132,10 @@
                     </div>
                 </div>
                 <div class="col-xl-6">
-                    <div class="card mb-4" style=" display: flex;  justify-content: center;  align-items: center;">
-                        <div class="card-header" style="width: 100%;">
-                            <i class="fas fa-chart-pie me-1"></i>
-                            Tổng lượt đặt lịch:
-                        </div>
-                        <div>
-                            <select id="filterTime" class="form-select form-select-sm"
-                                style="width: auto; margin-top: 10px">
-                                <option value="day">Theo ngày</option>
-                                <option value="week">Theo tuần</option>
-                                <option value="month" selected>Theo tháng</option>
-                                <option value="year">Theo năm</option>
-                            </select>
-                        </div>
-                        <div class="card-body " id="ti-le-dat-lich">
-                            <canvas id="reviewChart"></canvas>
-                            <style>
-                                #ti-le-dat-lich {
-                                    width: 52.3%;
-                                }
-                            </style>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- doanh so end --}}
-
-            {{-- Row 2 --}}
-            <div class="row">
-                <div class="col-xl-6">
-                    <div class="card mb-4" style="display: flex; justify-content: center; align-items: center;">
-                        <div class="card-header" style="width: 100%;">
-                            <i class="fas fa-chart-pie me-1"></i>
-                            Số lượt đánh giá
-                        </div>
-                        <div>
-                            <!-- Bộ lọc thời gian -->
-                            <select id="filterTime2" class="form-select form-select-sm"
-                                style="width: auto; margin-top: 10px">
-                                <option value="day">Theo ngày</option>
-                                <option value="week">Theo tuần</option>
-                                <option value="month" selected>Theo tháng</option>
-                                <option value="year">Theo năm</option>
-                            </select>
-                        </div>
-                        <div class="card-body" id="ti-le-dat-lich2">
-                            <!-- Biểu đồ -->
-                            <canvas id="reviewChart2" width="400" height="400"></canvas>
-                            <style>
-                                #ti-le-dat-lich2 {
-                                    width: 52.3%;
-                                }
-                            </style>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-xl-6">
                     <div class="card mb-4">
-                        <div class="card-header">
+                        <div class="card-header" style="background-color: #feee5fbc">
                             <i class="fas fa-chart-bar me-1"></i>
-                            Lượt bình luận gần nhất
+                            Lượt đánh giá gần nhất
                         </div>
                         <div class="card-body">
                             <table class="table table-striped">
@@ -277,73 +264,6 @@
         }
     </style>
     <script>
-        // Thống kê đơn đặt
-        const ctx = document.getElementById('reviewChart').getContext('2d');
-        let reviewChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Khám thành công', 'Trong quá trình', 'Hủy lịch khám'],
-                datasets: [{
-                    data: [{{ $statsMonth['kham_hoan_thanh'] }},
-                        {{ $statsMonth['chua_kham'] }}, {{ $statsMonth['khong_thanh_cong'] }}
-                    ], // Dữ liệu ban đầu (theo tháng)
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(255, 99, 132, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(255, 99, 132, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                }
-            }
-        });
-
-        // Xử lý khi người dùng thay đổi bộ lọc
-        document.getElementById('filterTime').addEventListener('change', function() {
-            const filterValue = this.value;
-            let newData;
-
-            // Cập nhật dữ liệu tùy theo bộ lọc
-            if (filterValue === 'day') {
-                newData = [{{ $statsToday['kham_hoan_thanh'] }},
-                    {{ $statsToday['chua_kham'] }},
-                    {{ $statsToday['khong_thanh_cong'] }}
-                ]; // Dữ liệu theo ngày
-            } else if (filterValue === 'week') {
-                newData = [{{ $statsWeek['kham_hoan_thanh'] }},
-                    {{ $statsWeek['chua_kham'] }},
-                    {{ $statsWeek['khong_thanh_cong'] }}
-                ]; // Dữ liệu theo tháng
-            } else if (filterValue === 'month') {
-                newData = [{{ $statsMonth['kham_hoan_thanh'] }},
-                    {{ $statsMonth['chua_kham'] }},
-                    {{ $statsMonth['khong_thanh_cong'] }}
-                ]; // Dữ liệu theo tháng
-            } else if (filterValue === 'year') {
-                newData = [{{ $statsYear['kham_hoan_thanh'] }},
-                    {{ $statsYear['chua_kham'] }},
-                    {{ $statsYear['khong_thanh_cong'] }}
-                ]; // Dữ liệu theo năm
-            }
-
-            // Cập nhật dữ liệu biểu đồ
-            reviewChart.data.datasets[0].data = newData;
-            reviewChart.update();
-        });
-        // Kết thúc đơn hàng
-
         // Biểu đồ doanh số bán hàng
         const ctxSales = document.getElementById('salesChart').getContext('2d');
         const salesChart = new Chart(ctxSales, {
@@ -411,86 +331,6 @@
             salesChart.data.labels = newLabels;
             salesChart.data.datasets[0].data = newData;
             salesChart.update();
-        });
-        // Thống kê đánh giá
-        const ctxReview2 = document.getElementById('reviewChart2').getContext('2d');
-        let reviewChart2 = new Chart(ctxReview2, {
-            type: 'pie',
-            data: {
-                labels: ['1 Sao', '2 Sao', '3 Sao', '4 Sao', '5 Sao'],
-                datasets: [{
-                    data: [{{ $reviewsToday[1] }},
-                        {{ $reviewsToday[2] }},
-                        {{ $reviewsToday[3] }},
-                        {{ $reviewsToday[4] }},
-                        {{ $reviewsToday[5] }}
-                    ],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(255, 159, 64, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(54, 162, 235, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(54, 162, 235, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                }
-            }
-        });
-
-        // Xử lý khi người dùng thay đổi bộ lọc đánh giá
-        document.getElementById('filterTime2').addEventListener('change', function() {
-            const filterValue = this.value;
-            let newData;
-
-            // Cập nhật dữ liệu tùy theo bộ lọc
-            if (filterValue === 'day') {
-                newData = [{{ $reviewsToday[1] }},
-                    {{ $reviewsToday[2] }},
-                    {{ $reviewsToday[3] }},
-                    {{ $reviewsToday[4] }},
-                    {{ $reviewsToday[5] }}
-                ];
-            } else if (filterValue === 'week') {
-                newData = [{{ $reviewsToday[1] }},
-                    {{ $reviewsWeek[2] }},
-                    {{ $reviewsWeek[3] }},
-                    {{ $reviewsWeek[4] }},
-                    {{ $reviewsWeek[5] }}
-                ];
-            } else if (filterValue === 'month') {
-                newData = [{{ $reviewsMonth[1] }},
-                    {{ $reviewsMonth[2] }},
-                    {{ $reviewsMonth[3] }},
-                    {{ $reviewsMonth[4] }},
-                    {{ $reviewsMonth[5] }}
-                ];
-            } else if (filterValue === 'year') {
-                newData = [{{ $reviewsYear[1] }},
-                    {{ $reviewsYear[2] }},
-                    {{ $reviewsYear[3] }},
-                    {{ $reviewsYear[4] }},
-                    {{ $reviewsYear[5] }}
-                ];
-            }
-
-            // Cập nhật dữ liệu biểu đồ
-            reviewChart2.data.datasets[0].data = newData;
-            reviewChart2.update();
         });
     </script>
 @endsection
