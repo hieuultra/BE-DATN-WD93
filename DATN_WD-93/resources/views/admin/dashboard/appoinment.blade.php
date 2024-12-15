@@ -114,7 +114,7 @@
             <div class="row">
                 <div class="col-xl-6">
                     <div class="card mb-4">
-                        <div class="card-header" style="background-color: #d7ecfb">
+                        <div class="card-header">
                             <i class="fas fa-chart-area me-1"></i>
                             So sánh doanh số
                         </div>
@@ -133,7 +133,7 @@
                 </div>
                 <div class="col-xl-6">
                     <div class="card mb-4">
-                        <div class="card-header" style="background-color: #feee5fbc">
+                        <div class="card-header">
                             <i class="fas fa-chart-bar me-1"></i>
                             Lượt đánh giá gần nhất
                         </div>
