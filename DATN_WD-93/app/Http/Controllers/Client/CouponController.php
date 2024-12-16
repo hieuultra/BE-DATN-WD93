@@ -96,6 +96,7 @@ class CouponController extends Controller
 
         $coupons = Coupon::where('expiry_date', '>=', now()) // Lọc mã giảm giá chưa hết hạn
             ->where('usage_limit', '>', 0) // Lọc mã giảm giá còn giới hạn sử dụng
+            ->where('is_active', '=', 1)
             ->orderBy('updated_at', 'asc')
             ->get();
 
