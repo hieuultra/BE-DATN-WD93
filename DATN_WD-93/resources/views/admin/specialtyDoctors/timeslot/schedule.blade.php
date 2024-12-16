@@ -26,7 +26,6 @@
     <h1>Lịch Làm Việc của Bác Sĩ: {{ $doctor->user->name }}</h1>
     <h3>Chuyên khoa: {{ $doctor->specialty->name }}</h3>
 
-    <!-- Nút Thêm Lịch -->
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEditScheduleModal" onclick="showAddForm()">Thêm Lịch</button>
 
     <a href="{{ route('appoinment.physicianManagement', $doctor->user->id) }}">
@@ -68,21 +67,19 @@
                     <th>Giờ bắt đầu</th>
                     <th>Giờ kết thúc</th>
                     <th>Trạng thái</th>
-                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
                 @php
-                    $previousDate = null;  // Biến để lưu ngày trước đó
+                    $previousDate = null; 
                 @endphp
                 @foreach ($schedules as $schedule)
                     @php
-                        $currentDate = $schedule->formattedDate;  // Lấy ngày hiện tại từ lịch
+                        $currentDate = $schedule->formattedDate;  
                     @endphp
                     
                     @if ($currentDate != $previousDate)
                         @if ($previousDate !== null) 
-                            <!-- Chèn khoảng trắng giữa các ngày khác nhau -->
                             <tr><td colspan="6" style="height: 20px;"></td></tr>
                         @endif
                         @php
@@ -100,18 +97,6 @@
                                 <span class="badge badge-danger">Đã có người đặt</span>
                             @else
                                 <span class="badge badge-success">Chưa có người đặt</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if ($schedule->isAvailable != 0)
-                                <button class="btn btn-warning btn-sm edit-btn"
-                                        data-id="{{ $schedule->id }}"
-                                        data-day="{{ $schedule->dayOfWeek }}"
-                                        data-start="{{ $schedule->startTime }}"
-                                        data-end="{{ $schedule->endTime }}"
-                                        data-date="{{ $schedule->date }}"
-                                        data-available="{{ $schedule->isAvailable }}">Sửa</button>
-                                <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $schedule->id }}">Xóa</button>
                             @endif
                         </td>
                     </tr>
