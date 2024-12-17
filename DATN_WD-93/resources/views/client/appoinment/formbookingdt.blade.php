@@ -180,10 +180,20 @@
             @if(isset($existingAppointment))
 
             @else
-            <button type="button" id="selfButton" class="btn btn-primary flex-fill me-2">Đặt cho mình</button>
-            <button type="button" id="otherButton" class="btn btn-secondary flex-fill">Đặt cho người thân</button>
+            <button type="button" id="selfButton" class="btn btn-primary flex-fill me-2">Chuyển sang đặt cho mình</button>
+            <button type="button" id="otherButton" class="btn btn-secondary flex-fill">Chuyển sang đặt cho người thân</button>
             @endif
         </div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
 
         <!-- Form đặt cho người thân -->
         <form id="form1" action="{{route('appoinment.bookAnAppointment')}}" method="POST" @if(isset($existingAppointment)) @else style="display: none;" @endif>
@@ -269,10 +279,12 @@
 
             <div class="mb-3">
                 <label class="form-label">Hình thức thanh toán</label>
+                @if($doctor->specialty->classification == 'chuyen_khoa')
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status_payment_method_nn" id="payLater" value="thanh_toan_tai_benh_vien" checked>
                     <label class="form-check-label" for="payLater">Thanh toán sau tại cơ sở y tế</label>
                 </div>
+                @endif
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status_payment_method_nn" id="payVNPay" value="thanh_toan_vnpay">
                     <label class="form-check-label" for="payVNPay">Thanh toán qua VNPay</label>
@@ -369,10 +381,12 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Hình thức thanh toán</label>
+                @if($doctor->specialty->classification == 'chuyen_khoa')
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status_payment_method" id="payLater" value="thanh_toan_tai_benh_vien" checked>
                     <label class="form-check-label" for="payLater">Thanh toán sau tại cơ sở y tế</label>
                 </div>
+                @endif
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status_payment_method" id="payVNPay" value="thanh_toan_vnpay">
                     <label class="form-check-label" for="payVNPay">Thanh toán qua VNPay</label>

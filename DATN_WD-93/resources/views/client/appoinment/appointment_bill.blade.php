@@ -75,9 +75,11 @@
             @endif
         </div>
     </div>
+    @if($appointment->doctor)
     <div class="text-center mt-4">
         <a href="{{route('appoinment.booKingCare', $appointment->doctor->specialty_id)}}" class="btn btn-primary px-5">Quay trở về</a>
     </div>
+    @endif
 </div>
 
 <style>

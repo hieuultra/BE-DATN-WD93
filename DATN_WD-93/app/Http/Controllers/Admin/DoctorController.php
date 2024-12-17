@@ -102,7 +102,9 @@ class DoctorController extends Controller
 
     public function doctorUpdateForm($id)
     {
-        $specialty = Specialty::orderBy('id')->get();
+        $specialty = Specialty::where('classification', '!=', 'tong_quat')
+        ->orderBy('id')
+        ->get();    
         $user = User::orderBy('id')->get();
         $doctors = Doctor::orderBy('id')->get();
         $doctor = Doctor::find($id);

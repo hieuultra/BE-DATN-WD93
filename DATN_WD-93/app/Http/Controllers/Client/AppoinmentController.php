@@ -13,6 +13,7 @@ use App\Models\Bill;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\doctorAchievement;
+use Illuminate\Support\Facades\Validator;
 use App\Models\OrderDetail;
 use App\Models\Package;
 use App\Models\Review;
@@ -144,6 +145,8 @@ class AppoinmentController extends Controller
     public function booKingCare($id)
     {
         $doctors = Doctor::with(['user', 'specialty', 'timeSlot'])
+            ->withCount('review')
+            ->withAvg('review', 'rating')
             ->whereHas('specialty', function ($query) use ($id) {
                 $query->where('id', $id);
             })
@@ -420,6 +423,29 @@ class AppoinmentController extends Controller
             return redirect()->back()->with('error', 'Thời gian hẹn đã có người đặt. Vui lòng chọn thời gian khác.');
         } else {
             if ($request->lua_chon == "cho_nguoi_than") {
+
+                $rules = [
+                    'notes' => 'required|string|max:255',
+                    'name' => 'required|string|max:255',
+                    'phone' => 'required|string|max:15',
+                    'address' => 'required|string|max:255',
+                ];
+
+                $messages = [
+                    'notes.required' => 'Vui lòng nhập lý do khám.',
+                    'name.required' => 'Vui lòng nhập tên bệnh nhân.',
+                    'phone.required' => 'Vui lòng nhập số điện thoại.',
+                    'address.required' => 'Vui lòng nhập địa chỉ.',
+                ];
+
+                $validator = Validator::make($request->all(), $rules, $messages);
+
+                if ($validator->fails()) {
+                    return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
                 $appoinment = new Appoinment();
                 $appoinment->user_id = $request->user_id;
                 $appoinment->doctor_id = $request->doctor_id;
@@ -457,6 +483,23 @@ class AppoinmentController extends Controller
                 $appointment = Appoinment::with(['doctor', 'user', 'timeSlot'])->findOrFail($appoinment->id);
                 return view('client.appoinment.appointment_bill', compact('appointment', 'orderCount', 'categories', 'spe'));
             } else {
+
+                $rules = [
+                    'notes' => 'required|string|max:255',
+                ];
+
+                $messages = [
+                    'notes.required' => 'Vui lòng nhập lý do khám.',
+                ];
+
+                $validator = Validator::make($request->all(), $rules, $messages);
+
+                if ($validator->fails()) {
+                    return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
                 $appoinment = new Appoinment();
                 $appoinment->user_id = $request->user_id;
                 $appoinment->doctor_id = $request->doctor_id;
