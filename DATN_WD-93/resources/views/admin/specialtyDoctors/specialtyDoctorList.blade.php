@@ -85,6 +85,7 @@
                         </button>
                       </form>
                     </a>
+                    @if($items->classification != 0)
                     <a href="" class="btn btn-danger">
                       <form action="{{ route('admin.specialties.specialtyDestroy', $items->id) }}" method="POST">
                         @csrf
@@ -95,6 +96,7 @@
                         </button>
                       </form>
                     </a>
+                    @endif
                   </td>
                 </tr>
                 @endforeach
@@ -215,7 +217,7 @@
                         </button>
                       </form>
                     </a>
-
+                    @if($doc->role != 'User')
                     <a href="" class="btn btn-danger">
                       <form action="{{ route('admin.doctors.doctorDestroy', $d->id) }}" method="POST">
                         @csrf
@@ -226,6 +228,7 @@
                         </button>
                       </form>
                     </a>
+@endif
                   </td>
                 </tr>
                 @endforeach

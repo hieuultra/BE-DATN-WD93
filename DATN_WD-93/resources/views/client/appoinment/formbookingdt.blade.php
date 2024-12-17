@@ -54,6 +54,21 @@
             border-color: #ffeeba;
             color: #856404;
         }
+        #notification-wrapper > div {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
 
         .doctor-info p {
             margin: 0;
@@ -116,54 +131,69 @@
     </div>
     @endif
 
-    @if(isset($existingAppointment))
-    <div id="appointment-notification" class="alert alert-warning" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: none;">
-        <p>Bạn đã đặt lịch vào thời điểm này:</p>
-        <ul>
-            <li>Bác sĩ: {{ $existingAppointment->doctor->user->name }}</li>
-            <li>Thời gian: {{ $existingAppointment->timeSlot->startTime }}</li>
-            <li>Ngày: {{ $existingAppointment->timeSlot->date }}</li>
-        </ul>
+    @if(isset($existingAppointment) || isset($notification))
+    <div id="notification-wrapper" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; gap: 20px;">
+        @if(isset($existingAppointment))
+        <div id="appointment-notification" class="alert alert-warning">
+            <p>Bạn đã đặt lịch vào thời điểm này:</p>
+            <ul>
+                <li>Bác sĩ: {{ $existingAppointment->doctor->user->name }}</li>
+                <li>Thời gian: {{ $existingAppointment->timeSlot->startTime }}</li>
+                <li>Ngày: {{ $existingAppointment->timeSlot->date }}</li>
+            </ul>
+        </div>
+        @endif
+
+        @if(isset($notification))
+        <div id="appointment-notification2" class="alert alert-warning">
+            <p>{{ $notification }}</p>
+        </div>
+        @endif
     </div>
     @endif
 
-    @if(isset($notification))
-    <div id="appointment-notification2" class="alert alert-warning" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: none;">
-        <p>{{$notification}}</p>
-    </div>
-    @endif
 
-    <a href="{{route('appoinment.booKingCare', $doctor->specialty->id)}}">Quay lại</a>
+   
     <div class="container">
-        <div class="doctor-info">
-            <img alt="Doctor's profile picture" class="profile-img" height="60"
-                src="{{ asset('upload/' . $doctor->user->image) }}"
-                width="60" />
-            <div>
-                <h5 class="text-primary">
-                    {{$doctor->user->name}} - Chuyên khoa: {{$doctor->specialty->name}}
-                </h5>
-                <p>
-                    @php
-                    $formattedDate = \Carbon\Carbon::parse($timeSlot->date)
+        <div class="doctor-info d-flex align-items-center p-3 border rounded shadow-sm">
+        <img alt="Doctor's profile picture" class="profile-img rounded-circle me-3"
+            src="{{ asset('upload/' . $doctor->user->image) }}" height="60" width="60" />
+        <div class="doctor-details">
+            <h5 class="text-primary mb-2">
+                {{$doctor->user->name}} - <span class="text-primary">Chuyên khoa: {{$doctor->specialty->name}}</span>
+            </h5>
+            <a href="{{route('appoinment.booKingCare', $doctor->specialty->id)}}" class="btn btn-outline-primary btn-sm mb-2">Quay lại</a>
+            <p class="text-muted mb-0">
+                @php
+                $formattedDate = \Carbon\Carbon::parse($timeSlot->date)
                     ->locale('vi')
                     ->isoFormat('dddd - D/MM/YYYY');
-                    @endphp
-                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }} -
-                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }} - {{ $formattedDate }}
-                </p>
-
-            </div>
+                @endphp
+                <span class="text-dark">Thời gian bắt đâu: {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->startTime)->format('H:i') }}</span> -- 
+                <span class="text-dark">Thời gian kết thúc: {{ \Carbon\Carbon::createFromFormat('H:i:s', $timeSlot->endTime)->format('H:i') }}</span> --
+                <span class="text-dark"> {{ $formattedDate }}</span>
+            </p>
         </div>
+    </div>
 
         <div class="mb-3 d-flex">
             @if(isset($existingAppointment))
 
             @else
-            <button type="button" id="selfButton" class="btn btn-primary flex-fill me-2">Đặt cho mình</button>
-            <button type="button" id="otherButton" class="btn btn-secondary flex-fill">Đặt cho người thân</button>
+            <button type="button" id="selfButton" class="btn btn-primary flex-fill me-2">Chuyển sang đặt cho mình</button>
+            <button type="button" id="otherButton" class="btn btn-secondary flex-fill">Chuyển sang đặt cho người thân</button>
             @endif
         </div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
 
         <!-- Form đặt cho người thân -->
         <form id="form1" action="{{route('appoinment.bookAnAppointment')}}" method="POST" @if(isset($existingAppointment)) @else style="display: none;" @endif>
@@ -249,10 +279,12 @@
 
             <div class="mb-3">
                 <label class="form-label">Hình thức thanh toán</label>
+                @if($doctor->specialty->classification == 'chuyen_khoa')
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status_payment_method_nn" id="payLater" value="thanh_toan_tai_benh_vien" checked>
                     <label class="form-check-label" for="payLater">Thanh toán sau tại cơ sở y tế</label>
                 </div>
+                @endif
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status_payment_method_nn" id="payVNPay" value="thanh_toan_vnpay">
                     <label class="form-check-label" for="payVNPay">Thanh toán qua VNPay</label>
@@ -349,10 +381,12 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Hình thức thanh toán</label>
+                @if($doctor->specialty->classification == 'chuyen_khoa')
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status_payment_method" id="payLater" value="thanh_toan_tai_benh_vien" checked>
                     <label class="form-check-label" for="payLater">Thanh toán sau tại cơ sở y tế</label>
                 </div>
+                @endif
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status_payment_method" id="payVNPay" value="thanh_toan_vnpay">
                     <label class="form-check-label" for="payVNPay">Thanh toán qua VNPay</label>

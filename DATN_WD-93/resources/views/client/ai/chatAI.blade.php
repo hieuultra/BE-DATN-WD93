@@ -86,7 +86,15 @@
 <body>
     @extends('layout')
     @section('content')
-    <a href="{{route('viewSikibidi')}}" class="">Quay lại</a>
+    <a href="{{route('viewSikibidi')}}" style="display: inline-block; text-decoration: none; color: white; background-color: #007bff; padding: 8px 12px; border-radius: 5px; font-weight: bold; transition: background-color 0.3s;">
+        Quay lại
+    </a>
+    <style>
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
     <div class="body">
         <h1>CÁC CÂU TRẢ LỜI CHỈ MANG TÍNH CHẤT THAM KHẢO</h1>
 
@@ -109,7 +117,6 @@
 
 
     <script>
-        
         const toggleButton = document.getElementById('toggleButton');
         const chatbotContainer = document.getElementById('chatbotContainer');
         const teachContainer = document.getElementById('teachContainer');
@@ -201,7 +208,7 @@
                 messageElement.textContent = message;
             } else {
                 messageElement.className = 'message bot-message';
-                messageElement.innerHTML = message; 
+                messageElement.innerHTML = message;
             }
 
             chatbox.appendChild(messageElement);
@@ -243,7 +250,7 @@
 
             for (const key in responses) {
                 if (lowerCaseMessage.includes(key)) {
-                    context = key; 
+                    context = key;
                     return responses[key];
                 }
             }
@@ -327,7 +334,7 @@
 
             if (userInputText) {
                 teachBotFromText(userInputText);
-                textInput.value = ''; 
+                textInput.value = '';
                 alert("Chatbot đã được dạy từ đoạn văn bản!");
             } else {
                 alert("Vui lòng nhập đoạn văn bản để dạy chatbot.");

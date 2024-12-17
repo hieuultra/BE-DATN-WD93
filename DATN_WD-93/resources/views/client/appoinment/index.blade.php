@@ -373,19 +373,19 @@
             <div class="services" id="services-section">
                 <div class="service-item">
                     <button onclick="toggleContent()" style="background: none; border: none;">
-                        <img src="https://www.cliniclistturkey.com/wp-content/uploads/2023/09/image-308.jpeg" alt="Specialized Examination" height="60" width="60">
+                        <img src="https://vieclam123.vn/ckfinder/userfiles/images/images/mot-so-luu-y-khi-kham-suc-khoe-tai-vien-198.jpg" alt="Specialized Examination" height="60" width="60">
                         <p style="color: #fff;">Chuyên khoa</p>
                     </button>
                 </div>
                 <div class="service-item">
                     <button onclick="toggleContent2()" style="background: none; border: none;">
-                        <img src="https://is4-ssl.mzstatic.com/image/thumb/Purple122/v4/3f/50/e5/3f50e5bd-c30c-c586-2216-3976e5ee1542/AppIcons-1x_U007emarketing-0-7-0-85-220.png/1200x630wa.png" alt="Remote Examination">
+                        <img src="https://www.fvhospital.com/wp-content/uploads/2022/10/doctor-telemedicine.jpg" alt="Remote Examination">
                         <p style="color: #fff;">Khám từ xa</p>
                     </button>
                 </div>
                 <div class="service-item">
                     <a href="/viewSikibidi" style="text-decoration: none;">
-                        <img src="https://v-virtuales-marinela-frontend-assets.s3.amazonaws.com/assets/img/icon-register.png" alt="General Examination" height="60" width="60">
+                        <img src="https://th.bing.com/th/id/OIP.R1NGJ1WOsnZYWq_kjmDNjwHaHa?rs=1&pid=ImgDetMain" alt="General Examination" height="60" width="60">
                         <p style="color: #fff;">Lần đầu bạn đến</p>
                     </a>
                 </div>
