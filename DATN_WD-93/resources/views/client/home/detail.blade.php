@@ -643,7 +643,7 @@ h2 {
                                     style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     {{ $s->name }}</a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h5>
+                                    <h6 class="text-danger">{{ number_format($tt, 0, ',', '.') }} VND</h6>
                                     <h6 class="text-muted ml-2">@if ($s->variantProduct->isNotEmpty())
                                         @php
                                             $variant = $s->variantProduct->first(); // Lấy biến thể đầu tiên
