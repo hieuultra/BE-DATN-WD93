@@ -241,14 +241,9 @@
     @section('content')
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#" id="navbarDropdown">
-                <i class="fas fa-bars"></i> BookingCare
+            <a class="navbar-brand" href="{{route('appoinment.index')}}" id="navbarDropdown">
+                Quay Lại
             </a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-
-                </ul>
-            </div>
         </div>
     </nav>
 
@@ -259,7 +254,6 @@
             <img alt="Doctor's portrait" height="80" src="{{ asset('upload/' . $package->image) }}" width="80" />
             <div class="doctor-info">
                 <div class="d-flex align-items-center mb-2">
-                    <span class="badge bg-warning text-dark me-2">Yêu thích</span>
                     <h5>{{ $package->hospital_name }}</h5>
                 </div>
                 <p>{!! Str::limit($package->description, 300, '...') !!}</p>

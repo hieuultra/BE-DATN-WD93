@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\AvailableTimeslot;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Models\Appoinment;
 use App\Models\Category;
 use App\Models\Clinic;
 use Illuminate\Support\Facades\File;
@@ -103,8 +104,8 @@ class DoctorController extends Controller
     public function doctorUpdateForm($id)
     {
         $specialty = Specialty::where('classification', '!=', 'tong_quat')
-        ->orderBy('id')
-        ->get();    
+            ->orderBy('id')
+            ->get();
         $user = User::orderBy('id')->get();
         $doctors = Doctor::orderBy('id')->get();
         $doctor = Doctor::find($id);
@@ -129,8 +130,6 @@ class DoctorController extends Controller
 
         if ($specialty->classification == 'chuyen_khoa' && !empty($clinic)) {
             $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'specialty_id' => 'required|integer|exists:specialties,id',
                 'title' => 'required|string|max:255',
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
@@ -147,11 +146,9 @@ class DoctorController extends Controller
             $clinic->address = $request->address;
             $clinic->save();
 
-            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật bác sỹ thành công.');
         } elseif ($specialty->classification == 'chuyen_khoa' && empty($clinic)) {
             $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'specialty_id' => 'required|integer|exists:specialties,id',
                 'title' => 'required|string|max:255',
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
@@ -170,11 +167,9 @@ class DoctorController extends Controller
             $clinic->address = $request->address;
             $clinic->save();
 
-            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật bác sỹ thành công.');
         } elseif ($specialty->classification == 'kham_tu_xa' && empty($clinic)) {
             $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'specialty_id' => 'required|integer|exists:specialties,id',
                 'title' => 'required|string|max:255',
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
@@ -186,11 +181,9 @@ class DoctorController extends Controller
 
             $doctor->update($validatedData);
 
-            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật bác sỹ thành công.');
         } elseif ($specialty->classification == 'kham_tu_xa' && !empty($clinic)) {
             $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'specialty_id' => 'required|integer|exists:specialties,id',
                 'title' => 'required|string|max:255',
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
@@ -203,19 +196,32 @@ class DoctorController extends Controller
             $doctor->update($validatedData);
 
             $clinic->delete();
-            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật bác sỹ thành công.');
         }
     }
 
 
     public function doctorDestroy($id)
     {
+        $pendingAppointments = Appoinment::where('doctor_id', $id)
+            ->whereNotIn('status_appoinment', ['benh_nhan_khong_den', 'huy_lich_hen', 'kham_hoan_thanh', 'can_tai_kham'])
+            ->exists();
+
+        if ($pendingAppointments) {
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('error', 'Bác sỹ này vẫn còn lịch đặt khám chưa xử lý.');
+        }
+        $doctor = AvailableTimeslot::where('doctor_id', $id)->first();
+        if ($doctor && $doctor->isAvailable == 1) {
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('error', 'Bác sỹ này vẫn còn lịch khám.');
+        }
         $package = Doctor::findOrFail($id);
         $user = User::where('id', $package->user_id)->first();
         $user->role = 'User';
         $user->save();
+
         return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Bác sỹ này đã bị cho nghỉ việc.');
     }
+
 
     public function showSchedule($doctorId)
     {
@@ -256,10 +262,10 @@ class DoctorController extends Controller
 
         $categories = Category::orderBy('name', 'asc')->get();
         $spe =  Specialty::whereIn('classification', ['chuyen_khoa', 'kham_tu_xa'])
-        ->orderBy('name', 'asc')
-        ->get();
+            ->orderBy('name', 'asc')
+            ->get();
 
-        return view('admin.specialtyDoctors.timeslot.schedule', compact('schedules', 'doctor', 'orderCount', 'categories','spe'));
+        return view('admin.specialtyDoctors.timeslot.schedule', compact('schedules', 'doctor', 'orderCount', 'categories', 'spe'));
     }
 
 
