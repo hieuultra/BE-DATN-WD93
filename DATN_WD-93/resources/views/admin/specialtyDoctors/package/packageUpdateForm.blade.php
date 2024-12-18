@@ -9,7 +9,7 @@
         @csrf
         <div class="row">
             <!-- Phần bên phải -->
-            <div class="col">
+            <div class="col" style="display: none;">
                 <div class="mb-3">
                     <label class="form-label">Chuyên khoa</label>
                     <select class="form-select" name="specialty_id" id="specialty_id">

@@ -129,8 +129,6 @@ class DoctorController extends Controller
 
         if ($specialty->classification == 'chuyen_khoa' && !empty($clinic)) {
             $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'specialty_id' => 'required|integer|exists:specialties,id',
                 'title' => 'required|string|max:255',
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
@@ -150,8 +148,6 @@ class DoctorController extends Controller
             return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
         } elseif ($specialty->classification == 'chuyen_khoa' && empty($clinic)) {
             $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'specialty_id' => 'required|integer|exists:specialties,id',
                 'title' => 'required|string|max:255',
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
@@ -173,8 +169,6 @@ class DoctorController extends Controller
             return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
         } elseif ($specialty->classification == 'kham_tu_xa' && empty($clinic)) {
             $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'specialty_id' => 'required|integer|exists:specialties,id',
                 'title' => 'required|string|max:255',
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',
@@ -189,8 +183,6 @@ class DoctorController extends Controller
             return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật variant thành công.');
         } elseif ($specialty->classification == 'kham_tu_xa' && !empty($clinic)) {
             $validatedData = $request->validate([
-                'user_id' => 'required|integer|exists:users,id',
-                'specialty_id' => 'required|integer|exists:specialties,id',
                 'title' => 'required|string|max:255',
                 'experience_years' => 'required|numeric',
                 'position' => 'required|string|max:255',

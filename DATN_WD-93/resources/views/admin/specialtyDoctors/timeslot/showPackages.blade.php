@@ -89,13 +89,6 @@
                             <td>{{ $formattedDate }}</td>
                             <td>{{ $schedule->isAvailable ? 'Có' : 'Không' }}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm edit-btn"
-                                    data-id="{{ $schedule->id }}"
-                                    data-day="{{ $schedule->dayOfWeek }}"
-                                    data-start="{{ $schedule->startTime }}"
-                                    data-end="{{ $schedule->endTime }}"
-                                    data-date="{{ $schedule->date }}"
-                                    data-available="{{ $schedule->isAvailable }}">Sửa</button>
                                 <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $schedule->id }}">Xóa</button>
                             </td>
                             </tr>
@@ -435,7 +428,12 @@
                                 alert(response.data.message);
                             })
                             .catch(error => {
-                                alert('Đã xảy ra lỗi: ' + error.response.data.message);
+                                if (error.response && error.response.status === 400) {
+                                    // Trường hợp lỗi do lịch đã có người đặt
+                                    alert('Không thể xóa: ' + error.response.data.message);
+                                } else {
+                                    alert('Đã xảy ra lỗi không xác định.');
+                                }
                             });
                     }
                 });
