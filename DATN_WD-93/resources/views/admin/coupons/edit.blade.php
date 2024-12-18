@@ -13,7 +13,7 @@
             <div class="form-group">
                 <label for="code">Mã giảm giá</label>
                 <input type="text" name="code" class="form-control" id="code" value="{{ old('code', $coupon->code) }}"
-                    required>
+                    readonly>
                 @error('code')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

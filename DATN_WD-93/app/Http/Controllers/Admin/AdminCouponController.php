@@ -86,8 +86,20 @@ class AdminCouponController extends Controller
      */
     public function edit(string $id)
     {
-        $coupon = Coupon::findOrFail($id);
-        return view('admin.coupons.edit', compact('coupon'));
+        $allCouponsUser = UserCoupon::join('coupons', 'user_coupons.coupon_id', '=', 'coupons.id')
+            ->select('user_coupons.coupon_id') // Lấy giá trị coupon_id
+            ->where(function ($query) {
+                $query->whereNull('coupons.expiry_date') // Chấp nhận mã không có ngày hết hạn
+                    ->orWhere('coupons.expiry_date', '>=', Carbon::now()); // Hoặc mã có ngày lớn hơn hoặc bằng hiện tại
+            })
+            ->distinct()
+            ->get();
+        if (!$allCouponsUser->contains('coupon_id', $id)) {
+            $coupon = Coupon::findOrFail($id);
+            return view('admin.coupons.edit', compact('coupon'));
+        } else {
+            return redirect()->back()->with('error', 'Đã có người sở hữu mã giảm giá này.');
+        }
     }
 
     /**
