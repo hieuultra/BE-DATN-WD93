@@ -28,14 +28,20 @@ class AuthController extends Controller
     }
     public function login(Request $request)
     {
+        $userCheck = User::where('email', $request->email)->first() ?? 0;
+        if ($userCheck) {
+            if ($userCheck->active === 0) {
+                return back()->with('error', 'Tài khoản đã bị vô hiệu hóa!');
+            }
+        }
         $users = $request->validate([
             'email' => ['required' => 'string', 'email', 'max:255'],
             'password' => ['required' => 'string']
         ]);
-        //   dd($users);
         if (Auth::attempt($users)) { //kiem tra in user_table co trung ko
             return redirect()->route('loginSuccess');
         }
+
         // return redirect()->back()->withErrors([
         //     'email' => 'Thông tin tài khoản chưa chính xác'
         // ]);
