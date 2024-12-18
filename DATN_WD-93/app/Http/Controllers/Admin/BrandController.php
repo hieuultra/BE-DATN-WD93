@@ -62,6 +62,9 @@ class BrandController extends Controller
     public function destroy($id)
     {
         $brand = Brand::findOrFail($id);
+        if ($brand->products()->exists()) {
+            return redirect()->route('admin.brands.index')->with('error', 'Không thể xóa thương hiệu vì vẫn còn sản phẩm liên quan.');
+        }
         $brand->delete(); // Xóa mềm
         return redirect()->route('admin.brands.index')->with('success', 'Xóa thương hiệu thành công');
     }

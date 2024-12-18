@@ -35,7 +35,7 @@ class UserController extends Controller
             $request->image->move(public_path('upload'), $imageName); //Di chuyển tệp tin đến thư mục public/upload.
             $validatedData['image'] = $imageName; //Cập nhật dữ liệu đã xác thực với tên tệp tin hình ảnh.
         }
-
+        $validatedData['role'] = 'Admin';
         $user = User::create($validatedData); // tạo một bản ghi mới trong bảng products.
 
         return redirect()->route('admin.users.userList')->with('success', 'Thêm account thành công'); //Chuyển hướng người dùng đến route productList và kèm theo thông báo thành công.
