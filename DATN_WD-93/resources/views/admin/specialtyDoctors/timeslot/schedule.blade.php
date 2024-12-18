@@ -23,8 +23,8 @@
         {{ session('success') }}
     </div>
     @endif
-    <h1>Lịch Làm Việc của Bác Sĩ: {{ $doctor->user->name }}</h1>
-    <h3>Chuyên khoa: {{ $doctor->specialty->name }}</h3>
+    <h3>Lịch Làm Việc của Bác Sĩ: {{ $doctor->user->name }}</h3>
+    <h6>Chuyên khoa: {{ $doctor->specialty->name }}</h6>
 
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEditScheduleModal" onclick="showAddForm()">Thêm Lịch</button>
 

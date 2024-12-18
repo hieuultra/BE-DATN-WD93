@@ -97,20 +97,25 @@ class SpecialtyController extends Controller
 
         return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Cập nhật specialty thành công.');
     }
-    //Destroy
+
     public function specialtyDestroy($id)
     {
-        $specialty = Specialty::findOrFail($id);
-        $specialty->classification = 0;
-        $specialty->save();
-        return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Specialty đã được cho dừng hoạt động.');
+        $specialty = Doctor::where('specialty_id', $id)->first();
+        if ($specialty) {
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Đang có bác sỹ thuộc chuyên khoa này.');
+        } else {
+            $specialty = Specialty::findOrFail($id);
+            $specialty->classification = 0;
+            $specialty->save();
+            return redirect()->route('admin.specialties.specialtyDoctorList')->with('success', 'Specialty đã được cho dừng hoạt động.');
+        }
     }
 
     public function timdoctorlist()
     {
-        $currentMonth = Carbon::now()->month; 
-        $currentYear = Carbon::now()->year;  
-    
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
         $leastAvailableDoctors = Doctor::with(['user', 'specialty'])
             ->withCount([
                 'timeSlot as available_times_count' => function ($query) {
@@ -118,7 +123,7 @@ class SpecialtyController extends Controller
                 },
                 'appoinment as booked_appointments_count' => function ($query) use ($currentMonth, $currentYear) {
                     $query->whereMonth('appointment_date', $currentMonth)
-                          ->whereYear('appointment_date', $currentYear);
+                        ->whereYear('appointment_date', $currentYear);
                 }
             ])
             ->orderBy('available_times_count', 'asc')
