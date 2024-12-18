@@ -51,7 +51,7 @@
                                 <tr>
                                     <td>{{ $coupon->code }}</td>
                                     <td>{{ $coupon->value }} {{ $coupon->type == 'percentage' ? '%' : 'VND' }}</td>
-                                    <td>{{ $coupon->min_order_value }} VND</td>
+                                    <td>{{ number_format($coupon->min_order_value, 0, ',', '.') }} VND</td>
                                     <td>{{ $coupon->max_discount ? number_format($coupon->max_discount, 0, ',', '.') . ' VND' : '0 VND' }}
                                     </td>
                                     <td>{{ $coupon->expiry_date }}</td>
@@ -69,7 +69,7 @@
                                                 <button type="submit" class="btn btn-danger btn-sm"
                                                     onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
                                             </form>
-                                        @endif  
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
