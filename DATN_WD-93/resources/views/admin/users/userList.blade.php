@@ -39,6 +39,8 @@
                                 <th>Email</th>
                                 <th>Ảnh</th>
                                 <th>Vai trò</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,6 +55,35 @@
                                     <td><img src="{{ asset('upload/' . $item->image) }}" height="150" width="300"
                                             alt=""></td>
                                     <td>{{ $item->role }}</td>
+                                    <td>
+                                        @if ($item->active == 1)
+                                            Hoạt động
+                                        @else
+                                            Vô hiệu hóa
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($item->role == 'User')
+                                            <a href=""
+                                                class="btn {{ $item->active == 0 ? 'btn-success' : 'btn-danger' }}">
+                                                <form action="{{ route('admin.users.userDestroy', $item->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    {{-- Sử dụng @method('DELETE') trong đoạn mã nhằm mục đích gửi một yêu cầu HTTP DELETE từ form HTML.  --}}
+                                                    <button style="background: none;  border: none; outline: none;"
+                                                        type="submit"
+                                                        onclick="return confirm('Bạn có chắc chắn muốn cập nhập?')">
+                                                        @if ($item->active == 1)
+                                                            Vô hiệu hóa
+                                                        @else
+                                                            Kích hoạt
+                                                        @endif
+                                                    </button>
+                                                </form>
+                                            </a>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
