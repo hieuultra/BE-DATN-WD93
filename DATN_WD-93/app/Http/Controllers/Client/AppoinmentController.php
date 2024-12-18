@@ -34,20 +34,24 @@ class AppoinmentController extends Controller
         $spe = Specialty::orderBy('name', 'desc')->get();
         $specialtiestx = Specialty::where('classification', 'kham_tu_xa')->orderBy('name', 'asc')->get();
         $specialtiestq = Specialty::where('classification', 'tong_quat')->orderBy('name', 'asc')->get();
-        $doctors = Doctor::with('user', 'specialty')
+        $doctors = Doctor::with(['user', 'specialty'])
             ->withCount('appoinment')
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'Doctor');
+            })
             ->orderBy('appoinment_count', 'desc')
             ->orderBy('updated_at', 'desc')
             ->take(10)
             ->get();
 
-        $orderCount = 0; // Biến kiểm tra số đơn hợp lệ
+
+        $orderCount = 0;
         $notification = null;
 
         if (Auth::check()) {
             $user = Auth::user();
 
-            // Đếm số lịch hẹn hợp lệ của người dùng
+            // Đếm số lịch hẹn hợp lệ của người dùng 
             $orderCount = DB::table('appoinments')
                 ->where('user_id', $user->id)
                 ->whereIn('status_appoinment', ['kham_hoan_thanh', 'can_tai_kham', 'huy_lich_hen', 'benh_nhan_khong_den'])
@@ -661,7 +665,12 @@ class AppoinmentController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
-        $doctors = Doctor::with(['specialty', 'user'])->get();
+        $doctors = Doctor::with(['specialty', 'user'])
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'Doctor');
+            })
+            ->get();
+
         $specialties = Specialty::whereIn('classification', ['chuyen_khoa', 'tong_quat', 'kham_tu_xa'])->get();
         return view('client.appoinment.allDoctor', compact('orderCount', 'categories', 'doctors', 'specialties', 'spe'));
     }

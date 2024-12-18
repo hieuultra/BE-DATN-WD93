@@ -126,6 +126,9 @@ class SpecialtyController extends Controller
                         ->whereYear('appointment_date', $currentYear);
                 }
             ])
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'Doctor');
+            })
             ->orderBy('available_times_count', 'asc')
             ->get();
 

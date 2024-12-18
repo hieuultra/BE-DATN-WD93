@@ -81,7 +81,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-//appoinment
+//appoinment 
 Route::prefix('appoinment')
     ->as('appoinment.')
     ->group(function () {
