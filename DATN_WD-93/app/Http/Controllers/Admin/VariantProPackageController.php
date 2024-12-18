@@ -15,7 +15,7 @@ class VariantProPackageController extends Controller
     {
         $packages = VariantPackage::orderBy('updated_at', 'desc')->get();
         $product = Product::orderBy('id')->get();
-        $variantPro = VariantProduct::orderBy('updated_at','desc')->get();
+        $variantPro = VariantProduct::orderBy('updated_at', 'desc')->get();
         $cates = Category::orderBy('id')->get();
         return view('admin.variantProducts.variantProList', compact('packages', 'product', 'variantPro', 'cates'));
     }
@@ -58,7 +58,10 @@ class VariantProPackageController extends Controller
     public function packageDestroy($id)
     {
         $package = VariantPackage::findOrFail($id); //// Tìm sản phẩm với ID được cung cấp. Nếu không tìm thấy, sẽ ném ra một ngoại lệ ModelNotFoundException.
-
+        if ($package->variantProduct()->exists()) {
+            return redirect()->route('admin.variantPros.variantProList')
+                ->with('error', 'Không thể xóa biến thể vì vẫn còn sản phẩm liên quan.');
+        }
         $package->delete();
         return redirect()->route('admin.variantPros.variantProList')->with('success', 'Variant đã được xóa thành công.');
     }
