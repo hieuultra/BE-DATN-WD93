@@ -41,7 +41,6 @@
                     <td>{{$achievement->description}}</td>
                     <td>
                         <a href="#" onclick="showEditForm({{ $achievement->id }}, '{{ $achievement->category }}', '{{ $achievement->name }}', '{{ $achievement->description }}')">Sửa</a>
-                        <button onclick="confirmDelete({{ $achievement->id }})">Xóa</button>
                     </td>
                 </tr>
                 @endforeach
