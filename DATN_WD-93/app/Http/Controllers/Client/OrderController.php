@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Models\Bill;
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\CartItem;
@@ -188,7 +189,7 @@ class OrderController extends Controller
                             'user_coupons.*', // Lấy tất cả các trường từ bảng user_coupons
                             'coupons.*'
                         ) // Lấy tất cả các trường từ bảng coupons
-                        ->first(); // Lấy coupon đầu tiên                    
+                        ->first(); // Lấy coupon đầu tiên
                     if ($couponTable && $couponTable->isValid()) {
                         $deleteCouponTable = UserCoupon::where('id', $couponTable->user_coupon_id)->first();
                         $deleteCouponTable->delete();
@@ -294,6 +295,13 @@ class OrderController extends Controller
                 }
             } elseif ($request->has('da_giao_hang')) {
                 $bill->update(['status_bill' => Bill::DA_GIAO_HANG]);
+
+                // Cộng điểm
+                $pointsPerUnit = 10000;
+                $pointsRequired = floor($bill->totalPrice / $pointsPerUnit);
+                $scoreUser = User::query()->findOrFail($bill->user_id);
+                $scoreUser->score = $scoreUser->score + $pointsRequired;
+                $scoreUser->save();
 
                 // Cập nhật trạng thái thanh toán thành ĐÃ THANH TOÁN nếu đã giao hàng
                 $bill->update(['status_payment_method' => Bill::DA_THANH_TOAN]);
