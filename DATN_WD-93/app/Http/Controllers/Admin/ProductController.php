@@ -190,6 +190,10 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if ($product) {
+            if ($product->orderDetail()->exists() || $product->cartItem()->exists() || $product->variantProduct()->exists()) {
+                return redirect()->route('admin.products.productList')
+                    ->with('error', 'Không thể xóa sản phẩm vì vẫn còn dữ liệu liên quan.');
+            }
             $product->delete(); // Thực hiện xóa mềm
             return redirect()->route('admin.products.productList')->with('success', 'Xóa mềm thành công!');
         }
