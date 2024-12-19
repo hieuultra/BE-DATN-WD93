@@ -441,7 +441,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        $(document).on('click', '.appointment-history-link', function(event) {
+         $(document).on('click', '.appointment-history-link', function(event) {
             event.preventDefault();
             const appointmentId = $(this).data('appointment-id');
 
@@ -458,13 +458,14 @@
                     content += `<p>Chẩn đoán: ${data.diagnosis || 'Không có thông tin'}</p>`;
                     content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có có ngày tái khám'}</p>`;
                     content += `<p>Ghi chú: ${data.notes || 'Không có thông tin'}</p>`;
+                    content += `<p>Tổng giá trị đơn thuốc: ${parseInt(data.bill).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>`;
 
-                    // Kiểm tra và hiển thị danh sách `order_details`
                     if (data.order_details && data.order_details.length > 0) {
                         content += `<h5>Chi tiết đơn thuốc:</h5>`;
                         content += `<table class="table table-bordered"><thead>
                                         <tr>
                                             <th>Tên sản phẩm</th>
+                                            <th>Biến thể của thuốc</th>
                                             <th>Số lượng</th>
                                             <th>Đơn giá</th>
                                             <th>Thành tiền</th>
@@ -473,9 +474,10 @@
                         data.order_details.forEach(order => {
                             content += `<tr>
                                             <td><a href="http://127.0.0.1:8000/products/detail/${order.product_id}" target="_blank">${order.product_name}</a></td>
+                                            <td>${order.name}</td>
                                             <td>${order.quantity}</td>
-                                            <td>${order.unit_price}</td>
-                                            <td>${order.total_money}</td>
+                                            <td>${parseInt(order.unit_price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
+                                            <td>${parseInt(order.total_money).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
                                         </tr>`;
                         });
                         content += `</tbody></table>`;

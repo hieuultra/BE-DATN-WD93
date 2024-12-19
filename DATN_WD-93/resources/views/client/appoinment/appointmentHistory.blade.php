@@ -83,13 +83,18 @@
     <div class="container">
         <h1 class="text-center">Lịch Sử Đặt Lịch Khám</h1>
 
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <input type="text" id="searchById" class="form-control" placeholder="Tìm kiếm theo Mã lịch khám" onkeyup="filterAppointments()">
-            </div>
-            <div class="col-md-6">
-                <input type="date" id="searchByDate" class="form-control" onchange="filterAppointments()">
-            </div>
+        <div class="filter-bar mb-3">
+            <label for="statusFilter">Lọc theo trạng thái:</label>
+            <select id="statusFilter" class="form-control" style="width: 200px; display: inline-block;">
+                <option value="">Tất cả</option>
+                <option value="cho_xac_nhan">Đang chờ xác nhận</option>
+                <option value="da_xac_nhan">Đã xác nhận</option>
+                <option value="yeu_cau_huy">Yêu cầu hủy</option>
+                <option value="kham_hoan_thanh">Khám hoàn tất</option>
+                <option value="can_tai_kham">Cần tái khám</option>
+                <option value="benh_nhan_khong_den">Bệnh nhân không đến</option>
+                <option value="huy_lich_hen">Lịch hẹn đã bị hủy</option>
+            </select>
         </div>
 
         <div class="btn-group my-3" role="group">
@@ -99,88 +104,120 @@
 
         <!--Đặt lịch cho bản thân-->
         <div id="myAppointments" style="display: block;">
-            <h2>Lịch sử đặt cho bản thân</h2>
-            @foreach($appoinments as $appointment)
-            @foreach($available as $time)
-            @if($time->id == $appointment->available_timeslot_id && $appointment->classify == 'ban_than')
-            <div class="card mb-3 appointment-card" data-id="{{ $appointment->id }}" data-date="{{ \Carbon\Carbon::parse($time->date)->format('Y-m-d') }}">
-                <div class="card-body">
-                    <h5 class="card-title">Mã lịch khám: <span class="text-primary">{{ $appointment->id }}</span></h5>
-                    @php
-                    $formattedDate = \Carbon\Carbon::parse($time->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
-                    $review = $reviewDortor->filter(function ($rv) use ($appointment) {
-                    return $rv->doctor_id == $appointment->doctor_id && $rv->appoinment_id == $appointment->id;
-                    })->first();
-                    @endphp
-                    <p><strong>Ngày khám:</strong> {{ $formattedDate }}</p>
-                    <p><strong>Thời gian:</strong> {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}</p>
-                    @if($appointment->doctor)
-                    <p><strong>Bác sĩ:</strong> {{ $appointment->doctor->user->name }}</p>
-                    @else
-                    <p><strong>Tên khám tổng quát:</strong> {{ $appointment->package->hospital_name }}</p>
-                    @endif
-                    @if($appointment->doctor)
-                    @foreach($clinics as $clinic)
-                    @if($clinic->doctor_id == $appointment->doctor->id)
-                    <p><strong>Địa điểm:</strong> Phòng khám {{ $clinic->address }}, {{$clinic->city}}</p>
-                    @endif
-                    @endforeach
-                    @else
-                    <p><strong>Địa chỉ khoa khám:</strong> {{ $appointment->package->address }}</p>
-                    @endif
-                    @if($appointment->meet_link)
-                    <p><strong>Link meet:</strong> <a href="{{ $appointment->meet_link }}" target="_blank">{{ $appointment->meet_link }}</a></p>
-                    @else
+            <h2 class="text-center">Lịch sử đặt cho bản thân</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Mã lịch khám</th>
+                            <th>Ngày khám</th>
+                            <th>Thời gian</th>
+                            <th>Bác sĩ</th>
+                            <th>Địa điểm</th>
+                            <th>Giá</th>
+                            <th>Trạng thái thanh toán</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($appoinments as $appointment)
+                        @foreach($available as $time)
+                        @if($time->id == $appointment->available_timeslot_id && $appointment->classify == 'ban_than')
+                        @php
+                        $formattedDate = \Carbon\Carbon::parse($time->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
+                        $review = $reviewDortor->filter(function ($rv) use ($appointment) {
+                        return $rv->doctor_id == $appointment->doctor_id && $rv->appoinment_id == $appointment->id;
+                        })->first();
+                        @endphp
+                        <tr>
+                            <td>{{ $appointment->id }}</td>
+                            <td>{{ $formattedDate }}</td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}</td>
+                            <td>{{ $appointment->doctor ? $appointment->doctor->user->name : $appointment->package->hospital_name }}</td>
+                            <td>
+                                @if($appointment->doctor)
+                                @foreach($clinics as $clinic)
+                                @if($clinic->doctor_id == $appointment->doctor->id)
+                                Phòng khám {{ $clinic->address }}, {{ $clinic->city }}
+                                @endif
+                                @endforeach
+                                @else
+                                {{ $appointment->package->address }}
+                                @endif
+                                @if($appointment->meet_link && $appointment->status_appoinment != 'huy_lich_hen' && $appointment->status_appoinment != 'benh_nhan_khong_den')
+                                <p><strong>Link meet:</strong> <a href="{{ $appointment->meet_link }}" target="_blank">{{ $appointment->meet_link }}</a></p>
+                                @else
+                                
+                                @endif
+                            </td>
+                            <td>{{ number_format($appointment->doctor ? $appointment->doctor->examination_fee : $appointment->package->price, 0, ',', '.') }} đ</td>
+                            <td>
+                                @if($appointment->status_payment_method == 'da_thanh_toan')
+                                <span style="color: green;">Đã thanh toán</span>
+                                @else
+                                <span style="color: red;">Chưa thanh toán</span>
+                                @endif
+                            </td>
+                            <td>
+                                @switch($appointment->status_appoinment)
+                                @case('cho_xac_nhan')
+                                <span data-status="cho_xac_nhan" style="color: yellowgreen;">Đang chờ xác nhận</span>
+                                @break
 
-                    @endif
-                    @if($appointment->doctor)
-                    <p class="price">Giá: {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} đ</p>
-                    @else
-                    <p><strong>Giá khám:</strong> {{ number_format($appointment->package->price, 0, ',', '.') }} đ</p>
-                    @endif
-                    <p><strong>Lý do khám:</strong> {{ $appointment->notes }}</p>
-                    <a href="#" class="btn btn-info btn-custom">Xem thêm</a>
+                                @case('da_xac_nhan')
+                                <span data-status="da_xac_nhan" style="color: blue;">Lịch hẹn đã được xác nhận</span>
+                                @break
 
-                    @if($appointment->status_appoinment == 'cho_xac_nhan')
-                    <a href="#" class="btn btn-danger btn-custom">Hủy lịch đặt</a>
-                    <p style="color: yellowgreen;">Đang chờ xác nhận</p>
+                                @case('yeu_cau_huy')
+                                <span data-status="yeu_cau_huy" style="color: blueviolet;">Yêu cầu hủy đang chờ duyệt</span>
+                                @break
 
-                    @elseif($appointment->status_appoinment == 'da_xac_nhan')
-                    <p>Liên hệ đến bác Sỹ nếu bạn muốn hủy: {{$appointment->doctor->user->phone}}</p>
-                    <p style="color: blue;">Lịch hẹn đã được xác nhận</p>
+                                @case('kham_hoan_thanh')
+                                <span data-status="kham_hoan_thanh" style="color: green;">Khám hoàn tất</span>
+                                @break
 
-                    @elseif($appointment->status_appoinment == 'yeu_cau_huy')
-                    <p style="color: blueviolet;">Yêu cầu hủy đang chờ duyệt</p>
+                                @case('can_tai_kham')
+                                <span data-status="can_tai_kham" style="color: green;">Cần tái khám</span>
+                                @break
 
-                    @elseif($appointment->status_appoinment == 'kham_hoan_thanh' || $appointment->status_appoinment == 'can_tai_kham')
-                    @if($review)
-                    <p>Đánh giá của bạn</p>
-                    <div class="rating">
-                        @for ($i = 5; $i >= 1; $i--)
-                        <input value="{{ $i }}" @if($review->rating == $i) checked @endif type="radio" disabled>
-                        <label for="star{{ $i }}" title="text"></label>
-                        @endfor
-                    </div>
-                    <a href="#" class="edit-review-btn" data-id="{{ $review->id }}">Sửa đánh giá</a>
-                    @else
-                    <a href="#" class="btn btn-custom-yellow review-btn" data-id="{{ $appointment->id }}" style="background-color: yellow; color: black; border: 1px solid yellow;">Đánh giá bác sĩ</a>
-                    @endif
-                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appointment->id }}">Chi tiết hóa đơn</a>
-                    <p style="color: green;">{{ $appointment->status_appoinment == 'kham_hoan_thanh' ? 'Khám hoàn tất' : 'Cần tái khám' }}</p>
+                                @case('benh_nhan_khong_den')
+                                <span data-status="benh_nhan_khong_den" style="color: orangered;">Bệnh nhân không đến</span>
+                                @break
 
-                    @elseif($appointment->status_appoinment == 'benh_nhan_khong_den')
-                    <p style="color: orangered;">Bệnh nhân không đến</p>
+                                @case('huy_lich_hen')
+                                <span data-status="huy_lich_hen" style="color: red;">Lịch hẹn đã bị hủy</span>
+                                @break
+                                @endswitch
+                            </td>
+                            <td>
+                                @if($appointment->status_appoinment == 'cho_xac_nhan')
+                                <a href="#" class="btn btn-danger btn-custom cancel-appointment-btn"
+                                    data-id="{{ $appointment->id }}"
+                                    data-name="{{ $appointment->package ? $appointment->package->hospital_name : 'N/A' }}"
+                                    data-date="{{ $formattedDate }}"
+                                    data-time="{{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}"
+                                    data-doctor="{{ $appointment->doctor ? $appointment->doctor->user->name : 'N/A' }}">
+                                    Hủy lịch đặt
+                                </a>
+                                @elseif($appointment->status_appoinment == 'kham_hoan_thanh' || $appointment->status_appoinment == 'can_tai_kham')
+                                @if($review)
+                                <a href="#" class="btn btn-primary btn-sm edit-review-btn" data-id="{{ $review->id }}">Xem đánh giá</a>
+                                @else
+                                <a href="#" class="btn btn-warning btn-sm review-btn" data-id="{{ $appointment->id }}">Đánh giá bác sĩ</a>
+                                @endif
+                                <a href="#" class="btn btn-info btn-sm appointment-history-link" data-appointment-id="{{ $appointment->id }}">Chi tiết hóa đơn</a>
+                                @endif
 
-                    @elseif($appointment->status_appoinment == 'huy_lich_hen')
-                    <p style="color: red;">Lịch hẹn đã bị hủy</p>
-                    @endif
-                </div>
+                            </td>
+                        </tr>
+                        @endif
+                        @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-            @endif
-            @endforeach
-            @endforeach
         </div>
-
 
         <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -254,28 +291,6 @@
             </div>
         </div>
 
-        <div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-labelledby="appointmentDetailsModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="appointmentDetailsModalLabel">Chi tiết lịch hẹn</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p><strong>Mã lịch khám:</strong> <span id="modalAppointmentId"></span></p>
-                        <p><strong>Ngày khám:</strong> <span id="modalDate"></span></p>
-                        <p><strong>Thời gian:</strong> <span id="modalTime"></span></p>
-                        <p><strong>Bác sĩ:</strong> <span id="modalDoctor"></span></p>
-                        <p><strong>Địa điểm:</strong> <span id="modalLocation"></span></p>
-                        <p><strong>Giá:</strong> <span id="modalPrice"></span></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade" id="cancelAppointmentModal" tabindex="-1" aria-labelledby="cancelAppointmentModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -288,7 +303,7 @@
                             <input type="hidden" id="modalAppointmentId" name="appointment_id">
 
                             <div class="mb-3">
-                                <label for="name" class="form-label">Tên người đặt</label>
+                                <label for="name" class="form-label">Tên loại khám tổng quát</label>
                                 <input type="text" class="form-control" id="name" name="name" readonly>
                             </div>
 
@@ -305,11 +320,6 @@
                             <div class="mb-3">
                                 <label for="doctor" class="form-label">Bác sĩ</label>
                                 <input type="text" class="form-control" id="doctor" name="doctor" readonly>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="location" class="form-label">Địa điểm</label>
-                                <input type="text" class="form-control" id="location" name="location" readonly>
                             </div>
 
                             <div class="mb-3">
@@ -346,113 +356,148 @@
 
         <!--Đặt lịch cho người thân-->
         <div id="familyAppointments" style="display: none;">
-            <h2>Lịch sử đặt cho người thân</h2>
-            @foreach($appoinments as $appointment)
-            @foreach($available as $time)
-            @if($time->id == $appointment->available_timeslot_id && $appointment->classify == 'cho_gia_dinh')
-            <div class="card mb-3 appointment-card" data-id="{{ $appointment->id }}" data-date="{{ \Carbon\Carbon::parse($time->date)->format('Y-m-d') }}">
-                <div class="card-body">
-                    <h5 class="card-title">Mã lịch khám: <span class="text-primary">{{ $appointment->id }}</span></h5>
-                    @php
-                    $formattedDate = \Carbon\Carbon::parse($time->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
-                    $review = $reviewDortor->filter(function ($rv) use ($appointment) {
-                    return $rv->doctor_id == $appointment->doctor_id && $rv->appoinment_id == $appointment->id;
-                    })->first();
-                    @endphp
-                    <p><strong>Ngày khám:</strong> {{ $formattedDate }}</p>
-                    <p><strong>Thời gian:</strong> {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}</p>
-                    @if($appointment->doctor)
-                    <p><strong>Bác sĩ:</strong> {{ $appointment->doctor->user->name }}</p>
-                    @else
-                    <p><strong>Tên khám tổng quát:</strong> {{ $appointment->package->hospital_name }}</p>
-                    @endif
-                    @if($appointment->doctor)
-                    @foreach($clinics as $clinic)
-                    @if($clinic->doctor_id == $appointment->doctor->id)
-                    <p><strong>Địa điểm:</strong> Phòng khám {{ $clinic->address }}, {{$clinic->city}}</p>
-                    @endif
-                    @endforeach
-                    @else
-                    <p><strong>Địa chỉ khoa khám:</strong> {{ $appointment->package->address }}</p>
-                    @endif
-                    @if($appointment->meet_link)
-                    <p><strong>Link meet:</strong> <a href="{{ $appointment->meet_link }}" target="_blank">{{ $appointment->meet_link }}</a></p>
-                    @else
+            <h2 class="text-center">Lịch sử đặt cho bản thân</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Mã lịch khám</th>
+                            <th>Ngày khám</th>
+                            <th>Thời gian</th>
+                            <th>Bác sĩ</th>
+                            <th>Địa điểm</th>
+                            <th>Giá</th>
+                            <th>Trạng thái thanh toán</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($appoinments as $appointment)
+                        @foreach($available as $time)
+                        @if($time->id == $appointment->available_timeslot_id && $appointment->classify == 'cho_gia_dinh')
+                        @php
+                        $formattedDate = \Carbon\Carbon::parse($time->date)->locale('vi')->isoFormat('dddd, D/MM/YYYY');
+                        $review = $reviewDortor->filter(function ($rv) use ($appointment) {
+                        return $rv->doctor_id == $appointment->doctor_id && $rv->appoinment_id == $appointment->id;
+                        })->first();
+                        @endphp
+                        <tr>
+                            <td>{{ $appointment->id }}</td>
+                            <td>{{ $formattedDate }}</td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}</td>
+                            <td>{{ $appointment->doctor ? $appointment->doctor->user->name : $appointment->package->hospital_name }}</td>
+                            <td>
+                                @if($appointment->doctor)
+                                @foreach($clinics as $clinic)
+                                @if($clinic->doctor_id == $appointment->doctor->id)
+                                Phòng khám {{ $clinic->address }}, {{ $clinic->city }}
+                                @endif
+                                @endforeach
+                                @else
+                                {{ $appointment->package->address }}
+                                @endif
+                                @if($appointment->meet_link && $appointment->status_appoinment != 'huy_lich_hen' && $appointment->status_appoinment != 'benh_nhan_khong_den')
+                                <p><strong>Link meet:</strong> <a href="{{ $appointment->meet_link }}" target="_blank">{{ $appointment->meet_link }}</a></p>
+                                @else
+                                
+                                @endif
+                            </td>
+                            <td>{{ number_format($appointment->doctor ? $appointment->doctor->examination_fee : $appointment->package->price, 0, ',', '.') }} đ</td>
+                            <td>
+                                @if($appointment->status_payment_method == 'da_thanh_toan')
+                                <span style="color: green;">Đã thanh toán</span>
+                                @else
+                                <span style="color: red;">Chưa thanh toán</span>
+                                @endif
+                            </td>
+                            <td>
+                                @switch($appointment->status_appoinment)
+                                @case('cho_xac_nhan')
+                                <span data-status="cho_xac_nhan" style="color: yellowgreen;">Đang chờ xác nhận</span>
+                                @break
 
-                    @endif
-                    @if($appointment->doctor)
-                    <p class="price">Giá: {{ number_format($appointment->doctor->examination_fee, 0, ',', '.') }} đ</p>
-                    @else
-                    <p><strong>Giá khám:</strong> {{ number_format($appointment->package->price, 0, ',', '.') }} đ</p>
-                    @endif
-                    <p><strong>Lý do khám:</strong> {{ $appointment->notes }}</p>
-                    <a href="#" class="btn btn-info btn-custom">Xem thêm</a>
+                                @case('da_xac_nhan')
+                                <span data-status="da_xac_nhan" style="color: blue;">Lịch hẹn đã được xác nhận</span>
+                                @break
 
-                    @if($appointment->status_appoinment == 'cho_xac_nhan')
-                    <a href="#" class="btn btn-danger btn-custom">Hủy lịch đặt</a>
-                    <p style="color: yellowgreen;">Đang chờ xác nhận</p>
+                                @case('yeu_cau_huy')
+                                <span data-status="yeu_cau_huy" style="color: blueviolet;">Yêu cầu hủy đang chờ duyệt</span>
+                                @break
 
-                    @elseif($appointment->status_appoinment == 'da_xac_nhan')
+                                @case('kham_hoan_thanh')
+                                <span data-status="kham_hoan_thanh" style="color: green;">Khám hoàn tất</span>
+                                @break
 
-                    <p style="color: blue;">Lịch hẹn đã được xác nhận</p>
+                                @case('can_tai_kham')
+                                <span data-status="can_tai_kham" style="color: green;">Cần tái khám</span>
+                                @break
 
-                    @elseif($appointment->status_appoinment == 'yeu_cau_huy')
-                    <p style="color: blueviolet;">Yêu cầu hủy đang chờ duyệt</p>
+                                @case('benh_nhan_khong_den')
+                                <span data-status="benh_nhan_khong_den" style="color: orangered;">Bệnh nhân không đến</span>
+                                @break
 
-                    @elseif($appointment->status_appoinment == 'kham_hoan_thanh' || $appointment->status_appoinment == 'can_tai_kham')
-                    @if($review)
-                    <p>Đánh giá của bạn</p>
-                    <div class="rating">
-                        @for ($i = 5; $i >= 1; $i--)
-                        <input value="{{ $i }}" @if($review->rating == $i) checked @endif type="radio" disabled>
-                        <label for="star{{ $i }}" title="text"></label>
-                        @endfor
-                    </div>
-                    <a href="#" class="edit-review-btn" data-id="{{ $review->id }}">Sửa đánh giá</a>
-                    @else
-                    <a href="#" class="btn btn-custom-yellow review-btn" data-id="{{ $appointment->id }}" style="background-color: yellow; color: black; border: 1px solid yellow;">Đánh giá bác sĩ</a>
-                    @endif
-                    <a href="#" class="appointment-history-link" data-appointment-id="{{ $appointment->id }}">Chi tiết hóa đơn</a>
-                    <p style="color: green;">{{ $appointment->status_appoinment == 'kham_hoan_thanh' ? 'Khám hoàn tất' : 'Cần tái khám' }}</p>
+                                @case('huy_lich_hen')
+                                <span data-status="huy_lich_hen" style="color: red;">Lịch hẹn đã bị hủy</span>
+                                @break
+                                @endswitch
+                            </td>
+                            <td>
+                                @if($appointment->status_appoinment == 'cho_xac_nhan')
+                                <a href="#" class="btn btn-danger btn-custom cancel-appointment-btn"
+                                    data-id="{{ $appointment->id }}"
+                                    data-name="{{ $appointment->package ? $appointment->package->hospital_name : 'N/A' }}"
+                                    data-date="{{ $formattedDate }}"
+                                    data-time="{{ \Carbon\Carbon::createFromFormat('H:i:s', $time->startTime)->format('H:i') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $time->endTime)->format('H:i') }}"
+                                    data-doctor="{{ $appointment->doctor ? $appointment->doctor->user->name : 'N/A' }}">
+                                    Hủy lịch đặt
+                                </a>
+                                @elseif($appointment->status_appoinment == 'kham_hoan_thanh' || $appointment->status_appoinment == 'can_tai_kham')
+                                @if($review)
+                                <a href="#" class="btn btn-primary btn-sm edit-review-btn" data-id="{{ $review->id }}">Xem đánh giá</a>
+                                @else
+                                <a href="#" class="btn btn-warning btn-sm review-btn" data-id="{{ $appointment->id }}">Đánh giá bác sĩ</a>
+                                @endif
+                                <a href="#" class="btn btn-info btn-sm appointment-history-link" data-appointment-id="{{ $appointment->id }}">Chi tiết hóa đơn</a>
+                                @endif
 
-                    @elseif($appointment->status_appoinment == 'benh_nhan_khong_den')
-                    <p style="color: orangered;">Bệnh nhân không đến</p>
-
-                    @elseif($appointment->status_appoinment == 'huy_lich_hen')
-                    <p style="color: red;">Lịch hẹn đã bị hủy</p>
-                    @endif
-                </div>
+                            </td>
+                        </tr>
+                        @endif
+                        @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-            @endif
-            @endforeach
-            @endforeach
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @if (session('error'))
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: '{{ session('error') }}',
-                timer: 5000, 
-                timerProgressBar: true
-            })
-        </script>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('
+            error ') }}',
+            timer: 5000,
+            timerProgressBar: true
+        })
+    </script>
     @endif
 
     @if (session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Thành công!',
-                text: '{{ session('success') }}',
-                timer: 5000, 
-                timerProgressBar: true
-            })
-        </script>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('
+            success ') }}',
+            timer: 5000,
+            timerProgressBar: true
+        })
+    </script>
     @endif
 
 
@@ -564,89 +609,60 @@
             });
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const viewMoreButtons = document.querySelectorAll('.btn-info.btn-custom');
-
-            viewMoreButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
-
-                    const appointmentCard = this.closest('.appointment-card');
-                    const appointmentId = appointmentCard.getAttribute('data-id');
-                    const appointmentDate = appointmentCard.getAttribute('data-date');
-                    const appointmentTime = appointmentCard.querySelector('.card-body p:nth-child(3)').innerText;
-                    const doctor = appointmentCard.querySelector('.card-body p:nth-child(4)').innerText;
-                    const location = appointmentCard.querySelector('.card-body p:nth-child(5)').innerText;
-                    const price = appointmentCard.querySelector('.card-body .price').innerText;
-
-                    document.getElementById('modalAppointmentId').innerText = appointmentId;
-                    document.getElementById('modalDate').innerText = appointmentDate;
-                    document.getElementById('modalTime').innerText = appointmentTime;
-                    document.getElementById('modalDoctor').innerText = doctor;
-                    document.getElementById('modalLocation').innerText = location;
-                    document.getElementById('modalPrice').innerText = price;
-
-                    const appointmentDetailsModal = new bootstrap.Modal(document.getElementById('appointmentDetailsModal'));
-                    appointmentDetailsModal.show();
-                });
-            });
-        });
-
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const cancelButtons = document.querySelectorAll('.btn-danger.btn-custom');
+        document.addEventListener('DOMContentLoaded', () => {
+            const cancelButtons = document.querySelectorAll('.cancel-appointment-btn');
 
             cancelButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
 
-                    const appointmentCard = this.closest('.appointment-card');
-                    const appointmentId = appointmentCard.getAttribute('data-id');
-                    const userName = "{{ auth()->user()->name ?? '' }}";
-                    const appointmentDate = appointmentCard.querySelector('.card-body p:nth-child(2)').innerText.split(': ')[1];
-                    const appointmentTime = appointmentCard.querySelector('.card-body p:nth-child(3)').innerText.split(': ')[1];
-                    const doctorName = appointmentCard.querySelector('.card-body p:nth-child(4)').innerText.split(': ')[1];
-                    const location = appointmentCard.querySelector('.card-body p:nth-child(5)').innerText.split(': ')[1];
+                    const appointmentId = this.dataset.id;
+                    const name = this.dataset.name;
+                    const date = this.dataset.date;
+                    const time = this.dataset.time;
+                    const doctor = this.dataset.doctor;
 
                     document.getElementById('modalAppointmentId').value = appointmentId;
-                    document.getElementById('name').value = userName;
-                    document.getElementById('appointmentDate').value = appointmentDate;
-                    document.getElementById('appointmentTime').value = appointmentTime;
-                    document.getElementById('doctor').value = doctorName;
-                    document.getElementById('location').value = location;
+                    document.getElementById('name').value = name;
+                    document.getElementById('appointmentDate').value = date;
+                    document.getElementById('appointmentTime').value = time;
+                    document.getElementById('doctor').value = doctor;
 
-                    const cancelAppointmentModal = new bootstrap.Modal(document.getElementById('cancelAppointmentModal'));
-                    cancelAppointmentModal.show();
+                    const cancelModal = new bootstrap.Modal(document.getElementById('cancelAppointmentModal'));
+                    cancelModal.show();
                 });
             });
+        });
 
-            document.getElementById('cancelAppointmentForm').addEventListener('submit', function(event) {
-                event.preventDefault();
+        document.getElementById('cancelAppointmentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-                const appointmentId = document.getElementById('modalAppointmentId').value;
-                const notes = document.getElementById('notes').value;
+            const appointmentId = document.getElementById('modalAppointmentId').value;
+            const notes = document.getElementById('notes').value;
 
-                fetch(`/appoinment/appointments/${appointmentId}/cancel`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            notes: notes
-                        })
+            fetch(`/appoinment/appointments/${appointmentId}/cancel`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        notes
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Lịch hẹn đã được hủy thành công');
-                            location.reload();
-                        } else {
-                            alert('Có lỗi xảy ra. Vui lòng thử lại.');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Hủy lịch hẹn thành công!');
+                        location.reload(); 
+                    } else {
+                        alert(data.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                });
         });
 
         $(document).on('click', '.appointment-history-link', function(event) {
@@ -666,12 +682,14 @@
                     content += `<p>Chẩn đoán: ${data.diagnosis || 'Không có thông tin'}</p>`;
                     content += `<p>Ngày tái khám: ${data.follow_up_date || 'Không có có ngày tái khám'}</p>`;
                     content += `<p>Ghi chú: ${data.notes || 'Không có thông tin'}</p>`;
+                    content += `<p>Tổng giá trị đơn thuốc: ${parseInt(data.bill).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>`;
 
                     if (data.order_details && data.order_details.length > 0) {
                         content += `<h5>Chi tiết đơn thuốc:</h5>`;
                         content += `<table class="table table-bordered"><thead>
                                         <tr>
                                             <th>Tên sản phẩm</th>
+                                            <th>Biến thể của thuốc</th>
                                             <th>Số lượng</th>
                                             <th>Đơn giá</th>
                                             <th>Thành tiền</th>
@@ -680,9 +698,10 @@
                         data.order_details.forEach(order => {
                             content += `<tr>
                                             <td><a href="http://127.0.0.1:8000/products/detail/${order.product_id}" target="_blank">${order.product_name}</a></td>
+                                            <td>${order.name}</td>
                                             <td>${order.quantity}</td>
-                                            <td>${order.unit_price}</td>
-                                            <td>${order.total_money}</td>
+                                            <td>${parseInt(order.unit_price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
+                                            <td>${parseInt(order.total_money).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
                                         </tr>`;
                         });
                         content += `</tbody></table>`;
@@ -701,6 +720,19 @@
 
         });
 
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            const filterValue = this.value;
+            const rows = document.querySelectorAll('table tbody tr');
+
+            rows.forEach(row => {
+                const statusCell = row.querySelector('td:nth-child(8) span');
+                if (!filterValue || (statusCell && statusCell.getAttribute('data-status') === filterValue)) {
+                    row.style.display = ''; // Hiển thị
+                } else {
+                    row.style.display = 'none'; // Ẩn
+                }
+            });
+        });
     </script>
     @endsection
 </body>

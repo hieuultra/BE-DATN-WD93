@@ -35,7 +35,7 @@ class UserController extends Controller
             $request->image->move(public_path('upload'), $imageName); //Di chuyển tệp tin đến thư mục public/upload.
             $validatedData['image'] = $imageName; //Cập nhật dữ liệu đã xác thực với tên tệp tin hình ảnh.
         }
-
+        $validatedData['role'] = 'Admin';
         $user = User::create($validatedData); // tạo một bản ghi mới trong bảng products.
 
         return redirect()->route('admin.users.userList')->with('success', 'Thêm account thành công'); //Chuyển hướng người dùng đến route productList và kèm theo thông báo thành công.
@@ -81,14 +81,11 @@ class UserController extends Controller
     }
     public function userDestroy($id)
     {
-        $acc = User::findOrFail($id); //// Tìm sản phẩm với ID được cung cấp. Nếu không tìm thấy, sẽ ném ra một ngoại lệ ModelNotFoundException.
-        if (!empty($acc->image)) {
-            $imgpath = "upload/" . $acc->image; //duong dan
-            if (file_exists($imgpath)) {
-                unlink($imgpath); //xoa
-            }
-        }
-        $acc->delete();
-        return redirect()->route('admin.users.userList')->with('success', 'account đã được xóa thành công.');
+        $acc = User::findOrFail($id); // Tìm user với ID được cung cấp. Nếu không tìm thấy, sẽ ném ra ngoại lệ ModelNotFoundException.
+
+        $acc->active = $acc->active == 0 ? 1 : 0; // Nếu active bằng 0 thì đổi thành 1, ngược lại đổi thành 0.
+        $acc->save(); // Lưu thay đổi vào cơ sở dữ liệu.
+
+        return redirect()->route('admin.users.userList')->with('success', 'Trạng thái tài khoản đã được thay đổi thành công.');
     }
 }

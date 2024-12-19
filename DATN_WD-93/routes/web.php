@@ -81,7 +81,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-//appoinment
+//appoinment 
 Route::prefix('appoinment')
     ->as('appoinment.')
     ->group(function () {
@@ -521,5 +521,6 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
             ->as('dasboard.')
             ->group(function () {
                 Route::get('/appoinment',      [AdminDashboardController::class, 'appointment'])->name('appointment');
+                Route::get('/appoinmentSreach',      [AdminDashboardController::class, 'appointmentSreach'])->name('appointmentSreach');
             });
     });

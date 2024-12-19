@@ -10,7 +10,7 @@
         <input type="hidden" name="id" value="{{ $doctor->id }}">
         <div class="row">
             <!-- Phần bên trái -->
-            <div class="col">
+            <div class="col" style="display: none;">
                 <div class="mb-3">
                     <label class="form-label">Tài khoản bác sỹ</label>
                     <select class="form-select" name="user_id">
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <!-- Phần bên phải -->
-            <div class="col">
+            <div class="col" style="display: none;">
                 <div class="mb-3">
                     <label class="form-label">Chuyên khoa bác sỹ</label>
                     <select class="form-select" name="specialty_id" id="specialty_id" onchange="checkClassification(this.value)">

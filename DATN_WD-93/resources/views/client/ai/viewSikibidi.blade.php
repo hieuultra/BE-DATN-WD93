@@ -12,17 +12,17 @@
             box-sizing: border-box;
         }
 
-        
+
         .body1 {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            min-height: 80vh;
             background-color: #f4f4f9;
             font-family: Arial, sans-serif;
         }
 
-        
+
         .container {
             max-width: 800px;
             text-align: center;
@@ -34,7 +34,7 @@
             color: #333;
         }
 
-        
+
         .service-options {
             display: flex;
             flex-wrap: wrap;
@@ -57,7 +57,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-      
+
         .option-icon {
             font-size: 40px;
             color: #4a90e2;
@@ -74,32 +74,64 @@
             font-size: 0.9em;
             color: #666;
         }
+
+        .custom-link {
+            display: inline-block;
+            text-decoration: none;
+            /* Xóa gạch chân mặc định */
+            color: #fff;
+            /* Màu chữ */
+            background-color: #4a90e2;
+            /* Màu nền */
+            padding: 10px 20px;
+            /* Khoảng cách nội dung */
+            border: 2px solid #4a90e2;
+            /* Viền màu xanh */
+            border-radius: 8px;
+            /* Bo góc viền */
+            font-weight: bold;
+            /* Chữ đậm */
+            transition: all 0.3s ease;
+            /* Hiệu ứng chuyển động mượt mà */
+        }
+
+        .custom-link:hover {
+            background-color: #fff;
+            /* Nền trắng khi hover */
+            color: #4a90e2;
+            /* Đổi màu chữ */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Hiệu ứng bóng đổ */
+            transform: translateY(-2px);
+            /* Dịch chuyển lên trên nhẹ */
+        }
     </style>
 </head>
 
 <body>
     @extends('layout')
     @section('content')
-    <a href="{{route('appoinment.index')}}">Quay lại</a>
+
     <div class="body1">
         <div class="container">
             <h1>Bạn muốn lựa chọn dịch vụ nào</h1>
+            <a href="{{route('appoinment.index')}}" class="custom-link">Quay lại</a>
             <div class="service-options">
-                
+
                 <div class="option" onclick="window.location.href='/chat-ai'">
                     <div class="option-icon">🤖</div>
                     <div class="option-title">Chat AI</div>
                     <div class="option-description">Trò chuyện với AI để nhận hỗ trợ tức thì.</div>
                 </div>
 
-               
+
                 <div class="option" onclick="window.location.href='/chat-zalo'">
                     <div class="option-icon">📞</div>
                     <div class="option-title">Tư vấn qua điện thoại & Zalo</div>
                     <div class="option-description">Gọi hoặc nhắn tin Zalo để tư vấn trực tiếp.</div>
                 </div>
 
-              
+
                 <div class="option" onclick="window.location.href='/huong-dan-dl'">
                     <div class="option-icon">🩺</div>
                     <div class="option-title">Hướng dẫn đặt lịch khám</div>

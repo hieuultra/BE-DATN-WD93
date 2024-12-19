@@ -5,6 +5,10 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <style>
         body {
             background-color: #e6f7f7;
@@ -290,6 +294,20 @@
             font-weight: bold;
             display: inline-block;
         }
+
+        .flame-effect {
+            color: red;
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+            animation: flame 1s infinite alternate;
+        }
+
+        @keyframes flame {
+            0% { text-shadow: 0 0 5px orange, 0 0 10px yellow, 0 0 15px red; }
+            100% { text-shadow: 0 0 10px red, 0 0 20px orange, 0 0 25px yellow; }
+        }
+
     </style>
 </head>
 
@@ -307,7 +325,7 @@
 
     <div class="container mt-4">
     <div class="specialty-details">
-        <h1 class="specialty-name text-primary">CHUYÊN KHOA: {{$specialty->name}}</h1>
+        <h2 class="specialty-name text-primary">CHUYÊN KHOA: {{$specialty->name}}</h2>
         <h3 class="specialty-description">Mô tả: <div id="description" class="description">
             {!! nl2br(e($specialty->description)) !!}
         </div>
@@ -328,8 +346,37 @@
             <img alt="Doctor's portrait" height="80" src="{{ asset('upload/' . $doctor->user->image) }}" width="80" />
             <div class="doctor-info">
                 <div class="d-flex align-items-center mb-2">
-                    <h5 class="text-primary">{{ $doctor->user->name }}</h5>
+                    @if(number_format($doctor->review_avg_rating, 1) >= 4.0)
+                    <h5 class="flame-effect" style="color: red; font-weight: bold;">
+                        🔥 {{ $doctor->user->name }} 🔥
+                    </h5>
+                    @else
+                    <h5 class="text-primary">
+                        {{ $doctor->user->name }}
+                    </h5>
+                    @endif
                 </div>
+                @if($doctor->review_count > 0) 
+                <h6>Số lượt đánh giá: {{ $doctor->review_count }}</h6>
+                <h6>
+                    Số sao trung bình: 
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($i <= floor($doctor->review_avg_rating))
+                            <!-- Sao đầy -->
+                            <i class="fas fa-star" style="color: gold;"></i>
+                        @elseif ($i - 0.5 <= $doctor->review_avg_rating)
+                            <!-- Sao nửa -->
+                            <i class="fas fa-star-half-alt" style="color: gold;"></i>
+                        @else
+                            <!-- Sao trống -->
+                            <i class="far fa-star" style="color: gold;"></i>
+                        @endif
+                    @endfor
+                    ({{ number_format($doctor->review_avg_rating, 1) }} / 5)
+                </h6>
+                @else
+                <h6>Chưa có đánh giá: {{ $doctor->review_count }}</h6>
+                @endif
                 <p>{!! Str::limit($doctor->bio, 300, '...') !!}</p>
                 <div class="location">
                     <i class="fas fa-map-marker-alt"></i>

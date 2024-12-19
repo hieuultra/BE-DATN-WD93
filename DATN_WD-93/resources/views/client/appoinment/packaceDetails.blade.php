@@ -263,9 +263,11 @@
     @section('content')
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                BookingCare
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{route('appoinment.index')}}" id="navbarDropdown">
+                Quay Lại
             </a>
+        </div>
             <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
                 class="navbar-toggler" data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon">
