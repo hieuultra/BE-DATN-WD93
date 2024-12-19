@@ -51,7 +51,7 @@ class AppoinmentController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
 
-            // Đếm số lịch hẹn hợp lệ của người dùng 
+            // Đếm số lịch hẹn hợp lệ của người dùng
             $orderCount = DB::table('appoinments')
                 ->where('user_id', $user->id)
                 ->whereIn('status_appoinment', ['kham_hoan_thanh', 'can_tai_kham', 'huy_lich_hen', 'benh_nhan_khong_den'])
@@ -1024,7 +1024,7 @@ class AppoinmentController extends Controller
         $appointment->save();
 
         $time = AvailableTimeslot::where('id', $appointment->available_timeslot_id)->first();
-        $time->isAvailable = 0;
+        $time->isAvailable = 1;
         $time->save();
 
         return response()->json([

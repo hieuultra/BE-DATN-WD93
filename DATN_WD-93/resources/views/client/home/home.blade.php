@@ -607,7 +607,7 @@
                                 alt="" />
                         </div>
                         <div class="flex-fill pl-3">
-                            <h6>Lấy mã giảm giá</h6>
+                            <h6>Đổi điểm lấy mã giảm giá</h6>
                         </div>
                     </div>
                 </a>
