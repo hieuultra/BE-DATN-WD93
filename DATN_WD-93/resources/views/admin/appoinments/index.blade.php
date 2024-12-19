@@ -108,9 +108,11 @@
                                                     onchange="confirmSubmit(this)"
                                                     data-default-value="{{ $item->status_appoinment }}">
                                                     @foreach ($statusAppoinment as $key => $value)
-                                                        <option value="{{ $key }}"
-                                                            {{ $key == $item->status_appoinment ? 'selected' : '' }}>
-                                                            {{ $value }}</option>
+                                                        @if ($key !== 'yeu_cau_huy')
+                                                            <option value="{{ $key }}"
+                                                                {{ $key == $item->status_appoinment ? 'selected' : '' }}>
+                                                                {{ $value }}</option>
+                                                        @endif
                                                     @endforeach
                                                 </select>
                                             </form>

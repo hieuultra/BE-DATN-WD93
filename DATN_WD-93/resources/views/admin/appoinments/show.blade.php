@@ -107,7 +107,7 @@
                                     <div class="info-item">
                                         <label for="hospital-address">Khoa:</label>
                                         <p id="hospital-address">
-                                            {{ $appoinmentDetail->doctor->specialty->first()->name ?? '' }}
+                                            {{ $appoinmentDetail->doctor->specialty->name ?? '' }}
                                         </p>
                                     </div>
                                     <div class="info-item">
@@ -189,7 +189,7 @@
                                         {{ $appoinmentDetail->timeSlot->endTime }}h</p>
                                     <p id="appointment-time">
                                         {{ $daysOfWeek[$appoinmentDetail->timeSlot->dayOfWeek] ?? 'Không xác định' }}</p>
-                                    <p id="appointment-time">Ca: {{ $appoinmentDetail->appointment_date }}</p>
+                                    <p id="appointment-time">Ngày: {{ $appoinmentDetail->appointment_date }}</p>
                                 </div>
                             </div>
                         </div>

@@ -220,76 +220,6 @@
           <img src="{{asset('img/9eaf8645b78d6bc41a5b06a4db109296.png') }}" alt="">
           <img src="{{asset('img/eaa44ae488d28a2bf8329e21e1146ece.png') }}" alt="">
         </marquee>
-        <div class="col-lg-6 d-none d-lg-block">
-          <div class="d-inline-flex align-items-center h-100">
-            <a class="text-body mr-3" href="">Về chúng tôi</a>
-            <a class="text-body mr-3" href="">Liên hệ</a>
-            <a class="text-body mr-3" href="">Giúp đỡ</a>
-            <a class="text-body mr-3" href="">FAQs</a>
-          </div>
-        </div>
-        <div class="col-lg-6 text-center text-lg-right">
-          <div class="d-inline-flex align-items-center">
-            <div class="btn-group">
-              <button
-                type="button"
-                class="btn btn-sm btn-light dropdown-toggle"
-                data-toggle="dropdown"
-              >
-                Tài khoản
-              </button>
-              <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button">Đăng ký</button>
-                <button class="dropdown-item" type="button">Đăng nhập</button>
-              </div>
-            </div>
-            <div class="btn-group mx-2">
-              <button
-                type="button"
-                class="btn btn-sm btn-light dropdown-toggle"
-                data-toggle="dropdown"
-              >
-                USD
-              </button>
-              <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button">EUR</button>
-                <button class="dropdown-item" type="button">GBP</button>
-                <button class="dropdown-item" type="button">CAD</button>
-              </div>
-            </div>
-            <div class="btn-group">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-light dropdown-toggle"
-                  data-toggle="dropdown"
-                >
-                  EN
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <button class="dropdown-item" type="button" onclick="changeLanguage('en')">English</button>
-                  <button class="dropdown-item" type="button" onclick="changeLanguage('vi')">Vietnamese</button>
-                </div>
-              </div>
-          </div>
-          <div class="d-inline-flex align-items-center d-block d-lg-none">
-            <a href="" class="btn px-0 ml-2">
-              <i class="fas fa-heart text-dark"></i>
-              <span
-                class="badge text-dark border border-dark rounded-circle"
-                style="padding-bottom: 2px"
-                >0</span
-              >
-            </a>
-            <a href="" class="btn px-0 ml-2">
-              <i class="fas fa-shopping-cart text-dark"></i>
-              <span
-                class="badge text-dark border border-dark rounded-circle"
-                style="padding-bottom: 2px"
-                >0</span
-              >
-            </a>
-          </div>
-        </div>
       </div>
       <div
         class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex"
@@ -322,7 +252,7 @@
         </div>
         <div class="col-lg-4 col-6 text-right">
           <p class="m-0">Dịch vụ khách hàng</p>
-          <h5 class="m-0">+012 345 6789</h5>
+          <h5 class="m-0">0987654321</h5>
         </div>
       </div>
     </div>
