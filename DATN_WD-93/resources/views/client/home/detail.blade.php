@@ -333,7 +333,6 @@ h2 {
 .thumbnail-images .small-img.active {
     border: 2px solid #007bff;
 }
-
     </style>
 
     <!-- Breadcrumb Start -->
@@ -523,20 +522,36 @@ h2 {
                     <div class="d-flex pt-2">
                         <strong class="text-dark mr-2">Chia sẻ:</strong>
                         <div class="d-inline-flex">
-                            <a class="text-dark px-2" href="">
+                            <!-- Facebook -->
+                            <a class="text-dark px-2"
+                               href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(Request::url()) }}"
+                               target="_blank">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
-                            <a class="text-dark px-2" href="">
+
+                            <!-- Twitter -->
+                            <a class="text-dark px-2"
+                               href="https://twitter.com/intent/tweet?url={{ urlencode(Request::url()) }}&text={{ urlencode($sp->name) }}"
+                               target="_blank">
                                 <i class="fab fa-twitter"></i>
                             </a>
-                            <a class="text-dark px-2" href="">
+
+                            <!-- LinkedIn -->
+                            <a class="text-dark px-2"
+                               href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(Request::url()) }}"
+                               target="_blank">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
-                            <a class="text-dark px-2" href="">
+
+                            <!-- Pinterest (nếu có ảnh sản phẩm) -->
+                            <a class="text-dark px-2"
+                               href="https://pinterest.com/pin/create/button/?url={{ urlencode(Request::url()) }}&media={{ asset('upload/' . $sp->img) }}&description={{ urlencode($sp->name) }}"
+                               target="_blank">
                                 <i class="fab fa-pinterest"></i>
                             </a>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -607,10 +622,57 @@ h2 {
                         </div>
                     </div>
                 </div>
+                <div class="mt-5">
+                    <button class="btn btn-outline-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#questionForm" aria-expanded="false" aria-controls="questionForm">
+                        Gửi câu hỏi về sản phẩm
+                    </button>
+
+                    <div class="collapse" id="questionForm">
+                        <form method="POST" action="{{ route('product.question.store') }}">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $sp->id }}">
+
+                            @guest
+                                <div class="form-group">
+                                    <label>Họ tên</label>
+                                    <input type="text" class="form-control" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Địa chỉ Email</label>
+                                    <input type="email" class="form-control" name="email" required>
+                                </div>
+                            @endguest
+
+                            <div class="form-group">
+                                <label>Câu hỏi của bạn</label>
+                                <textarea name="question" class="form-control" rows="4" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-2">Gửi câu hỏi</button>
+                        </form>
+                    </div>
+                </div>
+
+                @foreach($sp->questions as $q)
+                <li class="list-group-item">
+                    <strong>{{ $q->name ?? $q->user->name }}</strong> hỏi:
+                    <p>{{ $q->question }}</p>
+
+                    @if($q->answer)
+                        <div class="mt-2 text-success">
+                            <strong>Phản hồi từ shop:</strong>
+                            <p>{{ $q->answer }}</p>
+                        </div>
+                    @endif
+                </li>
+            @endforeach
+
             </div>
         </div>
     </div>
     <!-- Shop Detail End -->
+
+
 
 
     <!-- Products Start -->

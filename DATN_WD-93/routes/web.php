@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\VariantPackageController;
 use App\Http\Controllers\Admin\AdminAppoinmentController;
 use App\Http\Controllers\Admin\VariantProductsController;
+use App\Http\Controllers\Client\ProductQuestionController;
 use App\Http\Controllers\Admin\VariantProPackageController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
@@ -58,6 +59,7 @@ Route::get('/get-price-quantity-variant', [HomeController::class, 'getPriceQuant
 Route::post('/add-to-cart-home', [HomeController::class, 'addToCartHome'])->name('addToCartHome');  //
 Route::get('/get-price-quantity-vp', [CartController::class, 'getPriceQuantiVariant'])->name('getPriceQuantiVariant');
 Route::post('/products/filter', [HomeController::class, 'filter'])->name('products.filter');
+Route::post('/product/question', [ProductQuestionController::class, 'store'])->name('product.question.store');
 
 //Login + signup
 Route::get('/login', [AuthController::class, 'viewLogin'])->name('viewLogin');
@@ -81,7 +83,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-//appoinment 
+//appoinment
 Route::prefix('appoinment')
     ->as('appoinment.')
     ->group(function () {
@@ -522,5 +524,13 @@ Route::middleware(['auth', 'auth.admin'])->prefix('admin')
             ->group(function () {
                 Route::get('/appoinment',      [AdminDashboardController::class, 'appointment'])->name('appointment');
                 Route::get('/appoinmentSreach',      [AdminDashboardController::class, 'appointmentSreach'])->name('appointmentSreach');
+            });
+
+        //thương hiệu
+        Route::prefix('questions')
+            ->as('questions.')
+            ->group(function () {
+                Route::get('/index', [ProductQuestionController::class, 'index'])->name('index');
+                Route::post('questions/{id}/answer', [ProductQuestionController::class, 'answer'])->name('answer');
             });
     });
